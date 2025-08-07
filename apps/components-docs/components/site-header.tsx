@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { ThemeToggle } from "./theme-toggle";
-import { Button } from "./ui/button";
+import { ThemeToggle, Button } from "@ui";
+
 
 export function SiteHeader() {
   return (
