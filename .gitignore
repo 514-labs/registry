@@ -1,0 +1,34 @@
+.DS_Store
+node_modules
+.turbo
+*.log
+dist
+dist-ssr
+*.local
+.env
+.cache
+./logs/
+
+# Ignore scratch files - used for testing and development in Data Warehouse
+scratch*
+
+.cursor/
+
+# Temporary migration files and directories
+temp_migration/
+temp_migration_*/
+temp_*.sh
+temp_*.json
+elasticsearch_migration.log
+
+# Development logs
+dev-*.log
+nohup.out
+
+# Moose temporary directories
+.moose/
+
+# Service-specific temp files
+services/*/temp_migration/
+services/*/dev-*.log
+services/*/.moose/

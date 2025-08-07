@@ -1,0 +1,16 @@
+{
+  "name": "@workspace/models",
+  "exports": {
+    ".": "./src/index.ts",
+    "./foo": "./src/foo/index.ts",
+    "./bar": "./src/bar/index.ts"
+  },
+  "dependencies": {
+    "@514labs/moose-lib": "latest"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "^5.3.3"
+  }
+}

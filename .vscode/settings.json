@@ -1,0 +1,30 @@
+{
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+  "tailwindCSS.emmetCompletions": true,
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "css.validate": false,
+  "css.customData": [".vscode/tailwindcss.json"],
+  "tailwindCSS.classAttributes": [
+    "class",
+    "className",
+    "ngClass",
+    "class:list",
+    ".*[Ss]tyles.*",
+    ".*[Cc]lasses.*"
+  ],
+  "tailwindCSS.rootFontSize": 16,
+  "tailwindCSS.hooverPreview": true
+}
