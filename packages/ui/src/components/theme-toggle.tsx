@@ -1,3 +1,4 @@
+"use client";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "@workspace/ui/components/theme-provider";
 

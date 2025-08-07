@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
 
+@source "./src/**/*.{js,ts,jsx,tsx}";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -121,3 +123,6 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+@import "@workspace/ui/styles.css";
