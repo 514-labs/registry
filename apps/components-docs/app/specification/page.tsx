@@ -1,10 +1,5 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import dynamic from "next/dynamic";
-
-// Dynamically import the MDX content
-const APISpecification = dynamic(
-  () => import("@/content/specifications/api-connector.mdx"),
-);
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
+import APISpecification from "@/content/specifications/api-connector.mdx";
 
 function BlobStorageSpecification() {
   return (
