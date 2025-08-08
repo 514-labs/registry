@@ -1,5 +1,10 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
-import APISpecification from "@/content/specifications/api-connector.mdx";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@workspace/ui/components/tabs";
+import APISpecification from "@/content/docs/specifications/api-connector.mdx";
 
 function BlobStorageSpecification() {
   return (
@@ -40,7 +45,7 @@ export default function Specification() {
   return (
     <div className="flex flex-col gap-4 max-w-4xl mx-auto">
       <div className="prose dark:prose-invert prose-neutral">
-        <h1 className="text-4xl">Specification</h1>
+        <h1 className="text-4xl">Specifications</h1>
         <p>
           We provide extensive specifications for each type of connector which
           you can feed into the LLM of your choice to get a connector built for

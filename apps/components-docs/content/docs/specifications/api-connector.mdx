@@ -5,8 +5,17 @@ export const metadata = {
 
 ## API Connector Specification
 
-This specification defines the requirements for implementing a robust, production-ready API connector.
-The connector should be language-agnostic and follow these guidelines to ensure reliability, maintainability, and extensibility.
+This specification defines the requirements for implementing a robust, production‑ready API connector.
+The connector must be language‑agnostic. Any illustrative snippets must be treated as pseudocode, not tied to a specific language or framework.
+
+### Scope and Principles
+
+- **Language‑agnostic**: The spec describes behaviors, contracts, and data shapes, not language constructs.
+- **Separation of concerns**: Request execution, authentication, retries, rate limits, and pagination are composable, swappable modules.
+- **Deterministic, observable, testable**: Deterministic defaults, structured logs/metrics/traces, and clear test surfaces.
+- **Secure by default**: Credentials are redacted, transport is encrypted where applicable, and inputs/outputs are validated.
+- **Resilient**: Backoff with jitter, circuit breaking, idempotency, and graceful degradation built in.
+- **Extensible**: Hooks/middleware enable customization without forking core.
 
 ### Core Methods
 
@@ -55,6 +64,14 @@ Every API connector must implement the following core functionality:
 - **paginate(options)**  
   Returns an iterator that automatically handles pagination, fetching subsequent pages as needed. Should support different pagination strategies.
 
+#### Optional Operations (if applicable)
+
+- **stream(options)**  
+  Reads streaming responses (e.g., chunked, SSE) with backpressure and cancellation.
+
+- **upload(options)** / **download(options)**  
+  Handles large payload transfers, with multi‑part or resumable strategies when supported.
+
 ### Configuration Structure
 
 The connector configuration should support the following settings:
@@ -63,6 +80,10 @@ The connector configuration should support the following settings:
 
 - **baseUrl** - The base URL for all API requests
 - **timeout** - Request timeout in milliseconds (default: 30000)
+- **userAgent** - Identifier for outbound requests (include app version/commit when available)
+- **proxy** - Optional proxy configuration (host, port, protocol, credentials)
+- **tls** - TLS options (verify, min version, CA bundle, mTLS certificates) where applicable
+- **pooling** - Connection pooling/keep‑alive settings
 
 #### Authentication Configuration
 
@@ -79,6 +100,9 @@ Support for multiple authentication types:
 - **backoffMultiplier** - Multiplier for exponential backoff (default: 2)
 - **retryableStatusCodes** - HTTP status codes that trigger retries (default: [429, 500, 502, 503, 504])
 - **retryableErrors** - Error types/codes that should trigger retries
+- **retryBudgetMs** - Hard cap on total time spent retrying a single logical operation
+- **respectRetryAfter** - Whether to honor server Retry‑After hints (default: true)
+- **idempotency** - Enable idempotency key strategy for unsafe methods (default: enabled)
 
 #### Rate Limiting Configuration
 
@@ -86,6 +110,8 @@ Support for multiple authentication types:
 - **requestsPerMinute** - Maximum requests per minute
 - **requestsPerHour** - Maximum requests per hour
 - **concurrentRequests** - Maximum concurrent requests (default: 10)
+- **burstCapacity** - Allowed burst above steady rate (token bucket)
+- **adaptiveFromHeaders** - Update limits from response headers when available (default: true)
 
 #### Default Settings
 
@@ -130,6 +156,9 @@ The connector must implement a robust retry strategy with the following requirem
 4. **Circuit Breaker**  
    Implement circuit breaker pattern to prevent cascading failures
 
+5. **Retry Budget**  
+   Abort retries once the per‑operation retry budget is exhausted, even if `maxAttempts` not reached.
+
 ### Hook System
 
 Hooks provide extension points for customizing connector behavior without modifying core logic:
@@ -156,6 +185,21 @@ Each hook receives a context object containing:
 - **modifyResponse(updates)** - Modify the incoming response
 - **abort(reason)** - Cancel the request with a reason
 
+#### Middleware Pipeline (conceptual)
+
+Hooks/middleware execute in a well‑defined order around the core request execution:
+
+```text
+PSEUDOCODE pipeline:
+1. Build request (defaults → per‑call options → auth → user hooks)
+2. Rate limiter: waitForSlot()
+3. beforeRequest hooks (ordered by priority)
+4. Execute (with timeout + cancellation token)
+5. afterResponse hooks (transform/validate)
+6. onError hooks (map/enrich), possibly shouldRetry → backoff
+7. Metrics/logging at each stage
+```
+
 #### Common Hook Use Cases
 
 - Adding authentication headers
@@ -179,6 +223,7 @@ All responses should be wrapped in a consistent structure containing:
   - **duration** - Request duration in milliseconds
   - **retryCount** - Number of retry attempts made
   - **rateLimit** - Current rate limit status
+  - **requestId** - Correlation identifier echoed by server or generated by client
 
 #### Data Transformation
 
@@ -215,6 +260,8 @@ All connector errors should include:
 - **statusCode** - HTTP status code (if applicable)
 - **details** - Additional error context or data
 - **retryable** - Boolean indicating if the request can be retried
+- **requestId** - Correlation identifier if available
+- **source** - Subsystem where the error occurred (transport, auth, rateLimit, deserialize, userHook, unknown)
 
 #### Standard Error Codes
 
@@ -228,6 +275,8 @@ Connectors should use these standardized error codes:
 - **SERVER_ERROR** - Server-side error (5xx status codes)
 - **PARSING_ERROR** - Failed to parse response
 - **VALIDATION_ERROR** - Data validation failed
+- **CANCELLED** - Request was cancelled by caller
+- **UNSUPPORTED** - Operation not supported by target API
 
 #### Error Handling Best Practices
 
@@ -236,6 +285,14 @@ Connectors should use these standardized error codes:
 - Include request context in error details
 - Differentiate between retryable and non-retryable errors
 - Log errors with appropriate severity levels
+
+```text
+PSEUDOCODE error enrichment:
+IF transport error THEN code = NETWORK_ERROR, retryable = true
+ELSE IF status in [408, 425, 429, 5xx] THEN retryable = true
+ELSE retryable = false
+Attach requestId, endpoint, method, attemptNumber, duration
+```
 
 ### Pagination Support
 
@@ -247,6 +304,7 @@ The paginate method should accept options including:
 - **startCursor** - Initial cursor for cursor-based pagination
 - **startPage** - Initial page number for page-based pagination
 - **strategy** - Pagination type: cursor, offset, page, or link-header
+- **params** - Strategy‑specific parameter names (e.g., pageParam, perPageParam, cursorParam, offsetParam, limitParam)
 
 #### Custom Extraction Functions
 
@@ -278,6 +336,37 @@ PSEUDOCODE for paginate method:
    e. Check if more pages exist
    f. Update hasMore flag
 4. End iteration when no more pages
+```
+
+### Concurrency, Cancellation, and Timeouts
+
+- **Cancellation token**: All operations accept a caller‑provided token to cancel in‑flight work.
+- **Per‑call timeout**: Enforced at the transport layer; must trigger cancellation and error with `TIMEOUT`.
+- **Global shutdown**: The connector supports graceful shutdown, draining in‑flight requests.
+- **Max concurrency**: Enforced independent of rate limits; bounded work queue to avoid unbounded memory growth.
+
+```text
+PSEUDOCODE request with cancellation and timeout:
+1. IF !canProceed() THEN waitForSlot()
+2. START timer(timeout)
+3. TRY execute
+4. IF cancelled OR timer expired → abort transport → raise TIMEOUT/CANCELLED
+5. ALWAYS release slot
+```
+
+### Streaming and Large Payloads
+
+- Support reading streaming responses (SSE/chunked) with backpressure.
+- Support large uploads/downloads with chunking, multi‑part, or resumable mechanisms when available.
+- Apply checksum/ETag validation when provided by the server.
+- Surface progress events via hooks or callbacks where relevant.
+
+```text
+PSEUDOCODE streaming read:
+open stream
+FOR EACH chunk IN stream:
+  emit chunk to caller
+ON error → map to NETWORK_ERROR (retryable if partial/transient)
 ```
 
 ### Rate Limiting
@@ -313,6 +402,12 @@ Status information should include:
 - **Sliding Window** - Precise rate limiting over time windows
 - **Fixed Window** - Simple reset at specific intervals
 - **Adaptive** - Adjust based on server feedback
+
+```text
+PSEUDOCODE adaptive update:
+IF headers contain rate-limit info THEN update limiter state
+IF Retry-After present THEN sleep per hint
+```
 
 ### Authentication Strategies
 
@@ -354,6 +449,41 @@ Each authentication strategy should implement:
 - Support multiple authentication methods per connector
 - Allow authentication method switching at runtime
 
+```text
+PSEUDOCODE auth application:
+credentials = load from secure store
+IF credentials expiring → refresh()
+add auth to request (header/query/signature)
+```
+
+### Idempotency
+
+- For unsafe methods (e.g., POST), support idempotency keys when the API allows, to safely retry.
+- Generate a stable key per logical operation; store it in a header or agreed field.
+- Avoid silent replays when idempotency is not supported (surface clear warnings).
+
+```text
+PSEUDOCODE idempotency key:
+key = hash(operationName + stableInputs)
+set header "Idempotency-Key" = key
+```
+
+### Webhooks and Async Jobs (if applicable)
+
+- Verify webhook signatures and timestamps; reject stale or invalid deliveries.
+- Support async job polling patterns (create → poll status → fetch result), with backoff.
+- De‑duplicate webhook events using delivery IDs or replay IDs.
+
+```text
+PSEUDOCODE async job:
+jobId = POST /jobs
+REPEAT until done:
+  status = GET /jobs/{jobId}
+  IF status == done → break
+  sleep(backoff)
+result = GET /jobs/{jobId}/result
+```
+
 ### Best Practices
 
 - **Connection Pooling:** Reuse connections when possible
@@ -364,6 +494,26 @@ Each authentication strategy should implement:
 - **Metrics:** Track request count, latency, error rates
 - **Graceful Shutdown:** Complete in-flight requests before disconnecting
 - **Resource Cleanup:** Properly clean up timers, connections, and listeners
+
+### Observability
+
+- **Logging**: Structured logs with correlation `requestId`, redaction of secrets, and consistent fields.
+- **Metrics**: Counters (requests, errors, retries), distributions (latency, payload sizes), gauges (in‑flight, rate limits).
+- **Tracing**: Span per request with attributes for method, path, status, retryCount, rateLimit.
+
+### Security and Compliance
+
+- Redact secrets in logs, metrics, and errors.
+- Validate inputs and outputs; reject malformed data early.
+- Use TLS by default; support custom CA bundles and optional mTLS where required.
+- Clock‑skew aware signature validation when needed.
+- Respect data residency and minimization; avoid storing payloads unless explicitly enabled.
+
+### Versioning and Compatibility
+
+- Semantic versioning for the connector contract.
+- Backward‑compatible changes preferable; document breaking changes clearly.
+- Feature flags or capability negotiation for optional features (e.g., streaming, webhooks).
 
 ### Testing Requirements
 
@@ -376,3 +526,17 @@ Connectors must include:
 - Authentication flow testing
 - Error handling and recovery testing
 - Performance benchmarks
+
+### Conformance Checklist
+
+- Implements lifecycle: initialize, connect, disconnect, isConnected
+- Provides request primitives, optional stream/upload/download when applicable
+- Config supports baseUrl, timeouts, proxy/tls, auth, retry, rate limit, defaults, hooks
+- Retry with backoff + jitter, honors Retry‑After, has circuit breaker and retry budget
+- Hook pipeline before/after/error/retry; deterministic order and cancellation
+- Response wrapper with data/status/headers/meta including requestId and rateLimit
+- Structured errors with code/status/retryable/details and correlation id
+- Pagination supports cursor/offset/page/link‑header with pluggable extractors
+- Concurrency limits, cancellation, graceful shutdown
+- Observability: logs/metrics/traces with redaction
+- Security controls for credentials, TLS, validation, and redaction

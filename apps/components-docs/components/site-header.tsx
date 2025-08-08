@@ -1,30 +1,32 @@
 import Link from "next/link";
 import { ThemeToggle } from "@ui/components/theme-toggle";
 import { Button } from "@ui/components/button";
-
+import { SidebarTrigger } from "@ui/components/sidebar";
 
 export function SiteHeader() {
   return (
-    <header className="flex justify-between items-center p-4 w-full">
-      <div>
+    <header className="flex justify-between items-center p-4 w-full h-[var(--header-height)] sticky top-0 z-10 bg-background">
+      <div className="flex items-center gap-2">
         <Button asChild variant="link">
-          <Link href="/">
-            <h1 className="text-primary">
-              Connector <span className="text-muted-foreground">Factory</span>
-            </h1>
-          </Link>
+          <Link href="/">Connectors</Link>
         </Button>
         <Button asChild variant="link">
-          <Link href="/thesis">Our thesis</Link>
+          <Link href="/thesis">Discover</Link>
         </Button>
         <Button asChild variant="link">
-          <Link href="/specification">Specification</Link>
+          <Link href="/thesis">Publish</Link>
         </Button>
         <Button asChild variant="link">
-          <Link href="/connectors">All connectors</Link>
+          <Link href="/thesis">Host</Link>
+        </Button>
+        <Button asChild variant="link">
+          <Link href="/docs">Docs</Link>
         </Button>
       </div>
-      <ThemeToggle />
+      <div className="flex items-center gap-2">
+        <SidebarTrigger />
+        <ThemeToggle />
+      </div>
     </header>
   );
 }

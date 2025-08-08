@@ -1,8 +1,10 @@
+import ConnectorCard from "@/components/connector-card";
 import Link from "next/link";
+import { ChartLine, CreditCard } from "lucide-react";
 
 function Hero() {
   return (
-    <div className="flex flex-col text-center items-center container py-16 max-w-2xl gap-4">
+    <div className="flex flex-col text-center items-center container py-16 max-w-2xl gap-4 mx-auto">
       <h1 className="text-5xl">
         Bullet-proof, customizable, connectors... as actual code
       </h1>
@@ -19,6 +21,27 @@ export default function Home() {
     <div className="font-sans items-center justify-items-center min-h-screen space-y-4">
       <main className="flex flex-col items-center sm:items-start">
         <Hero />
+        {/* Connectors */}
+        <div className="grid grid-cols-3 gap-4 max-w-5xl mx-auto">
+          <ConnectorCard
+            name="Google Analytics"
+            description="Capture events and metrics from Google Analytics"
+            icon={ChartLine}
+            tags={["Product Analytics", "Events", "SaaS"]}
+          />
+          <ConnectorCard
+            name="Stripe"
+            description="Capture events and metrics from Stripe"
+            icon={CreditCard}
+            tags={["Product Analytics", "Events", "SaaS"]}
+          />
+          <ConnectorCard
+            name="Segment"
+            description="Capture events and metrics from Segment"
+            icon={ChartLine}
+            tags={["Product Analytics", "Events", "SaaS"]}
+          />
+        </div>
       </main>
       <footer className="row-start-3 flex flex-wrap items-center justify-center">
         <span>
