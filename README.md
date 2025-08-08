@@ -39,16 +39,14 @@ pnpm install
 Run the documentation app locally:
 
 ```bash
-cd apps/components-docs
-pnpm dev
+pnpm docs:dev
 # open http://localhost:3000
 ```
 
 Build the docs app:
 
 ```bash
-cd apps/components-docs
-pnpm build
+pnpm docs:build
 ```
 
 TurboRepo docs: `https://turborepo.com/docs`

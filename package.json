@@ -1,15 +1,7 @@
 {
-  "name": "area-code",
-  "version": "0.3.0",
+  "name": "connector-factory",
+  "version": "0.0.0",
   "private": true,
-  "workspaces": [
-    "ufa/apps/*",
-    "ufa/packages/*",
-    "ufa/services/*",
-    "odw/apps/*",
-    "odw/packages/*",
-    "odw/services/*"
-  ],
   "scripts": {
     "dev": "pnpm -C apps/components-docs dev",
     "build": "turbo run build",

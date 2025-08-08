@@ -1,10 +1,6 @@
 {
   "$schema": "https://turborepo.com/schema.json",
-  "globalEnv": [
-    "VITE_TRANSACTIONAL_API_BASE",
-    "VITE_ANALYTICAL_CONSUMPTION_API_BASE",
-    "VITE_RETRIEVAL_API_BASE"
-  ],
+  "globalEnv": [],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -15,25 +11,8 @@
       "outputs": ["dist/**"]
     },
     "lint": {},
-    "ufa:dev": {
-      "cache": false,
-      "persistent": true
-    },
-    "ufa:dev:clean": {
-      "cache": false,
-      "persistent": true
-    },
-    "ufa:dev:seed": {
-      "cache": false,
-      "persistent": true
-    },
-    "odw:dev": {
-      "cache": false,
-      "persistent": true
-    },
-    "odw:dev:clean": {
-      "cache": false,
-      "persistent": true
+    "clean": {
+      "cache": false
     }
   }
 }
