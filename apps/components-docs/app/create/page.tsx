@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function CreatePage() {
   return (
     <div className="py-20">
@@ -19,7 +21,10 @@ export default function CreatePage() {
             Follow the spec or ask your favorite AI to generate the connector
             for you
           </li>
-          <li>Publish your connector to the connectors hub</li>
+          <li>
+            <Link href="/share">Share</Link> your connector to the connectors
+            hub (optional)
+          </li>
         </ol>
       </div>
     </div>

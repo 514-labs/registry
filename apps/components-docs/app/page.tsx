@@ -1,6 +1,7 @@
 import ConnectorCard from "@/components/connector-card";
 import Link from "next/link";
 import { ChartLine, CreditCard } from "lucide-react";
+import { Button } from "@ui/components/button";
 
 function Hero() {
   return (
@@ -12,6 +13,10 @@ function Hero() {
         A starter kit for building, testing and sharing connectors that can be
         customomized and embedded in apps.
       </h2>
+      <div className="flex flex-row gap-4">
+        <Button>Get Started</Button>
+        <Button variant="outline">Learn More</Button>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@ui/components/theme-toggle";
 import { Button } from "@ui/components/button";
@@ -25,7 +26,22 @@ export function SiteHeader() {
           }
         >
           <Link href="/" aria-current={isActivePath("/") ? "page" : undefined}>
-            Connectors
+            <Image
+              src="/logo-medium-black.png"
+              alt="Connector Factory"
+              width={160}
+              height={24}
+              priority
+              className="h-6 w-auto block dark:hidden"
+            />
+            <Image
+              src="/logo-medium-white.png"
+              alt="Connector Factory"
+              width={160}
+              height={24}
+              priority
+              className="h-6 w-auto hidden dark:block"
+            />
           </Link>
         </Button>
         <Button
@@ -68,10 +84,10 @@ export function SiteHeader() {
           }
         >
           <Link
-            href="/publish"
+            href="/share"
             aria-current={isActivePath("/publish") ? "page" : undefined}
           >
-            Publish
+            Share
           </Link>
         </Button>
         <Button
@@ -88,6 +104,8 @@ export function SiteHeader() {
             Host
           </Link>
         </Button>
+      </div>
+      <div className="flex items-center gap-2">
         <Button
           asChild
           variant="link"
@@ -102,8 +120,6 @@ export function SiteHeader() {
             Docs
           </Link>
         </Button>
-      </div>
-      <div className="flex items-center gap-2">
         <SidebarTrigger />
         <ThemeToggle />
       </div>
