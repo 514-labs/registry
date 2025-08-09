@@ -1,6 +1,5 @@
 import ConnectorCard from "@/components/connector-card";
 import Link from "next/link";
-import { ChartLine, CreditCard } from "lucide-react";
 import { Button } from "@ui/components/button";
 
 function Hero() {
@@ -102,7 +101,7 @@ export default function Home() {
         <span>
           Inspired by
           <Link
-            className="pl-1"
+            className="pl-1 underline"
             href="https://ui.shadcn.com"
             target="_blank"
             rel="noopener noreferrer"
@@ -113,7 +112,7 @@ export default function Home() {
         <span>
           , Created with ❤️ by the folks at
           <Link
-            className="pl-1"
+            className="pl-1 underline"
             href="https://www.fiveonefour.com"
             target="_blank"
             rel="noopener noreferrer"
