@@ -42,7 +42,7 @@ function ConnectorCard({
               className={cn(
                 "bg-gradient-to-b h-full w-full  blur-sm absolute top-0 left-0",
                 "from-60% from-card",
-                "to-white/20"
+                "to-neutral-500/20"
               )}
             />
           </div>
