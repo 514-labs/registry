@@ -9,15 +9,23 @@ import { Badge } from "@ui/components/badge";
 import { Button } from "@ui/components/button";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface ConnectorCardProps {
   name: string;
   description: string;
   icon: string;
   tags: string[];
+  href: string;
 }
 
-function ConnectorCard({ name, description, icon, tags }: ConnectorCardProps) {
+function ConnectorCard({
+  name,
+  description,
+  icon,
+  tags,
+  href,
+}: ConnectorCardProps) {
   const imageSrc = icon.startsWith("/") ? icon : `/${icon}`;
   return (
     <Card className="h-full">
@@ -55,7 +63,9 @@ function ConnectorCard({ name, description, icon, tags }: ConnectorCardProps) {
             </Badge>
           ))}
         </div>
-        <Button variant="outline">View Connector</Button>
+        <Button variant="outline" asChild>
+          <Link href={href}>View Connector</Link>
+        </Button>
       </CardFooter>
     </Card>
   );
