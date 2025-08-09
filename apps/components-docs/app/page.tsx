@@ -97,7 +97,7 @@ export default function Home() {
           ))}
         </div>
       </main>
-      <footer className="row-start-3 flex flex-wrap items-center justify-center">
+      <footer className="flex flex-wrap items-center justify-center py-20">
         <span>
           Inspired by
           <Link
