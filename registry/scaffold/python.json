@@ -1,0 +1,115 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/scaffold.schema.json",
+  "scaffold": "python",
+  "version": "0.1.0",
+  "description": "Python implementation scaffold for a connector. Places a Python package under connector/author/python with conventional src/tests layout and minimal templates.",
+  "variables": {
+    "connector": {
+      "description": "Connector name (kebab-case).",
+      "example": "stripe",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "author": {
+      "description": "Organization or author handle (kebab-case).",
+      "example": "fiveonefour",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "packageName": {
+      "description": "Python package name (snake_case).",
+      "example": "connector_stripe",
+      "pattern": "^[a-z_][a-z0-9_]*$"
+    }
+  },
+  "structure": [
+    {
+      "type": "dir",
+      "name": "{connector}",
+      "children": [
+        {
+          "type": "dir",
+          "name": "{author}",
+          "children": [
+            {
+              "type": "dir",
+              "name": "python",
+              "children": [
+                { "type": "file", "name": ".gitignore", "template": "__pycache__/\n.venv/\n.env\n.dist/\n" },
+                { "type": "file", "name": ".env.example", "template": "API_KEY=\n" },
+                { "type": "file", "name": "README.md", "template": "# {connector} (Python)\n\nPython implementation for `{connector}` by `{author}`.\n\n" },
+                {
+                  "type": "file",
+                  "name": "pyproject.toml",
+                  "template": "[project]\nname = \"{packageName}\"\nversion = \"0.1.0\"\nreadme = \"README.md\"\nrequires-python = \">=3.10\"\nlicense = {text = \"MIT\"}\nauthors = [ { name = \"{author}\" } ]\ndependencies = [ ]\n\n[tool.ruff]\nline-length = 100\n\n[build-system]\nrequires = [\"setuptools>=68\",\"wheel\"]\nbuild-backend = \"setuptools.build_meta\"\n"
+                },
+                {
+                  "type": "dir",
+                  "name": "src",
+                  "children": [
+                    {
+                      "type": "dir",
+                      "name": "{packageName}",
+                      "children": [
+                        { "type": "file", "name": "__init__.py", "template": "__version__ = \"0.1.0\"\n" },
+                        { "type": "file", "name": "client.py", "template": "class Client:\n    def __init__(self, config: dict):\n        self.config = config\n\n    def ping(self) -> bool:\n        return True\n" },
+                        { "type": "file", "name": "config.py", "template": "from dataclasses import dataclass\n\n@dataclass\nclass ConnectorConfig:\n    api_key: str\n" },
+                        {
+                          "type": "dir",
+                          "name": "auth",
+                          "children": [
+                            { "type": "file", "name": "__init__.py" },
+                            { "type": "file", "name": "base.py", "template": "class AuthStrategy:\n    def apply(self, headers: dict) -> dict:\n        return headers\n" },
+                            { "type": "file", "name": "api_key.py", "template": "from .base import AuthStrategy\n\nclass ApiKeyAuth(AuthStrategy):\n    def __init__(self, api_key: str):\n        self.api_key = api_key\n\n    def apply(self, headers: dict) -> dict:\n        headers[\"Authorization\"] = f\"Bearer {self.api_key}\"\n        return headers\n" },
+                            { "type": "file", "name": "oauth2.py", "template": "from .base import AuthStrategy\n\nclass OAuth2(AuthStrategy):\n    pass\n" }
+                          ]
+                        },
+                        {
+                          "type": "dir",
+                          "name": "extract",
+                          "children": [
+                            { "type": "file", "name": "__init__.py" },
+                            { "type": "file", "name": "base_extractor.py", "template": "class BaseExtractor:\n    def run(self):\n        raise NotImplementedError\n" }
+                          ]
+                        },
+                        {
+                          "type": "dir",
+                          "name": "transform",
+                          "children": [
+                            { "type": "file", "name": "__init__.py" },
+                            { "type": "file", "name": "base_transformer.py", "template": "class BaseTransformer:\n    def transform(self, record):\n        return record\n" }
+                          ]
+                        },
+                        {
+                          "type": "dir",
+                          "name": "load",
+                          "children": [
+                            { "type": "file", "name": "__init__.py" },
+                            { "type": "file", "name": "base_loader.py", "template": "class BaseLoader:\n    def load(self, records):\n        pass\n" }
+                          ]
+                        },
+                        { "type": "dir", "name": "schemas", "children": [ { "type": "file", "name": "__init__.py" } ] }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "dir",
+                  "name": "tests",
+                  "children": [
+                    { "type": "file", "name": "test_client.py", "template": "def test_ping():\n    from {packageName}.client import Client\n    assert Client({}).ping() is True\n" }
+                  ]
+                },
+                {
+                  "type": "dir",
+                  "name": "examples",
+                  "children": [
+                    { "type": "file", "name": "basic_usage.py", "template": "from {packageName}.client import Client\n\nclient = Client({})\nprint(client.ping())\n" }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
