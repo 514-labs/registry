@@ -15,16 +15,9 @@ interface ConnectorCardProps {
   description: string;
   icon: string;
   tags: string[];
-  accentColor: string;
 }
 
-function ConnectorCard({
-  name,
-  description,
-  icon,
-  tags,
-  accentColor,
-}: ConnectorCardProps) {
+function ConnectorCard({ name, description, icon, tags }: ConnectorCardProps) {
   const imageSrc = icon.startsWith("/") ? icon : `/${icon}`;
   return (
     <Card className="h-full">

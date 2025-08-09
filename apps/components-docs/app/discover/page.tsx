@@ -10,28 +10,24 @@ const connectors = [
     description: "Capture events and metrics from Google Analytics",
     icon: "connector-logos/GoogleAnalytics.png",
     tags: ["Product Analytics", "Events", "SaaS"],
-    accentColor: "hsl(var(--red-500))",
   },
   {
     name: "Stripe",
     description: "Pull your up-to-date Stripe data into your data warehouse",
     icon: "connector-logos/Stripe.png",
     tags: ["Product Analytics", "Events", "Extract", "SaaS"],
-    accentColor: "hsl(var(--blue-500))",
   },
   {
     name: "Segment",
     description: "Capture events and metrics from Segment",
     icon: "connector-logos/Segment.png",
     tags: ["CDP", "Events", "SaaS"],
-    accentColor: "hsl(var(--green-500))",
   },
   {
     name: "Shopify",
     description: "Pull your up-to-date Shopify data into your data warehouse",
     icon: "connector-logos/Shopify.png",
     tags: ["Ecommerce", "Events", "Extract", "SaaS"],
-    accentColor: "hsl(var(--yellow-500))",
   },
   {
     name: "MySQL",
@@ -39,7 +35,6 @@ const connectors = [
       "Pull your transactional data from MySQL into your data warehouse",
     icon: "connector-logos/mysql.png",
     tags: ["Database", "Extract", "CDC"],
-    accentColor: "hsl(var(--purple-500))",
   },
   {
     name: "PostgreSQL",
@@ -47,7 +42,6 @@ const connectors = [
       "Extract your transactional data from PostgreSQL into your data warehouse",
     icon: "connector-logos/PostgreSQL.png",
     tags: ["Database", "Extract", "CDC"],
-    accentColor: "hsl(var(--pink-500))",
   },
   {
     name: "Datadog ",
@@ -55,7 +49,6 @@ const connectors = [
       "Pull your up-to-date Datadog telemetry into your observability data warehouse",
     icon: "connector-logos/Datadog.png",
     tags: ["Observability", "Events", "Extract", "SaaS"],
-    accentColor: "hsl(var(--orange-500))",
   },
   {
     name: "MongoDB",
@@ -63,7 +56,6 @@ const connectors = [
       "Extract your transactional data from MongoDB into your data warehouse",
     icon: "connector-logos/DBMongo.png",
     tags: ["Database", "Extract", "CDC"],
-    accentColor: "hsl(var(--indigo-500))",
   },
 ];
 
