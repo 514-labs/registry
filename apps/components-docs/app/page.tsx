@@ -2,10 +2,23 @@ import ConnectorCard from "@/components/connector-card";
 import Link from "next/link";
 import { Button } from "@ui/components/button";
 import { connectors } from "@/lib/connectors-mock";
+import { Badge } from "@ui/components/badge";
 
 function Hero() {
   return (
     <div className="flex flex-col text-center items-center container py-16 max-w-2xl gap-4 mx-auto">
+      <Badge>
+        This Project is a WIP. Join our{" "}
+        <Link
+          href="https://join.slack.com/t/moose-community/shared_invite/zt-2fjh5n3wz-cnOmM9Xe9DYAgQrNu8xKxg"
+          className="underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          slack
+        </Link>{" "}
+        to get involved
+      </Badge>
       <h1 className="text-5xl">
         Bullet-proof, customizable, connectors... as actual code
       </h1>
