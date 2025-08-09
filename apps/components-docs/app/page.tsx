@@ -21,6 +21,61 @@ function Hero() {
   );
 }
 
+const connectors = [
+  {
+    name: "Google Analytics",
+    description: "Capture events and metrics from Google Analytics",
+    icon: "connector-logos/GoogleAnalytics.png",
+    tags: ["Product Analytics", "Events", "SaaS"],
+  },
+  {
+    name: "Stripe",
+    description: "Pull your up-to-date Stripe data into your data warehouse",
+    icon: "connector-logos/Stripe.png",
+    tags: ["Product Analytics", "Events", "Extract", "SaaS"],
+  },
+  {
+    name: "Segment",
+    description: "Capture events and metrics from Segment",
+    icon: "connector-logos/Segment.png",
+    tags: ["CDP", "Events", "SaaS"],
+  },
+  {
+    name: "Shopify",
+    description: "Pull your up-to-date Shopify data into your data warehouse",
+    icon: "connector-logos/Shopify.png",
+    tags: ["Ecommerce", "Events", "Extract", "SaaS"],
+  },
+  {
+    name: "MySQL",
+    description:
+      "Pull your transactional data from MySQL into your data warehouse",
+    icon: "connector-logos/mysql.png",
+    tags: ["Database", "Extract", "CDC"],
+  },
+  {
+    name: "PostgreSQL",
+    description:
+      "Extract your transactional data from PostgreSQL into your data warehouse",
+    icon: "connector-logos/PostgreSQL.png",
+    tags: ["Database", "Extract", "CDC"],
+  },
+  {
+    name: "Datadog ",
+    description:
+      "Pull your up-to-date Datadog telemetry into your observability data warehouse",
+    icon: "connector-logos/Datadog.png",
+    tags: ["Observability", "Events", "Extract", "SaaS"],
+  },
+  {
+    name: "MongoDB",
+    description:
+      "Extract your transactional data from MongoDB into your data warehouse",
+    icon: "connector-logos/DBMongo.png",
+    tags: ["Database", "Extract", "CDC"],
+  },
+];
+
 export default function Home() {
   return (
     <div className="font-sans items-center justify-items-center min-h-screen space-y-4">
@@ -28,24 +83,15 @@ export default function Home() {
         <Hero />
         {/* Connectors */}
         <div className="grid grid-cols-3 gap-4 max-w-5xl mx-auto">
-          <ConnectorCard
-            name="Google Analytics"
-            description="Capture events and metrics from Google Analytics"
-            icon={ChartLine}
-            tags={["Product Analytics", "Events", "SaaS"]}
-          />
-          <ConnectorCard
-            name="Stripe"
-            description="Capture events and metrics from Stripe"
-            icon={CreditCard}
-            tags={["Product Analytics", "Events", "SaaS"]}
-          />
-          <ConnectorCard
-            name="Segment"
-            description="Capture events and metrics from Segment"
-            icon={ChartLine}
-            tags={["Product Analytics", "Events", "SaaS"]}
-          />
+          {connectors.map((connector) => (
+            <ConnectorCard
+              key={connector.name}
+              name={connector.name}
+              description={connector.description}
+              icon={connector.icon}
+              tags={connector.tags}
+            />
+          ))}
         </div>
       </main>
       <footer className="row-start-3 flex flex-wrap items-center justify-center">
