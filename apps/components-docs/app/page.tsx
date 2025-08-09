@@ -14,8 +14,12 @@ function Hero() {
         customomized and embedded in apps.
       </h2>
       <div className="flex flex-row gap-4">
-        <Button>Get Started</Button>
-        <Button variant="outline">Learn More</Button>
+        <Button asChild>
+          <Link href="discover">All connectors</Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link href="/docs">Learn More</Link>
+        </Button>
       </div>
     </div>
   );
