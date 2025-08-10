@@ -7,4 +7,4 @@ This directory contains language-agnostic metadata and documentation for the `go
 - Category: `api`
 - Languages: `typescript`
 
-See `meta/connector.json` for connector metadata and `common/` for shared specifications and examples.
+See `_meta/connector.json` for connector metadata and implementation folders for language-specific code.

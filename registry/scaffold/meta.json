@@ -1,8 +1,8 @@
 {
   "$schema": "https://schemas.connector-factory.dev/scaffold.schema.json",
   "scaffold": "meta",
-  "version": "0.3.0",
-  "description": "Scaffold connector root meta (connector-level metadata) and provider meta (author-level metadata), plus shared spec/examples/tests (no data schemas).",
+  "version": "0.6.0",
+  "description": "Scaffold connector root _meta (connector-level metadata) and provider _meta (author-level metadata).",
   "variables": {
     "connector": {
       "description": "Connector name (kebab-case).",
@@ -22,12 +22,11 @@
       "children": [
         {
           "type": "dir",
-          "name": "meta",
+          "name": "_meta",
           "children": [
             { "type": "file", "name": "README.md", "template": "# {connector} (connector root)\n\nShared, provider-agnostic docs and assets for `{connector}`.\n" },
             { "type": "file", "name": "connector.json", "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector-root.schema.json\",\n  \"name\": \"{connector}\",\n  \"title\": \"{connector}\",\n  \"version\": \"0.1.0\",\n  \"category\": \"api|db|stream\",\n  \"tags\": [],\n  \"description\": \"\",\n  \"homepage\": \"\"\n}\n" },
-            { "type": "dir", "name": "assets" },
-            { "type": "dir", "name": "docs" }
+            { "type": "dir", "name": "assets" }
           ]
         },
         {
@@ -36,23 +35,13 @@
           "children": [
             {
               "type": "dir",
-              "name": "meta",
+              "name": "_meta",
               "children": [
                 { "type": "file", "name": "README.md", "template": "# {connector}\n\n> Maintained by {author}\n\n" },
                 { "type": "file", "name": "CHANGELOG.md", "template": "# Changelog\n\nAll notable changes to `{connector}` by `{author}`.\n\n" },
                 { "type": "file", "name": "LICENSE", "template": "MIT\n" },
-                { "type": "file", "name": "connector.json", "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector-provider.schema.json\",\n  \"name\": \"{connector}\",\n  \"author\": \"{author}\",\n  \"version\": \"0.1.0\",\n  \"languages\": [],\n  \"tags\": [],\n  \"category\": \"api|db|stream\",\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"license\": \"MIT\",\n  \"source\": {\"type\":\"api\",\"spec\":\"./../common/spec/openapi.yaml\"},\n  \"capabilities\": {\"extract\": true, \"transform\": true, \"load\": true},\n  \"maintainers\": []\n}\n" },
-                { "type": "dir", "name": "assets" },
-                { "type": "dir", "name": "docs", "children": [ { "type": "file", "name": "getting-started.md" }, { "type": "file", "name": "configuration.md" }, { "type": "file", "name": "schema.md" }, { "type": "file", "name": "limits.md" } ] }
-              ]
-            },
-            {
-              "type": "dir",
-              "name": "common",
-              "children": [
-                { "type": "dir", "name": "spec", "children": [ { "type": "file", "name": "openapi.yaml" }, { "type": "file", "name": "models.json", "template": "{}\n" } ] },
-                { "type": "dir", "name": "examples", "children": [ { "type": "file", "name": "config.sample.json" }, { "type": "file", "name": "data.sample.json" } ] },
-                { "type": "dir", "name": "tests", "children": [ { "type": "file", "name": "contract.schema.test.json" } ] }
+                { "type": "file", "name": "connector.json", "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector-provider.schema.json\",\n  \"name\": \"{connector}\",\n  \"author\": \"{author}\",\n  \"version\": \"0.1.0\",\n  \"languages\": [],\n  \"tags\": [],\n  \"category\": \"api|db|stream\",\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"license\": \"MIT\",\n  \"source\": {\"type\":\"api\",\"spec\":\"\"},\n  \"capabilities\": {\"extract\": true, \"transform\": true, \"load\": true},\n  \"maintainers\": []\n}\n" },
+                { "type": "dir", "name": "assets" }
               ]
             },
             { "type": "dir", "name": "python" },

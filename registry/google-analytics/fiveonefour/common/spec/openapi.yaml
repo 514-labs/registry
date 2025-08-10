@@ -1,5 +1,0 @@
-openapi: 3.0.3
-info:
-  title: Google Analytics Connector
-  version: 0.1.0
-paths: {}
