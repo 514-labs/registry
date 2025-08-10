@@ -1,0 +1,10 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "name": "google-analytics",
+  "title": "Google Analytics",
+  "version": "0.1.0",
+  "category": "api",
+  "tags": ["analytics", "events", "saas"],
+  "description": "Subscribe to Google Analytics events and metrics.",
+  "homepage": "https://developers.google.com/analytics"
+}

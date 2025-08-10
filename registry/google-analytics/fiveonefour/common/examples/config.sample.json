@@ -1,0 +1,10 @@
+{
+  "auth": {
+    "client_id": "YOUR_CLIENT_ID",
+    "client_secret": "YOUR_CLIENT_SECRET",
+    "refresh_token": "YOUR_REFRESH_TOKEN"
+  },
+  "project": {
+    "propertyId": "YOUR_PROPERTY_ID"
+  }
+}

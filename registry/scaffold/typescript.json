@@ -1,8 +1,8 @@
 {
   "$schema": "https://schemas.connector-factory.dev/scaffold.schema.json",
   "scaffold": "typescript",
-  "version": "0.1.0",
-  "description": "TypeScript implementation scaffold for a connector. Places a TypeScript library under connector/author/typescript with conventional src/tests layout and minimal templates.",
+  "version": "0.2.0",
+  "description": "TypeScript implementation scaffold for a connector with language-specific schemas under src/schemas.",
   "variables": {
     "connector": {
       "description": "Connector name (kebab-case).",
@@ -35,7 +35,7 @@
               "children": [
                 { "type": "file", "name": ".gitignore", "template": "node_modules/\ndist/\n.env\n" },
                 { "type": "file", "name": ".env.example", "template": "API_KEY=\n" },
-                { "type": "file", "name": "README.md", "template": "# {connector} (TypeScript)\n\nTypeScript implementation for `{connector}` by `{author}`.\n\n" },
+                { "type": "file", "name": "README.md", "template": "# {connector} (TypeScript)\n\nTypeScript implementation for `{connector}` by `{author}`.\n\nSchemas: see `src/schemas/index.json` for machine-readable definitions and accompanying Markdown docs.\n" },
                 {
                   "type": "file",
                   "name": "package.json",
@@ -63,48 +63,42 @@
                         { "type": "file", "name": "oauth2.ts", "template": "export {}\n" }
                       ]
                     },
+                    { "type": "dir", "name": "extract", "children": [ { "type": "file", "name": "baseExtractor.ts", "template": "export abstract class BaseExtractor { abstract run(): Promise<void> }\n" } ] },
+                    { "type": "dir", "name": "transform", "children": [ { "type": "file", "name": "baseTransformer.ts", "template": "export class BaseTransformer<T = unknown> { transform(record: T): T { return record } }\n" } ] },
+                    { "type": "dir", "name": "load", "children": [ { "type": "file", "name": "baseLoader.ts", "template": "export class BaseLoader<T = unknown> { async load(records: T[]): Promise<void> {} }\n" } ] },
                     {
                       "type": "dir",
-                      "name": "extract",
+                      "name": "schemas",
                       "children": [
-                        { "type": "file", "name": "baseExtractor.ts", "template": "export abstract class BaseExtractor { abstract run(): Promise<void> }\n" }
+                        { "type": "file", "name": "index.json", "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/schema-index.schema.json\",\n  \"version\": \"0.1.0\",\n  \"datasets\": []\n}\n" },
+                        { "type": "dir", "name": "raw", "children": [
+                          { "type": "dir", "name": "json", "children": [
+                            { "type": "file", "name": "events.schema.json", "template": "{\\n  \\\"$schema\\\": \\\"http://json-schema.org/draft-07/schema#\\\",\\n  \\\"title\\\": \\\"Raw Event\\\",\\n  \\\"type\\\": \\\"object\\\",\\n  \\\"additionalProperties\\\": true\\n}\\n" },
+                            { "type": "file", "name": "events.md", "template": "# Raw events (JSON)\n\nDescribe the upstream event payload.\n" }
+                          ] },
+                          { "type": "dir", "name": "relational", "children": [
+                            { "type": "file", "name": "tables.json", "template": "{\\n  \\\"tables\\\": []\\n}\\n" },
+                            { "type": "file", "name": "tables.sql", "template": "-- DDL placeholders for raw tables\n" },
+                            { "type": "file", "name": "README.md", "template": "# Raw relational schema\n\nDescribe tables and relationships.\n" }
+                          ] }
+                        ] },
+                        { "type": "dir", "name": "extracted", "children": [
+                          { "type": "dir", "name": "json", "children": [
+                            { "type": "file", "name": "events.schema.json", "template": "{\\n  \\\"$schema\\\": \\\"http://json-schema.org/draft-07/schema#\\\",\\n  \\\"title\\\": \\\"Extracted Event\\\",\\n  \\\"type\\\": \\\"object\\\",\\n  \\\"additionalProperties\\\": false,\\n  \\\"properties\\\": {}\\n}\\n" },
+                            { "type": "file", "name": "events.md", "template": "# Extracted events (JSON)\n\nDescribe the normalized event shape.\n" }
+                          ] },
+                          { "type": "dir", "name": "relational", "children": [
+                            { "type": "file", "name": "tables.json", "template": "{\\n  \\\"tables\\\": []\\n}\\n" },
+                            { "type": "file", "name": "tables.sql", "template": "-- DDL placeholders for extracted tables\n" },
+                            { "type": "file", "name": "README.md", "template": "# Extracted relational schema\n\nDescribe normalized tables and relationships.\n" }
+                          ] }
+                        ] }
                       ]
-                    },
-                    {
-                      "type": "dir",
-                      "name": "transform",
-                      "children": [
-                        { "type": "file", "name": "baseTransformer.ts", "template": "export class BaseTransformer<T = unknown> { transform(record: T): T { return record } }\n" }
-                      ]
-                    },
-                    {
-                      "type": "dir",
-                      "name": "load",
-                      "children": [
-                        { "type": "file", "name": "baseLoader.ts", "template": "export class BaseLoader<T = unknown> { async load(records: T[]): Promise<void> {} }\n" }
-                      ]
-                    },
-                    { "type": "dir", "name": "schemas" }
-                  ]
-                },
-                {
-                  "type": "dir",
-                  "name": "tests",
-                  "children": [
-                    {
-                      "type": "file",
-                      "name": "client.test.ts",
-                      "template": "import { describe, it, expect } from 'vitest'\nimport { Client } from '../src/client'\n\ndescribe('client', () => {\n  it('ping', () => {\n    expect(new Client({}).ping()).toBe(true)\n  })\n})\n"
                     }
                   ]
                 },
-                {
-                  "type": "dir",
-                  "name": "examples",
-                  "children": [
-                    { "type": "file", "name": "basic-usage.ts", "template": "import { Client } from './src/client'\nconsole.log(new Client({}).ping())\n" }
-                  ]
-                }
+                { "type": "dir", "name": "tests", "children": [ { "type": "file", "name": "client.test.ts", "template": "import { describe, it, expect } from 'vitest'\nimport { Client } from '../src/client'\n\ndescribe('client', () => {\n  it('ping', () => {\n    expect(new Client({}).ping()).toBe(true)\n  })\n})\n" } ] },
+                { "type": "dir", "name": "examples", "children": [ { "type": "file", "name": "basic-usage.ts", "template": "import { Client } from './src/client'\nconsole.log(new Client({}).ping())\n" } ] }
               ]
             }
           ]

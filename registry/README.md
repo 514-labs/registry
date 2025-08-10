@@ -18,18 +18,28 @@ Each connector follows the same top-level structure:
 
 ```
 {connector}/
+  meta/               # connector-level shared metadata (name, description, category, tags) and docs/assets
   {author}/
-    meta/               # language-agnostic metadata, docs, assets
-    common/             # shared specifications and examples across implementations
-    python/             # Python implementation (optional)
-    typescript/         # TypeScript implementation (optional)
+    meta/             # provider-specific metadata and docs
+    common/           # shared specifications and examples across implementations (no data schemas)
+    python/           # Python implementation (optional)
+    typescript/       # TypeScript implementation (optional)
 ```
 
-### `meta/`
+### Connector root `meta/`
+
+Connector-level, provider-agnostic information and assets:
+
+- `connector.json`: connector-level metadata (name, title, description, category, tags, homepage)
+- `README.md`: overview of the connector (purpose, concepts)
+- `assets/`: shared logos/icons (optional)
+- `docs/`: shared conceptual docs across providers (optional)
+
+### Provider `meta/`
 
 - `README.md`, `CHANGELOG.md`, `LICENSE`
-- `connector.json`: registry metadata (name, author, version, languages, tags, capabilities)
-- `assets/`: logos/icons (e.g., `logo.svg`)
+- `connector.json`: provider metadata (author, languages, capabilities, maintainers)
+- `assets/`: provider logos/icons (e.g., `logo.svg`)
 - `docs/`: getting started, configuration, schema, limits
 
 ### `common/`
@@ -37,27 +47,28 @@ Each connector follows the same top-level structure:
 - `spec/`: protocol/contract (e.g., `openapi.yaml`, `models.json`)
 - `examples/`: sample configs and data
 - `tests/`: shared contract tests (e.g., `contract.schema.test.json`)
+- Note: Data schemas now live in language-specific implementations to allow type differences per language.
 
-### `python/` (optional)
+### Language-specific schemas
 
-- `pyproject.toml`: package metadata and build settings
-- `src/{packageName}/`: Python package source
-  - `client.py`: entry point client
-  - `config.py`: configuration types
-  - `auth/`, `extract/`, `transform/`, `load/`, `schemas/`: implementation modules
-- `tests/`: unit tests (e.g., `test_client.py`)
-- `examples/`: runnable examples (e.g., `basic_usage.py`)
+Each implementation owns its schemas under its own folder. For TypeScript:
 
-### `typescript/` (optional)
+```
+{connector}/{author}/typescript/src/schemas/
+  index.json                # machine-readable registry of datasets
+  raw/                      # source-side schemas
+    json/*.schema.json + *.md
+    relational/{tables.json, tables.sql, README.md}
+  extracted/                # post-extraction/normalized schemas
+    json/*.schema.json + *.md
+    relational/{tables.json, tables.sql, README.md}
+```
 
-- `package.json`: package metadata and scripts (Node >= 20; use pnpm)
-- `tsconfig.json`: compiler options
-- `src/`: TypeScript source
-  - `client.ts`: entry point client
-  - `config.ts`: configuration types
-  - `auth/`, `extract/`, `transform/`, `load/`, `schemas/`: implementation modules
-- `tests/`: vitest tests (e.g., `client.test.ts`)
-- `examples/`: runnable examples (e.g., `basic-usage.ts`)
+For Python use an analogous structure under `{connector}/{author}/python/src/{packageName}/schemas/`.
+
+- JSON schemas: JSON Schema draft-07+; include `$schema` and `title`.
+- Relational schemas: `tables.json` (programmatic tables/columns/types/PK/FK) and optional `tables.sql` for DDL.
+- Every schema has an adjacent Markdown explainer.
 
 ## Scaffolds
 
@@ -80,11 +91,13 @@ A generator can interpret the `structure` array and create files/directories wit
 ## Adding a new connector
 
 1. Choose connector and author names (kebab-case).
-2. Generate the meta scaffold using `registry/scaffold/meta.json` with your variables.
-3. Optionally generate language-specific scaffolds using `registry/scaffold/python.json` and/or `registry/scaffold/typescript.json`.
-4. Fill in `meta/connector.json` fields (description, tags, category, capabilities, homepage, maintainers). Point `source.spec` to `common/spec/openapi.yaml` or another contract.
-5. Add assets, docs, shared specs, and examples.
-6. Implement `client` and related modules in the chosen language(s). Add tests and examples.
+2. Create connector root `meta/` with shared provider-agnostic docs and `connector.json`.
+3. Generate the provider meta scaffold using `registry/scaffold/meta.json` with your variables.
+4. Optionally generate language-specific scaffolds using `registry/scaffold/python.json` and/or `registry/scaffold/typescript.json`.
+5. Fill in provider `meta/connector.json` fields (author, languages, capabilities, homepage, maintainers). Point `source.spec` to `common/spec/openapi.yaml` or another contract.
+6. Add assets, docs, shared specs, and examples.
+7. Add language-specific `src/schemas/` trees with raw and extracted schema definitions, an `index.json`, and Markdown explainers.
+8. Implement `client` and related modules in the chosen language(s). Add tests and examples.
 
 > Note: Always use pnpm in this monorepo. For TypeScript, ensure Node 20. Do not commit real `.env` files.
 
@@ -92,6 +105,9 @@ A generator can interpret the `structure` array and create files/directories wit
 
 ```
 stripe/
+  meta/
+    README.md
+    connector.json
   fiveonefour/
     meta/
       README.md
@@ -105,14 +121,10 @@ stripe/
       examples/{config.sample.json, data.sample.json}
       tests/contract.schema.test.json
     python/
-      pyproject.toml
-      src/connector_stripe/{__init__.py, client.py, config.py, auth/, extract/, transform/, load/, schemas/}
-      tests/test_client.py
-      examples/basic_usage.py
+      src/connector_stripe/schemas/{index.json, raw/**, extracted/**}
     typescript/
-      package.json
-      tsconfig.json
-      src/{index.ts, client.ts, config.ts, auth/, extract/, transform/, load/, schemas/}
+      src/schemas/{index.json, raw/**, extracted/**}
+      src/{index.ts, client.ts, config.ts, auth/, extract/, transform/, load/}
       tests/client.test.ts
       examples/basic-usage.ts
 ```
@@ -121,6 +133,9 @@ stripe/
 
 ```
 postgres/
+  meta/
+    README.md
+    connector.json
   fiveonefour/
     meta/
       README.md
@@ -134,22 +149,30 @@ postgres/
       examples/
       tests/
     typescript/
-      package.json
-      tsconfig.json
-      src/{index.ts, client.ts, config.ts, auth/, extract/, transform/, load/, schemas/}
+      src/schemas/{index.json, raw/**, extracted/**}
+      src/{index.ts, client.ts, config.ts, auth/, extract/, transform/, load/}
       tests/
       examples/
 ```
 
-## Metadata (`meta/connector.json`)
+## Root metadata (`{connector}/meta/connector.json`)
 
-Minimal fields you will want to fill:
+Connector-level fields:
 
 - `name`: connector ID (kebab-case)
-- `author`: organization/author
-- `version`: semantic version
-- `languages`: list of provided implementations, e.g., `["python", "typescript"]`
+- `title`: human-readable name
+- `version`: semantic version of the connector spec/artifacts
 - `category`: one of `api`, `db`, or `stream`
+- `tags`: classification tags
+- `description`: summary of functionality
+- `homepage`: upstream docs or product page
+
+## Provider metadata (`{connector}/{author}/meta/connector.json`)
+
+Provider-specific fields:
+
+- `author`: organization/author maintaining this implementation
+- `languages`: list of provided implementations, e.g., `["python", "typescript"]`
 - `capabilities`: toggles for `extract`, `transform`, `load`
 - `source`: describe the upstream interface and where the spec lives (e.g., `common/spec/openapi.yaml`)
 - `maintainers`: contacts for this connector
@@ -158,7 +181,7 @@ Minimal fields you will want to fill:
 
 Connectors can be copied into a target codebase similarly to shadcn components:
 
-- Copy the `meta/` and `common/` folders as-is.
+- Copy the connector root `meta/` and provider `meta/` and `common/` folders as needed.
 - Copy one or more implementation folders (`python/`, `typescript/`) depending on your target stack.
 - For TypeScript inside this monorepo, prefer package names prefixed with `@workspace/` and use pnpm.
 - For Python, use `pyproject.toml` to build and publish to your internal index if desired.

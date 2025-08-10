@@ -1,0 +1,17 @@
+{
+  "name": "google-analytics",
+  "author": "fiveonefour",
+  "version": "0.1.0",
+  "languages": ["typescript"],
+  "category": "api",
+  "capabilities": { "extract": true, "transform": false, "load": false },
+  "source": {
+    "type": "openapi",
+    "spec": "common/spec/openapi.yaml",
+    "homepage": "https://developers.google.com/analytics"
+  },
+  "tags": ["analytics", "events", "saas"],
+  "maintainers": [
+    { "name": "fiveonefour", "email": "" }
+  ]
+}
