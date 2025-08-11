@@ -33,6 +33,24 @@ describe("companies", () => {
     expect(one.data.id).toBe("c1");
     await hs.disconnect();
   });
+
+  it("getCompanies aggregates across pages", async () => {
+    nock(BASE)
+      .get("/crm/v3/objects/companies")
+      .query((q) => q.limit === "1" && (q.after === undefined || q.after === ""))
+      .reply(200, { results: [{ id: "c1" }], paging: { next: { after: "next" } } });
+    nock(BASE)
+      .get("/crm/v3/objects/companies")
+      .query((q) => q.limit === "1" && q.after === "next")
+      .reply(200, { results: [{ id: "c2" }] });
+
+    const hs = createHubSpotConnector();
+    hs.initialize({ auth: { type: "bearer", bearer: { token: "token" } } });
+    await hs.connect();
+    const all = await hs.getCompanies({ pageSize: 1 });
+    expect(all.map((x) => x.id)).toEqual(["c1", "c2"]);
+    await hs.disconnect();
+  });
 });
 
 

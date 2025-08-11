@@ -29,6 +29,24 @@ describe("deals", () => {
     expect(one.status).toBe(200);
     await hs.disconnect();
   });
+
+  it("getDeals aggregates across pages", async () => {
+    nock(BASE)
+      .get("/crm/v3/objects/deals")
+      .query((q) => q.limit === "1" && (q.after === undefined || q.after === ""))
+      .reply(200, { results: [{ id: "d1" }], paging: { next: { after: "n" } } });
+    nock(BASE)
+      .get("/crm/v3/objects/deals")
+      .query((q) => q.limit === "1" && q.after === "n")
+      .reply(200, { results: [{ id: "d2" }] });
+
+    const hs = createHubSpotConnector();
+    hs.initialize({ auth: { type: "bearer", bearer: { token: "token" } } });
+    await hs.connect();
+    const all = await hs.getDeals({ pageSize: 1 });
+    expect(all.map((x) => x.id)).toEqual(["d1", "d2"]);
+    await hs.disconnect();
+  });
 });
 
 
