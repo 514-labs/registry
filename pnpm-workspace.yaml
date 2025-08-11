@@ -2,4 +2,5 @@ packages:
   - "apps/*"
   - "registry/*"
   - "packages/*"
+  - "connectors/**"
   
