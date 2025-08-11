@@ -60,19 +60,12 @@ describe("hooks integration (live)", () => {
     await hs.disconnect();
   });
 
-  itif("paginates with pageSize=1 and yields pages", async () => {
+  itif("iterates contacts with pageSize=1 using convenience method", async () => {
     const hs = createHubSpotConnector();
     hs.initialize({ auth: { type: "bearer", bearer: { token: token! } } });
     await hs.connect();
-    let pageCount = 0;
-    let totalItems = 0;
-    for await (const items of hs.paginate<any>({ path: "/crm/v3/objects/contacts", pageSize: 1 })) {
-      pageCount += 1;
-      totalItems += items.length;
-      if (pageCount >= 2) break; // prove we can advance cursor at least once
-    }
-    expect(pageCount).toBeGreaterThanOrEqual(1);
-    expect(totalItems).toBeGreaterThanOrEqual(1);
+    const items = await hs.getContacts({ pageSize: 1, maxItems: 2 });
+    expect(items.length).toBeGreaterThanOrEqual(1);
     await hs.disconnect();
   });
 });

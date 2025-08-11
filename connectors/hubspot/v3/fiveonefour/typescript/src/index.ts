@@ -4,6 +4,12 @@ import type { HttpResponseEnvelope } from "./types/envelopes";
 import { withDerivedDefaults } from "./config/defaults";
 import { HttpClient } from "./client/http-client";
 import { TokenBucketLimiter } from "./rate-limit/token-bucket";
+import { paginateCursor, type SendFn } from "./core/paginate";
+import { buildContactsDomain } from "./domains/contacts";
+import { buildCompaniesDomain } from "./domains/companies";
+import { buildDealsDomain } from "./domains/deals";
+import { buildTicketsDomain } from "./domains/tickets";
+import { buildEngagementsDomain } from "./domains/engagements";
 
 export class HubSpotApiConnector implements HubSpotConnector {
   private config?: ConnectorConfig;
@@ -53,104 +59,53 @@ export class HubSpotApiConnector implements HubSpotConnector {
     return this.send(opts);
   }
 
-  async *paginate<T = any>(options: {
-    path: string;
-    query?: Record<string, any>;
-    pageSize?: number;
-    extractItems?: (res: any) => T[];
-    extractNextCursor?: (res: any) => string | undefined;
-  }): AsyncIterable<T[]> {
-    const extractItems = options.extractItems ?? ((res: any) => (res?.results ?? []) as T[]);
-    const extractNext = options.extractNextCursor ?? ((res: any) => res?.paging?.next?.after as string | undefined);
-    let after: string | undefined = options.query?.after as string | undefined;
-    const limit = options.pageSize ?? (options.query?.limit as number | undefined) ?? 100;
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      const res = await this.send<any>({ method: "GET", path: options.path, query: { ...(options.query ?? {}), limit, after }, operation: "paginate" });
-      const items = extractItems(res.data);
-      yield items;
-      const next = extractNext(res.data);
-      if (!next) break;
-      after = next;
-    }
+  // Generic paginator (advanced)
+  async *paginate<T = any>(options: { path: string; query?: Record<string, any>; pageSize?: number; extractItems?: (res: any) => T[]; extractNextCursor?: (res: any) => string | undefined }) {
+    const sendLite: SendFn = async (args) => this.send<any>(args);
+    yield* paginateCursor<T>({ send: sendLite, path: options.path, query: options.query, pageSize: options.pageSize, extractItems: options.extractItems, extractNextCursor: options.extractNextCursor });
   }
 
-  // Domain: Contacts
-  listContacts(params?: { properties?: string[]; limit?: number; after?: string }) {
-    const query: Record<string, any> = {};
-    if (params?.properties?.length) query.properties = params.properties.join(",");
-    if (params?.limit) query.limit = params.limit;
-    if (params?.after) query.after = params.after;
-    return this.send<{ results: any[]; paging?: any }>({ method: "GET", path: "/crm/v3/objects/contacts", query, operation: "listContacts" });
+  // Build domain delegates
+  private get domain() {
+    const sendLite: SendFn = async (args) => this.send<any>(args);
+    return {
+      ...buildContactsDomain(sendLite),
+      ...buildCompaniesDomain(sendLite),
+      ...buildDealsDomain(sendLite),
+      ...buildTicketsDomain(sendLite),
+      ...buildEngagementsDomain(sendLite),
+    };
   }
 
-  getContact(params: { id: string; properties?: string[] }) {
-    const query: Record<string, any> = {};
-    if (params?.properties?.length) query.properties = params.properties.join(",");
-    return this.send<any>({ method: "GET", path: `/crm/v3/objects/contacts/${params.id}`, query, operation: "getContact" });
-  }
+  // Contacts
+  listContacts = (params?: { properties?: string[]; limit?: number; after?: string }) => this.domain.listContacts(params);
+  getContact = (params: { id: string; properties?: string[] }) => this.domain.getContact(params);
+  streamContacts = (params?: { properties?: string[]; pageSize?: number }) => this.domain.streamContacts(params);
+  getContacts = (params?: { properties?: string[]; pageSize?: number; maxItems?: number }) => this.domain.getContacts(params);
 
-  // Domain: Companies
-  listCompanies(params?: { properties?: string[]; limit?: number; after?: string }) {
-    const query: Record<string, any> = {};
-    if (params?.properties?.length) query.properties = params.properties.join(",");
-    if (params?.limit) query.limit = params.limit;
-    if (params?.after) query.after = params.after;
-    return this.send<{ results: any[]; paging?: any }>({ method: "GET", path: "/crm/v3/objects/companies", query, operation: "listCompanies" });
-  }
+  // Companies
+  listCompanies = (params?: { properties?: string[]; limit?: number; after?: string }) => this.domain.listCompanies(params);
+  getCompany = (params: { id: string; properties?: string[] }) => this.domain.getCompany(params);
+  streamCompanies = (params?: { properties?: string[]; pageSize?: number }) => this.domain.streamCompanies(params);
+  getCompanies = (params?: { properties?: string[]; pageSize?: number; maxItems?: number }) => this.domain.getCompanies(params);
 
-  getCompany(params: { id: string; properties?: string[] }) {
-    const query: Record<string, any> = {};
-    if (params?.properties?.length) query.properties = params.properties.join(",");
-    return this.send<any>({ method: "GET", path: `/crm/v3/objects/companies/${params.id}`, query, operation: "getCompany" });
-  }
+  // Deals
+  listDeals = (params?: { properties?: string[]; limit?: number; after?: string }) => this.domain.listDeals(params);
+  getDeal = (params: { id: string; properties?: string[] }) => this.domain.getDeal(params);
+  streamDeals = (params?: { properties?: string[]; pageSize?: number }) => this.domain.streamDeals(params);
+  getDeals = (params?: { properties?: string[]; pageSize?: number; maxItems?: number }) => this.domain.getDeals(params);
 
-  // Domain: Deals
-  listDeals(params?: { properties?: string[]; limit?: number; after?: string }) {
-    const query: Record<string, any> = {};
-    if (params?.properties?.length) query.properties = params.properties.join(",");
-    if (params?.limit) query.limit = params.limit;
-    if (params?.after) query.after = params.after;
-    return this.send<{ results: any[]; paging?: any }>({ method: "GET", path: "/crm/v3/objects/deals", query, operation: "listDeals" });
-  }
+  // Tickets
+  listTickets = (params?: { properties?: string[]; limit?: number; after?: string }) => this.domain.listTickets(params);
+  getTicket = (params: { id: string; properties?: string[] }) => this.domain.getTicket(params);
+  streamTickets = (params?: { properties?: string[]; pageSize?: number }) => this.domain.streamTickets(params);
+  getTickets = (params?: { properties?: string[]; pageSize?: number; maxItems?: number }) => this.domain.getTickets(params);
 
-  getDeal(params: { id: string; properties?: string[] }) {
-    const query: Record<string, any> = {};
-    if (params?.properties?.length) query.properties = params.properties.join(",");
-    return this.send<any>({ method: "GET", path: `/crm/v3/objects/deals/${params.id}`, query, operation: "getDeal" });
-  }
-
-  // Domain: Tickets
-  listTickets(params?: { properties?: string[]; limit?: number; after?: string }) {
-    const query: Record<string, any> = {};
-    if (params?.properties?.length) query.properties = params.properties.join(",");
-    if (params?.limit) query.limit = params.limit;
-    if (params?.after) query.after = params.after;
-    return this.send<{ results: any[]; paging?: any }>({ method: "GET", path: "/crm/v3/objects/tickets", query, operation: "listTickets" });
-  }
-
-  getTicket(params: { id: string; properties?: string[] }) {
-    const query: Record<string, any> = {};
-    if (params?.properties?.length) query.properties = params.properties.join(",");
-    return this.send<any>({ method: "GET", path: `/crm/v3/objects/tickets/${params.id}`, query, operation: "getTicket" });
-  }
-
-  // Domain: Engagements (activities)
-  listEngagements(params: { objectType: "notes" | "calls" | "emails" | "meetings" | "tasks"; properties?: string[]; limit?: number; after?: string }) {
-    const { objectType } = params;
-    const query: Record<string, any> = {};
-    if (params?.properties?.length) query.properties = params.properties.join(",");
-    if (params?.limit) query.limit = params.limit;
-    if (params?.after) query.after = params.after;
-    return this.send<{ results: any[]; paging?: any }>({ method: "GET", path: `/crm/v3/objects/${objectType}` as const, query, operation: "listEngagements" });
-  }
-
-  getEngagement(params: { objectType: "notes" | "calls" | "emails" | "meetings" | "tasks"; id: string; properties?: string[] }) {
-    const { objectType, id } = params;
-    const query: Record<string, any> = {};
-    if (params?.properties?.length) query.properties = params.properties.join(",");
-    return this.send<any>({ method: "GET", path: `/crm/v3/objects/${objectType}/${id}` as const, query, operation: "getEngagement" });
-  }
+  // Engagements
+  listEngagements = (params: { objectType: "notes" | "calls" | "emails" | "meetings" | "tasks"; properties?: string[]; limit?: number; after?: string }) => this.domain.listEngagements(params);
+  getEngagement = (params: { objectType: "notes" | "calls" | "emails" | "meetings" | "tasks"; id: string; properties?: string[] }) => this.domain.getEngagement(params);
+  streamEngagements = (params: { objectType: "notes" | "calls" | "emails" | "meetings" | "tasks"; properties?: string[]; pageSize?: number }) => this.domain.streamEngagements(params);
+  getEngagements = (params: { objectType: "notes" | "calls" | "emails" | "meetings" | "tasks"; properties?: string[]; pageSize?: number; maxItems?: number }) => this.domain.getEngagements(params);
 }
 
 export function createHubSpotConnector(): HubSpotConnector {

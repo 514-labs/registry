@@ -29,6 +29,24 @@ describe("tickets", () => {
     expect(one.status).toBe(200);
     await hs.disconnect();
   });
+
+  it("getTickets aggregates across pages", async () => {
+    nock(BASE)
+      .get("/crm/v3/objects/tickets")
+      .query((q) => q.limit === "1" && (q.after === undefined || q.after === ""))
+      .reply(200, { results: [{ id: "t1" }], paging: { next: { after: "z" } } });
+    nock(BASE)
+      .get("/crm/v3/objects/tickets")
+      .query((q) => q.limit === "1" && q.after === "z")
+      .reply(200, { results: [{ id: "t2" }] });
+
+    const hs = createHubSpotConnector();
+    hs.initialize({ auth: { type: "bearer", bearer: { token: "token" } } });
+    await hs.connect();
+    const all = await hs.getTickets({ pageSize: 1 });
+    expect(all.map((x) => x.id)).toEqual(["t1", "t2"]);
+    await hs.disconnect();
+  });
 });
 
 

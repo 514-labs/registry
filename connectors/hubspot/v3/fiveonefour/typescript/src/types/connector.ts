@@ -34,6 +34,10 @@ export interface HubSpotConnector {
 
   getContact(params: { id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
 
+  // Convenience: stream and fetch all contacts
+  streamContacts(params?: { properties?: string[]; pageSize?: number }): AsyncIterable<any>;
+  getContacts(params?: { properties?: string[]; pageSize?: number; maxItems?: number }): Promise<any[]>;
+
   // Domain: Companies
   listCompanies(params?: {
     properties?: string[];
@@ -42,6 +46,10 @@ export interface HubSpotConnector {
   }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
 
   getCompany(params: { id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
+
+  // Convenience: stream and fetch all companies
+  streamCompanies(params?: { properties?: string[]; pageSize?: number }): AsyncIterable<any>;
+  getCompanies(params?: { properties?: string[]; pageSize?: number; maxItems?: number }): Promise<any[]>;
 
   // Domain: Deals
   listDeals(params?: {
@@ -52,6 +60,10 @@ export interface HubSpotConnector {
 
   getDeal(params: { id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
 
+  // Convenience: stream and fetch all deals
+  streamDeals(params?: { properties?: string[]; pageSize?: number }): AsyncIterable<any>;
+  getDeals(params?: { properties?: string[]; pageSize?: number; maxItems?: number }): Promise<any[]>;
+
   // Domain: Tickets
   listTickets(params?: {
     properties?: string[];
@@ -60,6 +72,10 @@ export interface HubSpotConnector {
   }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
 
   getTicket(params: { id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
+
+  // Convenience: stream and fetch all tickets
+  streamTickets(params?: { properties?: string[]; pageSize?: number }): AsyncIterable<any>;
+  getTickets(params?: { properties?: string[]; pageSize?: number; maxItems?: number }): Promise<any[]>;
 
   // Domain: Engagements (activities)
   listEngagements(params: {
@@ -70,6 +86,10 @@ export interface HubSpotConnector {
   }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
 
   getEngagement(params: { objectType: "notes" | "calls" | "emails" | "meetings" | "tasks"; id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
+
+  // Convenience: stream and fetch all engagements for a type
+  streamEngagements(params: { objectType: "notes" | "calls" | "emails" | "meetings" | "tasks"; properties?: string[]; pageSize?: number }): AsyncIterable<any>;
+  getEngagements(params: { objectType: "notes" | "calls" | "emails" | "meetings" | "tasks"; properties?: string[]; pageSize?: number; maxItems?: number }): Promise<any[]>;
 }
 
 
