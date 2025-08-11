@@ -2,7 +2,8 @@
  * Test setup file - runs before all tests
  */
 
-// Mock console.warn to reduce noise in tests
+// If you need to suppress console.warnings in a test, mock console.warn locally in that
+// test file or suite.
 const originalWarn = console.warn;
 console.warn = jest.fn();
 
