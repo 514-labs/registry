@@ -89,6 +89,68 @@ export class HubSpotApiConnector implements HubSpotConnector {
     if (params?.properties?.length) query.properties = params.properties.join(",");
     return this.send<any>({ method: "GET", path: `/crm/v3/objects/contacts/${params.id}`, query, operation: "getContact" });
   }
+
+  // Domain: Companies
+  listCompanies(params?: { properties?: string[]; limit?: number; after?: string }) {
+    const query: Record<string, any> = {};
+    if (params?.properties?.length) query.properties = params.properties.join(",");
+    if (params?.limit) query.limit = params.limit;
+    if (params?.after) query.after = params.after;
+    return this.send<{ results: any[]; paging?: any }>({ method: "GET", path: "/crm/v3/objects/companies", query, operation: "listCompanies" });
+  }
+
+  getCompany(params: { id: string; properties?: string[] }) {
+    const query: Record<string, any> = {};
+    if (params?.properties?.length) query.properties = params.properties.join(",");
+    return this.send<any>({ method: "GET", path: `/crm/v3/objects/companies/${params.id}`, query, operation: "getCompany" });
+  }
+
+  // Domain: Deals
+  listDeals(params?: { properties?: string[]; limit?: number; after?: string }) {
+    const query: Record<string, any> = {};
+    if (params?.properties?.length) query.properties = params.properties.join(",");
+    if (params?.limit) query.limit = params.limit;
+    if (params?.after) query.after = params.after;
+    return this.send<{ results: any[]; paging?: any }>({ method: "GET", path: "/crm/v3/objects/deals", query, operation: "listDeals" });
+  }
+
+  getDeal(params: { id: string; properties?: string[] }) {
+    const query: Record<string, any> = {};
+    if (params?.properties?.length) query.properties = params.properties.join(",");
+    return this.send<any>({ method: "GET", path: `/crm/v3/objects/deals/${params.id}`, query, operation: "getDeal" });
+  }
+
+  // Domain: Tickets
+  listTickets(params?: { properties?: string[]; limit?: number; after?: string }) {
+    const query: Record<string, any> = {};
+    if (params?.properties?.length) query.properties = params.properties.join(",");
+    if (params?.limit) query.limit = params.limit;
+    if (params?.after) query.after = params.after;
+    return this.send<{ results: any[]; paging?: any }>({ method: "GET", path: "/crm/v3/objects/tickets", query, operation: "listTickets" });
+  }
+
+  getTicket(params: { id: string; properties?: string[] }) {
+    const query: Record<string, any> = {};
+    if (params?.properties?.length) query.properties = params.properties.join(",");
+    return this.send<any>({ method: "GET", path: `/crm/v3/objects/tickets/${params.id}`, query, operation: "getTicket" });
+  }
+
+  // Domain: Engagements (activities)
+  listEngagements(params: { objectType: "notes" | "calls" | "emails" | "meetings" | "tasks"; properties?: string[]; limit?: number; after?: string }) {
+    const { objectType } = params;
+    const query: Record<string, any> = {};
+    if (params?.properties?.length) query.properties = params.properties.join(",");
+    if (params?.limit) query.limit = params.limit;
+    if (params?.after) query.after = params.after;
+    return this.send<{ results: any[]; paging?: any }>({ method: "GET", path: `/crm/v3/objects/${objectType}` as const, query, operation: "listEngagements" });
+  }
+
+  getEngagement(params: { objectType: "notes" | "calls" | "emails" | "meetings" | "tasks"; id: string; properties?: string[] }) {
+    const { objectType, id } = params;
+    const query: Record<string, any> = {};
+    if (params?.properties?.length) query.properties = params.properties.join(",");
+    return this.send<any>({ method: "GET", path: `/crm/v3/objects/${objectType}/${id}` as const, query, operation: "getEngagement" });
+  }
 }
 
 export function createHubSpotConnector(): HubSpotConnector {

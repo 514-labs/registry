@@ -33,6 +33,43 @@ export interface HubSpotConnector {
   }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
 
   getContact(params: { id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
+
+  // Domain: Companies
+  listCompanies(params?: {
+    properties?: string[];
+    limit?: number;
+    after?: string;
+  }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
+
+  getCompany(params: { id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
+
+  // Domain: Deals
+  listDeals(params?: {
+    properties?: string[];
+    limit?: number;
+    after?: string;
+  }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
+
+  getDeal(params: { id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
+
+  // Domain: Tickets
+  listTickets(params?: {
+    properties?: string[];
+    limit?: number;
+    after?: string;
+  }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
+
+  getTicket(params: { id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
+
+  // Domain: Engagements (activities)
+  listEngagements(params: {
+    objectType: "notes" | "calls" | "emails" | "meetings" | "tasks";
+    properties?: string[];
+    limit?: number;
+    after?: string;
+  }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
+
+  getEngagement(params: { objectType: "notes" | "calls" | "emails" | "meetings" | "tasks"; id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
 }
 
 
