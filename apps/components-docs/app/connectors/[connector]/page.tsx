@@ -4,16 +4,17 @@ import { Card } from "@ui/components/card";
 import { cn } from "@/lib/utils";
 import { listConnectorIds, readConnector } from "@workspace/registry";
 
-export function generateStaticParams(): { connector: string }[] {
+export async function generateStaticParams(): Promise<{ connector: string }[]> {
   return listConnectorIds().map((id: string) => ({ connector: id }));
 }
 
-export default function ConnectorPage({
+export default async function ConnectorPage({
   params,
 }: {
-  params: { connector: string };
+  params: Promise<{ connector: string }>;
 }) {
-  const conn = readConnector(params.connector);
+  const { connector } = await params;
+  const conn = readConnector(connector);
   if (!conn) return null;
 
   const meta = conn.root.meta;
