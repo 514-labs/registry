@@ -13,6 +13,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "baseUrl": ".",
     "plugins": [
       {
         "name": "next"
@@ -21,7 +22,9 @@
     "paths": {
       "@/*": ["./*"],
       "@ui": ["../../packages/ui/src/index.ts"],
-      "@ui/*": ["../../packages/ui/src/*"]
+      "@ui/*": ["../../packages/ui/src/*"],
+      "@workspace/registry": ["../../packages/registry/src/index.ts"],
+      "@workspace/registry/types": ["../../packages/registry/src/types.ts"]
     }
   },
   "include": [

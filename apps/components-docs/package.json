@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@workspace/registry": "workspace:*",
     "@workspace/ui": "workspace:*",
     "@icons-pack/react-simple-icons": "^13.7.0",
     "@mdx-js/loader": "^3.1.0",
