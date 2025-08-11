@@ -56,6 +56,9 @@ importers:
       '@types/mdx':
         specifier: ^2.0.13
         version: 2.0.13
+      '@workspace/registry':
+        specifier: workspace:*
+        version: link:../../packages/registry
       '@workspace/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -150,6 +153,21 @@ importers:
         version: link:../typescript-config
       typescript:
         specifier: ^5.3.3
+        version: 5.8.3
+
+  packages/registry:
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^20
+        version: 20.19.9
+      typescript:
+        specifier: ^5.4.0
         version: 5.8.3
 
   packages/typescript-config: {}
