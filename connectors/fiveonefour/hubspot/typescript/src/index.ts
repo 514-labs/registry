@@ -1,6 +1,6 @@
 import type { HubSpotConnector } from "./types/connector";
 import type { ConnectorConfig } from "./types/config";
-import type { ResponseEnvelope } from "./types/envelopes";
+import type { HttpResponseEnvelope } from "./types/envelopes";
 import { withDerivedDefaults } from "./config/defaults";
 import { HttpClient } from "./client/http-client";
 import { TokenBucketLimiter } from "./rate-limit/token-bucket";
@@ -44,7 +44,7 @@ export class HubSpotApiConnector implements HubSpotConnector {
     return this.http;
   }
 
-  private async send<T>(opts: Parameters<HttpClient["request"]>[0]): Promise<ResponseEnvelope<T>> {
+  private async send<T>(opts: Parameters<HttpClient["request"]>[0]): Promise<HttpResponseEnvelope<T>> {
     if (this.limiter) await this.limiter.waitForSlot();
     return this.requireClient().request<T>(opts);
   }
@@ -97,6 +97,6 @@ export function createHubSpotConnector(): HubSpotConnector {
 
 export type { HubSpotConnector } from "./types/connector";
 export type { ConnectorConfig } from "./types/config";
-export type { ResponseEnvelope } from "./types/envelopes";
+export type { HttpResponseEnvelope } from "./types/envelopes";
 
 

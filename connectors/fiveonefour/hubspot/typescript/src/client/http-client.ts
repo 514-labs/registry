@@ -1,5 +1,5 @@
 import type { ConnectorConfig } from "../types/config";
-import type { ResponseEnvelope } from "../types/envelopes";
+import type { HttpResponseEnvelope } from "../types/envelopes";
 import { ConnectorError } from "../types/errors";
 import { applyHookPipeline } from "./middleware/hook-middleware";
 import http from "node:http";
@@ -52,7 +52,7 @@ export class HttpClient {
     return withinAttempts && retryables.includes(status);
   }
 
-  async request<T = any>(opts: HttpRequestOptions): Promise<ResponseEnvelope<T>> {
+  async request<T = any>(opts: HttpRequestOptions): Promise<HttpResponseEnvelope<T>> {
     const start = Date.now();
     const path = opts.path.startsWith("/") ? opts.path : `/${opts.path}`;
     const url = this.buildUrl(path, opts.query);
@@ -128,7 +128,7 @@ export class HttpClient {
           retryAfterSeconds: Number.isFinite(retryAfter) ? retryAfter : undefined,
         };
 
-        const envelope: ResponseEnvelope<T> = {
+        const envelope: HttpResponseEnvelope<T> = {
           data: data as T,
           status,
           headers: hdrs,
