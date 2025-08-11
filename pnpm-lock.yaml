@@ -121,7 +121,7 @@ importers:
         specifier: ^5
         version: 5.8.3
 
-  connectors/fiveonefour/hubspot/typescript:
+  connectors/hubspot/v3/fiveonefour/typescript:
     dependencies:
       zod:
         specifier: ^3.25.8
