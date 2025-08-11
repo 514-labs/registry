@@ -5,8 +5,8 @@
  * No Jest required - just Node.js
  */
 
-const { AdsbConnector } = require('./dist/index.js');
-const { ConnectorError, ErrorCode } = require('./dist/types.js');
+const { AdsbConnector } = require('../dist/src/index.js');
+const { ConnectorError, ErrorCode } = require('../dist/src/types.js');
 
 async function runTest(name, testFn) {
   process.stdout.write(`${name}... `);

@@ -1,0 +1,27 @@
+{
+  "version": "2.0.0",
+  "description": "ADS-B.lol API data schemas",
+  "schemas": {
+    "aircraft": {
+      "path": "raw/json/aircraft.schema.json",
+      "description": "Individual aircraft data structure"
+    },
+    "aircraft_response": {
+      "path": "raw/json/aircraft-response.schema.json", 
+      "description": "API response containing multiple aircraft"
+    }
+  },
+  "formats": ["json"],
+  "endpoints": [
+    "/v2/icao/{hex}",
+    "/v2/callsign/{callsign}",
+    "/v2/reg/{registration}",
+    "/v2/type/{aircraft_type}",
+    "/v2/sqk/{squawk}",
+    "/v2/mil",
+    "/v2/ladd",
+    "/v2/pia",
+    "/v2/lat/{lat}/lon/{lon}/dist/{radius}",
+    "/v2/closest/{lat}/{lon}/{radius}"
+  ]
+}

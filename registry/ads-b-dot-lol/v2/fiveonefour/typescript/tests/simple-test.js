@@ -4,8 +4,8 @@
  * Simple unit tests without Jest
  */
 
-const { AdsbConnector } = require('./dist/index.js');
-const { ConnectorError, ErrorCode } = require('./dist/types.js');
+const { AdsbConnector } = require('../dist/src/index.js');
+const { ConnectorError, ErrorCode } = require('../dist/src/types.js');
 
 let tests = 0;
 let passed = 0;

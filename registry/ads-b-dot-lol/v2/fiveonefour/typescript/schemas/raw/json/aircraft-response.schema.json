@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "Aircraft Response",
+  "description": "API response containing aircraft data from ADS-B.lol",
+  "properties": {
+    "ac": {
+      "type": "array",
+      "description": "Array of aircraft objects",
+      "items": {
+        "$ref": "./aircraft.schema.json"
+      }
+    },
+    "total": {
+      "type": "number",
+      "description": "Total number of aircraft in response"
+    },
+    "ctime": {
+      "type": "number",
+      "description": "Current time (Unix timestamp)"
+    },
+    "ptime": {
+      "type": "number", 
+      "description": "Processing time (Unix timestamp)"
+    }
+  },
+  "required": ["ac", "total"]
+}

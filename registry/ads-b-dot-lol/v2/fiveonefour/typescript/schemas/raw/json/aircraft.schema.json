@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "Aircraft",
+  "description": "Individual aircraft data from ADS-B.lol API",
+  "properties": {
+    "hex": {
+      "type": "string",
+      "description": "ICAO hex identifier (required)"
+    },
+    "type": {
+      "type": "string",
+      "description": "Aircraft type code (e.g., B738, A320)"
+    },
+    "flight": {
+      "type": "string", 
+      "description": "Flight number/callsign"
+    },
+    "r": {
+      "type": "string",
+      "description": "Registration number"
+    },
+    "t": {
+      "type": "string",
+      "description": "Aircraft type"
+    },
+    "alt_baro": {
+      "type": "number",
+      "description": "Barometric altitude in feet"
+    },
+    "alt_geom": {
+      "type": "number",
+      "description": "Geometric altitude in feet"
+    },
+    "gs": {
+      "type": "number",
+      "description": "Ground speed in knots"
+    },
+    "track": {
+      "type": "number",
+      "description": "Track angle in degrees"
+    },
+    "baro_rate": {
+      "type": "number",
+      "description": "Rate of climb/descent in feet per minute"
+    },
+    "squawk": {
+      "type": "string",
+      "description": "Transponder squawk code"
+    },
+    "emergency": {
+      "type": "string",
+      "description": "Emergency status"
+    },
+    "category": {
+      "type": "string",
+      "description": "Aircraft category"
+    },
+    "lat": {
+      "type": "number",
+      "description": "Latitude in decimal degrees"
+    },
+    "lon": {
+      "type": "number", 
+      "description": "Longitude in decimal degrees"
+    },
+    "seen": {
+      "type": "number",
+      "description": "Seconds since last message"
+    },
+    "rssi": {
+      "type": "number",
+      "description": "Received signal strength indicator"
+    }
+  },
+  "required": ["hex"]
+}
