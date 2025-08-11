@@ -232,9 +232,8 @@ Using GraphQL under the hood while maintaining full API spec compliance is not o
 
 The key insight is that **our API specification defines behavior, not transport**. GraphQL is just another way to achieve the same results, and by implementing a proper translation layer, we get the best of both worlds: a standardized interface and modern, efficient transport.
 
-## References
+## 🔗 Resources
 
-- [API Connector Specification](../api-connector.mdx)
-- [Shopify GraphQL Admin API](https://shopify.dev/api/admin-graphql)
-- [Shopify REST Admin API](https://shopify.dev/api/admin-rest)
-- [Getting Started Guide](getting-started.md)
+- [Shopify Admin API Documentation](https://shopify.dev/api/admin)
+- [GraphQL vs REST Comparison](https://graphql.org/learn/comparison-with-rest/)
+- [API Connector Specification](../../../../../../apps/components-docs/content/docs/specifications/api-connector.mdx)

@@ -1,6 +1,6 @@
 # Implementation Plan - Python Shopify Connector
 
-This document outlines the implementation plan for the Shopify connector, strictly adhering to our [API Connector Specification](../api-connector.mdx).
+This document outlines the implementation plan for the Shopify connector, strictly adhering to our [API Connector Specification](../../../../../../apps/components-docs/content/docs/specifications/api-connector.mdx).
 
 ## 🎯 Implementation Goals
 
