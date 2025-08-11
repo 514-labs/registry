@@ -183,7 +183,8 @@ export class DataTransformer {
               }
               break;
             case 'email':
-              if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data)) {
+              // Simple email validation to avoid ReDoS - just check for @ and .
+              if (!data.includes('@') || !data.includes('.') || data.includes(' ')) {
                 throw new Error(`Invalid email format at ${path}`);
               }
               break;
