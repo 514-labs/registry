@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "pnpm exec jest || node simple-test.js",
+    "test": "node run-tests.js",
     "test:unit": "node simple-test.js", 
     "test:jest": "pnpm exec jest",
     "test:watch": "pnpm exec jest --watch",

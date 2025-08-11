@@ -217,7 +217,13 @@ export class AdsbConnector implements Partial<Connector> {
               ...options.headers,
               'User-Agent': this.config.userAgent || 'ADS-B-Connector/1.0'
             },
-            signal: options.signal || AbortSignal.timeout(options.timeout || this.config.timeout || 30000)
+            signal: options.signal || AbortSignal.timeout(
+              (() => {
+                if (typeof options.timeout === 'number') return options.timeout;
+                if (typeof this.config.timeout === 'number') return this.config.timeout;
+                return 30000;
+              })()
+            )
           });
 
           // Check for HTTP errors
