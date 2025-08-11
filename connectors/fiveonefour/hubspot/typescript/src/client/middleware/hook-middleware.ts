@@ -1,5 +1,5 @@
 import type { Hook, HookContext, HookType } from "../../types/hooks";
-import type { ResponseEnvelope } from "../../types/envelopes";
+import type { HttpResponseEnvelope } from "../../types/envelopes";
 
 export function applyHookPipeline(
   hooks: Partial<Record<HookType, Hook[]>>,
@@ -11,7 +11,7 @@ export function applyHookPipeline(
     async beforeRequest(): Promise<void> {
       for (const h of ordered("beforeRequest")) await h.execute(buildCtx("beforeRequest"));
     },
-    async afterResponse(resp: ResponseEnvelope<unknown>): Promise<void> {
+    async afterResponse(resp: HttpResponseEnvelope<unknown>): Promise<void> {
       const ctx = buildCtx("afterResponse");
       ctx.response = resp;
       ctx.modifyResponse = (updates) => {

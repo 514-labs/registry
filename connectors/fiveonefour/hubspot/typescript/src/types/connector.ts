@@ -1,4 +1,4 @@
-import type { ResponseEnvelope } from "./envelopes";
+import type { HttpResponseEnvelope } from "./envelopes";
 import type { ConnectorConfig } from "./config";
 
 export interface HubSpotConnector {
@@ -15,7 +15,7 @@ export interface HubSpotConnector {
     body?: unknown;
     timeoutMs?: number;
     operation?: string;
-  }): Promise<ResponseEnvelope<any>>;
+  }): Promise<HttpResponseEnvelope<any>>;
 
   paginate<T = any>(options: {
     path: string;
@@ -30,9 +30,9 @@ export interface HubSpotConnector {
     properties?: string[];
     limit?: number;
     after?: string;
-  }): Promise<ResponseEnvelope<{ results: any[]; paging?: any }>>;
+  }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
 
-  getContact(params: { id: string; properties?: string[] }): Promise<ResponseEnvelope<any>>;
+  getContact(params: { id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
 }
 
 

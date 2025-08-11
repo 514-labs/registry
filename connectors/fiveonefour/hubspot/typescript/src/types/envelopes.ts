@@ -1,4 +1,4 @@
-export interface ResponseEnvelope<T> {
+export interface HttpResponseEnvelope<T> {
   data: T;
   status: number;
   headers: Record<string, string>;

@@ -1,4 +1,4 @@
-import type { ResponseEnvelope } from "./envelopes";
+import type { HttpResponseEnvelope } from "./envelopes";
 
 export type HookType = "beforeRequest" | "afterResponse" | "onError" | "onRetry";
 
@@ -6,11 +6,11 @@ export interface HookContext {
   type: HookType;
   operation?: string;
   request?: Record<string, unknown>;
-  response?: ResponseEnvelope<unknown>;
+  response?: HttpResponseEnvelope<unknown>;
   error?: unknown;
   metadata?: Record<string, unknown>;
   modifyRequest?: (updates: Record<string, unknown>) => void;
-  modifyResponse?: (updates: Partial<ResponseEnvelope<unknown>>) => void;
+  modifyResponse?: (updates: Partial<HttpResponseEnvelope<unknown>>) => void;
   abort?: (reason?: string) => void;
 }
 
