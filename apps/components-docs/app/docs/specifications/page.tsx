@@ -5,15 +5,12 @@ import {
   TabsTrigger,
 } from "@workspace/ui/components/tabs";
 import APISpecification from "@/content/docs/specifications/api-connector.mdx";
+import BlobSpecification from "@/content/docs/specifications/blob-connector.mdx";
 
 function BlobStorageSpecification() {
   return (
-    <div className="prose dark:prose-invert prose-neutral">
-      <h2>Blob Storage Connectors</h2>
-      <p>
-        Connectors for cloud storage services like S3, Azure Blob Storage, and
-        Google Cloud Storage.
-      </p>
+    <div className="prose dark:prose-invert prose-neutral max-w-none">
+      <BlobSpecification />
     </div>
   );
 }

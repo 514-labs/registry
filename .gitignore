@@ -32,3 +32,5 @@ nohup.out
 services/*/temp_migration/
 services/*/dev-*.log
 services/*/.moose/
+
+scratch*
