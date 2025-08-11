@@ -23,8 +23,8 @@ function Hero() {
         Bullet-proof, customizable, connectors... as actual code
       </h1>
       <h2 className="text-lg text-muted-foreground">
-        A starter kit for building, testing and sharing connectors that can be
-        customomized and embedded in apps.
+        A starter kit for building, testing and sharing analytical connectors
+        that can be customized and embedded in apps.
       </h2>
       <div className="flex flex-row gap-4">
         <Button asChild>

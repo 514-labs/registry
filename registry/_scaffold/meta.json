@@ -9,6 +9,11 @@
       "example": "stripe",
       "pattern": "^[a-z0-9][a-z0-9-]*$"
     },
+    "version": {
+      "description": "Semantic version for this connector (e.g., 0.1.0).",
+      "example": "0.1.0",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(?:[-+][A-Za-z0-9.-]+)?$"
+    },
     "author": {
       "description": "Organization or author handle (kebab-case).",
       "example": "fiveonefour",
@@ -25,27 +30,42 @@
           "name": "_meta",
           "children": [
             { "type": "file", "name": "README.md", "template": "# {connector} (connector root)\n\nShared, provider-agnostic docs and assets for `{connector}`.\n" },
-            { "type": "file", "name": "connector.json", "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector-root.schema.json\",\n  \"name\": \"{connector}\",\n  \"title\": \"{connector}\",\n  \"version\": \"0.1.0\",\n  \"category\": \"api|db|stream\",\n  \"tags\": [],\n  \"description\": \"\",\n  \"homepage\": \"\"\n}\n" },
+            { "type": "file", "name": "connector.json", "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector-root.schema.json\",\n  \"name\": \"{connector}\",\n  \"title\": \"{connector}\",\n  \"category\": \"api|db|stream\",\n  \"tags\": [],\n  \"description\": \"\",\n  \"homepage\": \"\"\n}\n" },
             { "type": "dir", "name": "assets" }
           ]
         },
         {
           "type": "dir",
-          "name": "{author}",
+          "name": "{version}",
           "children": [
             {
               "type": "dir",
               "name": "_meta",
               "children": [
-                { "type": "file", "name": "README.md", "template": "# {connector}\n\n> Maintained by {author}\n\n" },
-                { "type": "file", "name": "CHANGELOG.md", "template": "# Changelog\n\nAll notable changes to `{connector}` by `{author}`.\n\n" },
-                { "type": "file", "name": "LICENSE", "template": "MIT\n" },
-                { "type": "file", "name": "connector.json", "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector-provider.schema.json\",\n  \"name\": \"{connector}\",\n  \"author\": \"{author}\",\n  \"version\": \"0.1.0\",\n  \"languages\": [],\n  \"tags\": [],\n  \"category\": \"api|db|stream\",\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"license\": \"MIT\",\n  \"source\": {\"type\":\"api\",\"spec\":\"\"},\n  \"capabilities\": {\"extract\": true, \"transform\": true, \"load\": true},\n  \"maintainers\": []\n}\n" },
+                { "type": "file", "name": "README.md", "template": "# {connector} v{version}\n\nVersion-level metadata and assets for `{connector}`.\n" },
+                { "type": "file", "name": "version.json", "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector-version.schema.json\",\n  \"name\": \"{connector}\",\n  \"version\": \"{version}\",\n  \"status\": \"experimental\",\n  \"releasedAt\": \"\",\n  \"notes\": \"\"\n}\n" },
                 { "type": "dir", "name": "assets" }
               ]
             },
-            { "type": "dir", "name": "python" },
-            { "type": "dir", "name": "typescript" }
+            {
+              "type": "dir",
+              "name": "{author}",
+              "children": [
+                {
+                  "type": "dir",
+                  "name": "_meta",
+                  "children": [
+                    { "type": "file", "name": "README.md", "template": "# {connector}\n\n> Maintained by {author}\n\n" },
+                    { "type": "file", "name": "CHANGELOG.md", "template": "# Changelog\n\nAll notable changes to `{connector}` by `{author}`.\n\n" },
+                    { "type": "file", "name": "LICENSE", "template": "MIT\n" },
+                    { "type": "file", "name": "connector.json", "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector-provider.schema.json\",\n  \"name\": \"{connector}\",\n  \"author\": \"{author}\",\n  \"version\": \"{version}\",\n  \"languages\": [],\n  \"tags\": [],\n  \"category\": \"api|db|stream\",\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"license\": \"MIT\",\n  \"source\": {\"type\":\"api\",\"spec\":\"\"},\n  \"capabilities\": {\"extract\": true, \"transform\": true, \"load\": true},\n  \"maintainers\": []\n}\n" },
+                    { "type": "dir", "name": "assets" }
+                  ]
+                },
+                { "type": "dir", "name": "python" },
+                { "type": "dir", "name": "typescript" }
+              ]
+            }
           ]
         }
       ]

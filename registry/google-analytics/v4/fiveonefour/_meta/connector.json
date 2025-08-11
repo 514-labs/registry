@@ -1,7 +1,7 @@
 {
   "name": "google-analytics",
   "author": "fiveonefour",
-  "version": "0.1.0",
+  "version": "v4",
   "languages": ["typescript"],
   "category": "api",
   "capabilities": { "extract": true, "transform": false, "load": false },
