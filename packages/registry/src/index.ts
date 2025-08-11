@@ -40,7 +40,7 @@ export function listConnectorIds(): string[] {
   return entries
     .filter((entry: Dirent) => entry.isDirectory())
     .map((entry: Dirent) => entry.name)
-    .filter((name: string) => !name.startsWith("."));
+    .filter((name: string) => !name.startsWith(".") && !name.startsWith("_"));
 }
 
 export function readConnector(connectorId: string): RegistryConnector | undefined {

@@ -4,6 +4,9 @@ import { Card } from "@ui/components/card";
 import { cn } from "@/lib/utils";
 import { listConnectorIds, readConnector } from "@workspace/registry";
 
+export const dynamic = "force-static";
+export const dynamicParams = false;
+
 export async function generateStaticParams(): Promise<{ connector: string }[]> {
   return listConnectorIds().map((id: string) => ({ connector: id }));
 }
