@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 /// <reference types="node" />
 import { existsSync, readFileSync, readdirSync, statSync, Dirent } from "fs";
 import { join, resolve } from "path";
