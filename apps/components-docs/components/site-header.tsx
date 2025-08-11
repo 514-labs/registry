@@ -90,20 +90,6 @@ export function SiteHeader() {
             Share
           </Link>
         </Button>
-        <Button
-          asChild
-          variant="link"
-          className={
-            isActivePath("/host") ? "underline underline-offset-4" : undefined
-          }
-        >
-          <Link
-            href="/host"
-            aria-current={isActivePath("/host") ? "page" : undefined}
-          >
-            Host
-          </Link>
-        </Button>
       </div>
       <div className="flex items-center gap-2">
         <Button
