@@ -4,7 +4,7 @@ Welcome to the Shopify Python Connector documentation. This guide helps you navi
 
 ## 🚀 Getting Started
 
-- **[README](README.md)** - Quick overview and getting started
+- **[README](../README.md)** - Quick overview and getting started
 - **[Getting Started](getting-started.md)** - Setup your Shopify store and configure the connector
 
 ## 🔧 Development & Configuration
@@ -49,7 +49,7 @@ connector.disconnect()
 ## 🎯 What You're Looking For
 
 ### **"I want to get started quickly"**
-→ Start with [README](README.md), then [Getting Started](getting-started.md)
+→ Start with [README](../README.md), then [Getting Started](getting-started.md)
 
 ### **"I need to configure advanced options"**
 → See [Configuration](configuration.md) for retry policies, rate limiting, hooks, etc.

@@ -25,12 +25,12 @@ connector.disconnect()
 
 ## 📚 Documentation
 
-- **[Documentation Index](docs.md)** - Navigate to the information you need
-- **[Getting Started](getting-started.md)** - Setup your Shopify store and configure the connector
-- **[Architecture](architecture.md)** - Technical implementation details and API mapping
-- **[Configuration](configuration.md)** - Configuration options and examples
-- **[Testing](testing.md)** - Testing strategy and examples
-- **[Why GraphQL?](why-graphql.md)** - Our implementation approach and rationale
+- **[Documentation Index](docs/docs.md)** - Navigate to the information you need
+- **[Getting Started](docs/getting-started.md)** - Setup your Shopify store and configure the connector
+- **[Architecture](docs/architecture.md)** - Technical implementation details and API mapping
+- **[Configuration](docs/configuration.md)** - Configuration options and examples
+- **[Testing](docs/testing.md)** - Testing strategy and examples
+- **[Why GraphQL?](docs/why-graphql.md)** - Our implementation approach and rationale
 
 ## ✨ Features
 
@@ -64,10 +64,10 @@ pip install shopify-connector
 
 - [Shopify Admin API Documentation](https://shopify.dev/api/admin)
 - [API Connector Specification](../api-connector.mdx)
-- [Getting Started Guide](getting-started.md)
+- [Getting Started Guide](docs/getting-started.md)
 
 ## 🤝 Contributing
 
-This connector follows our standard patterns. See the [Architecture](architecture.md) document for implementation details and the [Testing](testing.md) guide for development practices.
+This connector follows our standard patterns. See the [Architecture](docs/architecture.md) document for implementation details and the [Testing](docs/testing.md) guide for development practices.
 
 
