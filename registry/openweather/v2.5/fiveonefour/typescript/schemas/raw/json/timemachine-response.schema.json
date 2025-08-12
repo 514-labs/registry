@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.connector-factory.dev/openweather/v3/raw/timemachine-response.schema.json", 
+  "title": "OpenWeather Time Machine API Response",
+  "description": "Historical weather data from OpenWeather One Call Time Machine API",
+  "type": "object",
+  "properties": {
+    "lat": {
+      "type": "number",
+      "minimum": -90,
+      "maximum": 90,
+      "description": "Latitude of the location"
+    },
+    "lon": {
+      "type": "number",
+      "minimum": -180,
+      "maximum": 180,
+      "description": "Longitude of the location"
+    },
+    "timezone": {
+      "type": "string",
+      "description": "Timezone name for the requested location"
+    },
+    "timezone_offset": {
+      "type": "integer",
+      "description": "Shift in seconds from UTC"
+    },
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/HistoricalWeatherData"
+      },
+      "description": "Historical weather data points"
+    }
+  },
+  "required": ["lat", "lon", "timezone", "data"],
+  "$defs": {
+    "HistoricalWeatherData": {
+      "type": "object",
+      "properties": {
+        "dt": {
+          "type": "integer",
+          "description": "Time, Unix timestamp, UTC"
+        },
+        "temp": {
+          "type": "number",
+          "description": "Temperature"
+        },
+        "feels_like": {
+          "type": "number",
+          "description": "Temperature accounting for human perception"
+        },
+        "pressure": {
+          "type": "number",
+          "description": "Atmospheric pressure, hPa"
+        },
+        "humidity": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Humidity percentage"
+        },
+        "dew_point": {
+          "type": "number",
+          "description": "Dew point temperature"
+        },
+        "uvi": {
+          "type": "number",
+          "description": "UV index"
+        },
+        "clouds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Cloudiness percentage"
+        },
+        "visibility": {
+          "type": "number",
+          "description": "Average visibility, meters"
+        },
+        "wind_speed": {
+          "type": "number",
+          "description": "Wind speed"
+        },
+        "wind_deg": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 360,
+          "description": "Wind direction, degrees"
+        },
+        "wind_gust": {
+          "type": "number",
+          "description": "Wind gust speed"
+        },
+        "weather": {
+          "type": "array",
+          "items": {
+            "$ref": "onecall-response.schema.json#/$defs/WeatherCondition"
+          }
+        }
+      },
+      "required": ["dt", "temp", "humidity", "weather"]
+    }
+  }
+}

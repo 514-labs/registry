@@ -31,7 +31,13 @@
           "children": [
             { "type": "file", "name": "README.md", "template": "# {connector} (connector root)\n\nShared, provider-agnostic docs and assets for `{connector}`.\n" },
             { "type": "file", "name": "connector.json", "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector-root.schema.json\",\n  \"name\": \"{connector}\",\n  \"title\": \"{connector}\",\n  \"category\": \"api|db|stream\",\n  \"tags\": [],\n  \"description\": \"\",\n  \"homepage\": \"\"\n}\n" },
-            { "type": "dir", "name": "assets" }
+            { 
+              "type": "dir", 
+              "name": "assets",
+              "children": [
+                { "type": "file", "name": "README.md", "template": "# Assets\n\nRequired:\n- `logo.png` - 160x160 PNG logo for the connector\n\nOptional:\n- Screenshots or other visual assets\n" }
+              ]
+            }
           ]
         },
         {
@@ -59,7 +65,13 @@
                     { "type": "file", "name": "CHANGELOG.md", "template": "# Changelog\n\nAll notable changes to `{connector}` by `{author}`.\n\n" },
                     { "type": "file", "name": "LICENSE", "template": "MIT\n" },
                     { "type": "file", "name": "connector.json", "template": "{\n  \"name\": \"{connector}\",\n  \"author\": \"{author}\",\n  \"version\": \"{version}\",\n  \"languages\": [],\n  \"tags\": [],\n  \"category\": \"api|db|stream\",\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"license\": \"MIT\",\n  \"source\": {\"type\":\"api\",\"spec\":\"\"},\n  \"capabilities\": {\"extract\": true, \"transform\": true, \"load\": true},\n  \"maintainers\": []\n}\n" },
-                    { "type": "dir", "name": "assets" }
+                    { 
+                      "type": "dir", 
+                      "name": "assets",
+                      "children": [
+                        { "type": "file", "name": "README.md", "template": "# Assets\n\nAuthor-specific assets for `{connector}` by `{author}`.\n\nOptional:\n- Custom logos or branding\n- Implementation-specific screenshots\n" }
+                      ]
+                    }
                   ]
                 },
                 { "type": "dir", "name": "python" },

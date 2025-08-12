@@ -1,0 +1,63 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/schema-index.schema.json",
+  "version": "3.0.0",
+  "description": "OpenWeather One Call API v3.0 schema definitions for current weather, forecasts, historical data, and daily summaries",
+  "datasets": [
+    {
+      "name": "onecall_response",
+      "stage": "raw",
+      "kind": "json",
+      "path": "raw/json/onecall-response.schema.json",
+      "doc": "raw/json/onecall-response.md",
+      "description": "Current weather, forecasts, and alerts from One Call API"
+    },
+    {
+      "name": "timemachine_response", 
+      "stage": "raw",
+      "kind": "json",
+      "path": "raw/json/timemachine-response.schema.json",
+      "doc": "raw/json/timemachine-response.md",
+      "description": "Historical weather data from Time Machine API"
+    },
+    {
+      "name": "day_summary_response",
+      "stage": "raw", 
+      "kind": "json",
+      "path": "raw/json/day-summary-response.schema.json",
+      "doc": "raw/json/day-summary-response.md",
+      "description": "Daily aggregated weather data from Day Summary API"
+    },
+    {
+      "name": "weather_data",
+      "stage": "extracted",
+      "kind": "json", 
+      "path": "extracted/json/weather-data.schema.json",
+      "doc": "extracted/json/weather-data.md",
+      "description": "Normalized weather data structure for application use"
+    },
+    {
+      "name": "forecast_data",
+      "stage": "extracted",
+      "kind": "json",
+      "path": "extracted/json/forecast-data.schema.json", 
+      "doc": "extracted/json/forecast-data.md",
+      "description": "Normalized forecast data with consistent time periods"
+    },
+    {
+      "name": "weather_tables",
+      "stage": "raw",
+      "kind": "relational",
+      "path": "raw/relational/weather-tables.sql",
+      "doc": "raw/relational/weather-tables.md",
+      "description": "Raw weather data storage schema for SQL databases"
+    },
+    {
+      "name": "weather_analytics", 
+      "stage": "extracted",
+      "kind": "relational",
+      "path": "extracted/relational/weather-analytics.sql",
+      "doc": "extracted/relational/weather-analytics.md", 
+      "description": "Optimized schema for weather analytics and reporting"
+    }
+  ]
+}

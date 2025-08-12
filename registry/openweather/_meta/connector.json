@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "name": "openweather",
+  "title": "OpenWeather",
+  "category": "api",
+  "tags": ["Weather Data", "API", "Extract", "Real-time"],
+  "description": "Pull real-time and forecast weather data from OpenWeather API into your applications.",
+  "homepage": "https://openweathermap.org"
+}

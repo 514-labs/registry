@@ -32,3 +32,6 @@ nohup.out
 services/*/temp_migration/
 services/*/dev-*.log
 services/*/.moose/
+
+# Claude configuration (private workflow documentation)
+.claude/

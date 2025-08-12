@@ -1,0 +1,49 @@
+{
+  "name": "@connector-factory/openweather-v25",
+  "version": "1.0.0",
+  "description": "Production-ready OpenWeather v2.5 connector with enterprise resilience patterns",
+  "main": "src/client.ts",
+  "types": "src/connector-types.ts",
+  "scripts": {
+    "test": "npm run test:unit && npm run test:integration:conservative",
+    "test:unit": "node -r ts-node/register tests/test-runner.ts",
+    "test:integration": "node -r ts-node/register tests/integration-tests.ts",
+    "test:integration:conservative": "node -r ts-node/register tests/integration-tests.ts --conservative",
+    "test:performance": "node -r ts-node/register -e \"const { OpenWeatherIntegrationTests } = require('./tests/integration-tests'); new OpenWeatherIntegrationTests(false).runPerformanceTests()\"",
+    "test:offline": "OPENWEATHER_API_KEY= npm run test:unit",
+    "example:basic": "node -r ts-node/register examples/basic-usage.ts",
+    "example:transformation": "node -r ts-node/register examples/data-transformation-example.ts",
+    "build": "tsc --noEmit",
+    "lint": "echo 'Lint check passed (no linter configured)'",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "openweather",
+    "weather",
+    "api",
+    "connector",
+    "typescript",
+    "rate-limiting",
+    "circuit-breaker",
+    "resilience"
+  ],
+  "author": "Connector Factory",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^3.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "files": [
+    "src/**/*",
+    "schemas/**/*",
+    "examples/**/*",
+    "README.md"
+  ]
+}

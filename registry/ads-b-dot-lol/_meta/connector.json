@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "name": "ads-b-dot-lol",
+  "title": "ADS-B.lol",
+  "category": "api",
+  "tags": ["Aircraft Tracking", "Aviation", "Real-time", "Extract", "API"],
+  "description": "Pull real-time aircraft tracking data from ADS-B.lol API for aviation monitoring and analysis.",
+  "homepage": "https://api.adsb.lol"
+}

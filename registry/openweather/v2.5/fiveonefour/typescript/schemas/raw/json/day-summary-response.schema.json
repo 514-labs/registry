@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.connector-factory.dev/openweather/v3/raw/day-summary-response.schema.json",
+  "title": "OpenWeather Day Summary API Response", 
+  "description": "Daily aggregated weather data from OpenWeather One Call API",
+  "type": "object",
+  "properties": {
+    "lat": {
+      "type": "number",
+      "minimum": -90,
+      "maximum": 90,
+      "description": "Latitude of the location"
+    },
+    "lon": {
+      "type": "number",
+      "minimum": -180,
+      "maximum": 180,
+      "description": "Longitude of the location"
+    },
+    "tz": {
+      "type": "string",
+      "description": "Timezone name for the requested location"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Requested date in YYYY-MM-DD format"
+    },
+    "units": {
+      "type": "string",
+      "enum": ["standard", "metric", "imperial"],
+      "description": "Units format used for the response"
+    },
+    "cloud_cover": {
+      "$ref": "#/$defs/AggregatedValue",
+      "description": "Cloud cover aggregated data"
+    },
+    "humidity": {
+      "$ref": "#/$defs/AggregatedValue", 
+      "description": "Humidity aggregated data"
+    },
+    "pressure": {
+      "$ref": "#/$defs/AggregatedValue",
+      "description": "Atmospheric pressure aggregated data"
+    },
+    "temperature": {
+      "$ref": "#/$defs/TemperatureAggregated",
+      "description": "Temperature aggregated data"
+    },
+    "wind": {
+      "$ref": "#/$defs/WindAggregated",
+      "description": "Wind aggregated data"
+    },
+    "precipitation": {
+      "$ref": "#/$defs/PrecipitationAggregated",
+      "description": "Precipitation aggregated data"
+    }
+  },
+  "required": ["lat", "lon", "tz", "date", "units"],
+  "$defs": {
+    "AggregatedValue": {
+      "type": "object",
+      "properties": {
+        "afternoon": {"type": "number"},
+        "day": {"type": "number"},
+        "evening": {"type": "number"},
+        "morning": {"type": "number"},
+        "night": {"type": "number"}
+      }
+    },
+    "TemperatureAggregated": {
+      "type": "object",
+      "properties": {
+        "min": {"type": "number", "description": "Minimum temperature"},
+        "max": {"type": "number", "description": "Maximum temperature"},
+        "afternoon": {"type": "number"},
+        "day": {"type": "number"},
+        "evening": {"type": "number"},
+        "morning": {"type": "number"},
+        "night": {"type": "number"}
+      },
+      "required": ["min", "max"]
+    },
+    "WindAggregated": {
+      "type": "object",
+      "properties": {
+        "max": {
+          "type": "object",
+          "properties": {
+            "speed": {"type": "number"},
+            "direction": {"type": "number", "minimum": 0, "maximum": 360}
+          }
+        }
+      }
+    },
+    "PrecipitationAggregated": {
+      "type": "object",
+      "properties": {
+        "total": {"type": "number", "description": "Total precipitation amount"}
+      }
+    }
+  }
+}

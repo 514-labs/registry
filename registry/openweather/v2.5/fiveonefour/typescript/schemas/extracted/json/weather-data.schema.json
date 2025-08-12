@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.connector-factory.dev/openweather/v3/extracted/weather-data.schema.json",
+  "title": "Normalized Weather Data",
+  "description": "Standardized weather data structure for application consumption",
+  "type": "object",
+  "properties": {
+    "location": {
+      "$ref": "#/$defs/Location",
+      "description": "Geographic location information"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Weather observation time in ISO 8601 format"
+    },
+    "temperature": {
+      "$ref": "#/$defs/Temperature",
+      "description": "Temperature measurements"
+    },
+    "atmosphere": {
+      "$ref": "#/$defs/Atmosphere",
+      "description": "Atmospheric conditions"
+    },
+    "wind": {
+      "$ref": "#/$defs/Wind",
+      "description": "Wind measurements"
+    },
+    "precipitation": {
+      "$ref": "#/$defs/Precipitation", 
+      "description": "Precipitation data"
+    },
+    "visibility": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Visibility in kilometers"
+    },
+    "uv_index": {
+      "type": "number",
+      "minimum": 0,
+      "description": "UV index value"
+    },
+    "conditions": {
+      "$ref": "#/$defs/WeatherConditions",
+      "description": "Weather condition descriptions"
+    },
+    "sun": {
+      "$ref": "#/$defs/SunData",
+      "description": "Sunrise and sunset information"
+    }
+  },
+  "required": ["location", "timestamp", "temperature", "atmosphere", "conditions"],
+  "$defs": {
+    "Location": {
+      "type": "object",
+      "properties": {
+        "latitude": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "timezone": {
+          "type": "string",
+          "description": "IANA timezone identifier"
+        },
+        "timezone_offset": {
+          "type": "integer",
+          "description": "UTC offset in seconds"
+        }
+      },
+      "required": ["latitude", "longitude", "timezone"]
+    },
+    "Temperature": {
+      "type": "object",
+      "properties": {
+        "current": {
+          "type": "number",
+          "description": "Current temperature in Celsius"
+        },
+        "feels_like": {
+          "type": "number", 
+          "description": "Apparent temperature in Celsius"
+        },
+        "minimum": {
+          "type": "number",
+          "description": "Minimum temperature (for daily forecasts)"
+        },
+        "maximum": {
+          "type": "number",
+          "description": "Maximum temperature (for daily forecasts)"
+        },
+        "dew_point": {
+          "type": "number",
+          "description": "Dew point temperature in Celsius"
+        }
+      },
+      "required": ["current"]
+    },
+    "Atmosphere": {
+      "type": "object",
+      "properties": {
+        "pressure": {
+          "type": "number",
+          "description": "Atmospheric pressure in hPa"
+        },
+        "humidity": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Relative humidity percentage"
+        },
+        "cloud_cover": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Cloud coverage percentage"
+        }
+      },
+      "required": ["humidity"]
+    },
+    "Wind": {
+      "type": "object",
+      "properties": {
+        "speed": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Wind speed in m/s"
+        },
+        "direction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 360,
+          "description": "Wind direction in degrees"
+        },
+        "gust": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Wind gust speed in m/s"
+        }
+      }
+    },
+    "Precipitation": {
+      "type": "object",
+      "properties": {
+        "probability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Probability of precipitation (0-1)"
+        },
+        "rain": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Rain volume in mm"
+        },
+        "snow": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Snow volume in mm"
+        }
+      }
+    },
+    "WeatherConditions": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "OpenWeather condition ID"
+        },
+        "main": {
+          "type": "string",
+          "description": "Main weather group"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed weather description"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Weather icon identifier"
+        }
+      },
+      "required": ["id", "main", "description"]
+    },
+    "SunData": {
+      "type": "object",
+      "properties": {
+        "sunrise": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Sunrise time in ISO 8601 format"
+        },
+        "sunset": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Sunset time in ISO 8601 format"
+        }
+      }
+    }
+  }
+}
