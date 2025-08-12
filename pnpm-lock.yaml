@@ -142,34 +142,6 @@ importers:
         specifier: ^5
         version: 5.8.3
 
-  connectors/hubspot/v3/fiveonefour/typescript:
-    dependencies:
-      zod:
-        specifier: ^3.25.8
-        version: 3.25.76
-    devDependencies:
-      '@types/jest':
-        specifier: ^29.5.12
-        version: 29.5.14
-      '@types/node':
-        specifier: ^20.14.12
-        version: 20.19.9
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.19.9)(ts-node@10.9.2(@swc/core@1.13.3(@swc/helpers@0.5.17))(@types/node@20.19.9)(typescript@5.8.3))
-      nock:
-        specifier: ^13.5.4
-        version: 13.5.6
-      ts-jest:
-        specifier: ^29.2.5
-        version: 29.4.1(@babel/core@7.28.3)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.3))(jest-util@29.7.0)(jest@29.7.0(@types/node@20.19.9)(ts-node@10.9.2(@swc/core@1.13.3(@swc/helpers@0.5.17))(@types/node@20.19.9)(typescript@5.8.3)))(typescript@5.8.3)
-      tsx:
-        specifier: ^4.19.2
-        version: 4.20.4
-      typescript:
-        specifier: ^5.6.3
-        version: 5.8.3
-
   packages/eslint-config:
     dependencies:
       '@eslint/js':
@@ -420,6 +392,38 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@4.1.11)
+
+  registry/google-analytics/v4/514-labs/typescript/data-api: {}
+
+  registry/google-analytics/v4/tg339/typescript/data-api: {}
+
+  registry/hubspot/v3/fiveonefour/typescript:
+    dependencies:
+      zod:
+        specifier: ^3.25.8
+        version: 3.25.76
+    devDependencies:
+      '@types/jest':
+        specifier: ^29.5.12
+        version: 29.5.14
+      '@types/node':
+        specifier: ^20.14.12
+        version: 20.19.9
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.19.9)(ts-node@10.9.2(@swc/core@1.13.3(@swc/helpers@0.5.17))(@types/node@20.19.9)(typescript@5.8.3))
+      nock:
+        specifier: ^13.5.4
+        version: 13.5.6
+      ts-jest:
+        specifier: ^29.2.5
+        version: 29.4.1(@babel/core@7.28.3)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.3))(jest-util@29.7.0)(jest@29.7.0(@types/node@20.19.9)(ts-node@10.9.2(@swc/core@1.13.3(@swc/helpers@0.5.17))(@types/node@20.19.9)(typescript@5.8.3)))(typescript@5.8.3)
+      tsx:
+        specifier: ^4.19.2
+        version: 4.20.4
+      typescript:
+        specifier: ^5.6.3
+        version: 5.8.3
 
 packages:
 
