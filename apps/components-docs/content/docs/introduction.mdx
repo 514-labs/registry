@@ -4,7 +4,7 @@ import { Badge } from "@ui/components/badge";
 
 # Introduction
 
-We created this project because we believe that connectors should be
+We created this project because we believe that analytical connectors should be
 open source, free and easy to integrate, debug and maintain.
 
 ## Our thesis
@@ -18,9 +18,21 @@ expensive connectors that you pay for but never actually own.
 
 It's time to change that.
 
+## What are analytical connectors?
+
+Analytical connectors are a way to scalabily extract data from source systems
+and load it into a central data platform like a data warehouse, data lake, or
+lakehouse.
+
+Analytical connectors differ from transactional connectors in that they are
+designed to operate at scale over large volumes of data. This menas that they
+generally have a batch or stream extraction pattern, and are designed to be
+resilient and fault tolerant as opposed to prioritizing speed and low latency
+on single transactions.
+
 ### What this project is
 
-- rock solid set of absractions and connector implementation patterns
+- rock solid set of absractions and analytical connector implementation patterns
 - prompts and tools to build & test connectors that you own
 - tools to distribute those connectors, integrate them directly in
   your applications and share them with your friends
