@@ -3,7 +3,7 @@
   "name": "google-analytics",
   "title": "Google Analytics",
   "category": "api",
-  "tags": ["analytics", "events", "saas"],
+  "tags": ["Analytics", "Events", "SaaS"],
   "description": "Subscribe to Google Analytics events and metrics.",
   "homepage": "https://developers.google.com/analytics"
 }

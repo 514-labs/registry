@@ -1,0 +1,10 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "name": "datadog",
+  "title": "Datadog",
+  "category": "api",
+  "tags": ["Observability", "Events", "Extract", "SaaS"],
+  "description": "Pull your up-to-date Datadog telemetry into your observability data warehouse.",
+  "homepage": "https://www.datadoghq.com"
+}
+

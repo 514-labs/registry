@@ -1,0 +1,10 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "name": "mysql",
+  "title": "MySQL",
+  "category": "database",
+  "tags": ["Database", "Extract", "CDC"],
+  "description": "Pull your transactional data from MySQL into your data warehouse.",
+  "homepage": "https://dev.mysql.com"
+}
+
