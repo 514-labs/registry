@@ -10,7 +10,7 @@
     "spec": "",
     "homepage": "https://developers.hubspot.com/docs/reference/api"
   },
-  "tags": ["crm", "saas"],
+  "tags": ["crm", "saas", "extract"],
   "maintainers": [
     { "name": "fiveonefour", "email": "" }
   ]
