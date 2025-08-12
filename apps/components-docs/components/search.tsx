@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/components/tabs";
 import {
   Dialog,
@@ -35,7 +36,7 @@ async function importPagefind(): Promise<PagefindModule> {
     ) => Promise<PagefindModule>;
     const pf = await dyn("/pagefind/pagefind.js");
     return pf as PagefindModule;
-  } catch (e) {
+  } catch {
     // In dev, the pagefind bundle may not exist; return a stub that no-ops
     return {
       init: async () => {},
@@ -59,14 +60,15 @@ async function ensureInitialized(bundlePath?: string) {
 async function runSearch(
   query: string,
   filters?: Record<string, string | string[]>
-) {
+): Promise<SearchResultData[]> {
   const pagefind = await ensureInitialized();
-  const result = await pagefind.debouncedSearch(
-    query,
-    filters ? { filters } : undefined,
-    200
-  );
-  if (!result) return [] as SearchResultData[];
+  const searchOptions: { filters?: Record<string, string | string[]> } = {};
+  if (filters && Object.keys(filters).length > 0) {
+    searchOptions.filters = filters;
+  }
+  const result = await pagefind.search(query, searchOptions);
+  if (!result || !result.results) return [];
+
   const firstTen = (
     result.results as Array<{ data: () => Promise<SearchResultData> }>
   ).slice(0, 10);
@@ -81,6 +83,7 @@ export function SearchDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [tab, setTab] = useState("all");
   const [allResults, setAllResults] = useState<SearchResultData[]>([]);
@@ -105,6 +108,7 @@ export function SearchDialog({
         setConnectorResults([]);
         return;
       }
+
       const [all, comps] = await Promise.all([
         runSearch(query),
         // Filter only pages tagged with meta.type === "connector"
@@ -121,20 +125,30 @@ export function SearchDialog({
     };
   }, [query]);
 
-  const renderResults = useCallback((results: SearchResultData[]) => {
-    if (results.length === 0) {
-      return <div className="text-sm text-muted-foreground">No results</div>;
-    }
-    return (
-      <ul className="space-y-3">
-        {results.map((r) => {
-          const title =
-            (r.meta?.title as string | undefined) ??
-            r.sub_results?.[0]?.title ??
-            r.url;
-          return (
-            <li key={r.url} className="rounded-lg border p-3 hover:bg-accent">
-              <a href={r.url} className="no-underline">
+  const renderResults = useCallback(
+    (results: SearchResultData[]) => {
+      if (results.length === 0) {
+        return <div className="text-sm text-muted-foreground">No results</div>;
+      }
+      return (
+        <ul className="space-y-3">
+          {results.map((r) => {
+            const title =
+              (r.meta?.title as string | undefined) ??
+              r.sub_results?.[0]?.title ??
+              r.url;
+            // Remove .html extension for Next.js routing
+            const url = (r.url || "#").replace(/\.html$/, "");
+
+            return (
+              <li
+                key={r.url}
+                className="rounded-lg border p-3 hover:bg-accent cursor-pointer"
+                onClick={() => {
+                  router.push(url);
+                  onOpenChange(false);
+                }}
+              >
                 <div className="text-sm font-medium line-clamp-1">{title}</div>
                 {r.excerpt ? (
                   <div
@@ -142,13 +156,14 @@ export function SearchDialog({
                     dangerouslySetInnerHTML={{ __html: r.excerpt }}
                   />
                 ) : null}
-              </a>
-            </li>
-          );
-        })}
-      </ul>
-    );
-  }, []);
+              </li>
+            );
+          })}
+        </ul>
+      );
+    },
+    [router, onOpenChange]
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
