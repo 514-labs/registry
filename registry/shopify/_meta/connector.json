@@ -1,0 +1,10 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "name": "shopify",
+  "title": "Shopify",
+  "category": "api",
+  "tags": ["Ecommerce", "Events", "Extract", "SaaS"],
+  "description": "Pull your up-to-date Shopify data into your data warehouse.",
+  "homepage": "https://shopify.dev"
+}
+

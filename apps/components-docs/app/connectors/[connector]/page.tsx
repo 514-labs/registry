@@ -35,7 +35,7 @@ export default async function ConnectorPage({
             <Card className="h-full overflow-hidden p-0">
               <div className="relative p-8">
                 <Image
-                  src={`/connector-logos/${displayName.replace(/\s+/g, "")}.png`}
+                  src={`/connector-logos/${conn.connectorId}.png`}
                   alt={`${displayName} logo`}
                   width={48}
                   height={48}

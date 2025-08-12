@@ -1,9 +1,10 @@
 import ConnectorCard from "@/components/connector-card";
 import Link from "next/link";
 import { Button } from "@ui/components/button";
-import { connectors } from "@/lib/connectors-mock";
 import { Badge } from "@ui/components/badge";
 import { PagefindMeta } from "@/components/pagefind-meta";
+import { listRegistry } from "@workspace/registry";
+import type { ConnectorRootMeta } from "@workspace/registry/types";
 
 function Hero() {
   return (
@@ -40,6 +41,23 @@ function Hero() {
 }
 
 export default function Home() {
+  const registry = listRegistry();
+  const connectors = registry.map((conn) => {
+    const meta = (conn.root.meta ?? {}) as ConnectorRootMeta;
+    const displayName = (meta.title ?? meta.name ?? conn.connectorId) as string;
+    const description = (meta.description ?? "") as string;
+    const tags = (meta.tags ?? []) as string[];
+    // Prefer direct public path copied from registry via sync script. Try common extensions; next/image will
+    // resolve at runtime when the file exists. We default to .png for display but provide a fallback list in the card.
+    return {
+      name: displayName,
+      description,
+      tags,
+      icon: `connector-logos/${conn.connectorId}.png`,
+      href: `/connectors/${conn.connectorId}`,
+    };
+  });
+
   return (
     <div className="font-sans items-center justify-items-center min-h-screen space-y-4">
       <PagefindMeta type="docs" />

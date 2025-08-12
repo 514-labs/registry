@@ -10,9 +10,9 @@
       "pattern": "^[a-z0-9][a-z0-9-]*$"
     },
     "version": {
-      "description": "Source version identifier (e.g., v4). Avoid dots (.) and slashes (/).",
+      "description": "Source version identifier (not necessarily semver). Examples: v4, ga4, 2020-08-27, api-2020.08.27",
       "example": "v4",
-      "pattern": "^[a-z0-9][a-z0-9-]*$"
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
     },
     "author": {
       "description": "Organization or author handle (kebab-case).",
