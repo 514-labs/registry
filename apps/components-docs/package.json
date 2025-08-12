@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "predev": "node ./scripts/sync-logos.mjs || true",
+    "build": "node ./scripts/sync-logos.mjs || true && next build",
     "postbuild": "pagefind --site ./out && rm -rf ./public/pagefind && cp -R ./out/pagefind ./public/pagefind",
     "start": "next start",
     "lint": "next lint"

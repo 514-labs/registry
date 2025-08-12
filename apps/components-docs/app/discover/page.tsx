@@ -9,12 +9,11 @@ export default function DiscoverPage() {
     const displayName = (meta.title ?? meta.name ?? conn.connectorId) as string;
     const description = (meta.description ?? "") as string;
     const tags = (meta.tags ?? []) as string[];
-    const iconName = displayName.replace(/\s+/g, "");
     return {
       name: displayName,
       description,
       tags,
-      icon: `connector-logos/${iconName}.png`,
+      icon: `connector-logos/${conn.connectorId}.png`,
       href: `/connectors/${conn.connectorId}`,
     };
   });

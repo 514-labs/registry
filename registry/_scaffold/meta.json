@@ -10,9 +10,9 @@
       "pattern": "^[a-z0-9][a-z0-9-]*$"
     },
     "version": {
-      "description": "Semantic version for this connector (e.g., 0.1.0).",
-      "example": "0.1.0",
-      "pattern": "^\\d+\\.\\d+\\.\\d+(?:[-+][A-Za-z0-9.-]+)?$"
+      "description": "Source version identifier (not necessarily semver). Examples: v4, ga4, 2020-08-27, api-2020.08.27",
+      "example": "v4",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
     },
     "author": {
       "description": "Organization or author handle (kebab-case).",
@@ -42,8 +42,8 @@
               "type": "dir",
               "name": "_meta",
               "children": [
-                { "type": "file", "name": "README.md", "template": "# {connector} v{version}\n\nVersion-level metadata and assets for `{connector}`.\n" },
-                { "type": "file", "name": "version.json", "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector-version.schema.json\",\n  \"name\": \"{connector}\",\n  \"version\": \"{version}\",\n  \"status\": \"experimental\",\n  \"releasedAt\": \"\",\n  \"notes\": \"\"\n}\n" },
+                { "type": "file", "name": "README.md", "template": "# {connector} {version}\n\nVersion-level metadata and assets for `{connector}`.\n" },
+                { "type": "file", "name": "version.json", "template": "{\n  \"name\": \"{connector}\",\n  \"version\": \"{version}\",\n  \"status\": \"experimental\",\n  \"releasedAt\": \"\",\n  \"notes\": \"\"\n}\n" },
                 { "type": "dir", "name": "assets" }
               ]
             },
@@ -58,7 +58,7 @@
                     { "type": "file", "name": "README.md", "template": "# {connector}\n\n> Maintained by {author}\n\n" },
                     { "type": "file", "name": "CHANGELOG.md", "template": "# Changelog\n\nAll notable changes to `{connector}` by `{author}`.\n\n" },
                     { "type": "file", "name": "LICENSE", "template": "MIT\n" },
-                    { "type": "file", "name": "connector.json", "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector-provider.schema.json\",\n  \"name\": \"{connector}\",\n  \"author\": \"{author}\",\n  \"version\": \"{version}\",\n  \"languages\": [],\n  \"tags\": [],\n  \"category\": \"api|db|stream\",\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"license\": \"MIT\",\n  \"source\": {\"type\":\"api\",\"spec\":\"\"},\n  \"capabilities\": {\"extract\": true, \"transform\": true, \"load\": true},\n  \"maintainers\": []\n}\n" },
+                    { "type": "file", "name": "connector.json", "template": "{\n  \"name\": \"{connector}\",\n  \"author\": \"{author}\",\n  \"version\": \"{version}\",\n  \"languages\": [],\n  \"tags\": [],\n  \"category\": \"api|db|stream\",\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"license\": \"MIT\",\n  \"source\": {\"type\":\"api\",\"spec\":\"\"},\n  \"capabilities\": {\"extract\": true, \"transform\": true, \"load\": true},\n  \"maintainers\": []\n}\n" },
                     { "type": "dir", "name": "assets" }
                   ]
                 },
