@@ -1,6 +1,6 @@
 export const metadata = {
   title: "API Connector Specification",
-  description: "Complete specification for implementing robust, production-ready API connectors"
+  description: "Complete specification for implementing robust, production-ready API connectors. This release is scoped to Analytical (Extract, read-only) use cases."
 }
 
 ## API Connector Specification
@@ -16,6 +16,22 @@ The connector must be language‑agnostic. Any illustrative snippets must be tre
 - **Secure by default**: Credentials are redacted, transport is encrypted where applicable, and inputs/outputs are validated.
 - **Resilient**: Backoff with jitter, circuit breaking, idempotency, and graceful degradation built in.
 - **Extensible**: Hooks/middleware enable customization without forking core.
+
+### Analytical Focus
+
+This specification targets analytical workloads (ELT/ETL, reporting, ML feature extraction), not transactional use cases.
+
+- **Read-only posture**: Unsafe methods (POST/PUT/PATCH/DELETE) are Full profile only and out of scope for this release.
+- **Iterator-first**: Long-running scans via `paginate` with resume; large `pageSize` within service limits.
+- **Throughput-oriented**: Bounded concurrency, backpressure-aware streaming reads, cost-aware request batching.
+- **Eventual consistency tolerant**: Handle duplicates/reordering; dedupe on stable identifiers (e.g., `id`, `etag`, `updated_at`).
+- **Checkpointable/resumable**: Support since-cursors (e.g., `updated_since`, ETag/If-Modified-Since), continuation tokens, and link-based pagination.
+- **Observability for analytics**: Emphasize bytes/rows read, throughput, page amplification, checkpoint lag, retry counts.
+
+Recommended defaults:
+- Prefer the service-maximum page size when safe; adaptively tune when erroring/throttled.
+- Use a global concurrency limit with separate caps for downloads/streaming where applicable.
+- Apply exponential backoff with jitter; respect Retry-After; enforce per-operation retry budgets.
 
 ### Core Methods
 
@@ -44,16 +60,16 @@ Every API connector must implement the following core functionality:
 - **get(path, options)**  
   Performs an HTTP GET request to the specified path.
 
-- **post(path, data, options)**  
+- (Full profile only) **post(path, data, options)**  
   Performs an HTTP POST request with the provided data payload.
 
-- **put(path, data, options)**  
+- (Full profile only) **put(path, data, options)**  
   Performs an HTTP PUT request to update a resource.
 
-- **patch(path, data, options)**  
+- (Full profile only) **patch(path, data, options)**  
   Performs an HTTP PATCH request for partial updates.
 
-- **delete(path, options)**  
+- (Full profile only) **delete(path, options)**  
   Performs an HTTP DELETE request to remove a resource.
 
 #### Advanced Operations
@@ -69,8 +85,20 @@ Every API connector must implement the following core functionality:
 - **stream(options)**  
   Reads streaming responses (e.g., chunked, SSE) with backpressure and cancellation.
 
-- **upload(options)** / **download(options)**  
-  Handles large payload transfers, with multi‑part or resumable strategies when supported.
+- (Full profile only) **upload(options)** / **download(options)**  
+  Large payload transfer helpers. For this release, focus on read/download; uploads are Full profile only.
+
+#### Bulk Retrieval Pattern (Analytical)
+
+There is no `getMany`/bulk-get method. Compose `paginate` to enumerate resources, then `batch` GET requests within concurrency and rate limits.
+
+```text
+pages = paginate({ path: "/items", pageSize: 1000 })
+for page in pages:
+  ops = page.items.map(item => ({ method: "GET", path: `/items/${item.id}` }))
+  results = batch(ops)
+  process(results)
+```
 
 ### Configuration Structure
 
@@ -525,12 +553,13 @@ Connectors must include:
 - Rate limit testing
 - Authentication flow testing
 - Error handling and recovery testing
-- Performance benchmarks
+- Performance benchmarks (throughput, page amplification, end-to-end time for large scans)
+- Checkpoint/resume tests for long-running paginated extracts
 
 ### Conformance Checklist
 
 - Implements lifecycle: initialize, connect, disconnect, isConnected
-- Provides request primitives, optional stream/upload/download when applicable
+- Provides request primitives; read/download helpers only. Upload/write helpers are Full profile only and out of scope for this release
 - Config supports baseUrl, timeouts, proxy/tls, auth, retry, rate limit, defaults, hooks
 - Retry with backoff + jitter, honors Retry‑After, has circuit breaker and retry budget
 - Hook pipeline before/after/error/retry; deterministic order and cancellation

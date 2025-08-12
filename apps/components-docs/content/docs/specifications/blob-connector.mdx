@@ -1,6 +1,6 @@
 export const metadata = {
   title: "Blob Storage Connector Specification",
-  description: "A transport-agnostic specification for building robust, production-ready blob/object storage connectors (e.g., S3, Azure Blob Storage, GCS). This release is scoped to the Extract (read-only) profile."
+  description: "A transport-agnostic specification for building robust, production-ready blob/object storage connectors (e.g., S3, Azure Blob Storage, GCS). This release is scoped to Analytical (Extract, read-only) use cases."
 }
 
 ## Blob Storage Connector Specification
@@ -18,6 +18,22 @@ Important: This version of the specification is limited to the Extract (read-onl
 - **Secure by default**: Credentials redacted, encrypted transport, input/output validation.
 - **Resilient**: Backoff with jitter, circuit breaking, retry budget, graceful degradation.
 - **Extensible**: Hooks/middleware enable customization without forking core.
+
+### Analytical Focus
+
+This specification targets analytical workloads (ELT/ETL, reporting, ML feature extraction), not transactional use cases.
+
+- **Read-only**: No mutations; principals and capabilities are least-privilege.
+- **Iterator-first**: Long-running scans via pagination with resume; large `pageSize` within provider limits.
+- **Throughput-oriented**: Bounded concurrency, backpressure-aware streaming, cost-aware request batching.
+- **Eventual consistency tolerant**: Handle duplicates and reordering; prefer dedupe by `(bucket,key,versionId|ETag)`.
+- **Checkpointable/resumable**: Expose continuation tokens, `LastModified`, and `VersionId` for incremental extraction.
+- **Observability for analytics**: Emphasize bytes read, throughput, page amplification, checkpoint lag, retry counts.
+
+Recommended defaults:
+- Prefer provider-maximum page size for listings, with adaptive tuning.
+- Use a global concurrency limit plus separate concurrency for downloads.
+- Apply exponential backoff with jitter; respect throttle hints; enforce per-operation retry budgets.
 
 ### Core Methods
 
@@ -45,13 +61,21 @@ Every blob connector must implement the following:
 - High-level blob operations (recommended typed surface):
   - **listObjects(options)** → Iterator of pages of items
   - **getObject(params)** → Read object (support range reads)
+  - **getObjects(options)** → Analytical bulk read helper (composes list + get, respects pagination/backpressure)
   - **headObject(params)** → Metadata lookup
   - **downloadStream(params)** → Streaming reads with backpressure
   - **presignGet(params, options)** / **presignHead(params, options)** → Generate presigned read/metadata URLs
 
-Note: There is no bulk `getObjects` method. To retrieve many objects, use `listObjects` with a `prefix` (and optional `delimiter`) to enumerate keys, then call `getObject` per item. Provider backends generally do not support server-side globs; patterns like `foo*` are expressed as `prefix: "foo"` with optional client-side filtering. This mirrors the API Connector Specification approach, which favors `paginate` + `batch` composition over bulk-get methods.
+#### Analytical Bulk Retrieval: `getObjects`
 
-Bulk fetch pattern (conceptual):
+`getObjects(options)` is a convenience for analytical scans. It composes `listObjects` and `getObject` to fetch many objects efficiently while honoring pagination, concurrency, retries, and backpressure.
+
+- Pattern handling: Server-side globs are not standardized. Use `prefix` (and optional `delimiter`) for enumeration; optional client-side filters may refine matches.
+- Concurrency: Implement bounded parallel downloads; respect global limits. Default continues on errors, reporting them per-item.
+- Streaming: Prefer streaming fetches by default; support buffering if requested.
+- Resume: Honor continuation tokens and allow resuming from checkpoints.
+
+Conceptual usage:
 
 ```text
 for page in listObjects({ bucket: "test-bucket", prefix: "foo", pageSize: 100 }):
@@ -99,6 +123,23 @@ type ListObjectsOptions = {
   includeVersions?: boolean
   startAfter?: string
   continuationToken?: string
+}
+ 
+type GetObjectsOptions = ListObjectsOptions & {
+  maxConcurrentDownloads?: number
+  includeBody?: boolean // default streaming
+  filter?: (summary: object) => boolean // optional client-side predicate
+  onObject?: (result: {
+    key: string
+    data?: ReadableStream | Uint8Array
+    attributes: Record<string, unknown>
+    error?: Error
+  }) => Promise<void> | void
+  checkpoint?: {
+    continuationToken?: string
+    lastProcessedKey?: string
+    lastModifiedAfter?: string
+  }
 }
 ```
 
@@ -322,6 +363,8 @@ Implementation requirements:
 
 Iterator item shape (conceptual): `{ items: object[], commonPrefixes?: string[] }`
 
+`getObjects` must internally use this iterator to enumerate pages and yield per-object results in a streaming fashion, honoring continuation tokens and backpressure.
+
 Delimiter semantics:
 
 - When `delimiter` is set, each page MUST include `commonPrefixes` representing "directory" groupings alongside `items` for object summaries in the current prefix.
@@ -347,6 +390,11 @@ Multipart concurrency:
 - Configure separate limits for multipart uploads: `{ maxConcurrentParts, partSizeBytes }`.
 - Enforce bounded parallelism per object and a global cap to avoid resource exhaustion.
 
+`getObjects` concurrency:
+
+- Respect `maxConcurrentDownloads` (default to global cap if unspecified).
+- Guarantee forward progress under backpressure; pause enumeration when download queue is full.
+
 PSEUDOCODE request with cancellation and timeout:
 
 ```text
@@ -364,6 +412,11 @@ ALWAYS release slot
 - Validate checksums/ETag when provided; surface verification status
 - Range GETs for partial reads
 - Progress events exposed via hooks or callbacks
+
+`getObjects` streaming:
+
+- Emit per-object progress and completion events via hooks or the `onObject` callback.
+- Default to streaming bodies; allow `includeBody: true` to buffer small objects fully when required.
 
 Checksum and ETag semantics:
 
@@ -492,6 +545,7 @@ Include:
  - (Full profile only) Multipart upload error handling and resume semantics (including part failures and re-tries)
  - Versioned bucket behaviors including delete markers; ensure correct HEAD/GET semantics
  - Object lock / immutability policy scenarios when applicable
+ - `getObjects` end-to-end throughput, checkpoint/resume correctness, per-object error handling
 
 ### Conformance Checklist (Extract-only release)
 
