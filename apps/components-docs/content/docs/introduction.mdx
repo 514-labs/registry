@@ -1,3 +1,7 @@
+import { Card, CardDescription, CardHeader, CardTitle } from "@ui/components/card";
+import Link from "next/link";
+import { Badge } from "@ui/components/badge";
+
 # Introduction
 
 We created this project because we believe that connectors should be
@@ -42,10 +46,37 @@ It's time to change that.
 - Leave us a star on the repo
 - Check out our [blog](https://connectorfactory.dev/blog)
 - Follow us on [X](https://x.com/connectorfactory), [LinkedIn](https://www.linkedin.com/company/connector-factory), or [YouTube](https://www.youtube.com/@connectorfactory)
-- Check out our other projects:
-  - Moose Stack: tools for building analytical backends on top of ClickHouse and Redpanda (open source)
-  - Sloan: A co-pilot extension to help you do data engineering in your favorite AI enabled IDE (commercial)
-  - Boreal: A hosting platform for analytical backends, including connectors (commercial)
+
+
+## Check out our other projects:
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+<Link href="https://docs.fiveonefour.com/moose" className='no-underline'>
+  <Card>
+    <CardHeader className='gap-4'>
+      <CardTitle className='flex flex-row justify-between items-center text-xl'>Moose Stack <Badge variant="outline">Open Source</Badge></CardTitle>
+      <CardDescription>Tools for building analytical backends on top of ClickHouse and Redpanda </CardDescription>
+    </CardHeader>
+  </Card>
+</Link>
+<Link href="https://fiveonefour.com/sloan" className='no-underline'>
+  <Card>
+    <CardHeader className='gap-4'>
+      <CardTitle className='flex flex-row justify-between items-center text-xl'>Sloan <Badge variant="outline">Commercial</Badge></CardTitle>
+      <CardDescription>A co-pilot extension to help you do data engineering in your favorite AI enabled IDE </CardDescription>
+    </CardHeader>
+  </Card>
+</Link>
+<Link href="https://fiveonefour.com/boreal" className='no-underline col-span-2'>
+  <Card >
+    <CardHeader className='gap-4'>
+      <CardTitle className='flex flex-row justify-between items-center text-xl'>Boreal <Badge variant="outline">Commercial</Badge></CardTitle>
+      <CardDescription>A hosting platform for analytical backends, including connectors </CardDescription>
+    </CardHeader>
+  </Card>
+</Link>
+</div>
+
 
 ## If you have any questions
 - Join us on slack
