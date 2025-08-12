@@ -115,5 +115,7 @@ export function createHubSpotConnector(): HubSpotConnector {
 export type { HubSpotConnector } from "./types/connector";
 export type { ConnectorConfig } from "./types/config";
 export type { HttpResponseEnvelope } from "./types/envelopes";
+// Export all model types for external use
+export type * from "./models";
 
 

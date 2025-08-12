@@ -1,5 +1,30 @@
 import type { HttpResponseEnvelope } from "./envelopes";
 import type { ConnectorConfig } from "./config";
+import type {
+  Contact,
+  Company,
+  Deal,
+  Ticket,
+  Engagement,
+  ContactsResponse,
+  ContactResponse,
+  CompaniesResponse,
+  CompanyResponse,
+  DealsResponse,
+  DealResponse,
+  TicketsResponse,
+  TicketResponse,
+  EngagementsResponse,
+  EngagementResponse,
+  ListParams,
+  GetParams,
+  StreamParams,
+  GetAllParams,
+  EngagementParams,
+  GetEngagementParams,
+  StreamEngagementParams,
+  GetAllEngagementParams,
+} from "../models";
 
 export interface HubSpotConnector {
   initialize(config: ConnectorConfig): Promise<void> | void;
@@ -26,70 +51,49 @@ export interface HubSpotConnector {
   }): AsyncIterable<T[]>;
 
   // Domain: Contacts
-  listContacts(params?: {
-    properties?: string[];
-    limit?: number;
-    after?: string;
-  }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
+  listContacts(params?: ListParams): Promise<HttpResponseEnvelope<ContactsResponse>>;
 
-  getContact(params: { id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
+  getContact(params: GetParams): Promise<HttpResponseEnvelope<ContactResponse>>;
 
   // Convenience: stream and fetch all contacts
-  streamContacts(params?: { properties?: string[]; pageSize?: number }): AsyncIterable<any>;
-  getContacts(params?: { properties?: string[]; pageSize?: number; maxItems?: number }): Promise<any[]>;
+  streamContacts(params?: StreamParams): AsyncIterable<Contact>;
+  getContacts(params?: GetAllParams): Promise<Contact[]>;
 
   // Domain: Companies
-  listCompanies(params?: {
-    properties?: string[];
-    limit?: number;
-    after?: string;
-  }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
+  listCompanies(params?: ListParams): Promise<HttpResponseEnvelope<CompaniesResponse>>;
 
-  getCompany(params: { id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
+  getCompany(params: GetParams): Promise<HttpResponseEnvelope<CompanyResponse>>;
 
   // Convenience: stream and fetch all companies
-  streamCompanies(params?: { properties?: string[]; pageSize?: number }): AsyncIterable<any>;
-  getCompanies(params?: { properties?: string[]; pageSize?: number; maxItems?: number }): Promise<any[]>;
+  streamCompanies(params?: StreamParams): AsyncIterable<Company>;
+  getCompanies(params?: GetAllParams): Promise<Company[]>;
 
   // Domain: Deals
-  listDeals(params?: {
-    properties?: string[];
-    limit?: number;
-    after?: string;
-  }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
+  listDeals(params?: ListParams): Promise<HttpResponseEnvelope<DealsResponse>>;
 
-  getDeal(params: { id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
+  getDeal(params: GetParams): Promise<HttpResponseEnvelope<DealResponse>>;
 
   // Convenience: stream and fetch all deals
-  streamDeals(params?: { properties?: string[]; pageSize?: number }): AsyncIterable<any>;
-  getDeals(params?: { properties?: string[]; pageSize?: number; maxItems?: number }): Promise<any[]>;
+  streamDeals(params?: StreamParams): AsyncIterable<Deal>;
+  getDeals(params?: GetAllParams): Promise<Deal[]>;
 
   // Domain: Tickets
-  listTickets(params?: {
-    properties?: string[];
-    limit?: number;
-    after?: string;
-  }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
+  listTickets(params?: ListParams): Promise<HttpResponseEnvelope<TicketsResponse>>;
 
-  getTicket(params: { id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
+  getTicket(params: GetParams): Promise<HttpResponseEnvelope<TicketResponse>>;
 
   // Convenience: stream and fetch all tickets
-  streamTickets(params?: { properties?: string[]; pageSize?: number }): AsyncIterable<any>;
-  getTickets(params?: { properties?: string[]; pageSize?: number; maxItems?: number }): Promise<any[]>;
+  streamTickets(params?: StreamParams): AsyncIterable<Ticket>;
+  getTickets(params?: GetAllParams): Promise<Ticket[]>;
 
   // Domain: Engagements (activities)
-  listEngagements(params: {
-    objectType: "notes" | "calls" | "emails" | "meetings" | "tasks";
-    properties?: string[];
-    limit?: number;
-    after?: string;
-  }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
+  listEngagements(params: EngagementParams): Promise<HttpResponseEnvelope<EngagementsResponse>>;
 
-  getEngagement(params: { objectType: "notes" | "calls" | "emails" | "meetings" | "tasks"; id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
+  getEngagement(params: GetEngagementParams): Promise<HttpResponseEnvelope<EngagementResponse>>;
 
   // Convenience: stream and fetch all engagements for a type
-  streamEngagements(params: { objectType: "notes" | "calls" | "emails" | "meetings" | "tasks"; properties?: string[]; pageSize?: number }): AsyncIterable<any>;
-  getEngagements(params: { objectType: "notes" | "calls" | "emails" | "meetings" | "tasks"; properties?: string[]; pageSize?: number; maxItems?: number }): Promise<any[]>;
+  streamEngagements(params: StreamEngagementParams): AsyncIterable<Engagement>;
+  getEngagements(params: GetAllEngagementParams): Promise<Engagement[]>;
 }
 
 
