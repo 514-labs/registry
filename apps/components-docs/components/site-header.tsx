@@ -6,6 +6,7 @@ import { Button } from "@ui/components/button";
 import { SidebarTrigger } from "@ui/components/sidebar";
 import { SearchButton } from "@/components/search";
 import { getGithubStars } from "@/app/actions/get-github-stars";
+import { NavButton } from "@/components/nav-button";
 
 export async function SiteHeader() {
   const githubStars = await getGithubStars();
@@ -33,21 +34,13 @@ export async function SiteHeader() {
             />
           </Link>
         </Button>
-        <Button asChild variant="link">
-          <Link href="/discover">Discover</Link>
-        </Button>
-        <Button asChild variant="link">
-          <Link href="/create">Create</Link>
-        </Button>
-        <Button asChild variant="link">
-          <Link href="/share">Share</Link>
-        </Button>
+        <NavButton href="/discover" label="Discover" />
+        <NavButton href="/create" label="Create" />
+        <NavButton href="/share" label="Share" />
       </div>
       <div className="flex items-center gap-2">
         <SearchButton />
-        <Button asChild variant="link">
-          <Link href="/docs">Docs</Link>
-        </Button>
+        <NavButton href="/docs" label="Docs" />
         <SidebarTrigger />
         <ThemeToggle />
         <Button asChild variant="ghost" size="sm" className="h-7 px-2">
