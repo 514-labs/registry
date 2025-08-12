@@ -41,9 +41,12 @@ function SaaSSpecification() {
   );
 }
 
-export default function Specification() {
+export default function SpecificationsPage() {
   return (
-    <div className="flex flex-col gap-4 max-w-4xl mx-auto">
+    <div
+      className="flex flex-col gap-4 max-w-4xl mx-auto"
+      data-pagefind-filter="type:docs"
+    >
       <div className="prose dark:prose-invert prose-neutral">
         <h1 className="text-4xl">Specifications</h1>
         <p>

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+    "postbuild": "pagefind --site ./out && rm -rf ./public/pagefind && cp -R ./out/pagefind ./public/pagefind",
     "start": "next start",
     "lint": "next lint"
   },
@@ -41,6 +42,7 @@
     "eslint-config-next": "15.4.6",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.6",
-    "typescript": "^5"
+    "typescript": "^5",
+    "pagefind": "^1.3.0"
   }
 }

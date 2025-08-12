@@ -22,7 +22,7 @@ function DocsRightSidebar() {
 
 export default function DocsLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex flex-1">
+    <div className="flex flex-1" data-pagefind-filter="type:docs">
       {/* Left navigation */}
       <Sidebar
         variant="inset"
