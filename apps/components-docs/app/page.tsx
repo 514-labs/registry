@@ -40,7 +40,10 @@ function Hero() {
 
 export default function Home() {
   return (
-    <div className="font-sans items-center justify-items-center min-h-screen space-y-4">
+    <div
+      className="font-sans items-center justify-items-center min-h-screen space-y-4"
+      data-pagefind-filter="type:docs"
+    >
       <main className="flex flex-col items-center sm:items-start">
         <Hero />
         {/* Connectors */}

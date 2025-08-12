@@ -26,7 +26,10 @@ export default async function ConnectorPage({
   const tags = meta?.tags ?? [];
 
   return (
-    <div className="container mx-auto py-16 ">
+    <div
+      className="container mx-auto py-16 "
+      data-pagefind-filter="type:connector"
+    >
       <div className="grid grid-cols-12 gap-16">
         <div className="col-span-4">
           <div className="flex flex-col gap-4">
