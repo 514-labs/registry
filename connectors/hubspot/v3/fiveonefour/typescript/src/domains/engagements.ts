@@ -1,6 +1,18 @@
 /**
- * Engagements domain (activities: notes, calls, emails, meetings, tasks)
- * Demonstrates dynamic `objectType` binding over the same shared paginator/CRUD shape.
+ * Engagements domain (activities)
+ *
+ * Why the `objectType` union?
+ * - In HubSpot CRM v3, activity records are modeled as separate CRM objects that
+ *   share the same REST shape and pagination semantics but live under different
+ *   object types: `notes`, `calls`, `emails`, `meetings`, and `tasks`.
+ * - The endpoints are `/crm/v3/objects/{objectType}` and `/crm/v3/objects/{objectType}/{id}`.
+ * - Constraining `objectType` to this union catches typos at compile time and
+ *   documents the set of supported engagement types.
+ * - https://developers.hubspot.com/docs/guides/api/crm/engagements/engagement-details
+ *
+ * Contrast with fixed domains (contacts/companies/deals/tickets): those bind a
+ * constant path (e.g., `/crm/v3/objects/contacts`). Engagements are parameterized
+ * by `objectType`, but the CRUD/pagination behavior remains identical.
  */
 import type { SendFn } from "../core/paginate";
 import { paginateCursor } from "../core/paginate";
