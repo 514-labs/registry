@@ -1,5 +1,12 @@
 import type { HttpResponseEnvelope } from "./envelopes";
 import type { ConnectorConfig } from "./config";
+// SDK types
+import type { HubSpotContact } from "../models/contact";
+import type { HubSpotCompany } from "../models/company";
+import type { HubSpotDeal } from "../models/deal";
+import type { HubSpotTicket } from "../models/ticket";
+
+type Page<T> = { results: T[]; paging?: any };
 
 export interface HubSpotConnector {
   initialize(config: ConnectorConfig): Promise<void> | void;
@@ -27,69 +34,55 @@ export interface HubSpotConnector {
 
   // Domain: Contacts
   listContacts(params?: {
-    properties?: string[];
+    properties?: readonly string[];
     limit?: number;
     after?: string;
-  }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
+  }): Promise<HttpResponseEnvelope<Page<HubSpotContact>>>;
 
-  getContact(params: { id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
+  getContact(params: { id: string; properties?: readonly string[] }): Promise<HttpResponseEnvelope<HubSpotContact>>;
 
   // Convenience: stream and fetch all contacts
-  streamContacts(params?: { properties?: string[]; pageSize?: number }): AsyncIterable<any>;
-  getContacts(params?: { properties?: string[]; pageSize?: number; maxItems?: number }): Promise<any[]>;
+  streamContacts(params?: { properties?: readonly string[]; pageSize?: number }): AsyncIterable<HubSpotContact>;
+  getContacts(params?: { properties?: readonly string[]; pageSize?: number; maxItems?: number }): Promise<HubSpotContact[]>;
 
   // Domain: Companies
   listCompanies(params?: {
-    properties?: string[];
+    properties?: readonly string[];
     limit?: number;
     after?: string;
-  }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
+  }): Promise<HttpResponseEnvelope<Page<HubSpotCompany>>>;
 
-  getCompany(params: { id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
+  getCompany(params: { id: string; properties?: readonly string[] }): Promise<HttpResponseEnvelope<HubSpotCompany>>;
 
   // Convenience: stream and fetch all companies
-  streamCompanies(params?: { properties?: string[]; pageSize?: number }): AsyncIterable<any>;
-  getCompanies(params?: { properties?: string[]; pageSize?: number; maxItems?: number }): Promise<any[]>;
+  streamCompanies(params?: { properties?: readonly string[]; pageSize?: number }): AsyncIterable<HubSpotCompany>;
+  getCompanies(params?: { properties?: readonly string[]; pageSize?: number; maxItems?: number }): Promise<HubSpotCompany[]>;
 
   // Domain: Deals
   listDeals(params?: {
-    properties?: string[];
+    properties?: readonly string[];
     limit?: number;
     after?: string;
-  }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
+  }): Promise<HttpResponseEnvelope<Page<HubSpotDeal>>>;
 
-  getDeal(params: { id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
+  getDeal(params: { id: string; properties?: readonly string[] }): Promise<HttpResponseEnvelope<HubSpotDeal>>;
 
   // Convenience: stream and fetch all deals
-  streamDeals(params?: { properties?: string[]; pageSize?: number }): AsyncIterable<any>;
-  getDeals(params?: { properties?: string[]; pageSize?: number; maxItems?: number }): Promise<any[]>;
+  streamDeals(params?: { properties?: readonly string[]; pageSize?: number }): AsyncIterable<HubSpotDeal>;
+  getDeals(params?: { properties?: readonly string[]; pageSize?: number; maxItems?: number }): Promise<HubSpotDeal[]>;
 
   // Domain: Tickets
   listTickets(params?: {
-    properties?: string[];
+    properties?: readonly string[];
     limit?: number;
     after?: string;
-  }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
+  }): Promise<HttpResponseEnvelope<Page<HubSpotTicket>>>;
 
-  getTicket(params: { id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
+  getTicket(params: { id: string; properties?: readonly string[] }): Promise<HttpResponseEnvelope<HubSpotTicket>>;
 
   // Convenience: stream and fetch all tickets
-  streamTickets(params?: { properties?: string[]; pageSize?: number }): AsyncIterable<any>;
-  getTickets(params?: { properties?: string[]; pageSize?: number; maxItems?: number }): Promise<any[]>;
-
-  // Domain: Engagements (activities)
-  listEngagements(params: {
-    objectType: "notes" | "calls" | "emails" | "meetings" | "tasks";
-    properties?: string[];
-    limit?: number;
-    after?: string;
-  }): Promise<HttpResponseEnvelope<{ results: any[]; paging?: any }>>;
-
-  getEngagement(params: { objectType: "notes" | "calls" | "emails" | "meetings" | "tasks"; id: string; properties?: string[] }): Promise<HttpResponseEnvelope<any>>;
-
-  // Convenience: stream and fetch all engagements for a type
-  streamEngagements(params: { objectType: "notes" | "calls" | "emails" | "meetings" | "tasks"; properties?: string[]; pageSize?: number }): AsyncIterable<any>;
-  getEngagements(params: { objectType: "notes" | "calls" | "emails" | "meetings" | "tasks"; properties?: string[]; pageSize?: number; maxItems?: number }): Promise<any[]>;
+  streamTickets(params?: { properties?: readonly string[]; pageSize?: number }): AsyncIterable<HubSpotTicket>;
+  getTickets(params?: { properties?: readonly string[]; pageSize?: number; maxItems?: number }): Promise<HubSpotTicket[]>;
 }
 
 

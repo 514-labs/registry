@@ -1,29 +1,24 @@
-import nock from "nock";
 import { createHubSpotConnector } from "../../src";
 
-const BASE = "https://api.hubapi.com";
+// For paginate and streamContacts, the connector now uses SDK apiRequest or crm.contacts.basicApi
+jest.mock("@hubspot/api-client", () => {
+  const apiRequest = jest.fn();
+  const mocked = { apiRequest, crm: { contacts: { basicApi: { getPage: jest.fn() } } } } as any;
+  return { Client: jest.fn(() => mocked), __mocked: { mocked, apiRequest } };
+});
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { __mocked } = require("@hubspot/api-client");
 
 describe("paginate (unit)", () => {
-  afterEach(() => nock.cleanAll());
+  beforeEach(() => {
+    __mocked.apiRequest.mockReset();
+  });
 
   it("iterates two pages using limit=1 and paging.next.after", async () => {
-    // Page 1
-    const afterToken = "next-1";
-    nock(BASE)
-      .get("/crm/v3/objects/contacts")
-      .query((q) => q.limit === "1" && (q.after === undefined || q.after === ""))
-      .reply(200, {
-        results: [{ id: "1", properties: { email: "a@example.com" } }],
-        paging: { next: { after: afterToken } },
-      });
-
-    // Page 2
-    nock(BASE)
-      .get("/crm/v3/objects/contacts")
-      .query((q) => q.limit === "1" && q.after === afterToken)
-      .reply(200, {
-        results: [{ id: "2", properties: { email: "b@example.com" } }],
-      });
+    __mocked.apiRequest
+      .mockImplementationOnce(async () => ({ data: { results: [{ id: "1" }], paging: { next: { after: "next-1" } } } }))
+      .mockImplementationOnce(async () => ({ data: { results: [{ id: "2" }] } }));
 
     const hs = createHubSpotConnector();
     hs.initialize({ auth: { type: "bearer", bearer: { token: "token" } } });
@@ -42,36 +37,25 @@ describe("paginate (unit)", () => {
   });
 
   it("getContacts aggregates across pages", async () => {
-    // page 1
-    nock(BASE)
-      .get("/crm/v3/objects/contacts")
-      .query((q) => q.limit === "1" && (q.after === undefined || q.after === ""))
-      .reply(200, { results: [{ id: "1" }], paging: { next: { after: "next-1" } } });
-    // page 2
-    nock(BASE)
-      .get("/crm/v3/objects/contacts")
-      .query((q) => q.limit === "1" && q.after === "next-1")
-      .reply(200, { results: [{ id: "2" }] });
+    // Connector streams via crm.contacts.basicApi.getPage; simulate two pages
+    const getPage = __mocked.mocked.crm.contacts.basicApi.getPage as jest.Mock;
+    getPage
+      .mockResolvedValueOnce({ results: [{ id: "1" }], paging: { next: { after: "next-1" } } })
+      .mockResolvedValueOnce({ results: [{ id: "2" }] });
 
     const hs = createHubSpotConnector();
     hs.initialize({ auth: { type: "bearer", bearer: { token: "token" } } });
     await hs.connect();
     const res = await hs.getContacts({ pageSize: 1 });
-    expect(res.map((r) => r.id)).toEqual(["1", "2"]);
+    expect(res.map((r: any) => r.id)).toEqual(["1", "2"]);
     await hs.disconnect();
   });
 
   it("streamContacts yields items one by one", async () => {
-    // page 1
-    nock(BASE)
-      .get("/crm/v3/objects/contacts")
-      .query((q) => q.limit === "1" && (q.after === undefined || q.after === ""))
-      .reply(200, { results: [{ id: "a" }], paging: { next: { after: "after-a" } } });
-    // page 2
-    nock(BASE)
-      .get("/crm/v3/objects/contacts")
-      .query((q) => q.limit === "1" && q.after === "after-a")
-      .reply(200, { results: [{ id: "b" }] });
+    const getPage = __mocked.mocked.crm.contacts.basicApi.getPage as jest.Mock;
+    getPage
+      .mockResolvedValueOnce({ results: [{ id: "a" }], paging: { next: { after: "after-a" } } })
+      .mockResolvedValueOnce({ results: [{ id: "b" }] });
 
     const hs = createHubSpotConnector();
     hs.initialize({ auth: { type: "bearer", bearer: { token: "token" } } });
