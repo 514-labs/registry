@@ -3,6 +3,10 @@ import { Badge } from "@ui/components/badge";
 import { Card } from "@ui/components/card";
 import { cn } from "@/lib/utils";
 import { listConnectorIds, readConnector } from "@workspace/registry";
+import { PagefindMeta } from "@/components/pagefind-meta";
+
+export const dynamic = "force-static";
+export const dynamicParams = false;
 
 export async function generateStaticParams(): Promise<{ connector: string }[]> {
   return listConnectorIds().map((id: string) => ({ connector: id }));
@@ -24,13 +28,14 @@ export default async function ConnectorPage({
 
   return (
     <div className="container mx-auto py-16 ">
+      <PagefindMeta type="connector" />
       <div className="grid grid-cols-12 gap-16">
         <div className="col-span-4">
           <div className="flex flex-col gap-4">
             <Card className="h-full overflow-hidden p-0">
               <div className="relative p-8">
                 <Image
-                  src={`/connector-logos/${displayName.replace(/\s+/g, "")}.png`}
+                  src={`/connector-logos/${conn.connectorId}.png`}
                   alt={`${displayName} logo`}
                   width={48}
                   height={48}

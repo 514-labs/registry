@@ -511,7 +511,7 @@ result = GET /jobs/{jobId}/result
 
 ### Versioning and Compatibility
 
-- Semantic versioning for the connector contract.
+- Use the upstream/source version identifiers for organizing connector variants (e.g., v4, dates, API versions). SemVer is not required for registry entries.
 - Backward‑compatible changes preferable; document breaking changes clearly.
 - Feature flags or capability negotiation for optional features (e.g., streaming, webhooks).
 
