@@ -14,11 +14,11 @@ import logging
 # Add src to path for local development
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-from hooks.base import (
+from shopify_connector.hooks.base import (
     BaseHook, HookContext, HookType, HookPriority, HookExecutionError
 )
-from hooks.manager import HookManager
-from hooks.builtin import (
+from shopify_connector.hooks.manager import HookManager
+from shopify_connector.hooks.builtin import (
     LoggingHook, MetricsHook, TimingHook, ValidationHook, CorrelationHook
 )
 

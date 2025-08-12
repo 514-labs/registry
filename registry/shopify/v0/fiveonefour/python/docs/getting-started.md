@@ -50,7 +50,7 @@ If you later decide to turn your connector into an installable Shopify app:
 - Recommended for single‑store setups: custom app with Admin API access token.
 - Public app OAuth (Shopify Partners) is possible but not required for read‑only extraction in one store. Note: order data for public apps may require additional approvals from Shopify.
 
-**Important Note**: This connector uses the **REST Admin API**. While Shopify is steering new apps toward GraphQL (REST was marked legacy in 2024), REST remains fully functional for existing implementations and provides a simpler interface for read-only data extraction. 
+**Important Note**: This connector uses the **GraphQL Admin API** by default with no REST fallback in this release. Provide `SHOPIFY_SHOP`, `SHOPIFY_API_VERSION` (e.g., `2024-07`), and `SHOPIFY_ACCESS_TOKEN` before use. REST may be added later if needed.
 
 **Future Considerations**: 
 - REST API will continue to work for existing implementations

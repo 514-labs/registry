@@ -7,10 +7,10 @@ Shopify API communication methods.
 
 from .base import BaseTransport
 from .http_client import HTTPClient
-from .rest import RESTTransport
+from .graphql import GraphQLTransport
 
 __all__ = [
     'BaseTransport',
     'HTTPClient',
-    'RESTTransport',
+    'GraphQLTransport',
 ]

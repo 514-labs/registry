@@ -18,9 +18,10 @@ from .errors.base import (
 from .auth.base import BaseAuth
 from .auth.bearer import BearerAuth
 from .transport.base import BaseTransport
-from .transport.rest import RESTTransport
+from .transport.graphql import GraphQLTransport
+
 from .resilience import RetryPolicy, TokenBucketRateLimiter, CircuitBreaker
-from .pagination import BasePagination, LinkHeaderPagination
+from .pagination import BasePagination, CursorPagination
 from .hooks import HookManager, HookType, HookContext
 from .utils.logging import setup_logging
 
@@ -335,18 +336,10 @@ class ShopifyConnector:
         return auth
     
     def _setup_transport(self) -> BaseTransport:
-        """Setup transport layer with GraphQL primary and REST fallback."""
-        if self.config.useGraphQL:
-            # TODO: Implement GraphQL transport
-            # For now, fall back to REST
-            logger.info("GraphQL transport not yet implemented, using REST fallback")
-            rest_transport = RESTTransport(self.config)
-            rest_transport.set_auth(self.auth)
-            return rest_transport
-        else:
-            rest_transport = RESTTransport(self.config)
-            rest_transport.set_auth(self.auth)
-            return rest_transport
+        """Setup transport layer (GraphQL-only)."""
+        gql_transport = GraphQLTransport(self.config)
+        gql_transport.set_auth(self.auth)
+        return gql_transport
     
     def _setup_retry(self) -> RetryPolicy:
         """Setup retry policy."""
@@ -390,7 +383,7 @@ class ShopifyConnector:
     
     def _setup_paginator(self) -> BasePagination:
         """Setup pagination component."""
-        return LinkHeaderPagination(self)
+        return CursorPagination(self)
     
     def _execute_request(self, options: Dict[str, Any]) -> Dict[str, Any]:
         """Execute a single request through the transport layer."""

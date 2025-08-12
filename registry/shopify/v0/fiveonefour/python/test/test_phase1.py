@@ -12,9 +12,9 @@ import os
 # Add src to path for local development
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-from config.schema import ShopifyConnectorConfig
-from errors.codes import ErrorCode
-from errors.base import (
+from shopify_connector.config.schema import ShopifyConnectorConfig
+from shopify_connector.errors.codes import ErrorCode
+from shopify_connector.errors.base import (
     ConnectorError, NetworkError, TimeoutError, AuthFailedError,
     RateLimitError, InvalidRequestError, ServerError
 )
@@ -68,7 +68,7 @@ def test_error_codes():
         print(f"   RATE_LIMIT: {ErrorCode.RATE_LIMIT}")
         
         # Test error code mapping
-        from errors.codes import HTTP_STATUS_TO_ERROR_CODE
+        from shopify_connector.errors.codes import HTTP_STATUS_TO_ERROR_CODE
         print("✅ HTTP status to error code mapping")
         print(f"   400 -> {HTTP_STATUS_TO_ERROR_CODE.get(400)}")
         print(f"   401 -> {HTTP_STATUS_TO_ERROR_CODE.get(401)}")

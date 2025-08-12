@@ -2,11 +2,23 @@
 
 A production-ready Python connector for Shopify's GraphQL Admin API, built according to the [API Connector Specification](../../../../../../apps/components-docs/content/docs/specifications/api-connector.mdx).
 
+> Note: This release uses GraphQL as the only transport (no REST fallback). REST may be reintroduced later if needed.
+
 ## 🚀 Quick Start
 
 ### Prerequisites
 - Python 3.12+ 
 - pip (latest version)
+
+### Environment variables (placeholders)
+
+Set these before using the connector:
+
+```bash
+export SHOPIFY_SHOP="<your-store>.myshopify.com"       # REQUIRED
+export SHOPIFY_API_VERSION="2024-07"                    # REQUIRED (pinned)
+export SHOPIFY_ACCESS_TOKEN="<your-admin-api-access-token>"  # REQUIRED
+```
 
 ### Development Environment Setup
 

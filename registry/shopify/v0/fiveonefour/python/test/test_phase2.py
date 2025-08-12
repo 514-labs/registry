@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from shopify_connector.auth.bearer import BearerAuth
 from shopify_connector.transport.http_client import HTTPClient
-from shopify_connector.transport.rest import RESTTransport
+from shopify_connector.transport.graphql import GraphQLTransport
 from shopify_connector.config.schema import ShopifyConnectorConfig
 
 
@@ -84,9 +84,9 @@ def test_http_client():
     return True
 
 
-def test_rest_transport():
-    """Test REST transport components."""
-    print("🚀 Testing REST Transport Components")
+def test_graphql_transport():
+    """Test GraphQL transport components (no network execution)."""
+    print("🚀 Testing GraphQL Transport Components")
     print("=" * 40)
     
     # Create test config
@@ -96,30 +96,20 @@ def test_rest_transport():
     )
     
     try:
-        transport = RESTTransport(config)
-        print("✅ RESTTransport created successfully")
+        transport = GraphQLTransport(config)
+        print("✅ GraphQLTransport created successfully")
         print(f"   Healthy: {transport.is_healthy()}")
         print(f"   Type: {transport.get_transport_type()}")
-        
-        # Test method support
-        print(f"   Supports GET: {transport.supports_method('GET')}")
-        print(f"   Supports POST: {transport.supports_method('POST')}")
-        print(f"   Supports INVALID: {transport.supports_method('INVALID')}")
         
         # Test capabilities
         capabilities = transport.get_capabilities()
         print(f"   Capabilities: {capabilities}")
         
-        # Test URL building (internal method)
-        test_options = {'method': 'GET', 'path': '/products'}
-        url = transport._build_url(test_options)
-        print(f"   Built URL: {url}")
-        
         transport.close()
-        print("✅ RESTTransport closed successfully")
+        print("✅ GraphQLTransport closed successfully")
         
     except Exception as e:
-        print(f"❌ REST transport test failed: {e}")
+        print(f"❌ GraphQL transport test failed: {e}")
         return False
     
     print()
@@ -168,7 +158,7 @@ def main():
     tests = [
         ("Authentication", test_authentication),
         ("HTTP Client", test_http_client),
-        ("REST Transport", test_rest_transport),
+        ("GraphQL Transport", test_graphql_transport),
         ("Connector Integration", test_connector_integration),
     ]
     

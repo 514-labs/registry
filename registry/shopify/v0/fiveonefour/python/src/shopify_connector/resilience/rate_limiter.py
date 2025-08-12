@@ -35,9 +35,11 @@ class TokenBucketRateLimiter:
         Args:
             config: Rate limiting configuration
         """
-        self.max_tokens = config.maxTokens
-        self.refill_rate = config.refillRate  # tokens per second
-        self.burst_size = config.burstSize
+        # Use configured burst capacity as token bucket size (default 40)
+        self.max_tokens = float(config.burstCapacity)
+        # Use configured steady requests per second as refill rate (default 2 rps)
+        self.refill_rate = float(config.requestsPerSecond)
+        self.burst_size = int(config.burstCapacity)
         
         # Current token count and last refill time
         self.tokens = self.max_tokens

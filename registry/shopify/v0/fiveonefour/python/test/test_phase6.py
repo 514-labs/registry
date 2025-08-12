@@ -21,12 +21,10 @@ from shopify_connector.auth.base import BaseAuth
 from shopify_connector.auth.bearer import BearerAuth
 from shopify_connector.transport.base import BaseTransport
 from shopify_connector.transport.http_client import HTTPClient
-from shopify_connector.transport.rest import RESTTransport
 from shopify_connector.resilience.retry import RetryPolicy
 from shopify_connector.resilience.rate_limiter import TokenBucketRateLimiter
 from shopify_connector.resilience.circuit_breaker import CircuitBreaker, CircuitState
 from shopify_connector.pagination.base import BasePagination
-from shopify_connector.pagination.link_header import LinkHeaderPagination
 from shopify_connector.data.models import (
     ShopifyBaseModel, Product, Order, Customer, Collection, Shop, Image, Money
 )
@@ -51,8 +49,7 @@ def test_connector_initialization():
             'accessToken': 'test_token_123',
             'apiVersion': '2024-07',
             'timeout': 30000,
-            'useGraphQL': False,
-            'fallbackToREST': True
+            'useGraphQL': True
         }
         
         connector = ShopifyConnector(config)
@@ -270,7 +267,7 @@ def test_resilience_integration():
         # Test rate limiter
         rate_limiter = connector.rate_limiter
         print("✅ Rate limiter integration")
-        print(f"   Token bucket capacity: {rate_limiter.capacity}")
+        print(f"   Token bucket capacity: {rate_limiter.max_tokens}")
         print(f"   Refill rate: {rate_limiter.refill_rate} tokens/sec")
         
         # Test circuit breaker
@@ -278,7 +275,7 @@ def test_resilience_integration():
         print("✅ Circuit breaker integration")
         print(f"   State: {circuit_breaker.state}")
         print(f"   Failure threshold: {circuit_breaker.failure_threshold}")
-        print(f"   Recovery timeout: {circuit_breaker.recovery_timeout}ms")
+        print(f"   Recovery timeout: {circuit_breaker.recovery_timeout}")
         
         print()
         return True

@@ -59,7 +59,7 @@ class HookManager:
         
         # Add hook and sort by priority
         self.hooks[hook_type].append(hook)
-        self.hooks[hook_type].sort(key=lambda h: h.priority)
+        self.hooks[hook_type].sort(key=lambda h: h.priority.value)
         
         logger.debug(f"Added hook '{hook.name}' to {hook_type.value} (priority: {hook.priority.value})")
     
@@ -78,7 +78,7 @@ class HookManager:
             raise ValueError(f"Global hook with name '{hook.name}' already exists")
         
         self.global_hooks.append(hook)
-        self.global_hooks.sort(key=lambda h: h.priority)
+        self.global_hooks.sort(key=lambda h: h.priority.value)
         
         logger.debug(f"Added global hook '{hook.name}' (priority: {hook.priority.value})")
     

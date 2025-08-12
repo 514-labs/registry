@@ -446,3 +446,51 @@ touch src/{auth,transport,resilience,pagination,hooks,data,errors,config,utils}/
 - **Production Ready**: Can be deployed in production environments
 
 This implementation plan ensures the connector strictly adheres to our API connector specification while providing a robust, production-ready solution for Shopify data extraction.
+
+### **Phase 7: GraphQL Migration (Week 13-14)**
+
+#### **7.1 Goals**
+- Switch primary transport to Shopify GraphQL Admin API
+- Maintain API Connector Specification compliance and response shape
+- Keep REST transport as automatic fallback for unsupported operations
+- Deliver cursor-based pagination and cost/rate-limit parsing for GraphQL
+
+#### **7.2 Deliverables**
+- `src/shopify_connector/transport/graphql.py` (GraphQL transport)
+- Cursor-based pagination integrated into request flow
+- Error mapping from GraphQL errors to standardized error codes
+- GraphQL cost/rate-limit header parsing mapped to `meta.rateLimit`
+- Configuration: `useGraphQL=True` by default; `fallbackToREST=True`
+- Updated documentation (Getting Started, Architecture, Why GraphQL, Configuration)
+- Tests: unit and integration coverage for GraphQL transport and pagination
+
+#### **7.3 Work Items**
+- Implement `GraphQLTransport` with:
+  - Query execution (batched optional), headers, timeouts
+  - Error mapping (e.g., throttling → RATE_LIMIT)
+  - Cost/rate-limit parsing; request ID extraction
+- Add cursor-based pagination helpers and integrate with `connector.paginate`
+- Routing logic in `connector._setup_transport()` to instantiate GraphQL by default
+- Keep transparent REST fallback when GraphQL is unsupported or explicitly disabled
+- Update configuration docs and examples to reflect GraphQL default
+- Expand tests: retry logic, rate limiting, error mapping, pagination cursors
+
+#### **7.4 Acceptance Criteria**
+- When `useGraphQL=True`, requests use GraphQL transport; otherwise REST
+- `paginate()` uses cursor-based pagination under GraphQL
+- `meta.rateLimit`, `meta.requestId`, and `meta.duration` are populated
+- All existing conformance tests pass with GraphQL enabled
+- No regressions in REST fallback behavior
+
+#### **7.5 Rollout Plan**
+- Phase A: Land GraphQL transport behind `useGraphQL` flag (off by default)
+- Phase B: Enable GraphQL by default; retain `fallbackToREST`
+- Phase C: Update docs and examples; announce migration guidance
+
+#### **7.6 Risks & Mitigations**
+- GraphQL schema changes: pin API version and validate queries in CI
+- Throttling via cost model: implement adaptive backoff using cost headers
+- Pagination edge cases: comprehensive tests with large datasets
+
+#### **7.7 Tracking**
+- Status tracked in `development_files/PHASE7_STATUS.md`

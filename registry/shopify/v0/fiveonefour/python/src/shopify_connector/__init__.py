@@ -23,9 +23,9 @@ Example:
 from .connector import ShopifyConnector
 from .config.schema import ShopifyConnectorConfig
 from .auth import BaseAuth, BearerAuth
-from .transport import BaseTransport, HTTPClient, RESTTransport
+from .transport import BaseTransport, HTTPClient, GraphQLTransport
 from .resilience import RetryPolicy, TokenBucketRateLimiter, CircuitBreaker, CircuitState
-from .pagination import BasePagination, LinkHeaderPagination
+from .pagination import BasePagination
 from .data import (
     ShopifyBaseModel, Product, Order, Customer, Collection, 
     Shop, Image, Money, get_model_for_resource, validate_resource_data
@@ -67,7 +67,7 @@ __all__ = [
     # Transport
     "BaseTransport",
     "HTTPClient",
-    "RESTTransport",
+    "GraphQLTransport",
     
     # Resilience
     "RetryPolicy",
@@ -77,7 +77,6 @@ __all__ = [
     
     # Pagination
     "BasePagination",
-    "LinkHeaderPagination",
     
     # Data Models
     "ShopifyBaseModel",

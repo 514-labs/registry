@@ -6,9 +6,9 @@ Shopify API pagination mechanisms.
 """
 
 from .base import BasePagination
-from .link_header import LinkHeaderPagination
+from .cursor import CursorPagination
 
 __all__ = [
     'BasePagination',
-    'LinkHeaderPagination',
+    'CursorPagination',
 ]

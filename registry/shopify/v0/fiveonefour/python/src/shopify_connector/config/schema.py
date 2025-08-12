@@ -20,6 +20,7 @@ class RetryConfig(BaseModel):
     retryBudgetMs: int = Field(default=30000, ge=1000, le=600000, description="Total retry budget per operation")
     respectRetryAfter: bool = Field(default=True, description="Honor Retry-After headers")
     retryableStatusCodes: List[int] = Field(default=[429, 500, 502, 503, 504], description="HTTP status codes that trigger retries")
+    jitterFactor: float = Field(default=0.5, ge=0.0, le=1.0, description="Lower bound for jitter factor (0.0-1.0)")
     
     @validator('maxDelay')
     def max_delay_greater_than_initial(cls, v, values):
