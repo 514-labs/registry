@@ -499,7 +499,7 @@ class ShopifyConnector:
             'connection_time': self._connection_time.isoformat() if self._connection_time else None,
             'auth_valid': self.auth.isValid(),
             'circuit_breaker_open': self.circuit_breaker.is_open(),
-            'rate_limit_status': self.rate_limiter.get_status(),
+            'rate_limit_status': self.rate_limiter.get_stats(),
             'shop': self.config.shop,
             'api_version': self.config.apiVersion,
             'hook_stats': self.hook_manager.get_hook_stats()
