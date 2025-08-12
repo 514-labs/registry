@@ -1,3 +1,18 @@
+/**
+ * HubSpotApiConnector
+ *
+ * Responsibilities:
+ * - Initialize transport concerns (HTTP client, auth application, rate limiter)
+ * - Expose lifecycle (`initialize`, `connect`, `disconnect`, `isConnected`)
+ * - Provide a single `request` primitive and a generic `paginate` iterator
+ * - Delegate object‑specific operations to small "domains" that bind paths and models
+ *
+ * Why domains?
+ * - Separation of concerns: transport/retries/hooks stay here; paths/types live in domains
+ * - Reuse: domains are built from a shared CRUD factory + paginator to avoid duplication
+ * - Type safety: each domain binds its own response models for IntelliSense
+ * - Extensibility: adding an object = bind path + types; rest is inherited
+ */
 import type { HubSpotConnector } from "./types/connector";
 import type { ConnectorConfig } from "./types/config";
 import type { HttpResponseEnvelope } from "./types/envelopes";

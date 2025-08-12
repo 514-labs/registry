@@ -1,3 +1,8 @@
+/**
+ * Contacts domain
+ * Thin binding that maps the contacts API path to shared CRUD and streaming helpers.
+ * Keeps request/retry/rate‑limit in the connector; keeps types in `src/models/contacts`.
+ */
 import type { SendFn } from "../core/paginate";
 import { makeCrudDomain } from "../core/make-crud-domain";
 import type { Contact, ContactsResponse, ContactResponse } from "../models/contacts";

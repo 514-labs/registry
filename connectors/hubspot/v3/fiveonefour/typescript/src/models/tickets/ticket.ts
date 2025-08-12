@@ -1,3 +1,7 @@
+/**
+ * Ticket model: strong typing for ticket `properties` with base fields.
+ * Used by the tickets domain to type list/get/stream/getAll.
+ */
 import type { HubSpotObject } from "../shared";
 
 /**

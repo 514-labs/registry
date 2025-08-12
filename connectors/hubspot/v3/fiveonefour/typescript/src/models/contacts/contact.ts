@@ -1,9 +1,12 @@
+/**
+ * Contact model:
+ * - Provides strong typing for contact `properties` while inheriting base fields
+ * - Used by the contacts domain to type list/get/stream/getAll
+ * - Allows additional custom properties via index signature
+ */
 import type { HubSpotObject } from "../shared";
 
-/**
- * Contact Properties
- * Common HubSpot contact properties with strong typing
- */
+/** Contact Properties */
 export interface ContactProperties {
   email?: string;
   firstname?: string;

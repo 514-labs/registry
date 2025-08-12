@@ -1,3 +1,7 @@
+/**
+ * Deals domain
+ * Binds the deals path to shared CRUD and streaming helpers; models live in `src/models/deals`.
+ */
 import type { SendFn } from "../core/paginate";
 import { makeCrudDomain } from "../core/make-crud-domain";
 import type { Deal, DealsResponse, DealResponse } from "../models/deals";

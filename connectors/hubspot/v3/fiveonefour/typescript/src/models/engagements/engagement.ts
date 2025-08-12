@@ -1,3 +1,7 @@
+/**
+ * Engagement model: strong typing for engagement `properties` with base fields.
+ * Used by the engagements domain to type list/get/stream/getAll.
+ */
 import type { HubSpotObject } from "../shared";
 
 /**

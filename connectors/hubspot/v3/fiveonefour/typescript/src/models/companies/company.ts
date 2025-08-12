@@ -1,3 +1,7 @@
+/**
+ * Company model: strong typing for company `properties` with base fields.
+ * Used by the companies domain to type list/get/stream/getAll.
+ */
 import type { HubSpotObject } from "../shared";
 
 /**
