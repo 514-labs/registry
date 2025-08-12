@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "name": "hubspot",
+  "title": "HubSpot",
+  "category": "CRM",
+  "tags": ["CRM", "SaaS"],
+  "description": "Subscribe to HubSpot objects.",
+  "homepage": "https://developers.hubspot.com/docs/reference/api"
+}
