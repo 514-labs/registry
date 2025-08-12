@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@ui/components/theme-toggle";
 import { Button } from "@ui/components/button";
 import { SidebarTrigger } from "@ui/components/sidebar";
+import { SearchButton } from "@/components/search";
 
 export function SiteHeader() {
   const pathname = usePathname() ?? "/";
@@ -90,22 +91,9 @@ export function SiteHeader() {
             Share
           </Link>
         </Button>
-        <Button
-          asChild
-          variant="link"
-          className={
-            isActivePath("/host") ? "underline underline-offset-4" : undefined
-          }
-        >
-          <Link
-            href="/host"
-            aria-current={isActivePath("/host") ? "page" : undefined}
-          >
-            Host
-          </Link>
-        </Button>
       </div>
       <div className="flex items-center gap-2">
+        <SearchButton />
         <Button
           asChild
           variant="link"
