@@ -19,5 +19,9 @@ export default function DiscoverPage() {
     };
   });
 
-  return <DiscoverGrid connectors={connectors} />;
+  return (
+    <div data-pagefind-filter="type:docs">
+      <DiscoverGrid connectors={connectors} />
+    </div>
+  );
 }

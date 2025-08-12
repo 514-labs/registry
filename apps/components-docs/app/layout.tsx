@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@ui/components/theme-provider";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarProvider } from "@ui/components/sidebar";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +37,12 @@ export default function RootLayout({
             {children}
           </SidebarProvider>
         </ThemeProvider>
+        {/* Pagefind default UI styling (optional minimal), safe to include */}
+        <Script id="pagefind-preload" strategy="afterInteractive">
+          {`
+            // noop placeholder for future pagefind.init() preloading hooks
+          `}
+        </Script>
       </body>
     </html>
   );
