@@ -66,17 +66,13 @@ def main() -> int:
             if not isinstance(data_inv, dict):
                 print("GraphQL error (inventory):", resp_inv.get("body") or resp_inv)
                 return 1
-            inv = data_inv.get("inventoryItems") or data_inv.get("products") or {}
-            # Try edges list regardless of container
-            container = inv.get("edges") if isinstance(inv, dict) else []
-            inv_edges = container or []
-            print("Inventory items returned:", len(inv_edges))
-            if inv_edges:
-                first_edge = inv_edges[0]
-                node = first_edge.get("node", {}) if isinstance(first_edge, dict) else {}
-                # Try inventoryItem within variant path
-                item = node.get("inventoryItem", node)
-                print("First inventory-like node:", {k: item.get(k) for k in ("id", "sku") if isinstance(item, dict)})
+            products = (data_inv.get("products") or {}).get("edges", [])
+            print("Inventory items returned:", len(products))
+            if products:
+                first_product = products[0].get("node", {}) if isinstance(products[0], dict) else {}
+                first_variant_edge = ((first_product.get("variants") or {}).get("edges") or [None])[0]
+                first_variant = (first_variant_edge or {}).get("node", {}) if isinstance(first_variant_edge, dict) else {}
+                print("First variant:", {k: first_variant.get(k) for k in ("id", "sku", "inventoryQuantity")})
         except Exception as e:
             details = getattr(e, 'details', None)
             if details:
