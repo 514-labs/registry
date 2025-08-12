@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button } from "@ui/components/button";
 import { connectors } from "@/lib/connectors-mock";
 import { Badge } from "@ui/components/badge";
+import { PagefindMeta } from "@/components/pagefind-meta";
 
 function Hero() {
   return (
@@ -40,10 +41,8 @@ function Hero() {
 
 export default function Home() {
   return (
-    <div
-      className="font-sans items-center justify-items-center min-h-screen space-y-4"
-      data-pagefind-filter="type:docs"
-    >
+    <div className="font-sans items-center justify-items-center min-h-screen space-y-4">
+      <PagefindMeta type="docs" />
       <main className="flex flex-col items-center sm:items-start">
         <Hero />
         {/* Connectors */}

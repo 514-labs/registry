@@ -3,6 +3,7 @@ import { Badge } from "@ui/components/badge";
 import { Card } from "@ui/components/card";
 import { cn } from "@/lib/utils";
 import { listConnectorIds, readConnector } from "@workspace/registry";
+import { PagefindMeta } from "@/components/pagefind-meta";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -26,10 +27,8 @@ export default async function ConnectorPage({
   const tags = meta?.tags ?? [];
 
   return (
-    <div
-      className="container mx-auto py-16 "
-      data-pagefind-filter="type:connector"
-    >
+    <div className="container mx-auto py-16 ">
+      <PagefindMeta type="connector" />
       <div className="grid grid-cols-12 gap-16">
         <div className="col-span-4">
           <div className="flex flex-col gap-4">

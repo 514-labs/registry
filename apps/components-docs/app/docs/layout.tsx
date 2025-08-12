@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import DocsToc from "@/components/docs-toc";
 import DocsNav from "@/components/docs-nav";
+import { PagefindMeta } from "@/components/pagefind-meta";
 
 import {
   Sidebar,
@@ -22,7 +23,8 @@ function DocsRightSidebar() {
 
 export default function DocsLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex flex-1" data-pagefind-filter="type:docs">
+    <div className="flex flex-1">
+      <PagefindMeta type="docs" />
       {/* Left navigation */}
       <Sidebar
         variant="inset"
