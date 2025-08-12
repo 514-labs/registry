@@ -1,0 +1,45 @@
+{
+  "tables": [
+    {
+      "name": "aircraft_enriched",
+      "description": "Aircraft data with additional computed fields and metadata",
+      "columns": [
+        {"name": "hex", "type": "varchar(6)", "nullable": false, "key": "primary"},
+        {"name": "type", "type": "varchar(4)", "nullable": true},
+        {"name": "flight", "type": "varchar(8)", "nullable": true},
+        {"name": "registration", "type": "varchar(10)", "nullable": true},
+        {"name": "alt_baro_ft", "type": "integer", "nullable": true},
+        {"name": "alt_baro_m", "type": "integer", "nullable": true, "computed": true},
+        {"name": "gs_kts", "type": "decimal(5,1)", "nullable": true},
+        {"name": "gs_kmh", "type": "decimal(6,1)", "nullable": true, "computed": true},
+        {"name": "track_deg", "type": "decimal(5,2)", "nullable": true},
+        {"name": "climb_rate_fpm", "type": "integer", "nullable": true},
+        {"name": "squawk", "type": "varchar(4)", "nullable": true},
+        {"name": "emergency_status", "type": "varchar(20)", "nullable": true, "computed": true},
+        {"name": "is_military", "type": "boolean", "nullable": false, "default": false},
+        {"name": "lat", "type": "decimal(10,6)", "nullable": true},
+        {"name": "lon", "type": "decimal(10,6)", "nullable": true},
+        {"name": "last_seen", "type": "timestamp", "nullable": true, "computed": true},
+        {"name": "data_quality", "type": "varchar(10)", "nullable": true, "computed": true},
+        {"name": "request_id", "type": "varchar(50)", "nullable": true},
+        {"name": "processed_at", "type": "timestamp", "nullable": false}
+      ]
+    },
+    {
+      "name": "api_responses",
+      "description": "Processed API response metadata",
+      "columns": [
+        {"name": "response_id", "type": "bigint", "nullable": false, "key": "primary"},
+        {"name": "request_id", "type": "varchar(50)", "nullable": false, "unique": true},
+        {"name": "endpoint", "type": "varchar(100)", "nullable": false},
+        {"name": "status_code", "type": "integer", "nullable": false},
+        {"name": "aircraft_count", "type": "integer", "nullable": false},
+        {"name": "duration_ms", "type": "integer", "nullable": false},
+        {"name": "retry_count", "type": "integer", "nullable": false, "default": 0},
+        {"name": "rate_limit_remaining", "type": "integer", "nullable": true},
+        {"name": "rate_limit_reset", "type": "timestamp", "nullable": true},
+        {"name": "timestamp", "type": "timestamp", "nullable": false}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "tables": [
+    {
+      "name": "aircraft",
+      "description": "Real-time aircraft position and flight data",
+      "columns": [
+        {"name": "hex", "type": "varchar(6)", "nullable": false, "key": "primary"},
+        {"name": "type", "type": "varchar(4)", "nullable": true, "description": "Aircraft type code"},
+        {"name": "flight", "type": "varchar(8)", "nullable": true, "description": "Callsign"},
+        {"name": "registration", "type": "varchar(10)", "nullable": true, "key": "index"},
+        {"name": "alt_baro", "type": "integer", "nullable": true, "description": "Barometric altitude in feet"},
+        {"name": "alt_geom", "type": "integer", "nullable": true, "description": "Geometric altitude in feet"},
+        {"name": "gs", "type": "decimal(5,1)", "nullable": true, "description": "Ground speed in knots"},
+        {"name": "track", "type": "decimal(5,2)", "nullable": true, "description": "Track angle in degrees"},
+        {"name": "baro_rate", "type": "integer", "nullable": true, "description": "Climb/descent rate in ft/min"},
+        {"name": "squawk", "type": "varchar(4)", "nullable": true, "description": "Transponder code"},
+        {"name": "emergency", "type": "varchar(20)", "nullable": true},
+        {"name": "category", "type": "varchar(10)", "nullable": true},
+        {"name": "lat", "type": "decimal(10,6)", "nullable": true, "key": "index"},
+        {"name": "lon", "type": "decimal(10,6)", "nullable": true, "key": "index"},
+        {"name": "seen", "type": "integer", "nullable": true, "description": "Seconds since last update"},
+        {"name": "rssi", "type": "decimal(5,2)", "nullable": true, "description": "Signal strength"},
+        {"name": "messages", "type": "integer", "nullable": true},
+        {"name": "seen_pos", "type": "decimal(5,2)", "nullable": true},
+        {"name": "version", "type": "integer", "nullable": true}
+      ]
+    },
+    {
+      "name": "aircraft_snapshots",
+      "description": "Point-in-time snapshots of aircraft data",
+      "columns": [
+        {"name": "snapshot_id", "type": "bigint", "nullable": false, "key": "primary"},
+        {"name": "hex", "type": "varchar(6)", "nullable": false, "key": "foreign", "references": "aircraft.hex"},
+        {"name": "timestamp", "type": "timestamp", "nullable": false, "key": "index"},
+        {"name": "total_aircraft", "type": "integer", "nullable": false},
+        {"name": "ctime", "type": "bigint", "nullable": true},
+        {"name": "ptime", "type": "bigint", "nullable": true}
+      ]
+    }
+  ]
+}

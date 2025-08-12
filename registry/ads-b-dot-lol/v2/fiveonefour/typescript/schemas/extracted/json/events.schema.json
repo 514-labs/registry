@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "ADS-B Connector Response Envelope",
+  "description": "Processed response from ADS-B connector with metadata",
+  "properties": {
+    "data": {
+      "$ref": "../../raw/json/aircraft-response.schema.json",
+      "description": "Raw API response data"
+    },
+    "status": {
+      "type": "number",
+      "description": "HTTP status code",
+      "minimum": 100,
+      "maximum": 599
+    },
+    "headers": {
+      "type": "object",
+      "description": "HTTP response headers",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "meta": {
+      "type": "object",
+      "description": "Connector metadata",
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Response timestamp"
+        },
+        "duration": {
+          "type": "number",
+          "description": "Request duration in milliseconds"
+        },
+        "retryCount": {
+          "type": "number",
+          "description": "Number of retries attempted"
+        },
+        "requestId": {
+          "type": "string",
+          "description": "Unique request identifier"
+        },
+        "rateLimit": {
+          "type": "object",
+          "description": "Rate limiting information",
+          "properties": {
+            "limit": {
+              "type": "number",
+              "description": "Rate limit ceiling"
+            },
+            "remaining": {
+              "type": "number", 
+              "description": "Requests remaining in window"
+            },
+            "reset": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Rate limit reset time"
+            }
+          }
+        }
+      },
+      "required": ["timestamp", "duration", "requestId"]
+    }
+  },
+  "required": ["data", "status", "meta"]
+}

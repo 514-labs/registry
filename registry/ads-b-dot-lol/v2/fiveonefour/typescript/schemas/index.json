@@ -1,27 +1,43 @@
 {
+  "$schema": "https://schemas.connector-factory.dev/schema-index.schema.json",
   "version": "2.0.0",
-  "description": "ADS-B.lol API data schemas",
-  "schemas": {
-    "aircraft": {
+  "datasets": [
+    {
+      "name": "aircraft",
+      "stage": "raw",
+      "kind": "json",
       "path": "raw/json/aircraft.schema.json",
-      "description": "Individual aircraft data structure"
+      "doc": "raw/json/events.md"
     },
-    "aircraft_response": {
-      "path": "raw/json/aircraft-response.schema.json", 
-      "description": "API response containing multiple aircraft"
+    {
+      "name": "aircraft_response",
+      "stage": "raw",
+      "kind": "json",
+      "path": "raw/json/aircraft-response.schema.json",
+      "doc": "raw/json/events.md"
+    },
+    {
+      "name": "aircraft",
+      "stage": "raw",
+      "kind": "relational",
+      "path": "raw/relational/tables.json",
+      "sql": "raw/relational/tables.sql",
+      "doc": "raw/relational/README.md"
+    },
+    {
+      "name": "aircraft_response",
+      "stage": "extracted",
+      "kind": "json",
+      "path": "extracted/json/events.schema.json",
+      "doc": "extracted/json/events.md"
+    },
+    {
+      "name": "aircraft_response",
+      "stage": "extracted",
+      "kind": "relational",
+      "path": "extracted/relational/tables.json",
+      "sql": "extracted/relational/tables.sql",
+      "doc": "extracted/relational/README.md"
     }
-  },
-  "formats": ["json"],
-  "endpoints": [
-    "/v2/icao/{hex}",
-    "/v2/callsign/{callsign}",
-    "/v2/reg/{registration}",
-    "/v2/type/{aircraft_type}",
-    "/v2/sqk/{squawk}",
-    "/v2/mil",
-    "/v2/ladd",
-    "/v2/pia",
-    "/v2/lat/{lat}/lon/{lon}/dist/{radius}",
-    "/v2/closest/{lat}/{lon}/{radius}"
   ]
 }
