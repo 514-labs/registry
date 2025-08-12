@@ -1,3 +1,7 @@
+/**
+ * Companies domain
+ * Binds the companies path to shared CRUD and streaming helpers; models live in `src/models/companies`.
+ */
 import type { SendFn } from "../core/paginate";
 import { makeCrudDomain } from "../core/make-crud-domain";
 import type { Company, CompaniesResponse, CompanyResponse } from "../models/companies";

@@ -1,3 +1,7 @@
+/**
+ * Engagements domain (activities: notes, calls, emails, meetings, tasks)
+ * Demonstrates dynamic `objectType` binding over the same shared paginator/CRUD shape.
+ */
 import type { SendFn } from "../core/paginate";
 import { paginateCursor } from "../core/paginate";
 import type { Engagement, EngagementsResponse, EngagementResponse } from "../models/engagements";

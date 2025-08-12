@@ -1,5 +1,10 @@
 /**
- * Shared base types for all HubSpot CRM objects
+ * Shared base types for all HubSpot CRM objects.
+ *
+ * These types intentionally mirror HubSpot's object/response shape so that
+ * domain models (contacts/companies/deals/tickets/engagements) can extend
+ * them without redefining pagination or metadata fields. Custom objects can
+ * also use these directly via `HubSpotObject`.
  */
 
 // Base HubSpot object structure

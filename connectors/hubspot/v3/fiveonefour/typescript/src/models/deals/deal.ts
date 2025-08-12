@@ -1,3 +1,7 @@
+/**
+ * Deal model: strong typing for deal `properties` with base fields.
+ * Used by the deals domain to type list/get/stream/getAll.
+ */
 import type { HubSpotObject } from "../shared";
 
 /**
