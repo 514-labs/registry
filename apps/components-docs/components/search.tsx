@@ -12,6 +12,7 @@ import {
 import { Input } from "@ui/components/input";
 import { Button } from "@ui/components/button";
 import { ScrollArea } from "@ui/components/scroll-area";
+import { Search } from "lucide-react";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PagefindModule = any;
@@ -202,10 +203,30 @@ export function SearchDialog({
 
 export function SearchButton() {
   const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setOpen(true);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
   return (
     <>
-      <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
-        Search
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => setOpen(true)}
+        className="inline-flex items-center gap-2 text-muted-foreground bg-muted"
+      >
+        <Search className="w-4 h-4" />
+        <span>Search</span>
+        <span className="ml-1 hidden sm:inline-flex items-center rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+          <span>⌘</span>
+          <span className="ml-0.5">K</span>
+        </span>
       </Button>
       <SearchDialog open={open} onOpenChange={setOpen} />
     </>
