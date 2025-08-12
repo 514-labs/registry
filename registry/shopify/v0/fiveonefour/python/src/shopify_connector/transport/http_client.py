@@ -127,7 +127,8 @@ class HTTPClient:
             request_timeout = self.config.timeout / 1000.0
         
         # Prepare request data
-        request_data = self._prepare_request_data(method, data, json)
+        # Do not coerce JSON into form data; pass through httpx json= below
+        # request_data = self._prepare_request_data(method, data, json)
         
         # Prepare headers
         request_headers = self._prepare_headers(headers)
@@ -154,7 +155,8 @@ class HTTPClient:
                 url=url,
                 headers=request_headers,
                 params=request_params,
-                data=request_data,
+                data=data,
+                json=json,
                 timeout=request_timeout
             )
             
@@ -263,6 +265,13 @@ class HTTPClient:
         # Ensure content-type for JSON requests
         if 'Content-Type' not in request_headers:
             request_headers['Content-Type'] = 'application/json'
+        
+        # Ensure Accept JSON
+        if 'Accept' not in request_headers:
+            request_headers['Accept'] = 'application/json'
+        
+        # Add a User-Agent
+        request_headers.setdefault('User-Agent', 'shopify-connector/0.1.0')
         
         return request_headers
     

@@ -30,7 +30,7 @@ def test_configuration_system():
         config = {
             'shop': 'test-shop.myshopify.com',
             'accessToken': 'shpat_test_token_12345678901234567890',
-            'apiVersion': '2024-07'
+            'apiVersion': '2025-07'
         }
         
         connector_config = ShopifyConnectorConfig(**config)
@@ -160,7 +160,7 @@ def test_configuration_validation():
         valid_config = {
             'shop': 'test-shop.myshopify.com',
             'accessToken': 'shpat_test_token_12345678901234567890',
-            'apiVersion': '2024-07'
+            'apiVersion': '2025-07'
         }
         
         connector_config = ShopifyConnectorConfig(**valid_config)

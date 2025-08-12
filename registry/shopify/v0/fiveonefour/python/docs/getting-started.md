@@ -1,6 +1,6 @@
 ## Getting Started — Connect to Shopify (Read‑Only)
 
-This guide explains how to prepare your Shopify store and configuration so the Python Shopify REST connector can read data from your store.
+This guide explains how to prepare your Shopify store and configuration so the Python Shopify connector can read data from your store using the GraphQL Admin API under the hood.
 
 ### Prerequisites
 
@@ -50,7 +50,7 @@ If you later decide to turn your connector into an installable Shopify app:
 - Recommended for single‑store setups: custom app with Admin API access token.
 - Public app OAuth (Shopify Partners) is possible but not required for read‑only extraction in one store. Note: order data for public apps may require additional approvals from Shopify.
 
-**Important Note**: This connector uses the **GraphQL Admin API** by default with no REST fallback in this release. Provide `SHOPIFY_SHOP`, `SHOPIFY_API_VERSION` (e.g., `2024-07`), and `SHOPIFY_ACCESS_TOKEN` before use. REST may be added later if needed.
+**Important Note**: This connector uses the **GraphQL Admin API** by default with no REST fallback in this release. Provide `SHOPIFY_SHOP`, `SHOPIFY_API_VERSION` (e.g., `2025-07`), and `SHOPIFY_ACCESS_TOKEN` before use. REST may be added later if needed.
 
 **Future Considerations**: 
 - REST API will continue to work for existing implementations
@@ -83,7 +83,7 @@ If you later decide to turn your connector into an installable Shopify app:
 ### Collect configuration values
 
 - Shop domain: `your-store.myshopify.com` (no protocol)
-- API version: e.g., `2024-07` (pin a stable version)
+- API version: e.g., `2025-07` (pin a stable version)
 - Access token: from the custom app install page
 - Optional: proxy/TLS settings, request timeout, concurrency preferences
 
@@ -91,7 +91,7 @@ If you later decide to turn your connector into an installable Shopify app:
 
 ```bash
 export SHOPIFY_SHOP="your-store.myshopify.com"
-export SHOPIFY_API_VERSION="2024-07"
+export SHOPIFY_API_VERSION="2025-07"
 export SHOPIFY_ACCESS_TOKEN="<your-admin-api-access-token>"
 ```
 
@@ -102,7 +102,7 @@ Use these values when configuring the connector:
 ```json
 {
   "shop": "{SHOPIFY_SHOP}",
-  "apiVersion": "2024-07",
+  "apiVersion": "2025-07",
   "accessToken": "<SHOPIFY_ACCESS_TOKEN>",
   "defaults": { "query": { "limit": 250 } }
 }
@@ -116,14 +116,14 @@ Use these values when configuring the connector:
 - A 200 response confirms domain, version, and token are correct
 - Expect `X-Shopify-Shop-Api-Call-Limit: used/40` in response headers
 
-**Quick Python Test (REST API)**:
+**Optional REST Smoke Test (Manual)**:
 
 ```python
 import requests
 
 store = "your-store-name"               # no https, just the subdomain
 token = "shpat_xxx"                     # Admin API access token
-url = f"https://{store}.myshopify.com/admin/api/2024-07/shop.json"
+url = f"https://{store}.myshopify.com/admin/api/2025-07/shop.json"
 
 r = requests.get(url, headers={
     "X-Shopify-Access-Token": token
@@ -136,8 +136,8 @@ print(r.json())
 
 ### Operational considerations
 
-- **Rate limits (REST API)**: Target ~2 requests/second steady; burst up to 40. The connector adapts from headers and handles 429 with `Retry-After`. Note: GraphQL uses a different cost-based model.
-- **Pagination**: The connector follows `Link` headers using `page_info` cursors; typical `limit` is 250 where supported.
+- **Rate limits**: REST uses a 40-token leaky bucket at ≈2 rps; GraphQL uses a cost-based model. The connector adapts from `X-Shopify-Shop-Api-Call-Limit` and maps GraphQL cost extensions into headers for visibility. 429 is retried with backoff and `Retry-After`.
+- **Pagination**: Uses GraphQL cursors (`edges`/`pageInfo`) with `limit` defaulted and capped internally (≤250).
 - **Versioning**: Pin `apiVersion` and monitor `X-Shopify-Api-Deprecated-Reason` warnings.
 - **Security**: Never commit tokens; store secrets securely.
 

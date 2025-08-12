@@ -97,24 +97,24 @@ class RetryPolicy:
         
         # Check if error has status code and retry based on that
         if hasattr(error, 'status_code'):
-            status_code = error.status_code
-            
-            # Retry on specific status codes per API spec
-            retryable_statuses = [408, 425, 429, 500, 502, 503, 504]
-            if status_code in retryable_statuses:
-                logger.debug("Retrying based on status code", extra={
-                    'status_code': status_code,
-                    'attempt': attempt
-                })
-                return True
-            
-            # Don't retry client errors (4xx) except specific ones above
-            if 400 <= status_code < 500:
-                logger.debug("Not retrying client error", extra={
-                    'status_code': status_code,
-                    'attempt': attempt
-                })
-                return False
+            status_code = getattr(error, 'status_code', None)
+            if isinstance(status_code, int):
+                # Retry on specific status codes per API spec
+                retryable_statuses = [408, 425, 429, 500, 502, 503, 504]
+                if status_code in retryable_statuses:
+                    logger.debug("Retrying based on status code", extra={
+                        'status_code': status_code,
+                        'attempt': attempt
+                    })
+                    return True
+                
+                # Don't retry client errors (4xx) except specific ones above
+                if 400 <= status_code < 500:
+                    logger.debug("Not retrying client error", extra={
+                        'status_code': status_code,
+                        'attempt': attempt
+                    })
+                    return False
         
         # Check if error has error code
         if hasattr(error, 'code'):

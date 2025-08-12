@@ -131,16 +131,26 @@ class GraphQLTransport(BaseTransport):
             )
             return query, {}
 
-        # Inventory (locations and levels depend on scope; start with inventoryItems)
+        # Inventory (locations and levels depend on scope; start with inventory via products)
         if method == "GET" and (path.startswith("/inventory") or path.startswith("inventory")):
             after = query_params.get("cursor")
             query = (
-                "query inventoryItems($first: Int!, $after: String) {\n"
-                "  inventoryItems(first: $first, after: $after) {\n"
+                "query inventoryViaProducts($first: Int!, $after: String) {\n"
+                "  products(first: $first, after: $after) {\n"
                 "    edges {\n"
                 "      cursor\n"
-                "      node { id sku tracked \n"
-                "        inventoryLevels(first: 10) { edges { node { available location { id name } } } }\n"
+                "      node { id title\n"
+                "        variants(first: 10) {\n"
+                "          edges {\n"
+                "            node { id sku\n"
+                "              inventoryItem { id sku\n"
+                "                inventoryLevels(first: 10) {\n"
+                "                  edges { node { available location { id name } } }\n"
+                "                }\n"
+                "              }\n"
+                "            }\n"
+                "          }\n"
+                "        }\n"
                 "      }\n"
                 "    }\n"
                 "    pageInfo { hasNextPage endCursor }\n"
@@ -181,6 +191,14 @@ class GraphQLTransport(BaseTransport):
         body = response.get("body")
         headers = response.get("headers", {})
 
+        # If non-JSON or HTTP error, surface as InvalidRequestError
+        if status >= 400 and not isinstance(body, dict):
+            raise InvalidRequestError(
+                f"GraphQL HTTP error: {status}",
+                status_code=status,
+                details={"body": str(body)[:200]}
+            )
+
         # Shopify GraphQL returns 200 even for logical errors; inspect 'errors'
         if isinstance(body, dict):
             errors = body.get("errors")
@@ -215,7 +233,10 @@ class GraphQLTransport(BaseTransport):
 
             return processed
 
-        return response
+        # Unexpected shape
+        raise InvalidRequestError(
+            "Unexpected GraphQL response", details={"status": status, "body": str(body)[:200]}
+        )
 
     def close(self) -> None:
         if self.http_client:

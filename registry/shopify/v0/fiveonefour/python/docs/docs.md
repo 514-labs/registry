@@ -25,7 +25,7 @@ from shopify_connector import ShopifyConnector
 
 connector = ShopifyConnector({
     "shop": "your-store.myshopify.com",
-    "apiVersion": "2024-07",
+    "apiVersion": "2025-07",
     "accessToken": "your-admin-api-token"
 })
 
@@ -41,9 +41,9 @@ connector.disconnect()
 
 ### **Key Features**
 - Read-only data extraction
-- Automatic pagination via Link headers
+- Automatic pagination via GraphQL cursors (edges/pageInfo)
 - Built-in retry and rate limiting
-- GraphQL under the hood with REST fallback
+- GraphQL under the hood (no REST fallback in this release)
 - Full API connector specification compliance
 
 ## 🎯 What You're Looking For

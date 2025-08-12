@@ -2,8 +2,8 @@
 """
 Test script for Phase 6 components (Main Connector Implementation).
 
-This script tests the complete Shopify connector implementation
-without requiring a real Shopify connection.
+This script runs live tests against the Shopify GraphQL Admin API and
+requires real environment variables to be set.
 """
 
 import sys
@@ -37,22 +37,34 @@ from shopify_connector.hooks.builtin import (
 )
 
 
+# Require live environment configuration
+SHOP = os.environ.get("SHOPIFY_SHOP")
+API_VERSION = os.environ.get("SHOPIFY_API_VERSION", "2025-07")
+TOKEN = os.environ.get("SHOPIFY_ACCESS_TOKEN")
+
+if not SHOP or not TOKEN:
+    print("ERROR: Set SHOPIFY_SHOP and SHOPIFY_ACCESS_TOKEN environment variables to run Phase 6 live tests.")
+    sys.exit(1)
+
+
+def make_config() -> dict:
+    return {
+        'shop': SHOP,
+        'accessToken': TOKEN,
+        'apiVersion': API_VERSION,
+        'timeout': 30000,
+        'useGraphQL': True,
+    }
+
+
 def test_connector_initialization():
     """Test connector initialization and configuration."""
     print("🔧 Testing Connector Initialization")
     print("=" * 40)
     
     try:
-        # Test configuration
-        config = {
-            'shop': 'test-shop.myshopify.com',
-            'accessToken': 'test_token_123',
-            'apiVersion': '2024-07',
-            'timeout': 30000,
-            'useGraphQL': True
-        }
-        
-        connector = ShopifyConnector(config)
+        # Test configuration (from environment)
+        connector = ShopifyConnector(make_config())
         print("✅ ShopifyConnector created successfully")
         print(f"   Shop: {connector.config.shop}")
         print(f"   API Version: {connector.config.apiVersion}")
@@ -78,35 +90,22 @@ def test_connector_initialization():
 
 
 def test_connector_connection():
-    """Test connector connection lifecycle."""
+    """Test connector live connection lifecycle."""
     print("🔌 Testing Connector Connection")
     print("=" * 40)
     
     try:
         # Create connector
-        config = {
-            'shop': 'test-shop.myshopify.com',
-            'accessToken': 'test_token_123',
-            'apiVersion': '2024-07'
-        }
-        
-        connector = ShopifyConnector(config)
+        connector = ShopifyConnector(make_config())
         
         # Test initial connection state
         print("✅ Initial connection state")
         print(f"   Connected: {connector.isConnected()}")
         
-        # Test connection (will fail due to invalid credentials, but should handle gracefully)
-        try:
-            connector.connect()
-            print("❌ Should have failed with invalid credentials")
-            return False
-        except Exception as e:
-            print("✅ Connection properly failed with invalid credentials")
-            print(f"   Error: {type(e).__name__}: {e}")
-        
-        # Test connection state after failed connection
-        print(f"   Connected after failure: {connector.isConnected()}")
+        # Test live connection
+        connector.connect()
+        print("✅ Connection established")
+        print(f"   Connected: {connector.isConnected()}")
         
         # Test disconnect (should work even when not connected)
         try:
@@ -131,13 +130,7 @@ def test_hook_integration():
     
     try:
         # Create connector
-        config = {
-            'shop': 'test-shop.myshopify.com',
-            'accessToken': 'test_token_123',
-            'apiVersion': '2024-07'
-        }
-        
-        connector = ShopifyConnector(config)
+        connector = ShopifyConnector(make_config())
         
         # Test hook manager setup
         hook_manager = connector.hook_manager
@@ -176,13 +169,7 @@ def test_pagination_integration():
     
     try:
         # Create connector
-        config = {
-            'shop': 'test-shop.myshopify.com',
-            'accessToken': 'test_token_123',
-            'apiVersion': '2024-07'
-        }
-        
-        connector = ShopifyConnector(config)
+        connector = ShopifyConnector(make_config())
         
         # Test paginator setup
         paginator = connector.paginator
@@ -249,13 +236,7 @@ def test_resilience_integration():
     
     try:
         # Create connector
-        config = {
-            'shop': 'test-shop.myshopify.com',
-            'accessToken': 'test_token_123',
-            'apiVersion': '2024-07'
-        }
-        
-        connector = ShopifyConnector(config)
+        connector = ShopifyConnector(make_config())
         
         # Test retry policy
         retry_policy = connector.retry_policy
@@ -292,13 +273,7 @@ def test_transport_integration():
     
     try:
         # Create connector
-        config = {
-            'shop': 'test-shop.myshopify.com',
-            'accessToken': 'test_token_123',
-            'apiVersion': '2024-07'
-        }
-        
-        connector = ShopifyConnector(config)
+        connector = ShopifyConnector(make_config())
         
         # Test transport setup
         transport = connector.transport
@@ -329,13 +304,7 @@ def test_connector_status():
     
     try:
         # Create connector
-        config = {
-            'shop': 'test-shop.myshopify.com',
-            'accessToken': 'test_token_123',
-            'apiVersion': '2024-07'
-        }
-        
-        connector = ShopifyConnector(config)
+        connector = ShopifyConnector(make_config())
         
         # Test status method
         status = connector.get_status()
@@ -370,7 +339,7 @@ def test_error_handling():
         config = {
             'shop': 'test-shop.myshopify.com',
             'accessToken': 'test_token_123',
-            'apiVersion': '2024-07'
+            'apiVersion': '2025-07'
         }
         
         connector = ShopifyConnector(config)

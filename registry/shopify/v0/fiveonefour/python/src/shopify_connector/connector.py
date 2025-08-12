@@ -133,6 +133,14 @@ class ShopifyConnector:
                 'path': '/shop',
                 'timeout': 10000  # Short timeout for connection test
             })
+            # Validate GraphQL JSON shape
+            shop_data = None
+            if isinstance(test_response, dict):
+                data = test_response.get('data')
+                if isinstance(data, dict):
+                    shop_data = data.get('shop')
+            if not shop_data:
+                raise ConnectionError("GraphQL /shop did not return expected data")
             
             # Update connection state
             self._connected = True

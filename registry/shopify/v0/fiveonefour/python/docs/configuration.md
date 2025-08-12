@@ -10,7 +10,7 @@ The connector accepts a configuration dictionary with the following structure:
 config = {
     # Required settings
     "shop": "your-store.myshopify.com",
-    "apiVersion": "2024-07",
+    "apiVersion": "2025-07",
     "accessToken": "your-admin-api-token",
     
     # Optional settings with sensible defaults
@@ -38,7 +38,7 @@ config = {
 ### **apiVersion**
 - **Type**: `string`
 - **Description**: Shopify API version to use
-- **Example**: `"2024-07"`
+- **Example**: `"2025-07"`
 - **Note**: Pin to a stable version and monitor deprecation warnings
 
 ### **accessToken**
@@ -64,8 +64,8 @@ config = {
 ### **fallbackToREST**
 - **Type**: `boolean`
 - **Default**: `True`
-- **Description**: Whether to fall back to REST when GraphQL fails
-- **Note**: Only applies when `useGraphQL` is `True`
+- **Description**: Present in schema for future compatibility
+- **Note**: Ignored in this release (no REST fallback implemented)
 
 ## Advanced Configuration
 
@@ -149,7 +149,7 @@ config = {
 config = {
     "defaults": {
         "headers": {                   # Headers included with every request
-            "User-Agent": "Connector/Shopify Python 1.0.0"
+         "User-Agent": "shopify-connector/0.1.0"
         },
         "query": {                     # Query parameters for every request
             "limit": 250               # Default page size
@@ -214,7 +214,7 @@ You can also configure the connector using environment variables:
 
 ```bash
 export SHOPIFY_SHOP="your-store.myshopify.com"
-export SHOPIFY_API_VERSION="2024-07"
+export SHOPIFY_API_VERSION="2025-07"
 export SHOPIFY_ACCESS_TOKEN="your-admin-api-token"
 export SHOPIFY_TIMEOUT="30000"
 export SHOPIFY_USE_GRAPHQL="true"
@@ -230,7 +230,7 @@ from shopify_connector import ShopifyConnector
 
 config = {
     "shop": "my-store.myshopify.com",
-    "apiVersion": "2024-07",
+    "apiVersion": "2025-07",
     "accessToken": "shpat_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 }
 
@@ -242,7 +242,7 @@ connector = ShopifyConnector(config)
 ```python
 config = {
     "shop": "my-store.myshopify.com",
-    "apiVersion": "2024-07",
+    "apiVersion": "2025-07",
     "accessToken": "shpat_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     
     "timeout": 60000,
@@ -285,7 +285,7 @@ config = {
 ```python
 config = {
     "shop": "dev-store.myshopify.com",
-    "apiVersion": "2024-07",
+    "apiVersion": "2025-07",
     "accessToken": "shpat_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     
     "timeout": 30000,

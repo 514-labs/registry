@@ -4,13 +4,13 @@ This document describes the technical architecture of the Shopify Python connect
 
 ## Overview
 
-The connector implements a **translation layer** that converts our standardized API interface to Shopify's GraphQL Admin API (with REST fallback), while maintaining 100% compliance with our specification.
+The connector implements a **translation layer** that converts our standardized API interface to Shopify's GraphQL Admin API (no REST fallback in this release), while maintaining 100% compliance with our specification.
 
 ## Shopify API Characteristics
 
 ### **Base Configuration**
 - **Base URL**: `https://{shop}.myshopify.com/admin/api/{version}/`
-- **Versioning**: Required in path (e.g., `2024-07`). Respect deprecation headers.
+- **Versioning**: Required in path (e.g., `2025-07`). Respect deprecation headers.
 - **Rate limiting**: Leaky bucket 40 tokens; refill ≈2 tokens/sec. Header: `X-Shopify-Shop-Api-Call-Limit: used/40`. 429 on limit, optional `Retry-After`.
 - **Pagination**: Cursor via `Link` header with `rel="next"` and `page_info`; `limit` controls items/page.
 - **Filtering/incremental**: Many endpoints accept `updated_at_min`, `created_at_min`.
@@ -23,7 +23,7 @@ The connector implements a **translation layer** that converts our standardized 
 #### `initialize(configuration)`
 - Validates shop domain, API version, auth, timeouts, retry/rate settings
 - Sets up internal state and configuration
-- Prepares GraphQL query builders and REST fallback handlers
+- Prepares GraphQL query builders
 
 #### `connect()`
 - Validates token or OAuth result
@@ -43,16 +43,16 @@ The connector implements a **translation layer** that converts our standardized 
 ### **Request Engine**
 
 #### `request(options)`
-- Single entry point for all HTTP operations
-- Builds URL, merges defaults, applies auth
+- Single entry point for all operations
+- Merges defaults, applies auth
 - Enforces timeout and cancellation
 - Executes through rate limiter and retry policy
-- Routes to GraphQL or REST based on configuration
+- Uses GraphQL transport; unsupported paths raise an error
 
 #### `get(path, options)`
 - Delegates to `request()` method
-- Converts REST-style paths to GraphQL queries when possible
-- Falls back to REST for unsupported operations
+- Converts REST-style paths to GraphQL queries when supported
+- If translation is unavailable, an `UnsupportedError` is raised
 
 #### Response Wrapper
 All responses follow our standardized format:
@@ -103,13 +103,13 @@ All responses follow our standardized format:
 ### **Rate Limiting**
 
 #### **Token Bucket Implementation**
-- Tuned for Shopify: steady ≈2 requests/second, burst up to 40
+- Tuned for Shopify REST semantics: steady ≈2 requests/second, burst up to 40
 - Adaptive behavior: parses `X-Shopify-Shop-Api-Call-Limit` headers
-- Proactively slows down as limits approach
+- GraphQL cost extensions are mapped into synthetic headers for visibility
 - Respects `Retry-After` on 429 responses
 
 #### **Rate Limit Status**
-- Exposes `rateLimit.getStatus()` method
+- Exposes `rate_limiter.get_stats()`
 - Includes status in response `meta` object
 - Provides visibility into current usage and limits
 
@@ -210,29 +210,22 @@ Maps Shopify responses to our standardized errors:
 - Warns on `X-Shopify-Api-Deprecated-Reason` headers
 - CI smoke tests against current and next stable versions
 
-## GraphQL vs REST Implementation
+## GraphQL Implementation
 
 ### **Primary: GraphQL**
 - More efficient data fetching
 - Better rate limiting with cost-based model
 - Future-proof aligned with Shopify's direction
 
-### **Fallback: REST**
-- Available for unsupported operations
-- Maintains backward compatibility
-- Handles edge cases and legacy endpoints
-
 ### **Translation Layer**
-- Converts REST-style paths to GraphQL queries
+- Converts REST-style paths to GraphQL queries when supported
 - Maintains identical public interface
-- Handles response format differences
+- Unsupported paths raise an `UnsupportedError` (no REST fallback in this release)
 
 ## Feature Set (Phase 1)
 
 ### **Supported Resources**
-- Products, Variants, Inventory Levels
-- Orders, Fulfillments (read), Transactions (read)
-- Customers, Collections, Shop, Locations
+- Products (via variants->inventoryItem), Orders, Customers, Collections, Shop (as exposed by current GraphQL translations)
 
 ### **Incremental Extraction**
 - Uses `updated_at_min`/`created_at_min` filters
@@ -240,8 +233,8 @@ Maps Shopify responses to our standardized errors:
 - Last sync timestamp and `page_info` continuation
 
 ### **Pagination**
-- Automatic following of `Link` headers
-- Configurable `limit` (up to 250 where allowed)
+- GraphQL cursor pagination (`edges`/`pageInfo`)
+- Configurable `limit` (bounded internally to ≤250)
 - Iterator-based interface for memory efficiency
 
 ### **Resilience**

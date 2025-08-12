@@ -37,10 +37,8 @@ Internally, we translate our REST-style interface to GraphQL:
 ```python
 def get(self, path: str, options: Optional[RequestOptions] = None):
     """Public method - matches our API spec exactly"""
-    if self.config.use_graphql:
-        return self._graphql_get(path, options)
-    else:
-        return self._rest_get(path, options)  # Fallback
+    # GraphQL only in this release; unsupported paths raise
+    return self._graphql_get(path, options)
 
 def _graphql_get(self, path: str, options: Optional[RequestOptions] = None):
     """Internal GraphQL implementation"""
@@ -69,7 +67,7 @@ def _wrap_graphql_response(self, graphql_response, options):
             "duration": graphql_response.duration,
             "retryCount": 0,
             "rateLimit": self._parse_rate_limit(graphql_response.headers),
-            "requestId": graphql_response.headers.get("x-request-id")
+            "requestId": graphql_response.headers.get("X-Request-Id")
         }
     }
 ```
@@ -116,26 +114,9 @@ def _wrap_graphql_response(self, graphql_response, options):
 
 ## Implementation Strategy
 
-### **Phase 1: GraphQL with REST Fallback**
-```python
-class ShopifyConnector:
-    def get(self, path: str, options: Optional[RequestOptions] = None):
-        try:
-            return self._graphql_get(path, options)
-        except GraphQLUnsupportedError:
-            if self.config.fallback_to_rest:
-                return self._rest_get(path, options)
-            raise
-```
-
-### **Phase 2: GraphQL-First**
-```python
-class ShopifyConnector:
-    def get(self, path: str, options: Optional[RequestOptions] = None):
-        # Primary: GraphQL
-        # Fallback: REST only for unsupported operations
-        return self._graphql_get(path, options)
-```
+### **Release Strategy**
+- Current release: GraphQL-only; unsupported paths raise `UnsupportedError`.
+- Future: optional REST fallback may be added for specific endpoints.
 
 ## Potential Challenges & Solutions
 
@@ -174,27 +155,16 @@ def _graphql_paginate(self, options):
 ```
 
 ### **Challenge: Rate Limit Headers**
-**Solution**: Parse GraphQL cost headers and map to our format
-```python
-def _parse_rate_limit(self, headers):
-    """Convert GraphQL headers to our rate limit format"""
-    return {
-        'limit': headers.get('x-shopify-shop-api-call-limit', '0/40').split('/')[1],
-        'remaining': headers.get('x-shopify-shop-api-call-limit', '0/40').split('/')[0],
-        'reset': self._calculate_reset_time(headers),
-        'retryAfter': headers.get('retry-after')
-    }
-```
+**Solution**: Parse GraphQL `extensions.cost` and map to synthetic headers in the response, alongside `X-Shopify-Shop-Api-Call-Limit` when present.
 
 ## Configuration Options
 
-### **GraphQL vs REST Selection**
+### **GraphQL Selection**
 ```python
 config = {
-    "use_graphql": True,              # Primary: GraphQL
-    "fallback_to_rest": True,         # Fallback: REST for unsupported ops
-    "graphql_version": "2024-07",     # GraphQL API version
-    "rest_version": "2024-07",        # REST fallback version
+    "useGraphQL": True,              # Primary: GraphQL
+    "fallbackToREST": True,          # Present but ignored in this release
+    "apiVersion": "2025-07",
 }
 ```
 
@@ -202,9 +172,9 @@ config = {
 ```python
 config = {
     "graphql": {
-        "max_complexity": 1000,       # GraphQL query complexity limit
-        "batch_queries": True,        # Combine multiple requests
-        "query_timeout": 30000,       # GraphQL-specific timeout
+        "maxComplexity": 1000,
+        "batchQueries": True,
+        "queryTimeout": 30000,
     }
 }
 ```

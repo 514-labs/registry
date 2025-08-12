@@ -124,7 +124,7 @@ class ShopifyConnectorConfig(BaseModel):
     accessToken: str = Field(description="Admin API access token")
     
     # Optional fields with defaults
-    apiVersion: str = Field(default="2024-07", description="Shopify API version")
+    apiVersion: str = Field(default="2025-07", description="Shopify API version")
     timeout: int = Field(default=30000, ge=1000, le=300000, description="Request timeout in milliseconds")
     useGraphQL: bool = Field(default=True, description="Use GraphQL as primary transport")
     fallbackToREST: bool = Field(default=True, description="Fallback to REST when GraphQL fails")

@@ -17,34 +17,17 @@ Our testing strategy follows these principles:
 
 Unit tests focus on individual components and methods in isolation.
 
-#### **Request Builder Tests**
+#### **HTTP Client and Headers**
 
 ```python
-def test_request_builder_url_composition():
-    """Test URL construction with various path and version combinations"""
-    builder = RequestBuilder(config)
-    
-    # Test basic URL construction
-    url = builder.build_url('/products')
-    assert url == 'https://test-store.myshopify.com/admin/api/2024-07/products.json'
-    
-    # Test with query parameters
-    url = builder.build_url('/products', {'limit': 50, 'status': 'active'})
-    assert 'limit=50' in url
-    assert 'status=active' in url
+def test_http_client_headers():
+    from shopify_connector.transport.http_client import HTTPClient
+    from shopify_connector.config.schema import ShopifyConnectorConfig
 
-def test_request_builder_headers_merge():
-    """Test header merging with defaults and overrides"""
-    builder = RequestBuilder(config)
-    
-    # Test default headers
-    headers = builder.build_headers()
-    assert 'X-Shopify-Access-Token' in headers
-    
-    # Test header overrides
-    custom_headers = {'Custom-Header': 'value'}
-    headers = builder.build_headers(custom_headers)
-    assert headers['Custom-Header'] == 'value'
+    cfg = ShopifyConnectorConfig(shop="test-store.myshopify.com", accessToken="shpat_test_token_12345678901234567890")
+    client = HTTPClient(cfg)
+    result = client.request("GET", cfg.get_graphql_url())  # Will likely 401 in unit context; use mocking in CI
+    # In practice, mock client.request and assert headers are present
 ```
 
 #### **Authentication Tests**
@@ -71,7 +54,10 @@ def test_invalid_token_handling():
 ```python
 def test_retry_matrix():
     """Test retry decisions for various error conditions"""
-    retry_policy = RetryPolicy(config['retry'])
+     from shopify_connector.resilience.retry import RetryPolicy
+     from shopify_connector.config.schema import ShopifyConnectorConfig
+     cfg = ShopifyConnectorConfig(shop="test-shop.myshopify.com", accessToken="shpat_test_token_12345678901234567890")
+     retry_policy = RetryPolicy(cfg.retry)
     
     # Test retryable errors
     assert retry_policy.should_retry(NetworkError(), 1) == True
@@ -115,10 +101,10 @@ def test_retry_after_respect():
 ```python
 def test_token_bucket_behavior():
     """Test token bucket rate limiting behavior"""
-    limiter = TokenBucketLimiter(
-        rate=2,      # 2 tokens per second
-        capacity=40  # 40 token burst capacity
-    )
+     from shopify_connector.resilience.rate_limiter import TokenBucketRateLimiter
+     from shopify_connector.config.schema import ShopifyConnectorConfig
+     cfg = ShopifyConnectorConfig(shop="test-shop.myshopify.com", accessToken="shpat_test_token_12345678901234567890")
+     limiter = TokenBucketRateLimiter(cfg.rateLimit)
     
     # Test steady state
     for _ in range(40):
@@ -164,20 +150,11 @@ def test_link_header_parsing():
 
 def test_pagination_iterator():
     """Test pagination iterator behavior"""
-    connector = ShopifyConnector(config)
-    
-    # Mock paginated responses
-    with patch.object(connector, '_execute_request') as mock_request:
-        mock_request.side_effect = [
-            MockPaginatedResponse(['product1', 'product2'], has_next=True),
-            MockPaginatedResponse(['product3', 'product4'], has_next=False)
-        ]
-        
-        products = list(connector.paginate('/products'))
-        
-        assert len(products) == 2  # Two pages
-        assert products[0] == ['product1', 'product2']
-        assert products[1] == ['product3', 'product4']
+     from shopify_connector.connector import ShopifyConnector
+     from shopify_connector.config.schema import ShopifyConnectorConfig
+     cfg = ShopifyConnectorConfig(shop="test-shop.myshopify.com", accessToken="shpat_test_token_12345678901234567890")
+     connector = ShopifyConnector(cfg)
+     # For unit tests, patch GraphQLTransport.execute to yield GraphQL-shaped pages (edges/pageInfo)
 ```
 
 #### **Error Mapping Tests**
@@ -185,10 +162,10 @@ def test_pagination_iterator():
 ```python
 def test_error_code_mapping():
     """Test mapping of Shopify errors to standardized codes"""
-    mapper = ErrorMapper()
+     from shopify_connector.errors.codes import get_error_code_from_status
     
-    # Test various error scenarios
-    assert mapper.map_error(HTTPError(401)) == 'AUTH_FAILED'
+     # Test various status mappings
+     assert get_error_code_from_status(401).value == 'AUTH_FAILED'
     assert mapper.map_error(HTTPError(403)) == 'AUTH_FAILED'
     assert mapper.map_error(HTTPError(404)) == 'INVALID_REQUEST'
     assert mapper.map_error(HTTPError(429)) == 'RATE_LIMIT'
@@ -222,10 +199,10 @@ def test_hook_priority_ordering():
     def hook2(context):
         execution_order.append(2)
     
-    connector.add_hook('beforeRequest', hook1, priority=200)
-    connector.add_hook('beforeRequest', hook2, priority=100)
-    
-    connector.get('/products')
+     from shopify_connector.hooks.manager import HookManager
+     from shopify_connector.hooks.base import HookContext, HookType, HookPriority, BaseHook
+     manager = HookManager()
+     # Add simple ordered hooks and execute via manager on HookType.BEFORE_REQUEST
     
     # Lower priority (100) should execute first
     assert execution_order == [2, 1]
@@ -259,13 +236,7 @@ def mock_shopify_server():
     """Mock Shopify server for integration testing"""
     with responses.RequestsMock() as rsps:
         # Mock successful product response
-        rsps.add(
-            responses.GET,
-            'https://test-store.myshopify.com/admin/api/2024-07/products.json',
-            json={'products': [{'id': 1, 'title': 'Test Product'}]},
-            status=200,
-            headers={'X-Shopify-Shop-Api-Call-Limit': '1/40'}
-        )
+         # Prefer mocking GraphQLTransport.execute responses in unit tests
         
         # Mock paginated response
         rsps.add(
@@ -368,13 +339,13 @@ Optional tests against a real Shopify development store to validate real API beh
 @pytest.fixture(scope="session")
 def live_shopify_connector():
     """Live connector for smoke testing"""
-    config = {
-        "shop": os.environ["SHOPIFY_TEST_SHOP"],
-        "apiVersion": "2024-07",
-        "accessToken": os.environ["SHOPIFY_TEST_TOKEN"]
-    }
-    
-    connector = ShopifyConnector(config)
+     from shopify_connector.config.schema import ShopifyConnectorConfig
+     cfg = ShopifyConnectorConfig(
+         shop=os.environ["SHOPIFY_SHOP"],
+         apiVersion=os.environ.get("SHOPIFY_API_VERSION", "2025-07"),
+         accessToken=os.environ["SHOPIFY_ACCESS_TOKEN"],
+     )
+     connector = ShopifyConnector(cfg)
     connector.connect()
     
     yield connector
@@ -388,7 +359,7 @@ def live_shopify_connector():
 @pytest.mark.live
 def test_live_shop_endpoint(live_shopify_connector):
     """Test live shop endpoint"""
-    response = live_shopify_connector.get('/shop')
+     response = live_shopify_connector.get('/shop')
     
     assert response['status'] == 200
     assert 'shop' in response['data']
@@ -397,7 +368,7 @@ def test_live_shop_endpoint(live_shopify_connector):
 @pytest.mark.live
 def test_live_rate_limit_headers(live_shopify_connector):
     """Test live rate limit headers"""
-    response = live_shopify_connector.get('/products')
+     response = live_shopify_connector.get('/orders')
     
     assert 'X-Shopify-Shop-Api-Call-Limit' in response['headers']
     rate_limit = response['meta']['rateLimit']

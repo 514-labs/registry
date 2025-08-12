@@ -8,11 +8,9 @@ characteristics and our API connector specification requirements.
 from typing import Dict, Any
 
 # Base configuration defaults
-DEFAULT_CONFIG = {
-    "timeout": 30000,  # 30 seconds
-    "useGraphQL": True,
-    "fallbackToREST": True,
-    "apiVersion": "2024-07",
+DEFAULTS = {
+    "apiVersion": "2025-07",
+    "timeout": 30000,
 }
 
 # Retry configuration defaults
@@ -96,7 +94,7 @@ DEFAULT_TRACING_CONFIG = {
 def get_default_config() -> Dict[str, Any]:
     """Get complete default configuration."""
     return {
-        **DEFAULT_CONFIG,
+        **DEFAULTS,
         "retry": DEFAULT_RETRY_CONFIG.copy(),
         "rateLimit": DEFAULT_RATE_LIMIT_CONFIG.copy(),
         "pooling": DEFAULT_POOLING_CONFIG.copy(),

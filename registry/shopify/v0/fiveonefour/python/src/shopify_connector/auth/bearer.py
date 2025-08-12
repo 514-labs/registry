@@ -86,8 +86,9 @@ class BearerAuth(BaseAuth):
         # Add Shopify access token header
         request['headers']['X-Shopify-Access-Token'] = self.access_token
         
-        # Also add standard Authorization header for compatibility
-        request['headers']['Authorization'] = f'Bearer {self.access_token}'
+        # Remove Authorization header to match Shopify Admin API expectations
+        if 'Authorization' in request['headers']:
+            request['headers'].pop('Authorization', None)
     
     def isValid(self) -> bool:
         """

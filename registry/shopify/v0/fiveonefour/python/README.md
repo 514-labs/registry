@@ -16,7 +16,7 @@ Set these before using the connector:
 
 ```bash
 export SHOPIFY_SHOP="<your-store>.myshopify.com"       # REQUIRED
-export SHOPIFY_API_VERSION="2024-07"                    # REQUIRED (pinned)
+export SHOPIFY_API_VERSION="2025-07"                    # REQUIRED (pinned)
 export SHOPIFY_ACCESS_TOKEN="<your-admin-api-access-token>"  # REQUIRED
 ```
 
@@ -141,22 +141,3 @@ python test/test_phase6.py  # Test the complete connector
 ```bash
 pip install shopify-connector
 ```
-
-## 🎯 Use Cases
-
-- **Data pipelines** and ETL processes
-- **Analytics** and reporting
-- **Data synchronization** between systems
-- **Backup** and archival operations
-
-## 🔗 Resources
-
-- [Shopify Admin API Documentation](https://shopify.dev/api/admin)
-- [API Connector Specification](../../../../../../apps/components-docs/content/docs/specifications/api-connector.mdx)
-- [Getting Started Guide](docs/getting-started.md)
-
-## 🤝 Contributing
-
-This connector follows our standard patterns. See the [Architecture](docs/architecture.md) document for implementation details and the [Testing](docs/testing.md) guide for development practices.
-
-

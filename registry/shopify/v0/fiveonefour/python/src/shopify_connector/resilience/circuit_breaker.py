@@ -132,6 +132,15 @@ class CircuitBreaker:
         if self.state == CircuitState.CLOSED:
             self.failure_count = 0
     
+    # Public wrappers for connector usage
+    def on_success(self) -> None:
+        """Record a successful operation for circuit breaker state."""
+        self._on_success()
+
+    def on_failure(self, error: Exception | None = None) -> None:
+        """Record a failed operation for circuit breaker state."""
+        self._on_failure(error if error is not None else Exception("unknown error"))
+    
     def _on_failure(self, error: Exception) -> None:
         """Handle failed request."""
         self.failure_count += 1

@@ -11,7 +11,7 @@ Example:
     
     connector = ShopifyConnector({
         "shop": "your-store.myshopify.com",
-        "apiVersion": "2024-07",
+        "apiVersion": "2025-07",
         "accessToken": "your-admin-api-token"
     })
     

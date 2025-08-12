@@ -8,6 +8,7 @@ and rate limiting components without requiring a real Shopify connection.
 
 import sys
 import os
+import random
 
 # Add src to path for local development
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
