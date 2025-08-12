@@ -16,6 +16,7 @@ from shopify_connector.auth.bearer import BearerAuth
 from shopify_connector.transport.http_client import HTTPClient
 from shopify_connector.transport.graphql import GraphQLTransport
 from shopify_connector.config.schema import ShopifyConnectorConfig
+from shopify_connector.connector import ShopifyConnector
 
 
 def test_authentication():

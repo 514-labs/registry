@@ -15,7 +15,7 @@ from .errors.base import (
     ConnectorError, ConnectionError, AuthFailedError, 
     NetworkError, TimeoutError, RateLimitError
 )
-from .auth.base import BaseAuth
+from .auth.base import BaseAuth, InvalidAuth
 from .auth.bearer import BearerAuth
 from .transport.base import BaseTransport
 from .transport.graphql import GraphQLTransport
@@ -339,9 +339,16 @@ class ShopifyConnector:
         return pagination_result
     
     def _setup_auth(self) -> BaseAuth:
-        """Setup authentication component."""
-        auth = BearerAuth(self.config.accessToken)
-        return auth
+        """Setup authentication component.
+        
+        If provided credentials are invalid, fall back to an InvalidAuth instance
+        so the connector can initialize and surface connection errors at runtime.
+        """
+        try:
+            return BearerAuth(self.config.accessToken)
+        except AuthFailedError as e:
+            logger.warning("Using InvalidAuth due to credential validation failure", extra={"error": str(e)})
+            return InvalidAuth(str(e))
     
     def _setup_transport(self) -> BaseTransport:
         """Setup transport layer (GraphQL-only)."""

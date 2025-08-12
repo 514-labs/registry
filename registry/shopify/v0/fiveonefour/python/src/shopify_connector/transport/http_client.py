@@ -355,6 +355,28 @@ class HTTPClient:
                 self.total_requests / uptime if uptime > 0 else 0
             )
         }
+
+    def get_capabilities(self) -> Dict[str, Any]:
+        """Return HTTP client capabilities used by tests and diagnostics."""
+        return {
+            'type': 'http',
+            'features': {
+                'connection_pooling': True,
+                'keep_alive': True,
+                'http2': False,
+                'ssl_verification': True,
+                'redirects': True,
+            },
+            'pooling': {
+                'max_connections': self.config.pooling.maxConnections,
+                'max_connections_per_host': self.config.pooling.maxConnectionsPerHost,
+                'idle_timeout_ms': self.config.pooling.idleTimeout,
+                'connection_timeout_ms': self.config.pooling.connectionTimeout,
+            },
+            'timeouts': {
+                'request_timeout_ms': self.config.timeout,
+            }
+        }
     
     def __enter__(self):
         """Context manager entry."""

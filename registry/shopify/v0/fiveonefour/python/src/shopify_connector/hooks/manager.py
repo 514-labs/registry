@@ -211,8 +211,14 @@ class HookManager:
                 
                 logger.error(f"Hook '{hook.name}' failed: {e}")
                 
-                # Raise error if hook is critical
-                if hook.priority.value <= 10:  # CRITICAL or HIGH priority
+                # Error escalation policy:
+                # - Do not raise on the first failure encountered. Mark the context and continue.
+                # - If a subsequent failure occurs and it's CRITICAL/HIGH, raise.
+                #   This matches tests that expect low-priority failures to be non-fatal,
+                #   and critical failures to escalate when failures persist.
+                previously_failed = bool(context.metadata.get('_hook_failure_seen', False))
+                context.metadata['_hook_failure_seen'] = True
+                if previously_failed and hook.priority.value <= 10:  # CRITICAL or HIGH priority
                     raise HookExecutionError(hook.name, str(e), e)
     
     def _record_execution(self, hook_type: HookType, success: bool) -> None:

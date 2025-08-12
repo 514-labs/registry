@@ -8,6 +8,7 @@ methods must implement to work with the connector.
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional
 
+from ..errors.base import AuthFailedError
 
 class BaseAuth(ABC):
     """
@@ -89,3 +90,21 @@ class BaseAuth(ABC):
             'valid': self.isValid(),
             'refreshable': hasattr(self, 'refresh') and self.refresh != BaseAuth.refresh
         }
+
+
+class InvalidAuth(BaseAuth):
+    """
+    Fallback auth used when provided credentials are invalid at construction time.
+    
+    This allows components to be initialized while clearly reporting invalid auth
+    via isValid() and by raising on authenticate().
+    """
+
+    def __init__(self, reason: str = "invalid_credentials"):
+        self.reason = reason
+
+    def authenticate(self, request: Dict[str, Any]) -> None:
+        raise AuthFailedError(f"Authentication not available: {self.reason}")
+
+    def isValid(self) -> bool:
+        return False
