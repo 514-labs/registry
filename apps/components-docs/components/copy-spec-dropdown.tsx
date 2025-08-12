@@ -29,17 +29,24 @@ export default function CopySpecDropdown() {
       const targetElement = document.getElementById(elementId);
       if (!targetElement) return;
 
-      const targetText = targetElement.innerText ?? "";
-      if (!targetText) return;
+      const { default: TurndownService } = await import("turndown");
+      const turndown = new TurndownService();
+
+      const targetHtml = targetElement.innerHTML ?? "";
+      if (!targetHtml) return;
+
+      let finalMarkdown = turndown.turndown(targetHtml).trim();
 
       // Include common spec for all non-common selections
-      let finalText = targetText;
       if (elementId !== "spec-common" && commonElement) {
-        const commonText = commonElement.innerText ?? "";
-        finalText = `${commonText}\n\n${targetText}`.trim();
+        const commonHtml = commonElement.innerHTML ?? "";
+        if (commonHtml) {
+          const commonMarkdown = turndown.turndown(commonHtml).trim();
+          finalMarkdown = `${commonMarkdown}\n\n${finalMarkdown}`.trim();
+        }
       }
 
-      await navigator.clipboard.writeText(finalText);
+      await navigator.clipboard.writeText(finalMarkdown);
     } catch {
       // no-op fallback; we intentionally avoid alerts/toasts here
     }
