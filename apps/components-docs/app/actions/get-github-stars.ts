@@ -1,13 +1,12 @@
 "use server";
 
 const REPO = "514-labs/connector-factory";
-
-export const revalidate = 60 * 30; // 30 minutes
+const revalidateSeconds = 60 * 30; // 30 minutes
 
 export async function getGithubStars(): Promise<number | null> {
   try {
     const res = await fetch(`https://api.github.com/repos/${REPO}`, {
-      next: { revalidate },
+      next: { revalidate: revalidateSeconds },
       headers: {
         Accept: "application/vnd.github+json",
       },

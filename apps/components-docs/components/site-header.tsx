@@ -60,9 +60,9 @@ export async function SiteHeader() {
             <SiGithub className="size-4" />
             {githubStars != null && (
               <span className="text-xs tabular-nums">
-                {new Intl.NumberFormat(undefined, { notation: "compact" }).format(
-                  githubStars
-                )}
+                {new Intl.NumberFormat(undefined, {
+                  notation: "compact",
+                }).format(githubStars)}
               </span>
             )}
           </Link>

@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 
 const REPO = "514-labs/connector-factory";
 
-export const revalidate = 60 * 30; // 30 minutes ISR caching for route handlers
+// Next.js requires a numeric literal for this segment config
+export const revalidate = 1800; // 30 minutes ISR caching for route handlers
 
 export async function GET() {
   try {
