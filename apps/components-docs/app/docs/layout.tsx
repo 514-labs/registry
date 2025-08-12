@@ -1,48 +1,13 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
+import DocsToc from "@/components/docs-toc";
+import DocsNav from "@/components/docs-nav";
+import { PagefindMeta } from "@/components/pagefind-meta";
 
 import {
   Sidebar,
-  SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarInset,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "@workspace/ui/components/sidebar";
-
-function DocsNav() {
-  const items = [
-    { title: "Introduction", href: "/docs" },
-    { title: "Installation", href: "/docs/installation" },
-    {
-      title: "Specifications",
-      href: "/docs/specifications",
-    },
-  ];
-
-  return (
-    <SidebarContent>
-      <SidebarGroup>
-        <SidebarGroupLabel>Docs</SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            {items.map((item) => (
-              <SidebarMenuItem key={item.href}>
-                <SidebarMenuButton asChild>
-                  <Link href={item.href}>{item.title}</Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
-    </SidebarContent>
-  );
-}
 
 function DocsRightSidebar() {
   return (
@@ -51,28 +16,7 @@ function DocsRightSidebar() {
       variant="inset"
       className="top-(--header-height) h-[calc(100svh-var(--header-height))]!"
     >
-      <div className="text-sm font-semibold mb-3">On this page</div>
-      <nav className="text-sm space-y-2">
-        {/* Replace with a generated table of contents if desired */}
-        <a
-          className="text-muted-foreground hover:text-foreground block"
-          href="#"
-        >
-          Section 1
-        </a>
-        <a
-          className="text-muted-foreground hover:text-foreground block"
-          href="#"
-        >
-          Section 2
-        </a>
-        <a
-          className="text-muted-foreground hover:text-foreground block"
-          href="#"
-        >
-          Section 3
-        </a>
-      </nav>
+      <DocsToc />
     </Sidebar>
   );
 }
@@ -80,6 +24,7 @@ function DocsRightSidebar() {
 export default function DocsLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex flex-1">
+      <PagefindMeta type="docs" />
       {/* Left navigation */}
       <Sidebar
         variant="inset"

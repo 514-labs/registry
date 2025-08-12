@@ -26,7 +26,16 @@ function ConnectorCard({
   tags,
   href,
 }: ConnectorCardProps) {
-  const imageSrc = icon.startsWith("/") ? icon : `/${icon}`;
+  const base = icon.startsWith("/") ? icon : `/${icon}`;
+  const candidates = [
+    base,
+    base.replace(/\.png$/, ".svg"),
+    base.replace(/\.png$/, ".webp"),
+    base.replace(/\.png$/, ".jpg"),
+    base.replace(/\.png$/, ".jpeg"),
+  ];
+  // Use first candidate; browser will 404 fallbacks are not automatic, but primary will exist after sync
+  const imageSrc = candidates[0];
   return (
     <Card className="h-full">
       <CardHeader>
