@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "name": "hubspot",
+  "title": "HubSpot",
+  "category": "CRM",
+  "tags": ["CRM", "SaaS", "Extract"],
+  "description": "Pull your up-to-date HubSpot CRM data into your data warehouse.",
+  "homepage": "https://developers.hubspot.com/docs/reference/api"
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HubSpot Raw Contact",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "properties": {
+      "type": "object",
+      "properties": {
+        "email": { "type": ["string", "null"] },
+        "firstname": { "type": ["string", "null"] },
+        "lastname": { "type": ["string", "null"] },
+        "phone": { "type": ["string", "null"] },
+        "company": { "type": ["string", "null"] },
+        "website": { "type": ["string", "null"] },
+        "address": { "type": ["string", "null"] },
+        "city": { "type": ["string", "null"] },
+        "state": { "type": ["string", "null"] },
+        "zip": { "type": ["string", "null"] },
+        "country": { "type": ["string", "null"] },
+        "jobtitle": { "type": ["string", "null"] },
+        "lifecyclestage": { "type": ["string", "null"] },
+        "lead_status": { "type": ["string", "null"] },
+        "createdate": { "type": ["string", "null"] },
+        "lastmodifieddate": { "type": ["string", "null"] },
+        "hs_object_id": { "type": ["string", "null"] }
+      },
+      "additionalProperties": { "type": ["string", "null"] }
+    },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "archived": { "type": "boolean" }
+  },
+  "required": ["id", "properties", "createdAt", "updatedAt", "archived"],
+  "additionalProperties": true
+}
