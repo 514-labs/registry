@@ -241,3 +241,37 @@ export function buildThingsDomain(send: SendFn) {
 - [ ] `paginateCursor` matches HubSpot defaults
 - [ ] Models + contracts added and exported
 - [ ] Unit tests pass; integration optional
+
+## Schemas and packaging updates
+
+- Schemas (raw only):
+  - Location: `schemas/`
+    - `index.json` enumerates entities and points to raw schemas.
+    - `raw/json/*.schema.json` mirrors TS models exactly: `<Object>` = `HubSpotObject` + `<Object>Properties` with `properties` values constrained to `string|null`.
+    - `raw/relational/tables.json` + `tables.sql` define staging tables. Required columns (id, properties, created_at, updated_at, archived) are NOT NULL. Engagements include `object_type` in PK.
+  - Extracted schemas: deferred until a transform exists.
+
+- Package subpath exports:
+  - Consumers can import stable subpaths (avoid deep internals):
+    - Main API: `import { createHubSpotConnector } from '@workspace/connector-hubspot'`
+    - Config: `import { withDerivedDefaults, type ConnectorConfig } from '@workspace/connector-hubspot/config'`
+    - Low-level client (optional): `import { HttpClient } from '@workspace/connector-hubspot/client'`
+  - Implemented via `package.json` `exports` map.
+
+- Running the example:
+  - From package dir: `HUBSPOT_TOKEN="..." pnpm exec tsx examples/basic-usage.ts`
+
+- Adding a new object (updates):
+  1. Models: add `<object>` folder with `<Object>Properties` and `<Object>` extends `HubSpotObject`.
+  2. Contracts: list/single response types.
+  3. Domain: `makeCrudDomain` bound to `/crm/v3/objects/<objectType>`.
+  4. Connector: add public methods delegating to domain; prefer `stream<Object>s` naming.
+  5. Schemas:
+     - Raw JSON: `schemas/raw/json/<objects>.schema.json` mirroring the TS model (`properties` additional props are `string|null`).
+     - Raw relational: add table to `schemas/raw/relational/tables.json` and DDL in `tables.sql` (NOT NULL id/properties/created_at/updated_at/archived). Add `object_type` for multi-subtype domains as needed.
+     - Update `schemas/index.json` with the new entity.
+  6. Tests: unit tests for list/get/pagination.
+
+- Future (optional):
+  - Add Zod alongside models and generate JSON Schema later; no public API change required.
+  - Migrate transport to the official HubSpot SDK behind the existing client facade to preserve the API.
