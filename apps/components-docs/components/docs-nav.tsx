@@ -19,7 +19,6 @@ export default function DocsNav() {
   const items = [
     { title: "Introduction", href: "/docs" },
     { title: "Installation", href: "/docs/installation" },
-    { title: "Creating connectors", href: "/docs/creating-connectors" },
     {
       title: "Specifications",
       href: "/docs/specifications",
