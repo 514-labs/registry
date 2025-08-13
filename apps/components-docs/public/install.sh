@@ -20,6 +20,7 @@ REPO_NAME="connector-factory"
 DEFAULT_REPO_REF="main"
 # Allow override via environment: export REPO_REF=<branch>
 REPO_REF="${REPO_REF:-$DEFAULT_REPO_REF}"
+REGISTRY_URL="${REGISTRY_URL:-http://localhost:3000/registry.json}"
 
 # Positional args (required)
 CONNECTOR_NAME=""
@@ -180,112 +181,6 @@ copy_connector_into_subdir() {
   echo "✅ Installed into $dest_dir"
 }
 
-# Fetch the repository tree JSON from GitHub
-fetch_tree() {
-  # Use GitHub's tree API to list files without downloading the repo:
-  # - api.github.com returns structured JSON (paths) so we can build permutations
-  # - Avoids fetching the full archive for discovery
-  # - Note: unauthenticated requests have stricter rate limits
-  local tree_api="https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/git/trees/$REPO_REF?recursive=1"
-  curl -fsSL "$tree_api"
-}
-
-# Normalize tree JSON into permutations: name|version|author|language (excludes "_*")
-build_permutations() {
-  jq -r '
-    .tree
-    | map(select(type=="object") | .path)
-    | map(select(type=="string" and startswith("registry/")))
-    | map(split("/"))
-    | map(select(type=="array" and length >= 5))
-    | map({name: .[1], version: .[2], author: .[3], language: .[4]})
-    | map(select(type=="object"))
-    | map(select((.name|startswith("_")|not)
-                 and (.version|startswith("_")|not)
-                 and (.author|startswith("_")|not)
-                 and (.language|startswith("_")|not)))
-    | unique
-    | sort_by(.name, .version, .author, .language)
-    | map("\(.name)|\(.version)|\(.author)|\(.language)")
-    | .[]
-  '
-}
-
-# Lowercase helper
-to_lower() { printf %s "$1" | tr '[:upper:]' '[:lower:]'; }
-
-# Check if a lowercase field matches any token in a comma-separated list (case-insensitive substring)
-#
-# Inputs:
-#   $1 - field_lc: the already-lowercased field value (e.g., "google-analytics")
-#   $2 - filter_csv: comma-separated list of tokens (may include spaces), e.g., "google, shop"
-#
-# Behavior:
-#   - If filter_csv is empty, treat as match (no filter applied)
-#   - For each comma-separated token, trim whitespace, lowercase, and check if it is a substring of field_lc
-#   - Returns success (0) on first match; returns failure (1) if no token matches
-csv_match_any() {
-  local field_lc="$1"; local filter_csv="$2"
-  if [ -z "$filter_csv" ]; then return 0; fi
-  local IFS=','
-  read -r -a tokens <<< "$filter_csv"
-  local tok tok_lc trimmed
-  for tok in "${tokens[@]}"; do
-    # trim leading/trailing whitespace
-    trimmed=$(printf '%s' "$tok" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-    tok_lc=$(to_lower "$trimmed")
-    [ -z "$tok_lc" ] && continue
-    case "$field_lc" in
-      *"$tok_lc"*) return 0;;
-    esac
-  done
-  return 1
-}
-
-# Filter permutations using optional CSV filters and print copy-ready lines
-#
-# Reads pipe-delimited tuples from stdin: name|version|author|language
-# For each tuple:
-#   - Lowercases each field
-#   - Applies csv_match_any against the provided filters (AND across fields)
-#   - On match, prints a copy-ready line: "name version author language"
-#
-# Side effects:
-#   - Tracks whether anything was printed and shows a CTA if none matched
-filter_and_print() {
-  local printed_any=0
-  local f_name_lc f_version_lc f_author_lc f_language_lc
-  f_name_lc=$(to_lower "$FILTER_NAME")
-  f_version_lc=$(to_lower "$FILTER_VERSION")
-  f_author_lc=$(to_lower "$FILTER_AUTHOR")
-  f_language_lc=$(to_lower "$FILTER_LANGUAGE")
-
-  while IFS= read -r line; do
-    [ -z "$line" ] && continue
-    IFS='|' read -r name version author language <<< "$line"
-    local name_lc version_lc author_lc language_lc
-    name_lc=$(to_lower "$name")
-    version_lc=$(to_lower "$version")
-    author_lc=$(to_lower "$author")
-    language_lc=$(to_lower "$language")
-    if csv_match_any "$name_lc" "$f_name_lc" && \
-       csv_match_any "$version_lc" "$f_version_lc" && \
-       csv_match_any "$author_lc" "$f_author_lc" && \
-       csv_match_any "$language_lc" "$f_language_lc"; then
-      printf "%s %s %s %s\n" "$name" "$version" "$author" "$language"
-      printed_any=1
-    fi
-  done
-
-  echo ""
-  if [ "$printed_any" -eq 0 ]; then
-    echo "No connectors matched your filters."
-    echo ""
-    echo "❤️ We would love your contributions: https://github.com/514-labs/connector-factory"
-    echo ""
-  fi
-}
-
 # List copy/paste permutations: "<name> <version> <author> <language>" (exclude "_*")
 # TODO: Could the site just have a registry endpoint?
 list_connectors() {
@@ -299,10 +194,37 @@ list_connectors() {
     return
   fi
 
-  # Orchestrate: fetch → normalize → filter/print
+  # Fetch → filter in jq → print
   local perms
-  perms=$(fetch_tree | build_permutations)
-  filter_and_print <<< "$perms"
+  perms=$(curl -fsSL "$REGISTRY_URL" | jq -r \
+    --arg f_name "$FILTER_NAME" \
+    --arg f_version "$FILTER_VERSION" \
+    --arg f_author "$FILTER_AUTHOR" \
+    --arg f_language "$FILTER_LANGUAGE" '
+    def toks(s): if s=="" then [] else (s|split(",")|map(ascii_downcase|gsub("^\\s+|\\s+$";""))) end;
+    def matchAny(field; arr): (arr|length==0) or (any(arr[]; (field|ascii_downcase|contains(.))));
+    (.connectors // [])
+    | .[] as $c
+    | ($c.languages // [])[] as $l
+    | select(
+        matchAny($c.name; toks($f_name)) and
+        matchAny($c.version; toks($f_version)) and
+        matchAny($c.author; toks($f_author)) and
+        matchAny($l; toks($f_language))
+      )
+    | "\($c.name) \($c.version) \($c.author) \($l)"
+  ')
+
+  if [ -z "$perms" ]; then
+    echo "No connectors matched your filters."
+    echo ""
+    echo "❤️ We would love your contributions: https://github.com/514-labs/connector-factory"
+    echo ""
+    return
+  fi
+
+  echo "$perms"
+  echo ""
 }
 
 # Parse flags and positional arguments
