@@ -1,0 +1,78 @@
+import Link from "next/link";
+
+# Create your own connector
+
+Follow these steps to create your own connector:
+
+## 1. Clone the repository
+Clone the connector factory repository to your local machine:
+
+```bash
+git clone https://github.com/514-labs/connector-factory.git
+cd connector-factory
+```
+
+## 2. Generate a connector scaffold
+From the connector factory directory, run the install script to generate a new connector with the appropriate structure:
+
+```bash
+bash -i <(curl https://connectors.514.ai/install.sh) [connector-name] [version] [author] [language]
+```
+
+Example:
+```bash
+bash -i <(curl https://connectors.514.ai/install.sh) ads-b-dot-lol v2 fiveonefour typescript
+```
+
+This creates a new directory with your connector scaffold in the chosen language.
+
+## 3. Determine your connector type
+Identify which type of connector you're building:
+
+- **API Connector**: For general REST/GraphQL APIs
+- **SaaS Connector**: For third-party SaaS platforms and services
+- **Database Connector**: For SQL databases (PostgreSQL, MySQL, etc.)
+- **Blob Storage Connector**: For cloud storage (S3, GCS, Azure Blob)
+
+## 4. Follow the specifications
+Feed your LLM the relevant specifications and documentation:
+
+- **Target API documentation**: Share the official API docs of the service you're connecting to (e.g., Stripe API docs, Shopify API docs)
+- **Type-specific specs**: Include the appropriate specification:
+  - API Connector Spec for general REST/GraphQL APIs
+  - SaaS Connector Spec for third-party SaaS platforms
+  - Database Connector Spec for SQL databases
+  - Blob Storage Connector Spec for cloud storage
+- **Example connectors**: Reference existing connectors in the registry for patterns
+  - API Connectors: ADS-B.lol, OpenWeather
+  - SaaS Connectors: Google Analytics, Shopify
+  - [coming soon] Database Connectors: PostgreSQL
+  - [coming soon] Blob Storage Connectors: S3
+
+Your LLM can then help generate the connector implementation following the established patterns and specifications.
+
+## 5. Share your connector
+Open a pull request to the connector-factory repository to share your connector with the community. Mention the connector Issue in the PR description.
+
+If you built your connector outside the connector-factory monorepo, you'll need to add it to the monorepo's registry directory with all required metadata (defined in registry/_scaffold).
+
+---
+
+## Using Claude Code
+
+If you use [Claude Code](https://claude.ai/code), we've encoded our learnings from building connectors into specialized AI agents in the `.claude` directory of this repository. You can prompt Claude Code with:
+
+```
+Here's the API documentation: [paste docs URL or attach file]
+My API token environment variable is: MY_API_KEY
+Please review .claude/README.md, .claude/agents, [appropriate specification from apps/components-docs/content/docs/specifications/], and registry/_scaffold/.
+Build me a complete [API_NAME] connector following the patterns.
+```
+
+**Note:** Replace `[appropriate specification]` with the relevant spec for your connector type:
+- `api-connector.mdx` for REST/GraphQL APIs
+- Other specs as they become available for SaaS, Database, and Blob Storage connectors
+
+The agents will handle schema generation, client implementation, testing, and documentation using proven patterns from our OpenWeather, HubSpot, Shopify, and ADS-B implementations.
+
+
