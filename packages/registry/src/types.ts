@@ -29,8 +29,11 @@ export type ProviderMeta = {
   source?: Record<string, unknown>;
   capabilities?: Record<string, unknown>;
   maintainers?: Array<Record<string, unknown>>;
-  // Map from language to GitHub issue URL tracking this implementation
-  issues?: Record<string, string>;
+  // Map of GitHub issues tracking implementations.
+  // Backwards compatible:
+  // - { [language]: string } maps a language directly to an issue URL
+  // - { [language]: { [implementation]: string } } maps (language, implementation) to URL
+  issues?: Record<string, string | Record<string, string>>;
 };
 
 export type RegistryConnector = {
@@ -45,9 +48,8 @@ export type RegistryConnector = {
     meta?: ProviderMeta;
     implementations: Array<{
       language: string; // e.g. "typescript" | "python"
+      implementation: string; // e.g. "data-api" | "default"
       path: string;
     }>;
   }>;
 };
-
-

@@ -50,11 +50,61 @@ export async function getIssueThumbsUpCountFromUrl(
 export async function getIssueThumbsUpCountFromMeta(
   providerMeta: ProviderMeta | undefined,
   language: string,
+  implementation?: string,
   options?: { token?: string }
 ): Promise<number> {
-  const url = providerMeta?.issues?.[language];
+  const value = providerMeta?.issues?.[language];
+  const url =
+    typeof value === "string"
+      ? value
+      : implementation && value && typeof value === "object"
+        ? value[implementation]
+        : undefined;
   if (!url) return 0;
   return getIssueThumbsUpCountFromUrl(url, options);
+}
+
+export async function getIssuePositiveReactionsCountFromUrl(
+  issueUrl: string,
+  options?: { token?: string }
+): Promise<number> {
+  const parsed = parseIssueUrl(issueUrl);
+  if (!parsed) return 0;
+
+  const token = (options?.token ?? process.env.GITHUB_PAT ?? "").trim();
+  const res = await fetch(
+    `https://api.github.com/repos/${parsed.owner}/${parsed.repo}/issues/${parsed.issueNumber}`,
+    {
+      headers: {
+        Accept: "application/vnd.github+json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    }
+  );
+
+  if (!res.ok) return 0;
+  const data = (await res.json()) as { reactions?: Record<string, number> };
+  const thumbsUp = data.reactions?.["+1"] ?? 0;
+  const hearts = data.reactions?.heart ?? 0;
+  return thumbsUp + hearts;
+}
+
+export async function getIssuePositiveReactionsCountFromMeta(
+  providerMeta: ProviderMeta | undefined,
+  language: string,
+  implementation?: string,
+  options?: { token?: string }
+): Promise<number> {
+  const value = providerMeta?.issues?.[language];
+  const url =
+    typeof value === "string"
+      ? value
+      : implementation && value && typeof value === "object"
+        ? value[implementation]
+        : undefined;
+  if (!url) return 0;
+  return getIssuePositiveReactionsCountFromUrl(url, options);
 }
 
 export async function getUserAvatar(
@@ -120,5 +170,3 @@ export async function getAuthorAvatar(
   if (asUser) return asUser;
   return getOrganizationAvatar(author, options);
 }
-
-
