@@ -1,0 +1,31 @@
+{
+  "name": "@connector-factory/cli",
+  "version": "0.0.0",
+  "type": "module",
+  "private": false,
+  "bin": "dist/index.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "unzipper": "^0.12.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "tsx": "^4.7.0",
+    "typescript": "^5.5.0"
+  }
+}
+
+

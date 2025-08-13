@@ -1,0 +1,43 @@
+name: Release connector-factory CLI
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/release-cli.yaml"
+      - "packages/cli/**"
+      - "pnpm-lock.yaml"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (e.g., 0.1.0)"
+        required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Auth to npm
+        run: pnpm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
+
+      - name: Install workspace deps (limited)
+        run: pnpm install --filter @connector-factory/cli
+
+      - name: Release CLI
+        run: ./packages/cli/scripts/release.sh ${{ inputs.version || '0.0.0' }}
+
+
