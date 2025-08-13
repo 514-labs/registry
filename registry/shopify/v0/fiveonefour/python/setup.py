@@ -7,8 +7,8 @@ from setuptools import setup, find_packages
 
 setup(
     name="shopify-connector",
-    version="0.1.0",
-    description="Production-ready Shopify connector implementing the API Connector Specification",
+    version="0.1.8",
+    description="Shopify connector implementing the API Connector Specification",
     author="FiveOneFour",
     license="MIT",
     packages=find_packages(where="src"),

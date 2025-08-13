@@ -104,6 +104,7 @@ Use these values when configuring the connector:
   "shop": "{SHOPIFY_SHOP}",
   "apiVersion": "2025-07",
   "accessToken": "<SHOPIFY_ACCESS_TOKEN>",
+  "useGraphQL": true,
   "defaults": { "query": { "limit": 250 } }
 }
 ```

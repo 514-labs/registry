@@ -1,6 +1,6 @@
 # Python Shopify Connector
 
-A production-ready Python connector for Shopify's GraphQL Admin API, built according to the [API Connector Specification](../../../../../../apps/components-docs/content/docs/specifications/api-connector.mdx).
+A Python connector for Shopify's GraphQL Admin API, built according to the [API Connector Specification](../../../../../../apps/components-docs/content/docs/specifications/api-connector.mdx).
 
 > Note: This release uses GraphQL as the only transport (no REST fallback). REST may be reintroduced later if needed.
 

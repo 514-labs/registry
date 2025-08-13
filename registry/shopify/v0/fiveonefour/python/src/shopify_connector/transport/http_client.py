@@ -159,18 +159,21 @@ class HTTPClient:
                 json=json,
                 timeout=request_timeout
             )
-            
+
+            # Treat non-2xx/3xx as failures
+            response.raise_for_status()
+
             # Process response
             result = self._process_response(response, start_time)
             self.successful_requests += 1
-            
+
             logger.debug("HTTP request successful", extra={
                 'method': method,
                 'url': url,
                 'status_code': response.status_code,
                 'duration_ms': int((time.time() - start_time) * 1000)
             })
-            
+
             return result
             
         except TimeoutException as e:

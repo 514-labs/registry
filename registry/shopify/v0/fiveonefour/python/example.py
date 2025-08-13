@@ -26,7 +26,7 @@ def main():
     config = {
         "shop": os.getenv("SHOPIFY_SHOP", "your-store.myshopify.com"),
         "accessToken": os.getenv("SHOPIFY_ACCESS_TOKEN", "your-access-token"),
-        "apiVersion": "2024-07",
+        "apiVersion": "2025-07",
         "timeout": 30000,
         "useGraphQL": True,
         "fallbackToREST": True,

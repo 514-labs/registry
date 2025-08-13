@@ -351,7 +351,15 @@ class ShopifyConnector:
             return InvalidAuth(str(e))
     
     def _setup_transport(self) -> BaseTransport:
-        """Setup transport layer (GraphQL-only)."""
+        """Setup transport layer.
+
+        Currently only GraphQL is implemented. If configuration disables GraphQL,
+        fail fast with a clear error rather than silently using GraphQL.
+        """
+        if not self.config.useGraphQL:
+            from .errors.base import UnsupportedError
+            raise UnsupportedError("REST transport is not implemented yet; set useGraphQL=True")
+
         gql_transport = GraphQLTransport(self.config)
         gql_transport.set_auth(self.auth)
         return gql_transport

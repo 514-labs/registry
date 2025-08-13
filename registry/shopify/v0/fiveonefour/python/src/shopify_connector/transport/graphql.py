@@ -193,8 +193,9 @@ class GraphQLTransport(BaseTransport):
                 )
             else:
                 # Default: inventory items with per-location inventory levels
+                # Parameterize quantity names to avoid inline enum formatting issues
                 query = (
-                    "query inventoryItems($first: Int!, $after: String) {\n"
+                    "query inventoryItems($first: Int!, $after: String, $names: [String!]!) {\n"
                     "  inventoryItems(first: $first, after: $after) {\n"
                     "    edges {\n"
                     "      cursor\n"
@@ -205,7 +206,7 @@ class GraphQLTransport(BaseTransport):
                     "        inventoryLevels(first: 50) {\n"
                     "          edges {\n"
                     "            node {\n"
-                    "              available\n"
+                    "              quantities(names: $names) { name quantity }\n"
                     "              location { id name }\n"
                     "            }\n"
                     "          }\n"
@@ -220,6 +221,48 @@ class GraphQLTransport(BaseTransport):
             variables = {"first": page_size}
             if after:
                 variables["after"] = after
+            # Allow caller to specify quantity names via query.names; default "available"
+            # Accept single string, comma-separated string, or list[str]
+            names = query_params.get("names")
+            if not names:
+                names_list = ["available"]
+            elif isinstance(names, str):
+                raw_list = [n for n in (names.split(",") if "," in names else [names])]
+                names_list = [n.strip() for n in raw_list if n.strip()]
+            elif isinstance(names, list):
+                names_list = [str(n).strip() for n in names if str(n).strip()]
+            else:
+                names_list = ["available"]
+
+            # Normalize and validate against known valid quantity names per Shopify Admin API (2025-07)
+            valid_names = {
+                "available",
+                "committed",
+                "damaged",
+                "incoming",
+                "on_hand",
+                "quality_control",
+                "reserved",
+                "safety_stock",
+            }
+
+            normalized: list[str] = []
+            for name in names_list:
+                candidate = name.lower().replace("-", "_").replace(" ", "_")
+                # Common aliases
+                if candidate == "onhand":
+                    candidate = "on_hand"
+                if candidate == "qualitycontrol":
+                    candidate = "quality_control"
+                if candidate == "safetystock":
+                    candidate = "safety_stock"
+                normalized.append(candidate)
+
+            # Filter to only valid names; default to ["available"] if none valid
+            filtered = [n for n in normalized if n in valid_names]
+            if not filtered:
+                filtered = ["available"]
+            variables["names"] = filtered
             return query, variables
 
         # Orders with richer fields
@@ -288,13 +331,40 @@ class GraphQLTransport(BaseTransport):
         if isinstance(body, dict):
             errors = body.get("errors")
             if errors:
+                # Extract primary error context
+                first_err = errors[0] if isinstance(errors, list) and errors else {}
+                message = first_err.get("message") or "GraphQL error"
+                ext = (first_err.get("extensions") or {})
+                code = ext.get("code")
+
                 # Detect throttling if present in extensions
-                for err in errors:
-                    code = (err.get("extensions") or {}).get("code")
-                    if code in {"THROTTLED", "THROTTLED_DUE_TO_COST_LIMIT"}:
-                        raise RateLimitError("GraphQL throttled", details={"errors": errors})
-                # Otherwise, surface as server error for now
-                raise ServerError("GraphQL error", details={"errors": errors})
+                if code in {"THROTTLED", "THROTTLED_DUE_TO_COST_LIMIT"}:
+                    raise RateLimitError("GraphQL throttled", details={"errors": errors})
+
+                # Classify common non-retryable validation/user-input errors
+                validation_codes = {
+                    "GRAPHQL_VALIDATION_FAILED",
+                    "GRAPHQL_PARSE_FAILED",
+                    "BAD_USER_INPUT",
+                    "VARIABLE_VALUE_INVALID",
+                    "FIELD_NOT_FOUND",
+                }
+                if code in validation_codes:
+                    raise InvalidRequestError(
+                        f"GraphQL invalid request: {message}",
+                        details={"errors": errors}
+                    )
+
+                # Authentication/authorization
+                if code in {"UNAUTHENTICATED", "FORBIDDEN"}:
+                    from ..errors.base import AuthFailedError
+                    raise AuthFailedError(
+                        f"GraphQL auth error: {message}",
+                        details={"errors": errors}
+                    )
+
+                # Default: server error (retryable by policy)
+                raise ServerError(f"GraphQL error: {message}", details={"errors": errors})
 
             processed = {
                 "status_code": status,

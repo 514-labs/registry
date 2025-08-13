@@ -1,7 +1,7 @@
 """
 Shopify Python Connector
 
-A production-ready, read-only Python connector for Shopify that adheres to our
+A read-only Python connector for Shopify that adheres to our
 API Connector Specification. This connector provides a standardized interface
 for extracting data from Shopify stores with built-in resilience, rate limiting,
 and pagination.
@@ -49,9 +49,9 @@ from .errors.base import (
 )
 from .errors.codes import ErrorCode
 
-__version__ = "0.1.0"
+__version__ = "0.1.8"
 __author__ = "FiveOneFour"
-__description__ = "Production-ready Shopify connector implementing the API Connector Specification"
+__description__ = "Shopify connector implementing the API Connector Specification"
 
 __all__ = [
     # Main connector class
