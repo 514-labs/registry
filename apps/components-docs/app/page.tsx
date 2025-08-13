@@ -22,11 +22,12 @@ function Hero() {
         to get involved
       </Badge>
       <h1 className="text-5xl">
-        Bullet-proof, customizable, connectors... as actual code
+        Bullet-proof, customizable, connectors... as code
       </h1>
       <h2 className="text-lg text-muted-foreground">
-        A starter kit for building, testing and sharing analytical, AI-ready
-        connectors that can be customized and embedded in apps.
+        A starter kit for building, testing and sharing customizable,
+        embeddable, analytical connectors for extracting data and metadata from
+        source systems.
       </h2>
       <div className="flex flex-row gap-4">
         <Button asChild>

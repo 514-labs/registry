@@ -5,6 +5,7 @@
   "category": "api",
   "tags": ["Observability", "Events", "Extract", "SaaS"],
   "description": "Pull your up-to-date Datadog telemetry into your observability data warehouse.",
-  "homepage": "https://www.datadoghq.com"
+  "homepage": "https://www.datadoghq.com",
+  "registryUrl": "https://github.com/514-labs/connector-factory/tree/main/registry/datadog"
 }
 

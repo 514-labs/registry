@@ -10,6 +10,7 @@
     "docs:dev": "pnpm -C apps/components-docs dev",
     "docs:build": "pnpm -C apps/components-docs build",
     "docs:start": "pnpm -C apps/components-docs start",
+    "registry:sync:issues": "pnpm -C packages/registry run sync:issues",
     "format": "prettier -w .",
     "format:check": "prettier -c .",
     "clean": "turbo run clean || true; find . -name 'node_modules' -type d -prune -exec rm -rf {} +"
