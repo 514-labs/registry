@@ -58,6 +58,26 @@ def main() -> int:
             first = order_edges[0]["node"]
             print("First order:", {k: first.get(k) for k in ("id", "name", "createdAt")})
 
+        # Small Customers query
+        print("\nQuerying Customers (limit=5)...")
+        try:
+            resp_cust = conn.get("/customers", {"query": {"limit": 5}})
+            data_cust = resp_cust.get("data")
+            if not isinstance(data_cust, dict):
+                print("GraphQL error (customers):", resp_cust.get("body") or resp_cust)
+            else:
+                customers = (data_cust.get("customers") or {}).get("edges", [])
+                print("Customers returned:", len(customers))
+                if customers:
+                    first_cust = customers[0].get("node", {}) if isinstance(customers[0], dict) else {}
+                    print("First customer:", {k: first_cust.get(k) for k in ("id", "email", "firstName", "lastName")})
+        except Exception as e:
+            details = getattr(e, 'details', None)
+            if details:
+                print("GraphQL exception details (customers):", details)
+            else:
+                print("GraphQL exception (customers):", type(e).__name__, str(e))
+
         # Small Inventory query
         print("\nQuerying Inventory (limit=5)...")
         try:
@@ -66,13 +86,16 @@ def main() -> int:
             if not isinstance(data_inv, dict):
                 print("GraphQL error (inventory):", resp_inv.get("body") or resp_inv)
                 return 1
-            products = (data_inv.get("products") or {}).get("edges", [])
-            print("Inventory items returned:", len(products))
-            if products:
-                first_product = products[0].get("node", {}) if isinstance(products[0], dict) else {}
-                first_variant_edge = ((first_product.get("variants") or {}).get("edges") or [None])[0]
-                first_variant = (first_variant_edge or {}).get("node", {}) if isinstance(first_variant_edge, dict) else {}
-                print("First variant:", {k: first_variant.get(k) for k in ("id", "sku", "inventoryQuantity")})
+            inv_edges = (data_inv.get("inventoryItems") or {}).get("edges", [])
+            print("Inventory items returned:", len(inv_edges))
+            if inv_edges:
+                first_item = inv_edges[0].get("node", {}) if isinstance(inv_edges[0], dict) else {}
+                levels_edges = ((first_item.get("inventoryLevels") or {}).get("edges") or [])
+                first_level = levels_edges[0].get("node", {}) if (levels_edges and isinstance(levels_edges[0], dict)) else {}
+                print("First inventory item:", {k: first_item.get(k) for k in ("id", "sku", "tracked")})
+                if first_level:
+                    location = first_level.get("location") or {}
+                    print("First level:", {"available": first_level.get("available"), "location": location.get("name")})
         except Exception as e:
             details = getattr(e, 'details', None)
             if details:

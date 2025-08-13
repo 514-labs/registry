@@ -131,19 +131,31 @@ class GraphQLTransport(BaseTransport):
             )
             return query, {}
 
-        # Inventory (locations and levels depend on scope; start with inventory via products)
-        if method == "GET" and (path.startswith("/inventory") or path.startswith("inventory")):
+        # Customers
+        if method == "GET" and (path.startswith("/customers") or path.startswith("customers")):
             after = query_params.get("cursor")
             query = (
-                "query inventoryViaProducts($first: Int!, $after: String) {\n"
-                "  products(first: $first, after: $after) {\n"
+                "query customers($first: Int!, $after: String) {\n"
+                "  customers(first: $first, after: $after) {\n"
                 "    edges {\n"
                 "      cursor\n"
-                "      node { id title\n"
-                "        variants(first: 10) {\n"
-                "          edges {\n"
-                "            node { id sku inventoryQuantity }\n"
-                "          }\n"
+                "      node {\n"
+                "        id\n"
+                "        email\n"
+                "        firstName\n"
+                "        lastName\n"
+                "        phone\n"
+                "        createdAt\n"
+                "        updatedAt\n"
+                "        verifiedEmail\n"
+                "        state\n"
+                "        defaultAddress {\n"
+                "          address1\n"
+                "          address2\n"
+                "          city\n"
+                "          province\n"
+                "          country\n"
+                "          zip\n"
                 "        }\n"
                 "      }\n"
                 "    }\n"
@@ -156,7 +168,61 @@ class GraphQLTransport(BaseTransport):
                 variables["after"] = after
             return query, variables
 
-        # Orders
+        # Inventory: per-location levels (default) or variant-level fallback via query.mode
+        if method == "GET" and (path.startswith("/inventory") or path.startswith("inventory")):
+            after = query_params.get("cursor")
+            mode = (query_params.get("mode") or "levels").lower()
+            if mode == "variants":
+                # Fallback: inventory via product variants (no per-location detail)
+                query = (
+                    "query inventoryViaProducts($first: Int!, $after: String) {\n"
+                    "  products(first: $first, after: $after) {\n"
+                    "    edges {\n"
+                    "      cursor\n"
+                    "      node { id title\n"
+                    "        variants(first: 50) {\n"
+                    "          edges {\n"
+                    "            node { id sku inventoryQuantity }\n"
+                    "          }\n"
+                    "        }\n"
+                    "      }\n"
+                    "    }\n"
+                    "    pageInfo { hasNextPage endCursor }\n"
+                    "  }\n"
+                    "}\n"
+                )
+            else:
+                # Default: inventory items with per-location inventory levels
+                query = (
+                    "query inventoryItems($first: Int!, $after: String) {\n"
+                    "  inventoryItems(first: $first, after: $after) {\n"
+                    "    edges {\n"
+                    "      cursor\n"
+                    "      node {\n"
+                    "        id\n"
+                    "        sku\n"
+                    "        tracked\n"
+                    "        inventoryLevels(first: 50) {\n"
+                    "          edges {\n"
+                    "            node {\n"
+                    "              available\n"
+                    "              location { id name }\n"
+                    "            }\n"
+                    "          }\n"
+                    "          pageInfo { hasNextPage endCursor }\n"
+                    "        }\n"
+                    "      }\n"
+                    "    }\n"
+                    "    pageInfo { hasNextPage endCursor }\n"
+                    "  }\n"
+                    "}\n"
+                )
+            variables = {"first": page_size}
+            if after:
+                variables["after"] = after
+            return query, variables
+
+        # Orders with richer fields
         if method == "GET" and (path.startswith("/orders") or path.startswith("orders")):
             after = query_params.get("cursor")
             query = (
@@ -164,7 +230,32 @@ class GraphQLTransport(BaseTransport):
                 "  orders(first: $first, after: $after, reverse: false) {\n"
                 "    edges {\n"
                 "      cursor\n"
-                "      node { id name createdAt totalPriceSet { shopMoney { amount currencyCode } } customer { id email } }\n"
+                "      node {\n"
+                "        id\n"
+                "        name\n"
+                "        createdAt\n"
+                "        updatedAt\n"
+                "        test\n"
+                "        displayFinancialStatus\n"
+                "        displayFulfillmentStatus\n"
+                "        totalPriceSet { shopMoney { amount currencyCode } }\n"
+                "        subtotalPriceSet { shopMoney { amount currencyCode } }\n"
+                "        totalTaxSet { shopMoney { amount currencyCode } }\n"
+                "        currencyCode\n"
+                "        customer { id email firstName lastName }\n"
+                "        shippingAddress { city province country zip }\n"
+                "        billingAddress { city province country zip }\n"
+                "        lineItems(first: 50) {\n"
+                "          edges {\n"
+                "            node {\n"
+                "              name\n"
+                "              quantity\n"
+                "              discountedTotalSet { shopMoney { amount currencyCode } }\n"
+                "              variant { id sku }\n"
+                "            }\n"
+                "          }\n"
+                "        }\n"
+                "      }\n"
                 "    }\n"
                 "    pageInfo { hasNextPage endCursor }\n"
                 "  }\n"
