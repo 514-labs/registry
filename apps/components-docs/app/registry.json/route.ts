@@ -2,17 +2,17 @@ import { NextResponse } from "next/server";
 import { readdirSync, Dirent, existsSync, readFileSync } from "fs";
 import { join } from "path";
 import { getRegistryPath } from "@workspace/registry";
+import type { ProviderMeta } from "@workspace/registry/types";
 
 export const dynamic = "force-static";
 
-type JsonValue = unknown;
-
-function readJsonSafe<T = JsonValue>(filePath: string): T | undefined {
+function readJsonSafe<T = unknown>(filePath: string): T | undefined {
   try {
     if (!existsSync(filePath)) return undefined;
     const raw = readFileSync(filePath, "utf-8");
     return JSON.parse(raw) as T;
-  } catch {
+  } catch (error) {
+    console.error(`Error parsing JSON file: ${filePath}`, error);
     return undefined;
   }
 }
@@ -23,7 +23,7 @@ function isVisibleDir(entry: Dirent): boolean {
 
 export async function GET() {
   const registryDir = getRegistryPath();
-  const result: JsonValue[] = [];
+  const result: ProviderMeta[] = [];
 
   // Walk: registry/<name>/<version>/<author>/<language>
   const connectorDirs = readdirSync(registryDir, { withFileTypes: true }).filter(isVisibleDir);
@@ -39,7 +39,7 @@ export async function GET() {
       const authorEntries = readdirSync(versionPath, { withFileTypes: true }).filter(isVisibleDir);
       for (const authorEntry of authorEntries) {
         const authorPath = join(versionPath, authorEntry.name);
-        const authorMeta = readJsonSafe(join(authorPath, "_meta", "connector.json"));
+        const authorMeta = readJsonSafe<ProviderMeta>(join(authorPath, "_meta", "connector.json"));
         if (authorMeta) {
           // Push the author-level meta object exactly as-is
           result.push(authorMeta);
