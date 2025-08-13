@@ -40,7 +40,7 @@ export type RegistryConnector = {
     meta?: ConnectorRootMeta;
   };
   providers: Array<{
-    authorId: string; // e.g. "fiveonefour"
+    authorId: string; // e.g. "514-labs"
     path: string;
     meta?: ProviderMeta;
     implementations: Array<{
