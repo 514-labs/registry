@@ -604,6 +604,23 @@ pytest -v
 pytest tests/unit/test_auth.py
 ```
 
+### Populate a development store with test orders
+
+For integration testing against a live development store, you can generate customers and test orders using the provided script. This is helpful when validating pagination, rate limiting, and end‑to‑end extraction flows with realistic data.
+
+```bash
+# Reuse existing customers tagged automation-test
+python test/test_create_test_orders.py --count 100 --skip-customers --customer-tag automation-test
+
+# Create customers and orders, with rate limit backoff for draft order completion
+python test/test_create_test_orders.py --count 50 --customer-tag automation-test --rest-retries 8 --rest-sleep 70
+```
+
+Requirements:
+- Development store with Bogus Gateway enabled
+- Admin token with write scopes (customers, draft orders, orders)
+- Shopify credentials in env: `SHOPIFY_SHOP`, `SHOPIFY_API_VERSION`, `SHOPIFY_ACCESS_TOKEN`
+
 ### **Continuous Integration**
 
 ```yaml

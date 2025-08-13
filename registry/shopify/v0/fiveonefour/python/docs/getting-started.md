@@ -151,6 +151,34 @@ print(r.json())
 - Provide the shop domain, API version, and access token to the connector's configuration.
 - Start with low scope reads (Products/Customers) and validate pagination and rate limits before scaling to Orders.
 
+### Optional: generate test customers and orders
+
+For richer test data, you can programmatically create customers and orders in a development store. The helper script uses GraphQL to create customers and draft orders, completes them, then creates a REST test transaction (Bogus gateway) so `order.test == true`.
+
+Prerequisites:
+- Development store with Bogus Gateway (or Shopify Payments in test mode) enabled
+- Admin token with write scopes: `write_customers`, `write_draft_orders`, `write_orders`
+
+Usage:
+```bash
+# Reuse existing customers tagged automation-test
+python test/test_create_test_orders.py --count 1000 --skip-customers --customer-tag automation-test
+
+# Create new customers and orders (avoid duplicates with an offset)
+python test/test_create_test_orders.py --count 1000 --customer-tag automation-test --customer-offset 1000
+
+# Handle draft order REST rate limits more patiently
+python test/test_create_test_orders.py --count 50 --skip-customers --customer-tag automation-test --rest-retries 8 --rest-sleep 70
+
+# Add --verbose for additional logging
+python test/test_create_test_orders.py --count 10 --skip-customers --customer-tag automation-test --verbose
+```
+
+Notes:
+- Shopify credentials are read from your shell environment: `SHOPIFY_SHOP`, `SHOPIFY_API_VERSION`, `SHOPIFY_ACCESS_TOKEN`.
+- The script tags customers and orders with `automation-test` by default.
+- The script respects Shopify rate limits and will back off on draft order completion when necessary.
+
 ## 📚 Additional Documentation
 
 - **[Architecture](architecture.md)** - Technical implementation details and API mapping

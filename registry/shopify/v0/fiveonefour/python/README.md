@@ -121,6 +121,42 @@ python run_tests.py
 python test/test_phase6.py  # Test the complete connector
 ```
 
+### Populate test customers and orders (optional)
+
+To generate realistic test data in a development store, use the helper script. It creates customers and orders via GraphQL, then marks orders as test by creating a Bogus gateway transaction via REST.
+
+Prerequisites:
+- Enable Bogus Gateway (or test mode) in your store
+- Token with write scopes: write_customers, write_draft_orders, write_orders
+
+Examples:
+```bash
+# Reuse existing customers tagged automation-test (recommended)
+python test/test_create_test_orders.py \
+  --count 1000 \
+  --skip-customers \
+  --customer-tag automation-test
+
+# Create new customers (unique emails) and orders
+python test/test_create_test_orders.py \
+  --count 1000 \
+  --customer-tag automation-test \
+  --customer-offset 1000
+
+# Tuning for rate limits on draft order completion (REST fallback)
+python test/test_create_test_orders.py \
+  --count 50 \
+  --skip-customers \
+  --customer-tag automation-test \
+  --rest-retries 8 \
+  --rest-sleep 70
+```
+
+Notes:
+- Shopify env vars are read from your shell: `SHOPIFY_SHOP`, `SHOPIFY_ACCESS_TOKEN`, `SHOPIFY_API_VERSION`.
+- The script tags customers and orders with `automation-test` by default.
+- Use `--verbose` to see more logging if debugging.
+
 ## ✨ Features
 
 - **Read-only data extraction** for Products, Orders, Customers, Inventory, and more
