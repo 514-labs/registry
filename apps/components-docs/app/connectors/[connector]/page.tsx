@@ -59,8 +59,8 @@ export default async function ConnectorPage({
           {/* For now, pick the first provider/version */}
           <ConnectorDetailsInstallation
             connectorId={conn.connectorId}
-            versionId={conn.providers[0]?.path.split("/").slice(-2, -1)[0] ?? "unknown"}
-            authorId={conn.providers[0]?.authorId ?? "unknown"}
+            versionId={conn.providers[0]?.path.split("/").slice(-2, -1)[0] ?? ""}
+            authorId={conn.providers[0]?.authorId ?? ""}
             language={(conn.providers[0]?.implementations?.[0]?.language as "typescript" | "python") ?? "typescript"}
           />
         </div>
