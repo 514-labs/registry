@@ -1,32 +1,22 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { SiGithub } from "@icons-pack/react-simple-icons";
 import { ThemeToggle } from "@ui/components/theme-toggle";
 import { Button } from "@ui/components/button";
 import { SidebarTrigger } from "@ui/components/sidebar";
 import { SearchButton } from "@/components/search";
+import { getGithubStars } from "@/app/actions/get-github-stars";
+import { NavButton } from "@/components/nav-button";
+import { Separator } from "@ui/components/separator";
 
-export function SiteHeader() {
-  const pathname = usePathname() ?? "/";
-
-  const isActivePath = (href: string) => {
-    if (href === "/") return pathname === "/";
-    return pathname === href || pathname.startsWith(`${href}/`);
-  };
+export async function SiteHeader() {
+  const githubStars = await getGithubStars();
 
   return (
     <header className="flex justify-between items-center p-4 w-full h-[var(--header-height)] sticky top-0 z-10 bg-background">
-      <div className="flex items-center gap-2">
-        <Button
-          asChild
-          variant="link"
-          className={
-            isActivePath("/") ? "underline underline-offset-4" : undefined
-          }
-        >
-          <Link href="/" aria-current={isActivePath("/") ? "page" : undefined}>
+      <div className="flex flex-row items-center gap-2 h-full">
+        <Button asChild variant="link">
+          <Link href="/">
             <Image
               src="/logo-medium-black.png"
               alt="Connector Factory"
@@ -45,71 +35,34 @@ export function SiteHeader() {
             />
           </Link>
         </Button>
-        <Button
-          asChild
-          variant="link"
-          className={
-            isActivePath("/discover")
-              ? "underline underline-offset-4"
-              : undefined
-          }
-        >
-          <Link
-            href="/discover"
-            aria-current={isActivePath("/discover") ? "page" : undefined}
-          >
-            Discover
-          </Link>
-        </Button>
-        <Button
-          asChild
-          variant="link"
-          className={
-            isActivePath("/create") ? "underline underline-offset-4" : undefined
-          }
-        >
-          <Link
-            href="/create"
-            aria-current={isActivePath("/create") ? "page" : undefined}
-          >
-            Create
-          </Link>
-        </Button>
-        <Button
-          asChild
-          variant="link"
-          className={
-            isActivePath("/publish")
-              ? "underline underline-offset-4"
-              : undefined
-          }
-        >
-          <Link
-            href="/share"
-            aria-current={isActivePath("/publish") ? "page" : undefined}
-          >
-            Share
-          </Link>
-        </Button>
+        <NavButton href="/discover" label="Discover" />
+        <NavButton href="/create" label="Create" />
+        <NavButton href="/share" label="Share" />
+        <Separator orientation="vertical" />
+        <NavButton href="/pipeline" label="Pipeline" />
       </div>
       <div className="flex items-center gap-2">
         <SearchButton />
-        <Button
-          asChild
-          variant="link"
-          className={
-            isActivePath("/docs") ? "underline underline-offset-4" : undefined
-          }
-        >
-          <Link
-            href="/docs"
-            aria-current={isActivePath("/docs") ? "page" : undefined}
-          >
-            Docs
-          </Link>
-        </Button>
+        <NavButton href="/docs" label="Docs" />
         <SidebarTrigger />
         <ThemeToggle />
+        <Button asChild variant="ghost" size="sm" className="h-7 px-2">
+          <Link
+            href="https://github.com/514-labs/connector-factory"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub repository"
+          >
+            <SiGithub className="size-4" />
+            {githubStars != null && (
+              <span className="text-xs tabular-nums">
+                {new Intl.NumberFormat(undefined, {
+                  notation: "compact",
+                }).format(githubStars)}
+              </span>
+            )}
+          </Link>
+        </Button>
       </div>
     </header>
   );

@@ -14,7 +14,7 @@ function DocsRightSidebar() {
     <Sidebar
       side="right"
       variant="inset"
-      className="top-(--header-height) h-[calc(100svh-var(--header-height))]!"
+      className="top-(--header-height) h-[calc(100svh-var(--header-height))]! overflow-y-auto"
     >
       <DocsToc />
     </Sidebar>

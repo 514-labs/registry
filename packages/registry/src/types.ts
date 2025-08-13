@@ -7,6 +7,7 @@ export type ConnectorRootMeta = {
   tags?: string[];
   description?: string;
   homepage?: string;
+  registryUrl?: string;
 };
 
 export type ProviderMeta = {
@@ -19,10 +20,13 @@ export type ProviderMeta = {
   category?: string;
   description?: string;
   homepage?: string;
+  registryUrl?: string;
   license?: string;
   source?: Record<string, unknown>;
   capabilities?: Record<string, unknown>;
   maintainers?: Array<Record<string, unknown>>;
+  // Map from language to GitHub issue URL tracking this implementation
+  issues?: Record<string, string>;
 };
 
 export type RegistryConnector = {

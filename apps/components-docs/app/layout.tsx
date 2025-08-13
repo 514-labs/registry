@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Connectors by 514.ai",
+  title: "Connectors by 514",
   description: "Build, own, and share connectors as actual code",
 };
 

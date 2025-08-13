@@ -5,6 +5,7 @@
   "category": "api",
   "tags": ["CDP", "Events", "SaaS"],
   "description": "Capture events and metrics from Segment.",
-  "homepage": "https://segment.com"
+  "homepage": "https://segment.com",
+  "registryUrl": "https://github.com/514-labs/connector-factory/tree/main/registry/segment"
 }
 
