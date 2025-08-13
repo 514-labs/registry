@@ -17,6 +17,119 @@ The connector must be language‑agnostic. Any illustrative snippets must be tre
 - **Resilient**: Backoff with jitter, circuit breaking, idempotency, and graceful degradation built in.
 - **Extensible**: Hooks/middleware enable customization without forking core.
 
+### Registry Structure Requirements
+
+**CRITICAL**: All connectors MUST follow the exact registry structure. This structure is enforced and essential for connector discovery, organization, and tooling.
+
+#### Directory Structure
+```
+registry/
+  {connector-name}/              # Connector root (kebab-case, e.g., "google-analytics")
+    _meta/                       # Root connector metadata
+      connector.json             # Root connector definition with schema
+      README.md                  # Connector overview and documentation
+      assets/                    # Shared assets (logos, diagrams)
+    {author}/                    # Author/organization (e.g., "fiveonefour")
+      _meta/                     # Author-specific metadata
+        connector.json           # Author's implementation metadata
+        README.md                # Author's implementation docs
+        CHANGELOG.md             # Version history
+        LICENSE                  # License file
+        assets/                  # Author-specific assets
+      {language}/                # Language implementation (e.g., "typescript")
+        src/                     # Source code directory
+          index.ts               # Main export
+          client.ts              # Core client implementation
+          config.ts              # Configuration
+          auth/                  # Authentication modules
+          extract/               # Data extraction
+          transform/             # Data transformation
+          load/                  # Data loading
+        docs/                    # Documentation
+          getting-started.md     # Quick start guide
+          configuration.md       # Config options
+          limits.md              # Rate limits and constraints
+          schema.md              # Data schema docs
+        examples/                # Usage examples
+          basic-usage.ts         # Simple example
+        schemas/                 # Data schemas
+          index.json             # Schema index
+          raw/                   # Raw API schemas
+          extracted/             # Processed schemas
+        tests/                   # Test files
+          client.test.ts         # Unit tests
+        package.json             # Language package definition
+        tsconfig.json            # Language-specific config
+```
+
+#### Metadata Files
+
+**Root connector.json** (`registry/{connector}/_meta/connector.json`):
+```json
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "name": "connector-name",
+  "title": "Human Readable Name",
+  "version": "1.0.0",
+  "category": "api|database|file|stream",
+  "tags": ["tag1", "tag2"],
+  "description": "Brief description",
+  "homepage": "https://api-provider.com"
+}
+```
+
+**Author connector.json** (`registry/{connector}/{author}/_meta/connector.json`):
+```json
+{
+  "name": "connector-name",
+  "author": "author-name",
+  "version": "1.0.0", 
+  "languages": ["typescript", "python"],
+  "category": "api|database|file|stream",
+  "capabilities": {
+    "extract": true,
+    "transform": false, 
+    "load": false
+  },
+  "source": {
+    "type": "openapi|graphql|custom",
+    "spec": "path/to/spec",
+    "homepage": "https://api-provider.com"
+  },
+  "tags": ["tag1", "tag2"],
+  "maintainers": [
+    {"name": "Name", "email": "email@domain.com"}
+  ]
+}
+```
+
+#### Meta Folder Contents
+
+**Root `_meta/` directory** (`registry/{connector}/_meta/`):
+- `connector.json` - Root connector definition (REQUIRED)
+- `README.md` - Connector overview, provider info, available implementations
+- `assets/` - Shared logos, diagrams, icons for the connector
+
+**Author `_meta/` directory** (`registry/{connector}/{author}/_meta/`):
+- `connector.json` - Author's implementation metadata (REQUIRED)  
+- `README.md` - Author's implementation documentation
+- `CHANGELOG.md` - Version history and release notes
+- `LICENSE` - License file (MIT, Apache 2.0, etc.)
+- `assets/` - Author-specific assets and branding
+
+#### Structure Rules
+
+1. **Connector names**: Use kebab-case, descriptive names (e.g., `google-analytics`, `stripe-payments`)
+2. **Author names**: Use lowercase, no special characters (e.g., `fiveonefour`, `acmecorp`) 
+3. **Language names**: Use lowercase language names (e.g., `typescript`, `python`, `go`)
+4. **Metadata required**: Both root and author `_meta/` directories with `connector.json` files
+5. **Source organization**: Language implementations must follow the `src/`, `docs/`, `examples/`, `schemas/`, `tests/` structure
+6. **Schema compliance**: All `connector.json` files must validate against their respective schemas
+7. **Documentation required**: All `_meta/` directories must contain `README.md` files
+8. **Licensing required**: Author `_meta/` directories must contain `LICENSE` file
+
+**WARNING**: Deviating from this structure will prevent connector registration and discovery. This structure enables automated tooling for generation, testing, documentation, and publishing.
+
 ### Core Methods
 
 Every API connector must implement the following core functionality:
