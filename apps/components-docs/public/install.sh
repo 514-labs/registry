@@ -17,10 +17,10 @@ SCRIPT_NAME=$(basename "$0")
 # ===== Constants =====
 REPO_OWNER="514-labs"
 REPO_NAME="connector-factory"
-DEFAULT_REPO_REF="main"
-# Allow override via environment: export REPO_REF=<branch>
-REPO_REF="${REPO_REF:-$DEFAULT_REPO_REF}"
-REGISTRY_URL="${REGISTRY_URL:-http://localhost:3000/registry.json}"
+DEFAULT_REPO_BRANCH="main"
+# Allow override via environment
+REPO_BRANCH="${REPO_BRANCH:-$DEFAULT_REPO_BRANCH}"
+REGISTRY_JSON_URL="${REGISTRY_JSON_URL:-https://connectors.514.ai/registry.json}"
 
 # Positional args (required)
 CONNECTOR_NAME=""
@@ -35,6 +35,7 @@ FILTER_NAME=""
 FILTER_VERSION=""
 FILTER_AUTHOR=""
 FILTER_LANGUAGE=""
+DESTINATION=""
 
 # Remove temp dir on exit
 cleanup() {
@@ -54,7 +55,7 @@ $SCRIPT_NAME
 Install a connector from $REPO_OWNER/$REPO_NAME into a new subdirectory in your current directory.
 
 USAGE:
-  $SCRIPT_NAME <name> <version> <author> <language>
+  $SCRIPT_NAME <name> <version> <author> <language> [--dest <dir>]
   $SCRIPT_NAME --list [--name <n1,n2>] [--version <v1,v2>] [--author <a1,a2>] [--language <l1,l2>]
   $SCRIPT_NAME --help
 
@@ -66,23 +67,31 @@ EXAMPLES:
   $SCRIPT_NAME --list
 
 POSITIONAL ARGUMENTS:
-  name        Connector name (e.g., google-analytics, s3)
-  version     Data source version (e.g., v3, v4)
-  author      Author/vendor (e.g., fiveonefour)
-  language    Language (e.g., typescript, python)
+  name          Connector name (e.g., google-analytics, s3)
+  version       Data source version (e.g., v3, v4)
+  author        Author/vendor (e.g., fiveonefour)
+  language      Language (e.g., typescript, python)
 
 FLAGS:
-  --list      List available connectors to install
-              Optional filters (comma-separated, case-insensitive substrings):
-                --name <n1,n2>       Filter by connector name(s)
-                --version <v1,v2>    Filter by version(s)
-                --author <a1,a2>     Filter by author(s)
-                --language <l1,l2>   Filter by language(s)
-  -h, --help  Show this help
+  --list        List available connectors to install
+                Optional filters (comma-separated, case-insensitive substrings):
+                  --name <n1,n2>       Filter by connector name(s)
+                  --version <v1,v2>    Filter by version(s)
+                  --author <a1,a2>     Filter by author(s)
+                  --language <l1,l2>   Filter by language(s)
+
+  --dest <dir>  Destination directory for installation (absolute or relative)
+                Default: ./<name>
+
+  -h, --help    Show this help
 
 ENVIRONMENT:
-  REPO_REF    Git branch to list/install from. Default: $DEFAULT_REPO_REF
-              Example: REPO_REF=my-branch $SCRIPT_NAME --list
+  REGISTRY_JSON_URL URL to fetch connector registry JSON from.
+                    Default: $REGISTRY_JSON_URL
+                    Example: REGISTRY_JSON_URL=https://connectors.514.ai/registry.json $SCRIPT_NAME --list
+  REPO_BRANCH       Git branch to install from.
+                    Default: $DEFAULT_REPO_BRANCH
+                    Example: REPO_BRANCH=my-branch $SCRIPT_NAME google-analytics v4 fiveonefour typescript
 EOF
 }
 
@@ -181,8 +190,7 @@ copy_connector_into_subdir() {
   echo "✅ Installed into $dest_dir"
 }
 
-# List copy/paste permutations: "<name> <version> <author> <language>" (exclude "_*")
-# TODO: Could the site just have a registry endpoint?
+# List connectors in a copy-pasteable format
 list_connectors() {
   echo ""
   echo "🚀 Install a connector with: $SCRIPT_NAME <name> <version> <author> <language>"
@@ -190,27 +198,39 @@ list_connectors() {
 
   if ! command -v jq >/dev/null 2>&1; then
     echo "❌ --list requires 'jq' for readable permutations." >&2
-    echo "Install jq or browse: https://github.com/$REPO_OWNER/$REPO_NAME/tree/$REPO_REF/registry"
+    echo "Install jq or browse: https://github.com/$REPO_OWNER/$REPO_NAME/tree/$REPO_BRANCH/registry"
     return
   fi
 
-  # Fetch → filter in jq → print
-  local perms
-  perms=$(curl -fsSL "$REGISTRY_URL" | jq -r \
+  # Fetch registry JSON once; if not HTTP 200, show error
+  local resp http_status body perms
+  resp=$(curl -sS -w "HTTPSTATUS:%{http_code}" "$REGISTRY_JSON_URL" || true)
+  http_status="${resp##*HTTPSTATUS:}"
+  body="${resp%HTTPSTATUS:*}"
+
+  if [ "$http_status" != "200" ]; then
+    echo "❌ Unable to fetch $REGISTRY_JSON_URL" >&2
+    echo "   HTTP status: ${http_status:-unknown}" >&2
+    echo "   You can also browse: https://github.com/$REPO_OWNER/$REPO_NAME/tree/$REPO_BRANCH/registry" >&2
+    return
+  fi
+
+  # Filter in jq → print
+  perms=$(printf '%s' "$body" | jq -r \
     --arg f_name "$FILTER_NAME" \
     --arg f_version "$FILTER_VERSION" \
     --arg f_author "$FILTER_AUTHOR" \
     --arg f_language "$FILTER_LANGUAGE" '
-    def toks(s): if s=="" then [] else (s|split(",")|map(ascii_downcase|gsub("^\\s+|\\s+$";""))) end;
-    def matchAny(field; arr): (arr|length==0) or (any(arr[]; (field|ascii_downcase|contains(.))));
+    def mkpat(s): (s|split(",")|map(ascii_downcase|gsub("^\\s+|\\s+$";""))|join("|"));
+    def want(field; s): (s=="" or (field|ascii_downcase|test(mkpat(s))));
     (.connectors // [])
     | .[] as $c
     | ($c.languages // [])[] as $l
     | select(
-        matchAny($c.name; toks($f_name)) and
-        matchAny($c.version; toks($f_version)) and
-        matchAny($c.author; toks($f_author)) and
-        matchAny($l; toks($f_language))
+        want($c.name; $f_name) and
+        want($c.version; $f_version) and
+        want($c.author; $f_author) and
+        want($l; $f_language)
       )
     | "\($c.name) \($c.version) \($c.author) \($l)"
   ')
@@ -242,6 +262,8 @@ parse_args() {
         FILTER_AUTHOR="${2:-}"; shift 2;;
       --language)
         FILTER_LANGUAGE="${2:-}"; shift 2;;
+      --dest)
+        DESTINATION="${2:-}"; shift 2;;
       -h|--help)
         print_usage; exit 0;;
       --*)
@@ -265,8 +287,10 @@ parse_args() {
 }
 
 show_next_steps() {
-  # TODO: Could this be part of the connector metadata that we just print?
-  :
+  echo "🚀 Next steps:"
+  echo "  - Review $dest_dir/README.md"
+  echo "  - Review $dest_dir/docs/getting-started.md"
+  echo "  - Review $dest_dir/examples/"
 }
 
 main() {
@@ -283,11 +307,11 @@ main() {
   local rel_path="registry/$CONNECTOR_NAME/$CONNECTOR_VERSION/$CONNECTOR_AUTHOR/$CONNECTOR_LANGUAGE"
   echo ""
   echo "Connector: $rel_path"
-  echo "Source:    $REPO_OWNER/$REPO_NAME@$REPO_REF"
+  echo "Source:    $REPO_OWNER/$REPO_NAME@$REPO_BRANCH"
   echo ""
 
   local url zip_path root src_dir
-  url=$(resolve_archive_url "$REPO_OWNER" "$REPO_NAME" "$REPO_REF")
+  url=$(resolve_archive_url "$REPO_OWNER" "$REPO_NAME" "$REPO_BRANCH")
 
   zip_path=$(download_archive "$url")
   echo ""
@@ -299,7 +323,11 @@ main() {
   validate_connector_exists "$root" "$rel_path"
 
   src_dir="$root/$rel_path"
-  dest_dir="$PWD/$CONNECTOR_NAME"
+  if [ -n "${DESTINATION:-}" ]; then
+    dest_dir="$DESTINATION"
+  else
+    dest_dir="$PWD/$CONNECTOR_NAME"
+  fi
   copy_connector_into_subdir "$src_dir" "$dest_dir"
   echo ""
 
