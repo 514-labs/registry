@@ -1,0 +1,12 @@
+{
+  "development": {
+    "verbose": true,
+    "debugMode": true
+  },
+  "hooks": {
+    "timeout": 30000
+  },
+  "agents": {
+    "maxConcurrent": 3
+  }
+}

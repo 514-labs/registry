@@ -33,5 +33,5 @@ services/*/temp_migration/
 services/*/dev-*.log
 services/*/.moose/
 
-# Claude configuration (private workflow documentation)
-.claude/
+# Claude configuration (only ignore local settings)
+.claude/settings.local.json

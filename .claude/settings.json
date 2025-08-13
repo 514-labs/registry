@@ -1,0 +1,15 @@
+{
+  "agents": {
+    "enabled": true,
+    "autoLoad": true
+  },
+  "commands": {
+    "enabled": true,
+    "prefix": "/"
+  },
+  "hooks": {
+    "enabled": true,
+    "onFileChange": ["lint-check.sh"],
+    "onTypescript": ["typescript-dev.sh"]
+  }
+}

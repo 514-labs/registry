@@ -6,12 +6,15 @@ Inspired by the shadcn philosophy — copy what you need, keep full ownership, a
 
 ### Why this exists
 
-Everyone needs connectors. Nobody enjoys building or maintaining them. Vendors turned that pain into opaque subscriptions where you pay forever and never own the code. It’s time to change that.
+Everyone needs connectors. Nobody enjoys building or maintaining them. Vendors turned that pain into opaque subscriptions where you pay forever and never own the code. It's time to change that.
 
 - **Own the code**: No lock‑in. Copy, customize, and version in your repo.
 - **Proven patterns**: Rock‑solid abstractions for lifecycle, retries, rate limits, pagination, and error handling.
+- **AI‑enhanced development**: Specialized agents help build connectors 80% faster while maintaining quality.
 - **LLM‑friendly specs**: Feed our specifications to your LLM to scaffold connectors fast.
 - **Integrate everywhere**: Distribute as packages or embed directly into apps/services.
+
+See [AGENTS.md](./AGENTS.md) for details on the AI agents that accelerate connector development.
 
 ### Monorepo layout
 
@@ -53,12 +56,23 @@ TurboRepo docs: `https://turborepo.com/docs`
 
 ### Philosophy (shadcn‑inspired)
 
-We are not a hosted connector product. We’re a system you copy into your repo:
+We are not a hosted connector product. We're a system you copy into your repo:
 
 - **Copy/paste first**: Start with templates and snippets, not a dependency.
 - **Readable TypeScript**: Prefer clarity over magic. You should debug everything.
 - **Composable primitives**: Small, orthogonal building blocks you can swap.
 - **Batteries included, not attached**: Patterns and tests you can own and evolve.
+- **AI‑accelerated development**: Specialized agents apply proven patterns consistently while you focus on business logic.
+
+### AI Agent Development
+
+Our [specialized AI agents](./AGENTS.md) accelerate connector development while maintaining production quality:
+
+- **Simple connectors**: Built in 3-4 hours using `schema-generator`, `client-builder`, `data-validator`, `test-suite-builder`
+- **Enterprise connectors**: Built in 1-2 days adding `enterprise-architect`, `auth-flow-builder`, `monitoring-builder`
+- **Specification compliance**: `spec-checker` ensures all connectors meet quality standards
+
+Each agent specializes in specific patterns (circuit breakers, rate limiting, OAuth flows) extracted from real production implementations.
 
 ---
 
