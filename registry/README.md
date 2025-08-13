@@ -7,7 +7,7 @@ Connectors created here can be transferred into a target codebase (similar to ho
 ## Naming conventions
 
 - Connector name: kebab-case (e.g., `stripe`, `google-analytics`)
-- Author/organization: kebab-case (e.g., `fiveonefour`, `acme-inc`)
+- Author/organization (GitHub handle): kebab-case GitHub org or user (e.g., `514-labs`, `tg339`). This value must correspond to a real GitHub organization or user handle, as it is used for linking and avatars.
 - Python package name: snake_case (e.g., `connector_stripe`)
 - TypeScript npm package: prefer `@workspace/` prefix inside this monorepo (e.g., `@workspace/connector-stripe`)
 - Do not commit secrets. Use `.env.example` for documented variables; never override real `.env` in this repo.
@@ -68,7 +68,7 @@ A generator can interpret the `structure` array and create files/directories wit
 
 ## Adding a new connector
 
-1. Choose connector and author names (kebab-case).
+1. Choose connector and author names (kebab-case). The author must be a GitHub organization or user handle.
 2. Create connector root `_meta/` with `connector.json` and assets only.
 3. Generate the provider `_meta` scaffold using `registry/scaffold/meta.json` with your variables.
 4. Add language-specific implementations using `registry/scaffold/python.json` and/or `registry/scaffold/typescript.json`.
@@ -134,7 +134,12 @@ Connector-level fields:
 
 Provider-specific fields:
 
-- `author`, `languages`, `capabilities`, `source`, `maintainers`
+- `author`, `authorType` (one of `user` or `organization`), `avatarUrlOverride` (optional), `languages`, `capabilities`, `source`, `maintainers`
+
+Avatar resolution:
+
+- If `avatarUrlOverride` is set, it will be used directly.
+- Otherwise, the system will fetch from GitHub based on `authorType` and `author` handle. If `authorType` is omitted, it will try user first, then organization.
 
 ## Consuming connectors
 

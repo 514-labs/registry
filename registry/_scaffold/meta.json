@@ -15,9 +15,9 @@
       "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
     },
     "author": {
-      "description": "Organization or author handle (kebab-case).",
-      "example": "fiveonefour",
-      "pattern": "^[a-z0-9][a-z0-9-]*$"
+      "description": "GitHub organization or user handle (kebab-case). Used for linking and avatars.",
+      "example": "514-labs",
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,37}[a-z0-9])?$"
     }
   },
   "structure": [
@@ -58,7 +58,7 @@
                     { "type": "file", "name": "README.md", "template": "# {connector}\n\n> Maintained by {author}\n\n" },
                     { "type": "file", "name": "CHANGELOG.md", "template": "# Changelog\n\nAll notable changes to `{connector}` by `{author}`.\n\n" },
                     { "type": "file", "name": "LICENSE", "template": "MIT\n" },
-                    { "type": "file", "name": "connector.json", "template": "{\n  \"name\": \"{connector}\",\n  \"author\": \"{author}\",\n  \"version\": \"{version}\",\n  \"languages\": [],\n  \"tags\": [],\n  \"category\": \"api|db|stream\",\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"license\": \"MIT\",\n  \"source\": {\"type\":\"api\",\"spec\":\"\"},\n  \"capabilities\": {\"extract\": true, \"transform\": true, \"load\": true},\n  \"maintainers\": [],\n  \"registryUrl\": \"https://github.com/514-labs/connector-factory/tree/main/registry/{connector}/{version}/{author}\"\n}\n" },
+                    { "type": "file", "name": "connector.json", "template": "{\n  \"name\": \"{connector}\",\n  \"author\": \"{author}\",\n  \"authorType\": \"organization\",\n  \"avatarUrlOverride\": \"\",\n  \"version\": \"{version}\",\n  \"languages\": [],\n  \"tags\": [],\n  \"category\": \"api|db|stream\",\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"license\": \"MIT\",\n  \"source\": {\"type\":\"api\",\"spec\":\"\"},\n  \"capabilities\": {\"extract\": true, \"transform\": true, \"load\": true},\n  \"maintainers\": [],\n  \"registryUrl\": \"https://github.com/514-labs/connector-factory/tree/main/registry/{connector}/{version}/{author}\"\n}\n" },
                     { "type": "dir", "name": "assets" }
                   ]
                 },

@@ -14,6 +14,10 @@ export type ProviderMeta = {
   $schema?: string;
   name: string;
   author: string;
+  // The type of the author/creator. Determines how avatars are fetched.
+  authorType?: "user" | "organization";
+  // Optional URL to override the avatar source. If set, this URL is used directly.
+  avatarUrlOverride?: string;
   version?: string;
   languages?: string[];
   tags?: string[];

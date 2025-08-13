@@ -2,7 +2,14 @@
 import { existsSync, readFileSync, readdirSync, statSync, Dirent } from "fs";
 import { join, resolve } from "path";
 import type { ConnectorRootMeta, ProviderMeta, RegistryConnector } from "./types";
-export { parseIssueUrl, getIssueThumbsUpCountFromUrl, getIssueThumbsUpCountFromMeta } from "./github";
+export {
+  parseIssueUrl,
+  getIssueThumbsUpCountFromUrl,
+  getIssueThumbsUpCountFromMeta,
+  getUserAvatar,
+  getOrganizationAvatar,
+  getAuthorAvatar,
+} from "./github";
 
 // Resolve the monorepo root by walking up from the current working directory
 function findMonorepoRoot(startDir: string): string {
