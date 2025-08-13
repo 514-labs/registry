@@ -23,12 +23,28 @@ This is a TurboRepo + pnpm monorepo.
 
 Follow the workspace rule: prefix internal packages and services with `@workspace`.
 
+### Quickstart
+
+List available connectors:
+
+```bash
+bash -i <(curl https://connectors.514.ai/install.sh) --list
+```
+
+Install a connector: (arguments: connector, version, author, language)
+
+```bash
+bash -i <(curl https://connectors.514.ai/install.sh) google-analytics v4 fiveonefour typescript
+```
+
+## Contributors
+
 ### Requirements
 
 - Node 20 (until Moose Node version issues are resolved)
 - pnpm (never npm)
 
-### Quickstart
+### Development setup
 
 Install dependencies at the workspace root:
 
@@ -172,9 +188,7 @@ const authHook: Hook = {
 - Error classification and propagation
 - Pagination strategies and edge cases
 
----
-
-## Developing in this repo
+### Developing in this repo
 
 - **Tooling**: TurboRepo + pnpm. Do not override `.env`. Prefer absolute paths in scripts.
 - **Node**: Use Node 20. Example with nvm: `nvm use 20`.
@@ -186,6 +200,8 @@ Common commands:
 pnpm install
 cd apps/components-docs && pnpm dev
 ```
+
+---
 
 ## Roadmap (high level)
 
