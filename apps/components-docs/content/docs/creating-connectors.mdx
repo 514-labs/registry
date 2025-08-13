@@ -1,0 +1,54 @@
+# Creating connectors
+
+Follow these steps to create your own connector:
+
+## 1. Clone the repository
+
+Clone the connector factory repository to your local machine:
+
+```bash
+git clone https://github.com/514-labs/connector-factory.git
+cd connector-factory
+```
+
+## 2. Generate a connector scaffold
+
+From the connector factory directory, run the install script to generate a new connector with the appropriate structure:
+
+```bash
+bash -i <(curl https://connectors.514.ai/install.sh) [connector-name] [version] [author] [language]
+```
+
+**Example:**
+```bash
+bash -i <(curl https://connectors.514.ai/install.sh) ads-b-dot-lol v2 fiveonefour typescript
+```
+
+This creates a new directory with your connector scaffold in the chosen language.
+
+## 3. Determine your connector type
+
+Identify which type of connector you're building:
+
+- **API Connector**: For general REST/GraphQL APIs
+- **SaaS Connector**: For third-party SaaS platforms and services
+- **Database Connector**: For SQL databases (PostgreSQL, MySQL, etc.)
+- **Blob Storage Connector**: For cloud storage (S3, GCS, Azure Blob)
+
+## 4. Follow the specifications
+
+Feed your LLM the relevant specifications and documentation:
+
+1. **Target API documentation**: Share the official API docs of the service you're connecting to (e.g., [Stripe API docs](https://stripe.com/docs/api), [Shopify API docs](https://shopify.dev/docs/api))
+2. **Type-specific specs**: Include the appropriate specification:
+   - [API Connector Spec](/docs/specifications) for general REST/GraphQL APIs
+   - [SaaS Connector Spec](/docs/specifications) for third-party SaaS platforms
+   - [Database Connector Spec](/docs/specifications) for SQL databases  
+   - [Blob Storage Connector Spec](/docs/specifications) for cloud storage
+3. **Example connectors**: Reference existing connectors in the registry for patterns
+   - API Connectors: ADS-B.lol, OpenWeather
+   - SaaS Connectors: [Google Analytics](/registry/google-analytics/v4/fiveonefour/typescript/README.md), [Shopify](/registry/shopify/v2025-01/fiveonefour/typescript/README.md)
+   - [coming soon] Database Connectors: PostgreSQL
+   - [coming soon] Blob Storage Connectors: S3
+
+Your LLM can then help generate the connector implementation following the established patterns and specifications.
