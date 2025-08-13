@@ -7,13 +7,14 @@ import { SidebarTrigger } from "@ui/components/sidebar";
 import { SearchButton } from "@/components/search";
 import { getGithubStars } from "@/app/actions/get-github-stars";
 import { NavButton } from "@/components/nav-button";
+import { Separator } from "@ui/components/separator";
 
 export async function SiteHeader() {
   const githubStars = await getGithubStars();
 
   return (
     <header className="flex justify-between items-center p-4 w-full h-[var(--header-height)] sticky top-0 z-10 bg-background">
-      <div className="flex items-center gap-2">
+      <div className="flex flex-row items-center gap-2 h-full">
         <Button asChild variant="link">
           <Link href="/">
             <Image
@@ -37,6 +38,8 @@ export async function SiteHeader() {
         <NavButton href="/discover" label="Discover" />
         <NavButton href="/create" label="Create" />
         <NavButton href="/share" label="Share" />
+        <Separator orientation="vertical" />
+        <NavButton href="/pipeline" label="Pipeline" />
       </div>
       <div className="flex items-center gap-2">
         <SearchButton />

@@ -25,6 +25,8 @@ export type ProviderMeta = {
   source?: Record<string, unknown>;
   capabilities?: Record<string, unknown>;
   maintainers?: Array<Record<string, unknown>>;
+  // Map from language to GitHub issue URL tracking this implementation
+  issues?: Record<string, string>;
 };
 
 export type RegistryConnector = {

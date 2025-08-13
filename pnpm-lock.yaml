@@ -68,6 +68,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      dotenv:
+        specifier: ^16.6.1
+        version: 16.6.1
       lucide-react:
         specifier: ^0.536.0
         version: 0.536.0(react@18.3.1)
@@ -155,7 +158,7 @@ importers:
     dependencies:
       '@514labs/moose-lib':
         specifier: latest
-        version: 0.5.13(@swc/core@1.13.3(@swc/helpers@0.5.17))(@swc/helpers@0.5.17)(@types/node@24.2.0)(ts-patch@3.3.0)(typia@7.6.4(@samchon/openapi@2.5.3)(typescript@5.8.3))
+        version: 0.5.14(@swc/core@1.13.3(@swc/helpers@0.5.17))(@swc/helpers@0.5.17)(@types/node@24.2.0)(ts-patch@3.3.0)(typia@7.6.4(@samchon/openapi@2.5.3)(typescript@5.8.3))
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -168,6 +171,10 @@ importers:
         version: 5.8.3
 
   packages/registry:
+    dependencies:
+      dotenv:
+        specifier: ^16.6.1
+        version: 16.6.1
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -178,6 +185,9 @@ importers:
       '@types/node':
         specifier: ^20
         version: 20.19.9
+      tsx:
+        specifier: ^4.19.2
+        version: 4.20.4
       typescript:
         specifier: ^5.4.0
         version: 5.8.3
@@ -379,8 +389,8 @@ importers:
 
 packages:
 
-  '@514labs/moose-lib@0.5.13':
-    resolution: {integrity: sha512-+zuwwFhVebiNXsPkcJen52zANFaSwbF4PJpPxW41pFZfsYO13FxIr/bWRv2KX43hUqzQ+CMLuZDtpkRhJWkGdg==}
+  '@514labs/moose-lib@0.5.14':
+    resolution: {integrity: sha512-u6pqHnuihCmv5CoshxREhC5z6w95GzxSz4N7IRtuR6BQwM07/Ln6eBGFhrgvQ39YWv7Cx09tvLNcOpOT7tG5rw==}
     hasBin: true
     peerDependencies:
       ts-patch: ^3.3.0
@@ -2900,6 +2910,10 @@ packages:
   dot-case@2.1.1:
     resolution: {integrity: sha512-HnM6ZlFqcajLsyudHq7LeeLDr2rFAVYtDv/hV5qchQEidSck8j9OPUsXY9KwJv/lHMtYlX4DjRQqwFYa+0r8Ug==}
 
+  dotenv@16.6.1:
+    resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
+    engines: {node: '>=12'}
+
   drange@1.1.1:
     resolution: {integrity: sha512-pYxfDYpued//QpnLIm4Avk7rsNtAtQkUES2cwAYSvD/wd2pKD71gN2Ebj3e7klzXwjocvE8c5vx/1fxwpqmSxA==}
     engines: {node: '>=4'}
@@ -5236,7 +5250,7 @@ packages:
 
 snapshots:
 
-  '@514labs/moose-lib@0.5.13(@swc/core@1.13.3(@swc/helpers@0.5.17))(@swc/helpers@0.5.17)(@types/node@24.2.0)(ts-patch@3.3.0)(typia@7.6.4(@samchon/openapi@2.5.3)(typescript@5.8.3))':
+  '@514labs/moose-lib@0.5.14(@swc/core@1.13.3(@swc/helpers@0.5.17))(@swc/helpers@0.5.17)(@types/node@24.2.0)(ts-patch@3.3.0)(typia@7.6.4(@samchon/openapi@2.5.3)(typescript@5.8.3))':
     dependencies:
       '@clickhouse/client': 1.8.1
       '@clickhouse/client-web': 1.5.0
@@ -8058,6 +8072,8 @@ snapshots:
   dot-case@2.1.1:
     dependencies:
       no-case: 2.3.2
+
+  dotenv@16.6.1: {}
 
   drange@1.1.1: {}
 

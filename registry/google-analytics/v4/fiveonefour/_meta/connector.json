@@ -2,17 +2,33 @@
   "name": "google-analytics",
   "author": "fiveonefour",
   "version": "v4",
-  "languages": ["typescript"],
+  "languages": [
+    "typescript"
+  ],
   "category": "api",
-  "capabilities": { "extract": true, "transform": false, "load": false },
+  "capabilities": {
+    "extract": true,
+    "transform": false,
+    "load": false
+  },
   "source": {
     "type": "openapi",
     "spec": "",
     "homepage": "https://developers.google.com/analytics"
   },
-  "tags": ["analytics", "events", "saas"],
-  "maintainers": [
-    { "name": "fiveonefour", "email": "" }
+  "tags": [
+    "analytics",
+    "events",
+    "saas"
   ],
-  "registryUrl": "https://github.com/514-labs/connector-factory/tree/main/registry/google-analytics/v4/fiveonefour"
+  "maintainers": [
+    {
+      "name": "fiveonefour",
+      "email": ""
+    }
+  ],
+  "registryUrl": "https://github.com/514-labs/connector-factory/tree/main/registry/google-analytics/v4/fiveonefour",
+  "issues": {
+    "typescript": "https://github.com/514-labs/connector-factory/issues/11"
+  }
 }
