@@ -11,12 +11,17 @@
   "engines": {
     "node": ">=20"
   },
+  "scripts": {
+    "sync:issues": "tsx scripts/sync-issues.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1"
+  },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^20",
+    "tsx": "^4.19.2",
     "typescript": "^5.4.0"
   }
 }
-
-

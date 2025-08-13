@@ -30,7 +30,7 @@
           "name": "_meta",
           "children": [
             { "type": "file", "name": "README.md", "template": "# {connector} (connector root)\n\nShared, provider-agnostic docs and assets for `{connector}`.\n" },
-            { "type": "file", "name": "connector.json", "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector-root.schema.json\",\n  \"name\": \"{connector}\",\n  \"title\": \"{connector}\",\n  \"category\": \"api|db|stream\",\n  \"tags\": [],\n  \"description\": \"\",\n  \"homepage\": \"\"\n}\n" },
+            { "type": "file", "name": "connector.json", "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector-root.schema.json\",\n  \"name\": \"{connector}\",\n  \"title\": \"{connector}\",\n  \"category\": \"api|db|stream\",\n  \"tags\": [],\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"registryUrl\": \"https://github.com/514-labs/connector-factory/tree/main/registry/{connector}\"\n}\n" },
             { "type": "dir", "name": "assets" }
           ]
         },
@@ -58,7 +58,7 @@
                     { "type": "file", "name": "README.md", "template": "# {connector}\n\n> Maintained by {author}\n\n" },
                     { "type": "file", "name": "CHANGELOG.md", "template": "# Changelog\n\nAll notable changes to `{connector}` by `{author}`.\n\n" },
                     { "type": "file", "name": "LICENSE", "template": "MIT\n" },
-                    { "type": "file", "name": "connector.json", "template": "{\n  \"name\": \"{connector}\",\n  \"author\": \"{author}\",\n  \"version\": \"{version}\",\n  \"languages\": [],\n  \"tags\": [],\n  \"category\": \"api|db|stream\",\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"license\": \"MIT\",\n  \"source\": {\"type\":\"api\",\"spec\":\"\"},\n  \"capabilities\": {\"extract\": true, \"transform\": true, \"load\": true},\n  \"maintainers\": []\n}\n" },
+                    { "type": "file", "name": "connector.json", "template": "{\n  \"name\": \"{connector}\",\n  \"author\": \"{author}\",\n  \"version\": \"{version}\",\n  \"languages\": [],\n  \"tags\": [],\n  \"category\": \"api|db|stream\",\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"license\": \"MIT\",\n  \"source\": {\"type\":\"api\",\"spec\":\"\"},\n  \"capabilities\": {\"extract\": true, \"transform\": true, \"load\": true},\n  \"maintainers\": [],\n  \"registryUrl\": \"https://github.com/514-labs/connector-factory/tree/main/registry/{connector}/{version}/{author}\"\n}\n" },
                     { "type": "dir", "name": "assets" }
                   ]
                 },

@@ -2,7 +2,11 @@ import Image from "next/image";
 import { Badge } from "@ui/components/badge";
 import { Card } from "@ui/components/card";
 import { cn } from "@/lib/utils";
-import { listConnectorIds, readConnector } from "@workspace/registry";
+import {
+  listConnectorIds,
+  readConnector,
+  getIssueThumbsUpCountFromMeta,
+} from "@workspace/registry";
 import { PagefindMeta } from "@/components/pagefind-meta";
 
 export const dynamic = "force-static";
@@ -25,6 +29,20 @@ export default async function ConnectorPage({
   const displayName = meta?.title ?? meta?.name ?? conn.connectorId;
   const description = meta?.description ?? "";
   const tags = meta?.tags ?? [];
+
+  const thumbsPromises: Array<Promise<number>> = conn.providers.flatMap(
+    (provider) => {
+      const issues = provider.meta?.issues ?? {};
+      return Object.keys(issues).map((language) =>
+        getIssueThumbsUpCountFromMeta(provider.meta, language)
+      );
+    }
+  );
+  const thumbsArray = await Promise.all(thumbsPromises);
+  const totalThumbs = thumbsArray.reduce(
+    (sum, n) => sum + (Number.isFinite(n) ? n : 0),
+    0
+  );
 
   return (
     <div className="container mx-auto py-16 ">
@@ -51,6 +69,9 @@ export default async function ConnectorPage({
               </div>
             </Card>
             <h1 className="text-2xl ">{displayName}</h1>
+            <div className="text-sm text-muted-foreground">
+              👍 {totalThumbs}
+            </div>
             <p className="text-muted-foreground">{description}</p>
             <div className="flex flex-row gap-2">
               {tags.map((tag: string) => (

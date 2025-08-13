@@ -1,0 +1,30 @@
+## Blob Storage Connectors
+
+Connectors for cloud storage services like S3, Azure Blob Storage, and Google Cloud Storage.
+
+### Goals
+
+- Provide consistent configuration across providers (credentials, region, bucket/container)
+- Normalize listing, reading, writing, and deleting objects
+- Support pagination and streaming for large files
+
+### Core Operations
+
+1. List objects with prefix and pagination support
+2. Get object metadata (size, content-type, etag, last-modified)
+3. Read object (buffer or stream)
+4. Write object (buffer or stream) with content-type and ACL options
+5. Delete single object or batch delete
+
+### Error Handling
+
+- Missing object → NotFound error
+- Permission issues → Authorization error
+- Transient network failures → Retries with backoff
+
+### Observability
+
+- Emit metrics for request counts, latency, size transferred
+- Structured logs with request IDs and provider operation names
+
+

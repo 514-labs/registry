@@ -102,7 +102,7 @@ export function DocsToc() {
   }, [items, hasItems]);
 
   return (
-    <div>
+    <div className="pb-10">
       <div className="text-sm font-semibold mb-3">On this page</div>
       {content ?? (
         <div className="text-xs text-muted-foreground">No headings found</div>
