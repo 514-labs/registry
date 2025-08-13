@@ -64,7 +64,7 @@ function getTrailingNewline(content: string): string {
 // env owner/repo are fixed to 514-labs/connector-factory per product requirement
 
 async function searchExistingIssue(token: string, owner: string, repo: string, title: string): Promise<string | undefined> {
-  const query = `repo:${owner}/${repo} type:issue in:title "${title.replace(/"/g, '\\"')}"`;
+  const query = `repo:${owner}/${repo} type:issue in:title "${title.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
   const url = new URL("https://api.github.com/search/issues");
   url.searchParams.set("q", query);
   const res = await fetch(url.toString(), {
