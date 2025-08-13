@@ -199,7 +199,7 @@ list_connectors() {
   if ! command -v jq >/dev/null 2>&1; then
     echo "❌ --list requires 'jq' for readable permutations." >&2
     echo "Install jq or browse: https://github.com/$REPO_OWNER/$REPO_NAME/tree/$REPO_BRANCH/registry"
-    return
+    exit 1
   fi
 
   # Fetch registry JSON once; if not HTTP 200, show error
