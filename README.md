@@ -51,6 +51,18 @@ pnpm docs:build
 
 TurboRepo docs: `https://turborepo.com/docs`
 
+### Install connectors (optional)
+
+Use the install script to quickly set up connectors, or just copy the code directly from the registry:
+
+```bash
+# List available connectors
+./install.sh --list
+
+# Install a specific connector (connector, version, author, language)
+./install.sh google-analytics v4 fiveonefour typescript
+```
+
 ### Philosophy (shadcn‑inspired)
 
 We are not a hosted connector product. We’re a system you copy into your repo:
