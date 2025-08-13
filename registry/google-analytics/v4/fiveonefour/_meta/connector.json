@@ -13,5 +13,6 @@
   "tags": ["analytics", "events", "saas"],
   "maintainers": [
     { "name": "fiveonefour", "email": "" }
-  ]
+  ],
+  "registryUrl": "https://github.com/514-labs/connector-factory/tree/main/registry/google-analytics/v4/fiveonefour"
 }

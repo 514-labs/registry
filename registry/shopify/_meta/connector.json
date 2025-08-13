@@ -5,6 +5,7 @@
   "category": "api",
   "tags": ["Ecommerce", "Events", "Extract", "SaaS"],
   "description": "Pull your up-to-date Shopify data into your data warehouse.",
-  "homepage": "https://shopify.dev"
+  "homepage": "https://shopify.dev",
+  "registryUrl": "https://github.com/514-labs/connector-factory/tree/main/registry/shopify"
 }
 

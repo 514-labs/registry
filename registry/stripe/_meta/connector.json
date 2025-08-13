@@ -5,6 +5,7 @@
   "category": "api",
   "tags": ["Product Analytics", "Events", "Extract", "SaaS"],
   "description": "Pull your up-to-date Stripe data into your data warehouse.",
-  "homepage": "https://stripe.com"
+  "homepage": "https://stripe.com",
+  "registryUrl": "https://github.com/514-labs/connector-factory/tree/main/registry/stripe"
 }
 
