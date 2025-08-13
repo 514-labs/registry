@@ -3,7 +3,7 @@
 import { Card } from "@ui/components/card";
 import { Alert, AlertDescription, AlertTitle } from "@ui/components/alert";
 import { Hourglass } from "lucide-react";
-import CopyableSnippet from "@/components/copyable-snippet";
+import CodeBlock from "@/components/code-block";
 
 type ConnectorDetailsInstallationProps = {
   connectorId: string;
@@ -45,9 +45,9 @@ export default function ConnectorDetailsInstallation({
         </Alert>
       ) : (
         <>
-          <p className="!mt-2 text-sm text-muted-foreground">Run this inside your project source directory</p>
-          <Card className="p-4">
-            <CopyableSnippet code={command} label={langLabel} />
+          <p className="!mt-2 text-sm text-muted-foreground">Run this inside your project source directory, then follow the instructions from the script</p>
+          <Card className="p-0 bg-transparent border-none shadow-none">
+            <CodeBlock code={command} language="bash" />
           </Card>
         </>
       )}
