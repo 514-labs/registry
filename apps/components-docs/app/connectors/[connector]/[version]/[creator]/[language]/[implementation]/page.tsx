@@ -8,6 +8,8 @@ import {
   getIssuePositiveReactionsCountFromMeta,
 } from "@workspace/registry";
 import { PagefindMeta } from "@/components/pagefind-meta";
+import { Github, GitBranch, Code2, Wrench } from "lucide-react";
+import ComboBox from "@/components/combobox";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -80,6 +82,64 @@ export default async function ConnectorImplementationPage({
     implEntry.implementation
   );
 
+  // Build lists and navigation helpers
+  const getProviderVersion = (pPath: string): string =>
+    pPath.split("/").slice(-2)[0];
+  const versions = Array.from(
+    new Set(conn.providers.map((p) => getProviderVersion(p.path)))
+  );
+  const creatorsForVersion = Array.from(
+    new Set(
+      conn.providers
+        .filter((p) => getProviderVersion(p.path) === version)
+        .map((p) => p.authorId)
+    )
+  );
+  const languages = Array.from(
+    new Set(provider.implementations.map((i) => i.language))
+  );
+  const implementationsForLanguage = provider.implementations
+    .filter((i) => i.language === language)
+    .map((i) => i.implementation);
+
+  // Preload creator avatars for the current version
+  const providersForVersion = conn.providers.filter(
+    (p) => getProviderVersion(p.path) === version
+  );
+  const creatorAvatarsEntries = providersForVersion.map((p) => {
+    const override = p.meta?.avatarUrlOverride?.trim();
+    const primaryName = p.authorId;
+    const secondaryName = p.meta?.author?.trim();
+    const avatar =
+      override ||
+      (primaryName ? `https://github.com/${primaryName}.png` : null) ||
+      (secondaryName ? `https://github.com/${secondaryName}.png` : null);
+    return [p.authorId, avatar] as const;
+  });
+  const creatorAvatars: Record<string, string | null> = Object.fromEntries(
+    creatorAvatarsEntries
+  );
+
+  const firstImplForLanguage = (prov: typeof provider, lang: string) => {
+    const impls = prov.implementations.filter((i) => i.language === lang);
+    return impls.length > 0 ? impls[0].implementation : "default";
+  };
+
+  const getDefaultLanguage = (prov: typeof provider) =>
+    prov.implementations[0]?.language ?? language;
+
+  const pathFor = (v: string, c: string, l?: string, im?: string): string => {
+    const targetProvider =
+      conn.providers.find(
+        (p) => p.authorId === c && getProviderVersion(p.path) === v
+      ) ?? conn.providers.find((p) => getProviderVersion(p.path) === v)!;
+
+    const lang = l ?? getDefaultLanguage(targetProvider);
+    const impl =
+      im ?? firstImplForLanguage(targetProvider, lang ?? language) ?? "default";
+    return `/connectors/${connector}/${v}/${targetProvider.authorId}/${lang}/${impl}`;
+  };
+
   return (
     <div className="container mx-auto py-16 ">
       <PagefindMeta type="connector" />
@@ -105,16 +165,89 @@ export default async function ConnectorImplementationPage({
               </div>
             </Card>
             <h1 className="text-2xl ">{displayName}</h1>
-            <div className="text-sm text-muted-foreground">
-              👍❤️ {reactions}
-            </div>
-            <p className="text-muted-foreground">{description}</p>
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-wrap gap-2 items-center">
               {tags.map((tag: string) => (
                 <Badge key={tag} variant="secondary">
                   {tag}
                 </Badge>
               ))}
+              <Badge
+                variant="outline"
+                className="flex items-center gap-1 pl-2 pr-2"
+              >
+                <Github className="h-4 w-4" />
+              </Badge>
+              <Badge
+                variant="outline"
+                className="text-sm flex items-center gap-1"
+              >
+                <span>👍</span>
+                <span>❤️</span>
+                <span>{reactions}</span>
+              </Badge>
+            </div>
+            <p className="text-muted-foreground">{description}</p>
+
+            <div className="grid grid-cols-1 gap-3 mt-4">
+              {creatorsForVersion.length > 0 && (
+                <ComboBox
+                  withAvatars
+                  size="lg"
+                  value={creator}
+                  items={creatorsForVersion.map((c) => ({
+                    value: c,
+                    label: c,
+                    href: pathFor(version, c),
+                    avatarUrl: creatorAvatars[c] ?? undefined,
+                  }))}
+                  placeholder="Select author"
+                />
+              )}
+
+              {versions.length > 0 && (
+                <ComboBox
+                  withIcons
+                  size="lg"
+                  value={version}
+                  items={versions.map((v) => ({
+                    value: v,
+                    label: v,
+                    href: pathFor(v, creator),
+                    icon: <GitBranch />,
+                  }))}
+                  placeholder="Select version"
+                />
+              )}
+
+              {languages.length > 0 && (
+                <ComboBox
+                  withIcons
+                  size="lg"
+                  value={language}
+                  items={languages.map((l) => ({
+                    value: l,
+                    label: l,
+                    href: pathFor(version, creator, l),
+                    icon: <Code2 />,
+                  }))}
+                  placeholder="Select language"
+                />
+              )}
+
+              {implementationsForLanguage.length > 0 && (
+                <ComboBox
+                  withIcons
+                  size="lg"
+                  value={implEntry.implementation}
+                  items={implementationsForLanguage.map((im) => ({
+                    value: im,
+                    label: im,
+                    href: pathFor(version, creator, language, im),
+                    icon: <Wrench />,
+                  }))}
+                  placeholder="Select implementation"
+                />
+              )}
             </div>
           </div>
         </div>
