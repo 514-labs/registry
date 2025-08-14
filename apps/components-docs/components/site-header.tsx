@@ -5,12 +5,11 @@ import { ThemeToggle } from "@ui/components/theme-toggle";
 import { Button } from "@ui/components/button";
 import { SidebarTrigger } from "@ui/components/sidebar";
 import { SearchButton } from "@/components/search";
-import { getGithubStars } from "@/app/actions/get-github-stars";
+import { GithubStarsLive } from "@/components/stars-live";
 import { NavButton } from "@/components/nav-button";
 import { Separator } from "@ui/components/separator";
 
 export async function SiteHeader() {
-  const githubStars = await getGithubStars();
 
   return (
     <header className="flex justify-between items-center p-4 w-full h-[var(--header-height)] sticky top-0 z-10 bg-background">
@@ -54,13 +53,7 @@ export async function SiteHeader() {
             aria-label="GitHub repository"
           >
             <SiGithub className="size-4" />
-            {githubStars != null && (
-              <span className="text-xs tabular-nums">
-                {new Intl.NumberFormat(undefined, {
-                  notation: "compact",
-                }).format(githubStars)}
-              </span>
-            )}
+            <GithubStarsLive />
           </Link>
         </Button>
       </div>
