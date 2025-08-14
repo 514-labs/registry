@@ -95,14 +95,16 @@ function ConnectorCard({
                 className="text-sm flex items-center gap-1"
               >
                 <span>❤️</span>
-                <span>👍</span>
+                <span className="-ml-1">👍</span>
                 <span>{reactions}</span>
               </Badge>
             ) : null}
           </div>
         </CardHeader>
-        <CardHeader className="items-start ">
-          <CardTitle className="text-xl mb-2">{name}</CardTitle>
+        <CardHeader>
+          <CardTitle className="text-xl">{name}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4 grow">
           {creatorAvatarUrls && creatorAvatarUrls.length > 0 ? (
             <div className="flex -space-x-2">
               {creatorAvatarUrls.slice(0, 5).map((url, idx) => (
@@ -132,11 +134,9 @@ function ConnectorCard({
               unoptimized
             />
           ) : null}
-        </CardHeader>
-        <CardContent className="flex flex-col gap-5 grow">
-          <p className="text-sm text-muted-foreground">{description}</p>
         </CardContent>
-        <CardFooter className="flex flex-col gap-5 items-start">
+        <CardFooter className="flex flex-col gap-4 items-start">
+          <p className="text-sm text-muted-foreground">{description}</p>
           <div className="flex flex-wrap gap-2">
             {(languages && languages.length > 0
               ? languages

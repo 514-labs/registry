@@ -243,7 +243,7 @@ export default async function ConnectorImplementationPage({
               <Badge variant="secondary">
                 <Link href={issueUrl} className="flex items-center gap-1">
                   <span>👍</span>
-                  <span>❤️</span>
+                  <span className="-ml-1">❤️</span>
                   <span>{reactions}</span>
                 </Link>
               </Badge>
