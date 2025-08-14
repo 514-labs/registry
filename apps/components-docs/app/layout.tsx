@@ -22,8 +22,8 @@ export const metadata: Metadata = {
 };
 
 // Ensure the root layout is fully static so child routes remain static
-export const dynamic = "force-static";
-export const revalidate = false;
+// export const dynamic = "force-static";
+// export const revalidate = false;
 
 export default function RootLayout({
   children,
