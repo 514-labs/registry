@@ -55,9 +55,9 @@ export function ComboBox({
     size === "lg" ? "size-5" : size === "sm" ? "size-3.5" : "size-4";
   const renderIcon = (node?: React.ReactNode) => {
     if (!node) return null;
-    if (React.isValidElement(node)) {
-      const prev = (node.props as any)?.className ?? "";
-      return React.cloneElement(node as React.ReactElement, {
+    if (React.isValidElement<{ className?: string }>(node)) {
+      const prev = node.props.className ?? "";
+      return React.cloneElement(node, {
         className: `${prev} ${iconSizeClass}`.trim(),
       });
     }
