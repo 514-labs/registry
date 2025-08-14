@@ -54,7 +54,8 @@ export function listConnectorIds(): string[] {
   return entries
     .filter((entry: Dirent) => entry.isDirectory())
     .map((entry: Dirent) => entry.name)
-    .filter((name: string) => !name.startsWith(".") && !name.startsWith("_"));
+    .filter((name: string) => !name.startsWith(".") && !name.startsWith("_"))
+    .filter((name: string) => /^[a-zA-Z0-9_-]+$/.test(name));
 }
 
 export function readConnector(
