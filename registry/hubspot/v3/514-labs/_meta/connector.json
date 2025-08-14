@@ -1,6 +1,6 @@
 {
   "name": "hubspot",
-  "author": "fiveonefour",
+  "author": "514-labs",
   "version": "v3",
   "languages": ["typescript"],
   "category": "CRM",
@@ -12,6 +12,6 @@
   },
   "tags": ["crm", "saas", "extract"],
   "maintainers": [
-    { "name": "fiveonefour", "email": "" }
+    { "name": "514-labs", "email": "" }
   ]
 }

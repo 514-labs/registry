@@ -397,7 +397,7 @@ importers:
 
   registry/google-analytics/v4/tg339/typescript/data-api: {}
 
-  registry/hubspot/v3/fiveonefour/typescript:
+  registry/hubspot/v3/514-labs/typescript/data-api:
     dependencies:
       zod:
         specifier: ^3.25.8
