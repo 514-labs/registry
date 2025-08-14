@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HubSpot Raw Deal",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "properties": {
+      "type": "object",
+      "properties": {
+        "dealname": { "type": ["string", "null"] },
+        "amount": { "type": ["string", "null"] },
+        "dealstage": { "type": ["string", "null"] },
+        "pipeline": { "type": ["string", "null"] },
+        "closedate": { "type": ["string", "null"] },
+        "createdate": { "type": ["string", "null"] },
+        "hs_lastmodifieddate": { "type": ["string", "null"] },
+        "hubspot_owner_id": { "type": ["string", "null"] },
+        "dealtype": { "type": ["string", "null"] },
+        "description": { "type": ["string", "null"] },
+        "hs_object_id": { "type": ["string", "null"] }
+      },
+      "additionalProperties": { "type": ["string", "null"] }
+    },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "archived": { "type": "boolean" }
+  },
+  "required": ["id", "properties", "createdAt", "updatedAt", "archived"],
+  "additionalProperties": true
+}
