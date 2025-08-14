@@ -12,7 +12,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-SCRIPT_NAME=$(basename "$0")
+SCRIPT_NAME="bash -i <(curl https://connectors.514.ai/install.sh)"
 
 # ===== Constants =====
 REPO_OWNER="514-labs"
@@ -50,8 +50,6 @@ trap cleanup EXIT INT TERM
 # Print help and usage information
 print_usage() {
   cat <<EOF
-$SCRIPT_NAME
-
 Install a connector from $REPO_OWNER/$REPO_NAME into a new subdirectory in your current directory.
 
 USAGE:
@@ -193,7 +191,8 @@ copy_connector_into_subdir() {
 # List connectors in a copy-pasteable format
 list_connectors() {
   echo ""
-  echo "🚀 Install a connector with: $SCRIPT_NAME <name> <version> <author> <language>"
+  echo "🚀 Install a connector with this command:"
+  echo "$SCRIPT_NAME <name> <version> <author> <language>"
   echo ""
 
   if ! command -v jq >/dev/null 2>&1; then
@@ -238,11 +237,12 @@ list_connectors() {
   if [ -z "$perms" ]; then
     echo "No connectors matched your filters."
     echo ""
-    echo "❤️ We would love your contributions: https://github.com/514-labs/connector-factory"
+    echo "❤️  We would love your contributions: https://github.com/514-labs/connector-factory"
     echo ""
     return
   fi
 
+  echo "🔍 Available connectors:"
   echo "$perms"
   echo ""
 }
