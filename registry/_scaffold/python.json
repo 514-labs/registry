@@ -1,18 +1,29 @@
 {
   "$schema": "https://schemas.connector-factory.dev/scaffold.schema.json",
   "scaffold": "python",
-  "version": "0.1.0",
-  "description": "Python implementation scaffold for a connector. Places a Python package under connector/author/python with conventional src/tests layout and minimal templates.",
+  "version": "0.2.0",
+  "description": "Python implementation scaffold for a connector. Places a Python package under connector/version/author/python/{implementation} with conventional src/tests layout and minimal templates.",
   "variables": {
     "connector": {
       "description": "Connector name (kebab-case).",
       "example": "stripe",
       "pattern": "^[a-z0-9][a-z0-9-]*$"
     },
+    "version": {
+      "description": "Source version identifier (not necessarily semver). Examples: v4, ga4, 2020-08-27, api-2020.08.27",
+      "example": "v4",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
     "author": {
       "description": "GitHub organization or user handle (kebab-case). Used for linking and avatars.",
       "example": "514-labs",
       "pattern": "^[a-z0-9](?:[a-z0-9-]{0,37}[a-z0-9])?$"
+    },
+    "implementation": {
+      "description": "Implementation name nested under the language folder (kebab-case). Defaults to 'default'.",
+      "example": "default",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "default": "default"
     },
     "packageName": {
       "description": "Python package name (snake_case).",
@@ -27,82 +38,272 @@
       "children": [
         {
           "type": "dir",
-          "name": "{author}",
+          "name": "{version}",
           "children": [
             {
               "type": "dir",
-              "name": "python",
+              "name": "{author}",
               "children": [
-                { "type": "file", "name": ".gitignore", "template": "__pycache__/\n.venv/\n.env\n.dist/\n" },
-                { "type": "file", "name": ".env.example", "template": "API_KEY=\n" },
-                { "type": "file", "name": "README.md", "template": "# {connector} (Python)\n\nPython implementation for `{connector}` by `{author}`.\n\n" },
-                {
-                  "type": "file",
-                  "name": "pyproject.toml",
-                  "template": "[project]\nname = \"{packageName}\"\nversion = \"0.1.0\"\nreadme = \"README.md\"\nrequires-python = \">=3.10\"\nlicense = {text = \"MIT\"}\nauthors = [ { name = \"{author}\" } ]\ndependencies = [ ]\n\n[tool.ruff]\nline-length = 100\n\n[build-system]\nrequires = [\"setuptools>=68\",\"wheel\"]\nbuild-backend = \"setuptools.build_meta\"\n"
-                },
                 {
                   "type": "dir",
-                  "name": "src",
+                  "name": "python",
                   "children": [
                     {
                       "type": "dir",
-                      "name": "{packageName}",
+                      "name": "{implementation}",
                       "children": [
-                        { "type": "file", "name": "__init__.py", "template": "__version__ = \"0.1.0\"\n" },
-                        { "type": "file", "name": "client.py", "template": "class Client:\n    def __init__(self, config: dict):\n        self.config = config\n\n    def ping(self) -> bool:\n        return True\n" },
-                        { "type": "file", "name": "config.py", "template": "from dataclasses import dataclass\n\n@dataclass\nclass ConnectorConfig:\n    api_key: str\n" },
+                        {
+                          "type": "file",
+                          "name": ".gitignore",
+                          "template": "__pycache__/\n.venv/\n.env\n.dist/\n"
+                        },
+                        {
+                          "type": "file",
+                          "name": ".env.example",
+                          "template": "API_KEY=\n"
+                        },
+                        {
+                          "type": "file",
+                          "name": "README.md",
+                          "template": "# {connector} (Python)\n\nPython implementation for `{connector}` by `{author}`.\n\n"
+                        },
+                        {
+                          "type": "file",
+                          "name": "pyproject.toml",
+                          "template": "[project]\nname = \"{packageName}\"\nversion = \"0.1.0\"\nreadme = \"README.md\"\nrequires-python = \">=3.10\"\nlicense = {text = \"MIT\"}\nauthors = [ { name = \"{author}\" } ]\ndependencies = [ ]\n\n[tool.ruff]\nline-length = 100\n\n[build-system]\nrequires = [\"setuptools>=68\",\"wheel\"]\nbuild-backend = \"setuptools.build_meta\"\n"
+                        },
                         {
                           "type": "dir",
-                          "name": "auth",
+                          "name": "docs",
                           "children": [
-                            { "type": "file", "name": "__init__.py" },
-                            { "type": "file", "name": "base.py", "template": "class AuthStrategy:\n    def apply(self, headers: dict) -> dict:\n        return headers\n" },
-                            { "type": "file", "name": "api_key.py", "template": "from .base import AuthStrategy\n\nclass ApiKeyAuth(AuthStrategy):\n    def __init__(self, api_key: str):\n        self.api_key = api_key\n\n    def apply(self, headers: dict) -> dict:\n        headers[\"Authorization\"] = f\"Bearer {self.api_key}\"\n        return headers\n" },
-                            { "type": "file", "name": "oauth2.py", "template": "from .base import AuthStrategy\n\nclass OAuth2(AuthStrategy):\n    pass\n" }
+                            {
+                              "type": "file",
+                              "name": "getting-started.md",
+                              "template": "# Getting started\n\nThis is a placeholder. Document how to configure and run the connector in Python.\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "configuration.md",
+                              "template": "# Configuration\n\nDocument configuration options (auth, scopes, IDs).\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "schema.md",
+                              "template": "# Schema\n\nRefer to `schemas/index.json` and related files.\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "limits.md",
+                              "template": "# Limits\n\nDescribe API limits, quotas, and rate limiting behavior.\n"
+                            }
                           ]
                         },
                         {
                           "type": "dir",
-                          "name": "extract",
+                          "name": "schemas",
                           "children": [
-                            { "type": "file", "name": "__init__.py" },
-                            { "type": "file", "name": "base_extractor.py", "template": "class BaseExtractor:\n    def run(self):\n        raise NotImplementedError\n" }
+                            {
+                              "type": "file",
+                              "name": "index.json",
+                              "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/schema-index.schema.json\",\n  \"version\": \"0.1.0\",\n  \"datasets\": []\n}\n"
+                            },
+                            {
+                              "type": "dir",
+                              "name": "raw",
+                              "children": [
+                                {
+                                  "type": "dir",
+                                  "name": "json",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "events.schema.json",
+                                      "template": "{\\n  \\\"$schema\\\": \\\"http://json-schema.org/draft-07/schema#\\\",\\n  \\\"title\\\": \\\"Raw Event\\\",\\n  \\\"type\\\": \\\"object\\\",\\n  \\\"additionalProperties\\\": true\\n}\\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "events.md",
+                                      "template": "# Raw events (JSON)\n\nDescribe the upstream event payload.\n"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "relational",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "tables.json",
+                                      "template": "{\\n  \\\"tables\\\": []\\n}\\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "tables.sql",
+                                      "template": "-- DDL placeholders for raw tables\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "README.md",
+                                      "template": "# Raw relational schema\n\nDescribe tables and relationships.\n"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "dir",
+                              "name": "extracted",
+                              "children": [
+                                {
+                                  "type": "dir",
+                                  "name": "json",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "events.schema.json",
+                                      "template": "{\\n  \\\"$schema\\\": \\\"http://json-schema.org/draft-07/schema#\\\",\\n  \\\"title\\\": \\\"Extracted Event\\\",\\n  \\\"type\\\": \\\"object\\\",\\n  \\\"additionalProperties\\\": false,\\n  \\\"properties\\\": {}\\n}\\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "events.md",
+                                      "template": "# Extracted events (JSON)\n\nDescribe the normalized event shape.\n"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "relational",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "tables.json",
+                                      "template": "{\\n  \\\"tables\\\": []\\n}\\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "tables.sql",
+                                      "template": "-- DDL placeholders for extracted tables\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "README.md",
+                                      "template": "# Extracted relational schema\n\nDescribe normalized tables and relationships.\n"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
                           ]
                         },
                         {
                           "type": "dir",
-                          "name": "transform",
+                          "name": "src",
                           "children": [
-                            { "type": "file", "name": "__init__.py" },
-                            { "type": "file", "name": "base_transformer.py", "template": "class BaseTransformer:\n    def transform(self, record):\n        return record\n" }
+                            {
+                              "type": "dir",
+                              "name": "{packageName}",
+                              "children": [
+                                {
+                                  "type": "file",
+                                  "name": "__init__.py",
+                                  "template": "__version__ = \"0.1.0\"\n"
+                                },
+                                {
+                                  "type": "file",
+                                  "name": "client.py",
+                                  "template": "class Client:\n    def __init__(self, config: dict):\n        self.config = config\n\n    def ping(self) -> bool:\n        return True\n"
+                                },
+                                {
+                                  "type": "file",
+                                  "name": "config.py",
+                                  "template": "from dataclasses import dataclass\n\n@dataclass\nclass ConnectorConfig:\n    api_key: str\n"
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "auth",
+                                  "children": [
+                                    { "type": "file", "name": "__init__.py" },
+                                    {
+                                      "type": "file",
+                                      "name": "base.py",
+                                      "template": "class AuthStrategy:\n    def apply(self, headers: dict) -> dict:\n        return headers\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "api_key.py",
+                                      "template": "from .base import AuthStrategy\n\nclass ApiKeyAuth(AuthStrategy):\n    def __init__(self, api_key: str):\n        self.api_key = api_key\n\n    def apply(self, headers: dict) -> dict:\n        headers[\"Authorization\"] = f\"Bearer {self.api_key}\"\n        return headers\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "oauth2.py",
+                                      "template": "from .base import AuthStrategy\n\nclass OAuth2(AuthStrategy):\n    pass\n"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "extract",
+                                  "children": [
+                                    { "type": "file", "name": "__init__.py" },
+                                    {
+                                      "type": "file",
+                                      "name": "base_extractor.py",
+                                      "template": "class BaseExtractor:\n    def run(self):\n        raise NotImplementedError\n"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "transform",
+                                  "children": [
+                                    { "type": "file", "name": "__init__.py" },
+                                    {
+                                      "type": "file",
+                                      "name": "base_transformer.py",
+                                      "template": "class BaseTransformer:\n    def transform(self, record):\n        return record\n"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "load",
+                                  "children": [
+                                    { "type": "file", "name": "__init__.py" },
+                                    {
+                                      "type": "file",
+                                      "name": "base_loader.py",
+                                      "template": "class BaseLoader:\n    def load(self, records):\n        pass\n"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
                           ]
                         },
                         {
                           "type": "dir",
-                          "name": "load",
+                          "name": "tests",
                           "children": [
-                            { "type": "file", "name": "__init__.py" },
-                            { "type": "file", "name": "base_loader.py", "template": "class BaseLoader:\n    def load(self, records):\n        pass\n" }
+                            {
+                              "type": "file",
+                              "name": "test_client.py",
+                              "template": "def test_ping():\n    from {packageName}.client import Client\n    assert Client({}).ping() is True\n"
+                            }
                           ]
                         },
-                        { "type": "dir", "name": "schemas", "children": [ { "type": "file", "name": "__init__.py" } ] }
+                        {
+                          "type": "dir",
+                          "name": "examples",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "basic_usage.py",
+                              "template": "from {packageName}.client import Client\n\nclient = Client({})\nprint(client.ping())\n"
+                            }
+                          ]
+                        }
                       ]
                     }
-                  ]
-                },
-                {
-                  "type": "dir",
-                  "name": "tests",
-                  "children": [
-                    { "type": "file", "name": "test_client.py", "template": "def test_ping():\n    from {packageName}.client import Client\n    assert Client({}).ping() is True\n" }
-                  ]
-                },
-                {
-                  "type": "dir",
-                  "name": "examples",
-                  "children": [
-                    { "type": "file", "name": "basic_usage.py", "template": "from {packageName}.client import Client\n\nclient = Client({})\nprint(client.ping())\n" }
                   ]
                 }
               ]
