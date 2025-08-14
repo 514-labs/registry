@@ -1,0 +1,252 @@
+export const metadata = {
+  title: "API Connector Spec (MVP-focused for HubSpot)",
+  description: "Practical, minimal spec to ship a first iteration of a robust API connector with hooks, retries, and pagination"
+}
+
+## API Connector Spec (MVP‑focused)
+
+This document defines a pragmatic first iteration of an API connector, shaped by building the HubSpot contacts connector. It prioritizes shipping value quickly while keeping the core abstractions clean and extensible.
+
+### Scope and Priorities
+
+- **Now (MVP)**
+  - Lifecycle: initialize, connect, disconnect, isConnected
+  - Request primitives: request (generic) + domain helpers (e.g., listContacts, getContact)
+  - Auth: Private App Token (Bearer)
+  - Retries: exponential backoff + jitter, honor Retry‑After, retry budget
+  - Rate limiting: token bucket (requests/sec + burst)
+  - Hooks: beforeRequest, afterResponse, onError, onRetry with modifyResponse/abort
+  - Pagination: cursor pattern (HubSpot: `limit` + `after`, `paging.next.after`)
+  - Response envelope: data, status, headers, meta (timestamp, durationMs, retryCount, requestId, rateLimit)
+  - Tests: unit with HTTP mocking; one gated live integration test
+
+- **Later**
+  - OAuth2 (access + refresh)
+  - Adaptive rate limiting from provider headers
+  - Concurrency queue (max in‑flight)
+  - Circuit breaker
+  - Validation with schemas (e.g., Zod)
+  - Observability (logs/metrics/traces)
+  - Idempotency (for write operations)
+  - Streaming/upload/download
+
+### Lifecycle
+
+- `initialize(configuration)`: validate/prepare config, create HTTP client/limiters
+- `connect()`: mark ready (perform auth warm‑ups if needed)
+- `disconnect()`: flush and close resources
+- `isConnected()`: readiness boolean
+
+### Request Primitives
+
+- `request({ method, path, query, headers, body, timeoutMs, operation })`
+  - Applies defaults → auth → hooks → rate limit → execute → hooks
+  - Enforces per‑call timeout; retry with backoff and jitter; honors Retry‑After
+
+- Convenience helpers exposed per connector as domain operations (example):
+  - `listContacts({ properties?, limit?, after? })`
+  - `getContact({ id, properties? })`
+
+### Configuration Structure (MVP)
+
+- Base
+  - `baseUrl` (default: `https://api.hubapi.com`)
+  - `timeoutMs` (default: 30000)
+  - `userAgent` (default: connector‑specific UA)
+  - `defaultHeaders` (default: `Accept: application/json`) — do not set `Content-Type` for GET
+  - `defaultQueryParams`
+
+- Auth
+  - `{ type: "bearer", bearer: { token: string } }`
+  - OAuth2 postponed to future iteration
+
+- Retry
+  - `maxAttempts` (default: 3)
+  - `initialDelayMs` (1000), `maxDelayMs` (30000), `backoffMultiplier` (2)
+  - `retryableStatusCodes` (default: [408, 425, 429, 500, 502, 503, 504])
+  - `retryBudgetMs` (default: 60000)
+  - `respectRetryAfter` (default: true)
+
+- Rate Limit
+  - `requestsPerSecond` (default: conservative, e.g., 15)
+  - `burstCapacity` (default: same as RPS)
+  - `concurrentRequests` (default: 10)
+  - `adaptiveFromHeaders`: reserved for later
+
+- Hooks
+  - `hooks?: { beforeRequest?: Hook[]; afterResponse?: Hook[]; onError?: Hook[]; onRetry?: Hook[] }`
+
+#### Proxy, TLS, and Pooling (alignment with original)
+
+- Proxy (deferred in MVP): Prefer environment variables (`HTTPS_PROXY`, `NO_PROXY`) initially. In a future revision, add an explicit `proxy` block (host, port, protocol, credentials) and wire `http(s).Agent` accordingly.
+- TLS (deferred knobs): HTTPS by default. Future `tls` options: `verify`, `minVersion`, custom CA bundle, and mTLS (cert/key). MVP avoids this complexity.
+- Pooling/keep‑alive (deferred knobs): Will expose connection pooling flags alongside proxy/TLS to maximize throughput when needed.
+
+### Response Envelope
+
+Every call returns:
+
+- `data`: parsed JSON
+- `status`: HTTP status code
+- `headers`: response headers (lower‑cased keys)
+- `meta`:
+  - `timestamp`, `durationMs`, `retryCount`
+  - `requestId` (e.g., `x-request-id` or `x-trace`)
+  - `rateLimit` (if present): `limit`, `remaining`, `reset`, `retryAfterSeconds`
+
+### Hooks
+
+- Hook types: `beforeRequest`, `afterResponse`, `onError`, `onRetry`
+- Hook signature:
+  - `execute(ctx) => void | Promise<void>`
+  - `ctx` includes: `type`, `operation`, `request`, `response`, `error`, `metadata`
+  - `ctx.modifyResponse(updates)` to mutate the response envelope
+  - `ctx.abort(reason?)` to cancel the request from a hook
+
+Example: transform HubSpot contacts into a flatter shape via `afterResponse`.
+
+```ts
+const transformHook = {
+  name: "map-contacts",
+  execute(ctx) {
+    if (ctx.type !== "afterResponse" || !ctx.response) return;
+    const results = Array.isArray(ctx.response.data?.results) ? ctx.response.data.results : [];
+    const items = results.map((r) => ({
+      id: r.id,
+      email: r.properties?.email,
+      firstName: r.properties?.firstname,
+      lastName: r.properties?.lastname,
+      fullName: [r.properties?.firstname, r.properties?.lastname].filter(Boolean).join(" "),
+      createdAt: r.createdAt,
+    }));
+    ctx.modifyResponse?.({ data: { items } });
+  },
+};
+```
+
+### Pagination (HubSpot MVP)
+
+- Request: `limit` and `after`
+- Response: `results: []`, `paging.next.after`
+- Connector exposes a generic `paginate({ path, query, pageSize, extractItems, extractNextCursor })` iterator and domain helpers that use it.
+
+### Error Handling (MVP)
+
+- Standardized `ConnectorError` with fields: `message`, `code`, `statusCode?`, `retryable?`, `details?`, `requestId?`, `source`
+- Common codes used: `NETWORK_ERROR`, `TIMEOUT`, `AUTH_FAILED`, `RATE_LIMIT`, `SERVER_ERROR`, `PARSING_ERROR`, `INVALID_REQUEST`, `CANCELLED`
+- Retryable when status in `[408, 425, 429, 5xx]` or transient network failures
+
+### Rate Limiting (MVP)
+
+- Token bucket with `capacity = burstCapacity`, `refill = requestsPerSecond`
+- Applied before each request; integrate adaptive updates in future iteration (e.g., from `X-HubSpot-RateLimit-*`)
+
+### Concurrency, Cancellation, and Timeouts
+
+- Per‑call timeout is enforced at the transport layer and triggers a `TIMEOUT` error.
+- User‑provided cancellation token and global graceful shutdown (draining in‑flight) are deferred for post‑MVP batch/sync scenarios.
+
+### Streaming and Large Payloads
+
+- Not applicable to read‑only contacts MVP. Will be specified with uploads/downloads if and when needed.
+
+### Testing Requirements (MVP)
+
+- Unit tests: mock HTTP (e.g., using `nock`); cover lifecycle, request path, simple transforms
+- Integration test: optional live test gated by `HUBSPOT_TOKEN`; demonstrates end‑to‑end + hooks
+- Config split:
+  - `jest.config.cjs`: unit (excludes `/tests/integration/`)
+  - `jest.integration.cjs`: integration root in `/tests/integration`
+
+### Use Cases and Coverage
+
+- Contacts data extraction (read-only)
+  - Covered now: list contacts with selected properties; pagination; transform via hooks
+  - Covered now: get contact by ID with selected properties
+  - Missing: incremental sync by updated time (search endpoint with filters)
+    - Rationale: requires `/crm/v3/objects/contacts/search` filterGroups and paging semantics; adds complexity. Planned soon.
+
+- Filtering and search
+  - Missing: search by email/value; arbitrary filter groups
+    - Rationale: adds input schema/validation surface and more error mapping; defer to keep MVP thin.
+
+- Associations
+  - Missing: include associated companies/deals in one call; fetch associations
+    - Rationale: increases request fan‑out and rate‑limit pressure; design needs opt‑in strategy and batching; planned later.
+
+- Other objects (companies, deals, tickets)
+  - Missing in MVP; easy to add list/get using same primitives
+    - Rationale: focus on most common first (contacts); extend after feedback.
+
+- Property metadata and schemas
+  - Missing: fetch property definitions (`/crm/v3/properties/contacts`) for dynamic typing/validation
+    - Rationale: needs schema layer (e.g., Zod) and caching; planned once validation is added.
+
+- Writes (create/update/delete)
+  - Missing: create/update contacts; batch writes
+    - Rationale: requires idempotency keys, validation, and clearer error semantics; MVP is read‑only to reduce risk.
+
+- Batch/bulk operations
+  - Missing: batch read (`/batch/read`) for throughput optimization
+    - Rationale: initial goal is simplicity and correctness; can introduce once we profile rate limits.
+
+- OAuth2 auth flow
+  - Missing: full OAuth2 with refresh
+    - Rationale: Private App Token is fastest; OAuth2 adds token lifecycle and testing complexity; planned.
+
+- Adaptive rate limits
+  - Missing: dynamically adjust limiter from `X‑HubSpot‑RateLimit-*` headers
+    - Rationale: MVP uses conservative static RPS; adaptive logic is incremental and will be added after baseline stability.
+
+- Concurrency control and circuit breaker
+  - Missing: max concurrent requests queue; circuit breaker
+    - Rationale: not needed to validate initial reads; add when extending to parallelized syncs.
+
+- Observability
+  - Missing: structured logs/metrics/traces with redaction
+    - Rationale: adds runtime footprint; layer in once connector usage patterns stabilize.
+
+- Testing depth
+  - Covered now: unit tests with HTTP mocking; live test gated by token; hook transform verification
+  - Missing: retry/rate‑limit behavior tests; mock OpenAPI server (Prism)
+    - Rationale: add as we expand surface area beyond contacts list/get.
+
+### Practical Notes Learned
+
+- Prefer Node `http/https` client for compatibility with HTTP mocking libraries (more predictable interception than global fetch in some setups)
+- Avoid setting `Content-Type` on GET by default
+- Keep domain operations thin; favor hooks for transformations to avoid domain‑specific coupling
+- Gate live tests by env variables; keep them isolated from unit suite
+
+### Observability
+
+- MVP minimizes runtime surface. Next iteration to add structured logs (requestId, status, duration, redacted headers), and evolve into metrics/tracing.
+
+### Security and Compliance
+
+- Redact secrets in logs/errors; never print tokens.
+- HTTPS by default; additional TLS controls arrive with the future `tls` knobs.
+- Schema validation for inputs/outputs is planned before write operations.
+
+### Versioning and Compatibility
+
+- Semantic versioning of the connector package; document breaking changes as the surface expands.
+
+### Conformance Checklist (MVP)
+
+- Lifecycle: initialize, connect, disconnect, isConnected
+- Request primitives implemented with timeout, retries, hooks, rate limit
+- Response envelope with meta fields
+- Private App Token auth
+- Pagination for cursor pattern
+- Unit tests and gated integration test
+
+### Future Extensions
+
+- OAuth2 with refresh and pre‑expiry renewal
+- Adaptive limiter updates from provider headers
+- Concurrency controls (max in‑flight work queue)
+- Circuit breaker
+- Schema validation on inputs/outputs
+- Structured logs/metrics/traces with redaction
+
