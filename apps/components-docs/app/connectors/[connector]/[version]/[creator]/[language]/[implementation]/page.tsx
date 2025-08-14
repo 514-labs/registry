@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Badge } from "@ui/components/badge";
-import { Card } from "@ui/components/card";
-import { cn } from "@/lib/utils";
+// import { Card } from "@ui/components/card";
+// import { cn } from "@/lib/utils";
 import {
   listConnectorIds,
   readConnector,
@@ -12,7 +12,11 @@ import { GitBranch, Code2, Wrench } from "lucide-react";
 import Link from "next/link";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 import ComboBox from "@/components/combobox";
-import { Separator } from "@ui/components/separator";
+// import { Separator } from "@ui/components/separator";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@ui/components/tabs";
+import { existsSync, readdirSync, readFileSync } from "fs";
+import { join } from "path";
+import { marked } from "marked";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -56,7 +60,7 @@ export default async function ConnectorImplementationPage({
   const { connector, version, creator, language, implementation } =
     await params;
   const sp = await searchParams;
-  const page = (Array.isArray(sp.page) ? sp.page[0] : sp.page) ?? "readme";
+  // const page = (Array.isArray(sp.page) ? sp.page[0] : sp.page) ?? "readme";
 
   const conn = readConnector(connector);
   if (!conn) return null;
@@ -119,6 +123,54 @@ export default async function ConnectorImplementationPage({
   const implementationsForLanguage = provider.implementations
     .filter((i) => i.language === language)
     .map((i) => i.implementation);
+
+  // Discover docs in the selected implementation folder
+  const docsDir = join(implEntry.path, "docs");
+  const docFiles = existsSync(docsDir)
+    ? readdirSync(docsDir)
+        .filter(
+          (f) =>
+            f.toLowerCase().endsWith(".md") || f.toLowerCase().endsWith(".mdx")
+        )
+        .sort()
+    : ([] as string[]);
+
+  type DocPage = { slug: string; title: string; html: string };
+  const preferredOrder = [
+    "getting-started",
+    "installation",
+    "configuration",
+    "usage",
+    "examples",
+    "limits",
+    "troubleshooting",
+    "faq",
+  ];
+  const docs: DocPage[] = docFiles
+    .map((file) => {
+      const filePath = join(docsDir, file);
+      const raw = readFileSync(filePath, "utf-8");
+      const firstHeadingMatch = raw.match(/^#\s+(.+)$/m);
+      const title =
+        firstHeadingMatch?.[1]?.trim() || file.replace(/\.(md|mdx)$/i, "");
+      const slug = file.replace(/\.(md|mdx)$/i, "");
+      const html = marked.parse(raw) as string;
+      return { slug, title, html } as DocPage;
+    })
+    .sort((a, b) => {
+      const ia = preferredOrder.indexOf(a.slug);
+      const ib = preferredOrder.indexOf(b.slug);
+      if (ia !== -1 && ib !== -1) return ia - ib;
+      if (ia !== -1) return -1;
+      if (ib !== -1) return 1;
+      return a.slug.localeCompare(b.slug);
+    });
+
+  const defaultTab =
+    docs.find((d) => d.slug === (Array.isArray(sp.page) ? sp.page[0] : sp.page))
+      ?.slug ||
+    docs.find((d) => d.slug === "getting-started")?.slug ||
+    docs[0]?.slug;
 
   // Preload creator avatars for the current version
   const providersForVersion = conn.providers.filter(
@@ -262,15 +314,38 @@ export default async function ConnectorImplementationPage({
           </div>
         </div>
         <div className="col-span-9">
-          <div className="prose dark:prose-invert">
-            {page === "readme" ? <h1>Get Started</h1> : <h1>{page}</h1>}
-            <div className="text-sm text-muted-foreground mt-2">
-              <div>Version: {version}</div>
-              <div>Creator: {creator}</div>
-              <div>Language: {language}</div>
-              <div>Implementation: {implEntry.implementation}</div>
+          {docs.length === 0 ? (
+            <div className="prose dark:prose-invert">
+              <h1>Documentation</h1>
+              <p className="text-muted-foreground">
+                No docs found for this implementation.
+              </p>
+              <div className="text-sm text-muted-foreground mt-4">
+                <div>Version: {version}</div>
+                <div>Creator: {creator}</div>
+                <div>Language: {language}</div>
+                <div>Implementation: {implEntry.implementation}</div>
+              </div>
             </div>
-          </div>
+          ) : (
+            <Tabs defaultValue={defaultTab} className="w-full">
+              <TabsList>
+                {docs.map((d) => (
+                  <TabsTrigger key={d.slug} value={d.slug}>
+                    {d.title}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+              {docs.map((d) => (
+                <TabsContent key={d.slug} value={d.slug}>
+                  <div
+                    className="prose dark:prose-invert max-w-none"
+                    dangerouslySetInnerHTML={{ __html: d.html }}
+                  />
+                </TabsContent>
+              ))}
+            </Tabs>
+          )}
         </div>
       </div>
     </div>
