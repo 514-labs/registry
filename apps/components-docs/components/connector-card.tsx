@@ -9,6 +9,16 @@ import { Badge } from "@ui/components/badge";
 import Image from "next/image";
 import Link from "next/link";
 
+// Utility function to escape HTML entities
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 interface ConnectorCardProps {
   name: string;
   description: string;
@@ -53,7 +63,11 @@ function ConnectorCard({
   // Use first candidate; browser will 404 fallbacks are not automatic, but primary will exist after sync
   const imageSrc = candidates[0];
   return (
-    <Link href={href} className="block h-full" aria-label={`View ${name}`}>
+    <Link
+      href={href}
+      className="block h-full"
+      aria-label={`View ${escapeHtml(name)}`}
+    >
       <Card className="h-full group cursor-pointer transition-colors hover:bg-muted/40">
         <CardHeader className="flex flex-row items-start justify-between">
           <Image
