@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "pnpm -C apps/components-docs dev",
-    "build": "turbo run build",
+    "build": "pnpm registry:sync:issues && turbo run build",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "docs:dev": "pnpm -C apps/components-docs dev",

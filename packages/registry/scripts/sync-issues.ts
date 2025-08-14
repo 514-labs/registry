@@ -1,5 +1,12 @@
 /// <reference types="node" />
-import { existsSync, readdirSync, readFileSync, statSync, writeFileSync, mkdirSync } from "fs";
+import {
+  existsSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+  writeFileSync,
+  mkdirSync,
+} from "fs";
 import { join, resolve, dirname as pathDirname } from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
@@ -19,7 +26,9 @@ type ProviderConnectorMeta = {
   source?: Record<string, unknown>;
   capabilities?: Record<string, unknown>;
   maintainers?: Array<Record<string, unknown>>;
-  issues?: Record<string, string>;
+  // Map of language to either a single URL string (back-compat)
+  // or to a map of implementation name -> URL
+  issues?: Record<string, string | Record<string, string>>;
 };
 
 type VersionMeta = { version?: string };
@@ -53,7 +62,8 @@ function detectIndentFromJson(jsonContent: string): string {
       if (!minSpaces || (count > 0 && count < minSpaces)) minSpaces = count;
     }
   }
-  if (typeof minSpaces === "number" && minSpaces > 0) return " ".repeat(minSpaces);
+  if (typeof minSpaces === "number" && minSpaces > 0)
+    return " ".repeat(minSpaces);
   return "  ";
 }
 
@@ -63,8 +73,13 @@ function getTrailingNewline(content: string): string {
 
 // env owner/repo are fixed to 514-labs/connector-factory per product requirement
 
-async function searchExistingIssue(token: string, owner: string, repo: string, title: string): Promise<string | undefined> {
-  const query = `repo:${owner}/${repo} type:issue in:title "${title.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
+async function searchExistingIssue(
+  token: string,
+  owner: string,
+  repo: string,
+  title: string
+): Promise<string | undefined> {
+  const query = `repo:${owner}/${repo} type:issue in:title "${title.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
   const url = new URL("https://api.github.com/search/issues");
   url.searchParams.set("q", query);
   const res = await fetch(url.toString(), {
@@ -75,34 +90,55 @@ async function searchExistingIssue(token: string, owner: string, repo: string, t
     },
   });
   if (!res.ok) return undefined;
-  const data = (await res.json()) as { items?: Array<{ html_url: string; title: string }> };
+  const data = (await res.json()) as {
+    items?: Array<{ html_url: string; title: string }>;
+  };
   const match = data.items?.find((i) => i.title === title);
   return match?.html_url;
 }
 
-async function createIssue(token: string, owner: string, repo: string, title: string, body: string): Promise<string | undefined> {
-  const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
-    method: "POST",
-    headers: {
-      Accept: "application/vnd.github+json",
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-      "X-GitHub-Api-Version": "2022-11-28",
-    },
-    body: JSON.stringify({ title, body }),
-  });
+async function createIssue(
+  token: string,
+  owner: string,
+  repo: string,
+  title: string,
+  body: string
+): Promise<string | undefined> {
+  const res = await fetch(
+    `https://api.github.com/repos/${owner}/${repo}/issues`,
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/vnd.github+json",
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+      body: JSON.stringify({ title, body }),
+    }
+  );
   if (!res.ok) {
     const txt = await res.text();
-    console.error(`Failed to create issue: ${res.status} ${res.statusText} - ${txt}`);
+    console.error(
+      `Failed to create issue: ${res.status} ${res.statusText} - ${txt}`
+    );
     return undefined;
   }
   const data = (await res.json()) as { html_url?: string };
   return data.html_url;
 }
 
-function ensureIssuesMap(meta: ProviderConnectorMeta): Record<string, string> {
+function ensureIssuesMap(
+  meta: ProviderConnectorMeta
+): Record<string, string | Record<string, string>> {
   if (!meta.issues) meta.issues = {};
-  return meta.issues as Record<string, string>;
+  return meta.issues as Record<string, string | Record<string, string>>;
+}
+
+function getImplementationDirs(languagePath: string): string[] {
+  const entries = listDirectories(languagePath);
+  // If there are no subdirectories, treat the language root as a single "default" implementation
+  return entries.length === 0 ? ["default"] : entries;
 }
 
 async function main(): Promise<void> {
@@ -129,7 +165,11 @@ async function main(): Promise<void> {
   const ownerRepo = { owner: "514-labs", repo: "connector-factory" };
 
   const connectors = listDirectories(registryRoot);
-  const summary: Array<{ path: string; action: "created" | "linked" | "skipped"; url?: string }> = [];
+  const summary: Array<{
+    path: string;
+    action: "created" | "linked" | "skipped";
+    url?: string;
+  }> = [];
 
   for (const connectorId of connectors) {
     const connectorPath = join(registryRoot, connectorId);
@@ -182,54 +222,86 @@ async function main(): Promise<void> {
 
         const languages = listDirectories(providerPath);
         for (const language of languages) {
-          // Check existing link
+          const languagePath = join(providerPath, language);
+          const implementations = getImplementationDirs(languagePath);
+
           const issuesMap = ensureIssuesMap(providerMeta);
-          const already = issuesMap[language];
-          if (already && typeof already === "string" && already.trim().length > 0) {
-            summary.push({ path: join(connectorId, versionId, providerId, language), action: "skipped", url: already });
-            continue;
+          const existing = issuesMap[language];
+          // Normalize to per-implementation map
+          let perImpl: Record<string, string> = {};
+          if (typeof existing === "string" && existing.trim().length > 0) {
+            perImpl = { default: existing };
+          } else if (existing && typeof existing === "object") {
+            perImpl = { ...existing } as Record<string, string>;
           }
 
-          const title = `Connector: ${connectorId}@${versionLabel} - ${providerId}/${language}`;
-          const body = [
-            `Tracking implementation for ${connectorId}@${versionLabel}`,
-            "",
-            `Author: ${providerId}`,
-            `Language: ${language}`,
-            "",
-            "Paths:",
-            `- Provider: registry/${connectorId}/${versionId}/${providerId}`,
-            `- Implementation: registry/${connectorId}/${versionId}/${providerId}/${language}`,
-          ].join("\n");
+          for (const impl of implementations) {
+            const implPath =
+              impl === "default" ? languagePath : join(languagePath, impl);
+            const already = perImpl[impl];
+            if (already && already.trim().length > 0) {
+              summary.push({
+                path: join(connectorId, versionId, providerId, language, impl),
+                action: "skipped",
+                url: already,
+              });
+              continue;
+            }
 
-          let issueUrl = await searchExistingIssue(token, ownerRepo.owner, ownerRepo.repo, title);
-          let action: "created" | "linked" = "linked";
-          if (!issueUrl) {
-            issueUrl = await createIssue(token, ownerRepo.owner, ownerRepo.repo, title, body);
-            action = "created";
-          }
-          if (!issueUrl) {
-            console.error(`Failed to obtain issue URL for ${title}`);
-            continue;
-          }
+            const title = `Connector: ${connectorId}@${versionLabel} - ${providerId}/${language}/${impl}`;
+            const body = [
+              `Tracking implementation for ${connectorId}@${versionLabel}`,
+              "",
+              `Author: ${providerId}`,
+              `Language: ${language}`,
+              `Implementation: ${impl}`,
+              "",
+              "Paths:",
+              `- Provider: registry/${connectorId}/${versionId}/${providerId}`,
+              `- Implementation: registry/${connectorId}/${versionId}/${providerId}/${language}${impl === "default" ? "" : "/" + impl}`,
+              `- Filesystem: ${implPath}`,
+            ].join("\n");
 
-          issuesMap[language] = issueUrl;
+            let issueUrl = await searchExistingIssue(
+              token,
+              ownerRepo.owner,
+              ownerRepo.repo,
+              title
+            );
+            let action: "created" | "linked" = "linked";
+            if (!issueUrl) {
+              issueUrl = await createIssue(
+                token,
+                ownerRepo.owner,
+                ownerRepo.repo,
+                title,
+                body
+              );
+              action = "created";
+            }
+            if (!issueUrl) {
+              console.error(`Failed to obtain issue URL for ${title}`);
+              continue;
+            }
 
-          // Write back provider meta preserving indent and trailing newline
-          const serialized = JSON.stringify(providerMeta, null, indent) + trailingNewline;
-          const metaDir = pathDirname(providerMetaPath);
-          if (!existsSync(metaDir)) {
-            // Create missing _meta directory chain
-            // Using fs.mkdirSync with recursive to avoid import; but require to import mkdirSync
-          }
-          try {
-            mkdirSync(metaDir, { recursive: true });
-          } catch {
-            // ignore
-          }
-          writeFileSync(providerMetaPath, serialized, "utf-8");
+            // Assign and persist
+            perImpl[impl] = issueUrl;
+            issuesMap[language] = perImpl;
 
-          summary.push({ path: join(connectorId, versionId, providerId, language), action, url: issueUrl });
+            const serialized =
+              JSON.stringify(providerMeta, null, indent) + trailingNewline;
+            const metaDir = pathDirname(providerMetaPath);
+            try {
+              mkdirSync(metaDir, { recursive: true });
+            } catch {}
+            writeFileSync(providerMetaPath, serialized, "utf-8");
+
+            summary.push({
+              path: join(connectorId, versionId, providerId, language, impl),
+              action,
+              url: issueUrl,
+            });
+          }
         }
       }
     }
@@ -241,7 +313,9 @@ async function main(): Promise<void> {
   }
 
   for (const row of summary) {
-    console.log(`${row.action.toUpperCase()}: ${row.path}${row.url ? ` -> ${row.url}` : ""}`);
+    console.log(
+      `${row.action.toUpperCase()}: ${row.path}${row.url ? ` -> ${row.url}` : ""}`
+    );
   }
 }
 
@@ -249,5 +323,3 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
-
-

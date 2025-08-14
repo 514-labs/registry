@@ -1,6 +1,6 @@
 {
   "name": "google-analytics",
-  "author": "fiveonefour",
+  "author": "tg339",
   "version": "v4",
   "languages": [
     "typescript"
@@ -23,12 +23,14 @@
   ],
   "maintainers": [
     {
-      "name": "fiveonefour",
+      "name": "tg339",
       "email": ""
     }
   ],
-  "registryUrl": "https://github.com/514-labs/connector-factory/tree/main/registry/google-analytics/v4/fiveonefour",
+  "registryUrl": "https://github.com/514-labs/connector-factory/tree/main/registry/google-analytics/v4/tg339",
   "issues": {
-    "typescript": "https://github.com/514-labs/connector-factory/issues/11"
+    "typescript": {
+      "data-api": "https://github.com/514-labs/connector-factory/issues/21"
+    }
   }
 }
