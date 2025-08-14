@@ -6,9 +6,7 @@ import {
   CardTitle,
 } from "@ui/components/card";
 import { Badge } from "@ui/components/badge";
-import { Button } from "@ui/components/button";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 interface ConnectorCardProps {
@@ -17,6 +15,15 @@ interface ConnectorCardProps {
   icon: string;
   tags: string[];
   href: string;
+  language?: string;
+  languages?: string[];
+  sourceType?: string;
+  domains?: string[];
+  comingSoon?: boolean;
+  implementationCount?: number;
+  reactions?: number;
+  creatorAvatarUrl?: string;
+  creatorAvatarUrls?: string[];
 }
 
 function ConnectorCard({
@@ -25,6 +32,15 @@ function ConnectorCard({
   icon,
   tags,
   href,
+  language,
+  languages,
+  sourceType,
+  domains,
+  comingSoon,
+  implementationCount,
+  reactions,
+  creatorAvatarUrl,
+  creatorAvatarUrls,
 }: ConnectorCardProps) {
   const base = icon.startsWith("/") ? icon : `/${icon}`;
   const candidates = [
@@ -37,46 +53,106 @@ function ConnectorCard({
   // Use first candidate; browser will 404 fallbacks are not automatic, but primary will exist after sync
   const imageSrc = candidates[0];
   return (
-    <Card className="h-full">
-      <CardHeader>
-        <Card className="h-full overflow-hidden p-0">
-          <div className="relative p-8">
-            <Image
-              src={imageSrc}
-              alt={`${name} logo`}
-              width={48}
-              height={48}
-              className="h-12 w-12 rounded-sm object-contain mx-auto relative z-10"
-            />
-            <div
-              className={cn(
-                "bg-gradient-to-b h-full w-full  blur-sm absolute top-0 left-0",
-                "from-60% from-card",
-                "to-neutral-500/20"
-              )}
-            />
+    <Link href={href} className="block h-full" aria-label={`View ${name}`}>
+      <Card className="h-full group cursor-pointer transition-colors hover:bg-muted/40">
+        <CardHeader className="flex flex-row items-start justify-between">
+          <Image
+            src={imageSrc}
+            alt={`${name} logo`}
+            width={48}
+            height={48}
+            className="h-12 w-12 rounded-sm object-contain 0"
+          />
+          <div className="flex items-center gap-2">
+            {typeof implementationCount === "number" &&
+            implementationCount > 0 ? (
+              <Badge variant="secondary" className="text-sm">
+                {implementationCount} impls
+              </Badge>
+            ) : null}
+            {comingSoon ? (
+              <Badge variant="secondary" className="text-sm">
+                Coming soon
+              </Badge>
+            ) : null}
+            {typeof reactions === "number" && reactions > 0 ? (
+              <Badge
+                variant="secondary"
+                className="text-sm flex items-center gap-1"
+              >
+                <span>❤️</span>
+                <span>👍</span>
+                <span>{reactions}</span>
+              </Badge>
+            ) : null}
           </div>
-        </Card>
-      </CardHeader>
-      <CardHeader className="items-center ">
-        <CardTitle className="text-xl">{name}</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-5 grow">
-        <p className="text-sm text-muted-foreground">{description}</p>
-      </CardContent>
-      <CardFooter className="flex flex-col gap-5 items-start">
-        <div className="flex flex-wrap gap-2">
-          {tags.map((tag) => (
-            <Badge key={tag} variant="secondary">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-        <Button variant="outline" asChild>
-          <Link href={href}>View Connector</Link>
-        </Button>
-      </CardFooter>
-    </Card>
+        </CardHeader>
+        <CardHeader className="items-start ">
+          <CardTitle className="text-xl mb-2">{name}</CardTitle>
+          {creatorAvatarUrls && creatorAvatarUrls.length > 0 ? (
+            <div className="flex -space-x-2">
+              {creatorAvatarUrls.slice(0, 5).map((url, idx) => (
+                <Image
+                  key={`${url}-${idx}`}
+                  src={url}
+                  alt="Creator avatar"
+                  width={24}
+                  height={24}
+                  className="h-6 w-6 rounded-full ring-1 ring-background"
+                  unoptimized
+                />
+              ))}
+              {creatorAvatarUrls.length > 5 ? (
+                <div className="h-6 w-6 rounded-full bg-muted text-xs flex items-center justify-center ring-1 ring-background">
+                  +{creatorAvatarUrls.length - 5}
+                </div>
+              ) : null}
+            </div>
+          ) : creatorAvatarUrl ? (
+            <Image
+              src={creatorAvatarUrl}
+              alt="Creator avatar"
+              width={24}
+              height={24}
+              className="h-6 w-6 rounded-full mt-2"
+              unoptimized
+            />
+          ) : null}
+        </CardHeader>
+        <CardContent className="flex flex-col gap-5 grow">
+          <p className="text-sm text-muted-foreground">{description}</p>
+        </CardContent>
+        <CardFooter className="flex flex-col gap-5 items-start">
+          <div className="flex flex-wrap gap-2">
+            {(languages && languages.length > 0
+              ? languages
+              : language
+                ? [language]
+                : []
+            ).map((lang) => (
+              <Badge key={`lang-${lang}`} variant="secondary">
+                {lang}
+              </Badge>
+            ))}
+            {sourceType ? (
+              <Badge key={`type-${sourceType}`} variant="secondary">
+                {sourceType}
+              </Badge>
+            ) : null}
+            {(domains ?? []).map((d) => (
+              <Badge key={`domain-${d}`} variant="secondary">
+                {d}
+              </Badge>
+            ))}
+            {tags.map((tag) => (
+              <Badge key={tag} variant="secondary">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        </CardFooter>
+      </Card>
+    </Link>
   );
 }
 

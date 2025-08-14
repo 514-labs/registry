@@ -43,7 +43,12 @@ export async function getIssueThumbsUpCountFromUrl(
   );
 
   if (!res.ok) return 0;
-  const data = (await res.json()) as { reactions?: Record<string, number> };
+  const data = (await res.json()) as {
+    reactions?: Record<string, number>;
+    state?: string;
+  };
+  // Ignore closed issues entirely
+  if ((data.state ?? "").toLowerCase() !== "open") return 0;
   return data.reactions?.["+1"] ?? 0;
 }
 
@@ -54,12 +59,11 @@ export async function getIssueThumbsUpCountFromMeta(
   options?: { token?: string }
 ): Promise<number> {
   const value = providerMeta?.issues?.[language];
-  const url =
-    typeof value === "string"
-      ? value
-      : implementation && value && typeof value === "object"
-        ? value[implementation]
-        : undefined;
+  // Do not use a default implementation; only count when an explicit implementation URL exists
+  let url: string | undefined;
+  if (value && typeof value === "object" && implementation) {
+    url = value[implementation];
+  }
   if (!url) return 0;
   return getIssueThumbsUpCountFromUrl(url, options);
 }
@@ -84,7 +88,12 @@ export async function getIssuePositiveReactionsCountFromUrl(
   );
 
   if (!res.ok) return 0;
-  const data = (await res.json()) as { reactions?: Record<string, number> };
+  const data = (await res.json()) as {
+    reactions?: Record<string, number>;
+    state?: string;
+  };
+  // Ignore closed issues entirely
+  if ((data.state ?? "").toLowerCase() !== "open") return 0;
   const thumbsUp = data.reactions?.["+1"] ?? 0;
   const hearts = data.reactions?.heart ?? 0;
   return thumbsUp + hearts;
@@ -97,12 +106,11 @@ export async function getIssuePositiveReactionsCountFromMeta(
   options?: { token?: string }
 ): Promise<number> {
   const value = providerMeta?.issues?.[language];
-  const url =
-    typeof value === "string"
-      ? value
-      : implementation && value && typeof value === "object"
-        ? value[implementation]
-        : undefined;
+  // Do not use a default implementation; only count when an explicit implementation URL exists
+  let url: string | undefined;
+  if (value && typeof value === "object" && implementation) {
+    url = value[implementation];
+  }
   if (!url) return 0;
   return getIssuePositiveReactionsCountFromUrl(url, options);
 }
