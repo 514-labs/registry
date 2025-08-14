@@ -2,7 +2,9 @@
   "name": "google-analytics",
   "author": "tg339",
   "version": "v4",
-  "languages": ["typescript"],
+  "languages": [
+    "typescript"
+  ],
   "category": "api",
   "capabilities": {
     "extract": true,
@@ -14,7 +16,11 @@
     "spec": "",
     "homepage": "https://developers.google.com/analytics"
   },
-  "tags": ["analytics", "events", "saas"],
+  "tags": [
+    "analytics",
+    "events",
+    "saas"
+  ],
   "maintainers": [
     {
       "name": "tg339",
@@ -24,7 +30,7 @@
   "registryUrl": "https://github.com/514-labs/connector-factory/tree/main/registry/google-analytics/v4/tg339",
   "issues": {
     "typescript": {
-      "data-api": ""
+      "data-api": "https://github.com/514-labs/connector-factory/issues/21"
     }
   }
 }
