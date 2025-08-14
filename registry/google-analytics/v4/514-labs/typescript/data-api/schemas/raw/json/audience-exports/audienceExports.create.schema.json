@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Google Analytics Data API v1beta - audienceExports.create Endpoint",
+  "description": "Endpoint for creating an audience export for a Google Analytics 4 property",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "parent": {
+          "type": "string",
+          "description": "Required. The parent resource where this audience export will be created",
+          "pattern": "^properties/[^/]+$"
+        },
+        "audienceExport": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Output only. The audience export resource name"
+            },
+            "audience": {
+              "type": "string",
+              "description": "Required. The audience resource name"
+            },
+            "audienceDisplayName": {
+              "type": "string",
+              "description": "Output only. The descriptive display name for this audience"
+            },
+            "dimensions": {
+              "type": "array",
+              "description": "Required. The dimensions requested and displayed",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "dimensionName": { "type": "string" }
+                }
+              }
+            },
+            "state": {
+              "type": "string",
+              "enum": ["STATE_UNSPECIFIED", "CREATING", "ACTIVE", "FAILED"],
+              "description": "Output only. The current state of this audience export"
+            },
+            "beginCreatingTime": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Output only. The time when CreateAudienceExport was called"
+            },
+            "creationQuotaTokensCharged": {
+              "type": "integer",
+              "description": "Output only. The total quota tokens charged during creation"
+            },
+            "rowCount": {
+              "type": "integer",
+              "description": "Output only. The total number of rows in the export"
+            },
+            "errorMessage": {
+              "type": "string",
+              "description": "Output only. Error message is populated when an audience export fails"
+            },
+            "percentageCompleted": {
+              "type": "number",
+              "description": "Output only. The percentage completed"
+            }
+          },
+          "required": ["audience", "dimensions"]
+        }
+      },
+      "required": ["parent", "audienceExport"]
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "response": { "type": "object" },
+        "metadata": { "type": "object" },
+        "done": { "type": "boolean" }
+      },
+      "description": "A long-running operation resource"
+    }
+  },
+  "metadata": {
+    "apiType": "endpoint",
+    "httpMethod": "POST",
+    "apiPath": "v1beta/{parent=properties/*}/audienceExports"
+  }
+}

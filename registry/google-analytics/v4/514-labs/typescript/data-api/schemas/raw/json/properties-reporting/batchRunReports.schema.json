@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Google Analytics Data API v1beta - batchRunReports Endpoint",
+  "description": "Endpoint for batch running reports against a Google Analytics 4 property",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "property": {
+          "type": "string",
+          "description": "A Google Analytics 4 property identifier"
+        },
+        "requests": {
+          "type": "array",
+          "description": "Individual requests in the batch",
+          "items": {
+            "$ref": "#/definitions/RunReportRequest"
+          }
+        }
+      },
+      "required": ["property", "requests"]
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "reports": {
+          "type": "array",
+          "description": "Individual report responses",
+          "items": {
+            "$ref": "#/definitions/RunReportResponse"
+          }
+        },
+        "kind": {
+          "type": "string",
+          "description": "Resource type",
+          "const": "analyticsData#batchRunReportsResponse"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "RunReportRequest": {
+      "type": "object",
+      "properties": {
+        "dimensions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Dimension" }
+        },
+        "metrics": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Metric" }
+        },
+        "dateRanges": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/DateRange" }
+        },
+        "dimensionFilter": { "$ref": "#/definitions/FilterExpression" },
+        "metricFilter": { "$ref": "#/definitions/FilterExpression" },
+        "offset": { "type": "string", "format": "int64" },
+        "limit": { "type": "string", "format": "int64" },
+        "metricAggregations": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/MetricAggregation" }
+        },
+        "orderBys": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/OrderBy" }
+        },
+        "currencyCode": { "type": "string" },
+        "cohortSpec": { "$ref": "#/definitions/CohortSpec" },
+        "keepEmptyRows": { "type": "boolean" },
+        "returnPropertyQuota": { "type": "boolean" },
+        "comparisons": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Comparison" }
+        }
+      }
+    },
+    "RunReportResponse": {
+      "type": "object",
+      "properties": {
+        "dimensionHeaders": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/DimensionHeader" }
+        },
+        "metricHeaders": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/MetricHeader" }
+        },
+        "rows": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Row" }
+        },
+        "totals": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Row" }
+        },
+        "maximums": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Row" }
+        },
+        "minimums": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Row" }
+        },
+        "rowCount": { "type": "integer" },
+        "metadata": { "$ref": "#/definitions/ResponseMetaData" },
+        "propertyQuota": { "$ref": "#/definitions/PropertyQuota" },
+        "kind": { "type": "string" }
+      }
+    },
+    "Dimension": { "type": "object" },
+    "Metric": { "type": "object" },
+    "DateRange": { "type": "object" },
+    "FilterExpression": { "type": "object" },
+    "MetricAggregation": { "type": "string" },
+    "OrderBy": { "type": "object" },
+    "CohortSpec": { "type": "object" },
+    "Comparison": { "type": "object" },
+    "DimensionHeader": { "type": "object" },
+    "MetricHeader": { "type": "object" },
+    "Row": { "type": "object" },
+    "ResponseMetaData": { "type": "object" },
+    "PropertyQuota": { "type": "object" }
+  },
+  "metadata": {
+    "apiType": "endpoint",
+    "httpMethod": "POST",
+    "apiPath": "v1beta/{property=properties/*}:batchRunReports"
+  }
+}

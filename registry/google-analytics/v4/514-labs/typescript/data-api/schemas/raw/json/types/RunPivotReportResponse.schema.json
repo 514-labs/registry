@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Google Analytics Data API v1beta - RunPivotReportResponse Type",
+  "description": "The response from a pivot report request",
+  "type": "object",
+  "properties": {
+    "pivotHeaders": {
+      "type": "array",
+      "description": "Describes dimension columns",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pivotDimensionHeaders": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "dimensionValues": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/DimensionValue" }
+                }
+              }
+            }
+          },
+          "rowCount": { "type": "integer" }
+        }
+      }
+    },
+    "metricHeaders": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/MetricHeader" }
+    },
+    "rows": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Row" }
+    },
+    "aggregates": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Row" }
+    },
+    "metadata": { "$ref": "#/definitions/ResponseMetaData" },
+    "propertyQuota": { "$ref": "#/definitions/PropertyQuota" },
+    "kind": { "type": "string" }
+  },
+  "definitions": {
+    "DimensionValue": { "type": "object" },
+    "MetricHeader": { "type": "object" },
+    "Row": { "type": "object" },
+    "ResponseMetaData": { "type": "object" },
+    "PropertyQuota": { "type": "object" }
+  },
+  "metadata": {
+    "apiType": "type",
+    "description": "Response structure for pivot report requests"
+  }
+}

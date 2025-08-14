@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Google Analytics Data API v1beta - checkCompatibility Endpoint",
+  "description": "Endpoint for checking dimension and metric compatibility for a Google Analytics 4 property",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "property": {
+          "type": "string",
+          "description": "A Google Analytics 4 property identifier"
+        },
+        "dimensions": {
+          "type": "array",
+          "description": "The dimensions to check compatibility",
+          "items": { "$ref": "#/definitions/Dimension" }
+        },
+        "metrics": {
+          "type": "array",
+          "description": "The metrics to check compatibility",
+          "items": { "$ref": "#/definitions/Metric" }
+        },
+        "dimensionFilter": {
+          "description": "The filter clause of dimensions",
+          "$ref": "#/definitions/FilterExpression"
+        },
+        "metricFilter": {
+          "description": "The filter clause of metrics",
+          "$ref": "#/definitions/FilterExpression"
+        },
+        "compatibilityFilter": {
+          "type": "string",
+          "enum": ["COMPATIBILITY_UNSPECIFIED", "COMPATIBLE", "INCOMPATIBLE"],
+          "description": "Filters the dimensions and metrics in the response to just this compatibility"
+        }
+      },
+      "required": ["property"]
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "dimensionCompatibilities": {
+          "type": "array",
+          "description": "The compatibility for each dimension",
+          "items": {
+            "type": "object",
+            "properties": {
+              "dimensionMetadata": {
+                "$ref": "#/definitions/DimensionMetadata"
+              },
+              "compatibility": {
+                "type": "string",
+                "enum": [
+                  "COMPATIBILITY_UNSPECIFIED",
+                  "COMPATIBLE",
+                  "INCOMPATIBLE"
+                ]
+              }
+            }
+          }
+        },
+        "metricCompatibilities": {
+          "type": "array",
+          "description": "The compatibility for each metric",
+          "items": {
+            "type": "object",
+            "properties": {
+              "metricMetadata": { "$ref": "#/definitions/MetricMetadata" },
+              "compatibility": {
+                "type": "string",
+                "enum": [
+                  "COMPATIBILITY_UNSPECIFIED",
+                  "COMPATIBLE",
+                  "INCOMPATIBLE"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Dimension": { "type": "object" },
+    "Metric": { "type": "object" },
+    "FilterExpression": { "type": "object" },
+    "DimensionMetadata": { "type": "object" },
+    "MetricMetadata": { "type": "object" }
+  },
+  "metadata": {
+    "apiType": "endpoint",
+    "httpMethod": "POST",
+    "apiPath": "v1beta/{property=properties/*}:checkCompatibility"
+  }
+}
