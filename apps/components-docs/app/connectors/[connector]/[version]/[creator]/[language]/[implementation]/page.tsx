@@ -8,8 +8,11 @@ import {
   getIssuePositiveReactionsCountFromMeta,
 } from "@workspace/registry";
 import { PagefindMeta } from "@/components/pagefind-meta";
-import { Github, GitBranch, Code2, Wrench } from "lucide-react";
+import { GitBranch, Code2, Wrench } from "lucide-react";
+import Link from "next/link";
+import { SiGithub } from "@icons-pack/react-simple-icons";
 import ComboBox from "@/components/combobox";
+import { Separator } from "@ui/components/separator";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -82,6 +85,21 @@ export default async function ConnectorImplementationPage({
     implEntry.implementation
   );
 
+  // Get URLs from metadata
+  const registryUrl =
+    provider.meta?.registryUrl ??
+    meta?.registryUrl ??
+    `https://github.com/514-labs/connector-factory/tree/main/registry/${connector}/${version}/${creator}`;
+
+  // Get issue URL for current language/implementation
+  const issueValue = provider.meta?.issues?.[implEntry.language];
+  const issueUrl =
+    typeof issueValue === "string"
+      ? issueValue
+      : issueValue && typeof issueValue === "object"
+        ? (issueValue[implEntry.implementation] ?? issueValue["default"])
+        : `https://github.com/514-labs/connector-factory/issues`;
+
   // Build lists and navigation helpers
   const getProviderVersion = (pPath: string): string =>
     pPath.split("/").slice(-2)[0];
@@ -144,26 +162,15 @@ export default async function ConnectorImplementationPage({
     <div className="container mx-auto py-16 ">
       <PagefindMeta type="connector" />
       <div className="grid grid-cols-12 gap-16">
-        <div className="col-span-4">
+        <div className="col-span-3">
           <div className="flex flex-col gap-4">
-            <Card className="h-full overflow-hidden p-0">
-              <div className="relative p-8">
-                <Image
-                  src={`/connector-logos/${conn.connectorId}.png`}
-                  alt={`${displayName} logo`}
-                  width={48}
-                  height={48}
-                  className="h-12 w-12 rounded-sm object-contain mx-auto relative z-10"
-                />
-                <div
-                  className={cn(
-                    "bg-gradient-to-b h-full w-full  blur-sm absolute top-0 left-0",
-                    "from-60% from-card",
-                    "to-neutral-500/20"
-                  )}
-                />
-              </div>
-            </Card>
+            <Image
+              src={`/connector-logos/${conn.connectorId}.png`}
+              alt={`${displayName} logo`}
+              width={48}
+              height={48}
+              className="h-12 w-12 rounded-sm object-contain "
+            />
             <h1 className="text-2xl ">{displayName}</h1>
             <div className="flex flex-wrap gap-2 items-center">
               {tags.map((tag: string) => (
@@ -171,24 +178,27 @@ export default async function ConnectorImplementationPage({
                   {tag}
                 </Badge>
               ))}
+
               <Badge
-                variant="outline"
-                className="flex items-center gap-1 pl-2 pr-2"
+                variant="secondary"
+                className="text-sm flex flex-row items-center gap-2"
               >
-                <Github className="h-4 w-4" />
+                <Link href={registryUrl} className="flex items-center gap-1">
+                  <SiGithub className="h-4 w-4" />
+                  <span>Source</span>
+                </Link>
               </Badge>
-              <Badge
-                variant="outline"
-                className="text-sm flex items-center gap-1"
-              >
-                <span>👍</span>
-                <span>❤️</span>
-                <span>{reactions}</span>
+              <Badge variant="secondary">
+                <Link href={issueUrl} className="flex items-center gap-1">
+                  <span>👍</span>
+                  <span>❤️</span>
+                  <span>{reactions}</span>
+                </Link>
               </Badge>
             </div>
             <p className="text-muted-foreground">{description}</p>
 
-            <div className="grid grid-cols-1 gap-3 mt-4">
+            <div className="grid grid-cols-1 gap-2 ">
               {creatorsForVersion.length > 0 && (
                 <ComboBox
                   withAvatars
@@ -251,7 +261,7 @@ export default async function ConnectorImplementationPage({
             </div>
           </div>
         </div>
-        <div className="col-span-8">
+        <div className="col-span-9">
           <div className="prose dark:prose-invert">
             {page === "readme" ? <h1>Get Started</h1> : <h1>{page}</h1>}
             <div className="text-sm text-muted-foreground mt-2">

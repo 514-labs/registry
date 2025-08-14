@@ -85,7 +85,7 @@ export function ComboBox({
           size={size}
           className={buttonClassName ?? "w-full justify-between"}
         >
-          <span className="flex items-center gap-2">
+          <span className="flex items-center gap-3">
             {withAvatars && selected?.avatarUrl ? (
               <Avatar
                 className={
