@@ -1,0 +1,39 @@
+{
+  "entities": [
+    {
+      "name": "contacts",
+      "raw": {
+        "json": "raw/json/contacts.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
+    },
+    {
+      "name": "companies",
+      "raw": {
+        "json": "raw/json/companies.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
+    },
+    {
+      "name": "deals",
+      "raw": {
+        "json": "raw/json/deals.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
+    },
+    {
+      "name": "tickets",
+      "raw": {
+        "json": "raw/json/tickets.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
+    },
+    {
+      "name": "engagements",
+      "raw": {
+        "json": "raw/json/engagements.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
+    }
+  ]
+}

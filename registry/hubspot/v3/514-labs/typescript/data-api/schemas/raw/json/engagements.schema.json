@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HubSpot Raw Engagement",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "properties": {
+      "type": "object",
+      "properties": {
+        "hs_timestamp": { "type": ["string", "null"] },
+        "hubspot_owner_id": { "type": ["string", "null"] },
+        "hs_body_preview": { "type": ["string", "null"] },
+        "hs_body_preview_html": { "type": ["string", "null"] },
+        "hs_body_preview_is_truncated": { "type": ["string", "null"] },
+
+        "hs_note_body": { "type": ["string", "null"] },
+
+        "hs_call_body": { "type": ["string", "null"] },
+        "hs_call_duration": { "type": ["string", "null"] },
+
+        "hs_email_subject": { "type": ["string", "null"] },
+        "hs_email_html": { "type": ["string", "null"] },
+
+        "hs_meeting_title": { "type": ["string", "null"] },
+        "hs_meeting_body": { "type": ["string", "null"] },
+
+        "hs_task_body": { "type": ["string", "null"] },
+        "hs_task_subject": { "type": ["string", "null"] },
+        "hs_task_status": { "type": ["string", "null"] },
+
+        "createdate": { "type": ["string", "null"] },
+        "hs_lastmodifieddate": { "type": ["string", "null"] },
+        "hs_object_id": { "type": ["string", "null"] }
+      },
+      "additionalProperties": { "type": ["string", "null"] }
+    },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "archived": { "type": "boolean" }
+  },
+  "required": ["id", "properties", "createdAt", "updatedAt", "archived"],
+  "additionalProperties": true
+}
