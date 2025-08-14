@@ -1,8 +1,8 @@
 {
   "$schema": "https://schemas.connector-factory.dev/scaffold.schema.json",
   "scaffold": "typescript",
-  "version": "0.4.0",
-  "description": "TypeScript implementation scaffold with top-level `schemas/` and `docs/` within the implementation.",
+  "version": "0.5.0",
+  "description": "TypeScript implementation scaffold with support for an implementation layer under the language directory.",
   "variables": {
     "connector": {
       "description": "Connector name (kebab-case).",
@@ -15,8 +15,13 @@
       "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
     },
     "author": {
-      "description": "Organization or author handle (kebab-case).",
-      "example": "fiveonefour",
+      "description": "GitHub organization or user handle (kebab-case). Used for linking and avatars.",
+      "example": "514-labs",
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,37}[a-z0-9])?$"
+    },
+    "implementation": {
+      "description": "Implementation name nested under the language folder (kebab-case). Use 'default' if you don't want an extra folder.",
+      "example": "data-api",
       "pattern": "^[a-z0-9][a-z0-9-]*$"
     },
     "packageName": {
@@ -42,6 +47,7 @@
                   "type": "dir",
                   "name": "typescript",
               "children": [
+                { "type": "dir", "name": "{implementation}", "children": [
                 { "type": "file", "name": ".gitignore", "template": "node_modules/\ndist/\n.env\n" },
                 { "type": "file", "name": ".env.example", "template": "API_KEY=\n" },
                 { "type": "file", "name": "README.md", "template": "# {connector} (TypeScript)\n\nTypeScript implementation for `{connector}` by `{author}`.\n\nSchemas: see `schemas/index.json` for machine-readable definitions and accompanying Markdown docs.\n" },
@@ -99,6 +105,7 @@
                 { "type": "dir", "name": "tests", "children": [ { "type": "file", "name": "client.test.ts", "template": "import { describe, it, expect } from 'vitest'\nimport { Client } from '../src/client'\n\ndescribe('client', () => {\n  it('ping', () => {\n    expect(new Client({}).ping()).toBe(true)\n  })\n})\n" } ] },
                 { "type": "dir", "name": "examples", "children": [ { "type": "file", "name": "basic-usage.ts", "template": "import { Client } from './src/client'\nconsole.log(new Client({}).ping())\n" } ] }
               ]
+            }
             }
               ]
             }

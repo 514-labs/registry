@@ -12,6 +12,8 @@ Everyone needs connectors. Nobody enjoys building or maintaining them. Vendors t
 - **Proven patterns**: Rock‑solid abstractions for lifecycle, retries, rate limits, pagination, and error handling.
 - **LLM‑friendly specs**: Feed our specifications to your LLM to scaffold connectors fast.
 - **Integrate everywhere**: Distribute as packages or embed directly into apps/services.
+- **Open source**: Built on top of open source tools and standards.
+- **Community**: Built by the community, for the community.
 
 ### Monorepo layout
 
@@ -78,6 +80,43 @@ We are not a hosted connector product. We’re a system you copy into your repo:
 
 ---
 
+### Testing checklist
+
+- Unit tests for all public methods
+- Integration tests with mock servers
+- Retry logic (backoff, jitter, circuit breaker)
+- Rate limiting behavior
+- Auth flows and expiry/refresh
+- Error classification and propagation
+- Pagination strategies and edge cases
+
+---
+
+## Developing in this repo
+
+- **Tooling**: TurboRepo + pnpm. Do not override `.env`. Prefer absolute paths in scripts.
+- **Node**: Use Node 20. Example with nvm: `nvm use 20`.
+- **Workspace**: Internal packages use the `@workspace/*` scope.
+
+Common commands:
+
+```bash
+pnpm install
+cd apps/components-docs && pnpm dev
+```
+
+## Roadmap (high level)
+
+- API connectors: spec + templates + generators
+- Blob storage connectors: S3, GCS, Azure
+- Database connectors: Postgres, MySQL, SQLite, MongoDB
+- SaaS connectors: common third‑party APIs with auth presets
+- Distribution tooling: publishable packages and app integration helpers
+
+## Acknowledgements
+
+This project’s philosophy is inspired by shadcn/ui — pragmatic copy‑and‑own code over opaque dependencies.
+
 ## API Connector Specification (summary)
 
 The full spec lives in `apps/components-docs/content/specifications/api-connector.mdx`. Key requirements:
@@ -104,15 +143,31 @@ export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 export interface ConnectorConfig {
   baseUrl: string;
   timeout?: number;
-  auth?: { type: "api_key" | "bearer" | "basic" | "oauth2" | "custom"; credentials: unknown };
-  retry?: { maxAttempts?: number; initialDelay?: number; maxDelay?: number; backoffMultiplier?: number };
-  rateLimit?: { requestsPerSecond?: number; requestsPerMinute?: number; concurrentRequests?: number };
+  auth?: {
+    type: "api_key" | "bearer" | "basic" | "oauth2" | "custom";
+    credentials: unknown;
+  };
+  retry?: {
+    maxAttempts?: number;
+    initialDelay?: number;
+    maxDelay?: number;
+    backoffMultiplier?: number;
+  };
+  rateLimit?: {
+    requestsPerSecond?: number;
+    requestsPerMinute?: number;
+    concurrentRequests?: number;
+  };
   defaultHeaders?: Record<string, string>;
   defaultQueryParams?: Record<string, string | number>;
   hooks?: Partial<Record<HookType, Hook[]>>;
 }
 
-export type HookType = "beforeRequest" | "afterResponse" | "onError" | "onRetry";
+export type HookType =
+  | "beforeRequest"
+  | "afterResponse"
+  | "onError"
+  | "onRetry";
 
 export interface HookContext {
   type: HookType;
@@ -144,7 +199,17 @@ export interface ResponseEnvelope<T> {
   data: T;
   status: number;
   headers: Record<string, string>;
-  meta?: { timestamp: string; duration: number; retryCount?: number; rateLimit?: { limit?: number; remaining?: number; reset?: string; retryAfter?: number } };
+  meta?: {
+    timestamp: string;
+    duration: number;
+    retryCount?: number;
+    rateLimit?: {
+      limit?: number;
+      remaining?: number;
+      reset?: string;
+      retryAfter?: number;
+    };
+  };
 }
 
 export interface Connector {
@@ -152,14 +217,40 @@ export interface Connector {
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
   isConnected: () => boolean;
-  request: <T = unknown>(options: RequestOptions) => Promise<ResponseEnvelope<T>>;
-  get: <T = unknown>(path: string, options?: Omit<RequestOptions, "method" | "path">) => Promise<ResponseEnvelope<T>>;
-  post: <T = unknown>(path: string, data?: unknown, options?: Omit<RequestOptions, "method" | "path" | "body">) => Promise<ResponseEnvelope<T>>;
-  put: <T = unknown>(path: string, data?: unknown, options?: Omit<RequestOptions, "method" | "path" | "body">) => Promise<ResponseEnvelope<T>>;
-  patch: <T = unknown>(path: string, data?: unknown, options?: Omit<RequestOptions, "method" | "path" | "body">) => Promise<ResponseEnvelope<T>>;
-  delete: <T = unknown>(path: string, options?: Omit<RequestOptions, "method" | "path" | "body">) => Promise<ResponseEnvelope<T>>;
-  batch?: <T = unknown>(requests: RequestOptions[]) => Promise<ResponseEnvelope<T>[]>;
-  paginate?: <T = unknown>(options: { path: string; pageSize?: number; strategy?: "cursor" | "offset" | "page" | "link-header" }) => AsyncIterable<T[]>;
+  request: <T = unknown>(
+    options: RequestOptions
+  ) => Promise<ResponseEnvelope<T>>;
+  get: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path">
+  ) => Promise<ResponseEnvelope<T>>;
+  post: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  put: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  patch: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  delete: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  batch?: <T = unknown>(
+    requests: RequestOptions[]
+  ) => Promise<ResponseEnvelope<T>[]>;
+  paginate?: <T = unknown>(options: {
+    path: string;
+    pageSize?: number;
+    strategy?: "cursor" | "offset" | "page" | "link-header";
+  }) => AsyncIterable<T[]>;
 }
 ```
 
@@ -170,9 +261,2136 @@ const authHook: Hook = {
   name: "auth-bearer",
   priority: 1,
   execute(ctx) {
-    if (ctx.type !== "beforeRequest" || !ctx.request || !ctx.modifyRequest) return;
+    if (ctx.type !== "beforeRequest" || !ctx.request || !ctx.modifyRequest)
+      return;
     ctx.modifyRequest({
-      headers: { ...(ctx.request.headers ?? {}), Authorization: `Bearer ${process.env.API_TOKEN ?? ""}` },
+      headers: {
+        ...(ctx.request.headers ?? {}),
+        Authorization: `Bearer ${process.env.API_TOKEN ?? ""}`,
+      },
+    });
+  },
+};
+```
+
+### Testing checklist
+
+- Unit tests for all public methods
+- Integration tests with mock servers
+- Retry logic (backoff, jitter, circuit breaker)
+- Rate limiting behavior
+- Auth flows and expiry/refresh
+- Error classification and propagation
+- Pagination strategies and edge cases
+
+---
+
+## Developing in this repo
+
+- **Tooling**: TurboRepo + pnpm. Do not override `.env`. Prefer absolute paths in scripts.
+- **Node**: Use Node 20. Example with nvm: `nvm use 20`.
+- **Workspace**: Internal packages use the `@workspace/*` scope.
+
+Common commands:
+
+```bash
+pnpm install
+cd apps/components-docs && pnpm dev
+```
+
+## Roadmap (high level)
+
+- API connectors: spec + templates + generators
+- Blob storage connectors: S3, GCS, Azure
+- Database connectors: Postgres, MySQL, SQLite, MongoDB
+- SaaS connectors: common third‑party APIs with auth presets
+- Distribution tooling: publishable packages and app integration helpers
+
+## Acknowledgements
+
+This project’s philosophy is inspired by shadcn/ui — pragmatic copy‑and‑own code over opaque dependencies.
+
+## API Connector Specification (summary)
+
+The full spec lives in `apps/components-docs/content/specifications/api-connector.mdx`. Key requirements:
+
+- **Lifecycle**: `initialize(config)`, `connect()`, `disconnect()`, `isConnected()`
+- **Requests**: `request(options)` plus `get/post/put/patch/delete`
+- **Advanced ops**: `batch(requests)`, `paginate(options)` with strategies (cursor, offset, page, link‑header)
+- **Configuration**:
+  - Base: `baseUrl`, `timeout`
+  - Auth: `api_key | bearer | basic | oauth2 | custom`
+  - Retries: `maxAttempts`, backoff with jitter, circuit breaker, respect `Retry‑After`
+  - Rate limiting: RPS/RPM/hour, concurrent requests, adaptive updates from headers
+  - Defaults: headers, query params
+  - Hooks: `beforeRequest`, `afterResponse`, `onError`, `onRetry`
+- **Response shape**: `{ data, status, headers, meta: { timestamp, duration, retryCount, rateLimit } }`
+- **Data**: `serialize`, `deserialize`, `validate` with schema support
+- **Errors**: structured with `code`, `statusCode`, `details`, `retryable` and standard codes
+
+### Minimal TypeScript interface
+
+```ts
+export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+export interface ConnectorConfig {
+  baseUrl: string;
+  timeout?: number;
+  auth?: {
+    type: "api_key" | "bearer" | "basic" | "oauth2" | "custom";
+    credentials: unknown;
+  };
+  retry?: {
+    maxAttempts?: number;
+    initialDelay?: number;
+    maxDelay?: number;
+    backoffMultiplier?: number;
+  };
+  rateLimit?: {
+    requestsPerSecond?: number;
+    requestsPerMinute?: number;
+    concurrentRequests?: number;
+  };
+  defaultHeaders?: Record<string, string>;
+  defaultQueryParams?: Record<string, string | number>;
+  hooks?: Partial<Record<HookType, Hook[]>>;
+}
+
+export type HookType =
+  | "beforeRequest"
+  | "afterResponse"
+  | "onError"
+  | "onRetry";
+
+export interface HookContext {
+  type: HookType;
+  request?: RequestOptions;
+  response?: ResponseEnvelope<unknown>;
+  error?: unknown;
+  metadata?: Record<string, unknown>;
+  modifyRequest?: (updates: Partial<RequestOptions>) => void;
+  modifyResponse?: (updates: Partial<ResponseEnvelope<unknown>>) => void;
+  abort?: (reason?: string) => void;
+}
+
+export interface Hook {
+  name: string;
+  priority?: number; // lower runs first
+  execute: (ctx: HookContext) => Promise<void> | void;
+}
+
+export interface RequestOptions {
+  method: HttpMethod;
+  path: string;
+  headers?: Record<string, string>;
+  query?: Record<string, string | number | boolean | undefined>;
+  body?: unknown;
+  timeout?: number;
+}
+
+export interface ResponseEnvelope<T> {
+  data: T;
+  status: number;
+  headers: Record<string, string>;
+  meta?: {
+    timestamp: string;
+    duration: number;
+    retryCount?: number;
+    rateLimit?: {
+      limit?: number;
+      remaining?: number;
+      reset?: string;
+      retryAfter?: number;
+    };
+  };
+}
+
+export interface Connector {
+  initialize: (config: ConnectorConfig) => Promise<void> | void;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
+  isConnected: () => boolean;
+  request: <T = unknown>(
+    options: RequestOptions
+  ) => Promise<ResponseEnvelope<T>>;
+  get: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path">
+  ) => Promise<ResponseEnvelope<T>>;
+  post: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  put: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  patch: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  delete: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  batch?: <T = unknown>(
+    requests: RequestOptions[]
+  ) => Promise<ResponseEnvelope<T>[]>;
+  paginate?: <T = unknown>(options: {
+    path: string;
+    pageSize?: number;
+    strategy?: "cursor" | "offset" | "page" | "link-header";
+  }) => AsyncIterable<T[]>;
+}
+```
+
+### Example: add an auth header via a hook
+
+```ts
+const authHook: Hook = {
+  name: "auth-bearer",
+  priority: 1,
+  execute(ctx) {
+    if (ctx.type !== "beforeRequest" || !ctx.request || !ctx.modifyRequest)
+      return;
+    ctx.modifyRequest({
+      headers: {
+        ...(ctx.request.headers ?? {}),
+        Authorization: `Bearer ${process.env.API_TOKEN ?? ""}`,
+      },
+    });
+  },
+};
+```
+
+### Testing checklist
+
+- Unit tests for all public methods
+- Integration tests with mock servers
+- Retry logic (backoff, jitter, circuit breaker)
+- Rate limiting behavior
+- Auth flows and expiry/refresh
+- Error classification and propagation
+- Pagination strategies and edge cases
+
+---
+
+## Developing in this repo
+
+- **Tooling**: TurboRepo + pnpm. Do not override `.env`. Prefer absolute paths in scripts.
+- **Node**: Use Node 20. Example with nvm: `nvm use 20`.
+- **Workspace**: Internal packages use the `@workspace/*` scope.
+
+Common commands:
+
+```bash
+pnpm install
+cd apps/components-docs && pnpm dev
+```
+
+## Roadmap (high level)
+
+- API connectors: spec + templates + generators
+- Blob storage connectors: S3, GCS, Azure
+- Database connectors: Postgres, MySQL, SQLite, MongoDB
+- SaaS connectors: common third‑party APIs with auth presets
+- Distribution tooling: publishable packages and app integration helpers
+
+## Acknowledgements
+
+This project’s philosophy is inspired by shadcn/ui — pragmatic copy‑and‑own code over opaque dependencies.
+
+## API Connector Specification (summary)
+
+The full spec lives in `apps/components-docs/content/specifications/api-connector.mdx`. Key requirements:
+
+- **Lifecycle**: `initialize(config)`, `connect()`, `disconnect()`, `isConnected()`
+- **Requests**: `request(options)` plus `get/post/put/patch/delete`
+- **Advanced ops**: `batch(requests)`, `paginate(options)` with strategies (cursor, offset, page, link‑header)
+- **Configuration**:
+  - Base: `baseUrl`, `timeout`
+  - Auth: `api_key | bearer | basic | oauth2 | custom`
+  - Retries: `maxAttempts`, backoff with jitter, circuit breaker, respect `Retry‑After`
+  - Rate limiting: RPS/RPM/hour, concurrent requests, adaptive updates from headers
+  - Defaults: headers, query params
+  - Hooks: `beforeRequest`, `afterResponse`, `onError`, `onRetry`
+- **Response shape**: `{ data, status, headers, meta: { timestamp, duration, retryCount, rateLimit } }`
+- **Data**: `serialize`, `deserialize`, `validate` with schema support
+- **Errors**: structured with `code`, `statusCode`, `details`, `retryable` and standard codes
+
+### Minimal TypeScript interface
+
+```ts
+export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+export interface ConnectorConfig {
+  baseUrl: string;
+  timeout?: number;
+  auth?: {
+    type: "api_key" | "bearer" | "basic" | "oauth2" | "custom";
+    credentials: unknown;
+  };
+  retry?: {
+    maxAttempts?: number;
+    initialDelay?: number;
+    maxDelay?: number;
+    backoffMultiplier?: number;
+  };
+  rateLimit?: {
+    requestsPerSecond?: number;
+    requestsPerMinute?: number;
+    concurrentRequests?: number;
+  };
+  defaultHeaders?: Record<string, string>;
+  defaultQueryParams?: Record<string, string | number>;
+  hooks?: Partial<Record<HookType, Hook[]>>;
+}
+
+export type HookType =
+  | "beforeRequest"
+  | "afterResponse"
+  | "onError"
+  | "onRetry";
+
+export interface HookContext {
+  type: HookType;
+  request?: RequestOptions;
+  response?: ResponseEnvelope<unknown>;
+  error?: unknown;
+  metadata?: Record<string, unknown>;
+  modifyRequest?: (updates: Partial<RequestOptions>) => void;
+  modifyResponse?: (updates: Partial<ResponseEnvelope<unknown>>) => void;
+  abort?: (reason?: string) => void;
+}
+
+export interface Hook {
+  name: string;
+  priority?: number; // lower runs first
+  execute: (ctx: HookContext) => Promise<void> | void;
+}
+
+export interface RequestOptions {
+  method: HttpMethod;
+  path: string;
+  headers?: Record<string, string>;
+  query?: Record<string, string | number | boolean | undefined>;
+  body?: unknown;
+  timeout?: number;
+}
+
+export interface ResponseEnvelope<T> {
+  data: T;
+  status: number;
+  headers: Record<string, string>;
+  meta?: {
+    timestamp: string;
+    duration: number;
+    retryCount?: number;
+    rateLimit?: {
+      limit?: number;
+      remaining?: number;
+      reset?: string;
+      retryAfter?: number;
+    };
+  };
+}
+
+export interface Connector {
+  initialize: (config: ConnectorConfig) => Promise<void> | void;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
+  isConnected: () => boolean;
+  request: <T = unknown>(
+    options: RequestOptions
+  ) => Promise<ResponseEnvelope<T>>;
+  get: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path">
+  ) => Promise<ResponseEnvelope<T>>;
+  post: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  put: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  patch: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  delete: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  batch?: <T = unknown>(
+    requests: RequestOptions[]
+  ) => Promise<ResponseEnvelope<T>[]>;
+  paginate?: <T = unknown>(options: {
+    path: string;
+    pageSize?: number;
+    strategy?: "cursor" | "offset" | "page" | "link-header";
+  }) => AsyncIterable<T[]>;
+}
+```
+
+### Example: add an auth header via a hook
+
+```ts
+const authHook: Hook = {
+  name: "auth-bearer",
+  priority: 1,
+  execute(ctx) {
+    if (ctx.type !== "beforeRequest" || !ctx.request || !ctx.modifyRequest)
+      return;
+    ctx.modifyRequest({
+      headers: {
+        ...(ctx.request.headers ?? {}),
+        Authorization: `Bearer ${process.env.API_TOKEN ?? ""}`,
+      },
+    });
+  },
+};
+```
+
+### Testing checklist
+
+- Unit tests for all public methods
+- Integration tests with mock servers
+- Retry logic (backoff, jitter, circuit breaker)
+- Rate limiting behavior
+- Auth flows and expiry/refresh
+- Error classification and propagation
+- Pagination strategies and edge cases
+
+---
+
+## Developing in this repo
+
+- **Tooling**: TurboRepo + pnpm. Do not override `.env`. Prefer absolute paths in scripts.
+- **Node**: Use Node 20. Example with nvm: `nvm use 20`.
+- **Workspace**: Internal packages use the `@workspace/*` scope.
+
+Common commands:
+
+```bash
+pnpm install
+cd apps/components-docs && pnpm dev
+```
+
+## Roadmap (high level)
+
+- API connectors: spec + templates + generators
+- Blob storage connectors: S3, GCS, Azure
+- Database connectors: Postgres, MySQL, SQLite, MongoDB
+- SaaS connectors: common third‑party APIs with auth presets
+- Distribution tooling: publishable packages and app integration helpers
+
+## Acknowledgements
+
+This project’s philosophy is inspired by shadcn/ui — pragmatic copy‑and‑own code over opaque dependencies.
+
+## API Connector Specification (summary)
+
+The full spec lives in `apps/components-docs/content/specifications/api-connector.mdx`. Key requirements:
+
+- **Lifecycle**: `initialize(config)`, `connect()`, `disconnect()`, `isConnected()`
+- **Requests**: `request(options)` plus `get/post/put/patch/delete`
+- **Advanced ops**: `batch(requests)`, `paginate(options)` with strategies (cursor, offset, page, link‑header)
+- **Configuration**:
+  - Base: `baseUrl`, `timeout`
+  - Auth: `api_key | bearer | basic | oauth2 | custom`
+  - Retries: `maxAttempts`, backoff with jitter, circuit breaker, respect `Retry‑After`
+  - Rate limiting: RPS/RPM/hour, concurrent requests, adaptive updates from headers
+  - Defaults: headers, query params
+  - Hooks: `beforeRequest`, `afterResponse`, `onError`, `onRetry`
+- **Response shape**: `{ data, status, headers, meta: { timestamp, duration, retryCount, rateLimit } }`
+- **Data**: `serialize`, `deserialize`, `validate` with schema support
+- **Errors**: structured with `code`, `statusCode`, `details`, `retryable` and standard codes
+
+### Minimal TypeScript interface
+
+```ts
+export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+export interface ConnectorConfig {
+  baseUrl: string;
+  timeout?: number;
+  auth?: {
+    type: "api_key" | "bearer" | "basic" | "oauth2" | "custom";
+    credentials: unknown;
+  };
+  retry?: {
+    maxAttempts?: number;
+    initialDelay?: number;
+    maxDelay?: number;
+    backoffMultiplier?: number;
+  };
+  rateLimit?: {
+    requestsPerSecond?: number;
+    requestsPerMinute?: number;
+    concurrentRequests?: number;
+  };
+  defaultHeaders?: Record<string, string>;
+  defaultQueryParams?: Record<string, string | number>;
+  hooks?: Partial<Record<HookType, Hook[]>>;
+}
+
+export type HookType =
+  | "beforeRequest"
+  | "afterResponse"
+  | "onError"
+  | "onRetry";
+
+export interface HookContext {
+  type: HookType;
+  request?: RequestOptions;
+  response?: ResponseEnvelope<unknown>;
+  error?: unknown;
+  metadata?: Record<string, unknown>;
+  modifyRequest?: (updates: Partial<RequestOptions>) => void;
+  modifyResponse?: (updates: Partial<ResponseEnvelope<unknown>>) => void;
+  abort?: (reason?: string) => void;
+}
+
+export interface Hook {
+  name: string;
+  priority?: number; // lower runs first
+  execute: (ctx: HookContext) => Promise<void> | void;
+}
+
+export interface RequestOptions {
+  method: HttpMethod;
+  path: string;
+  headers?: Record<string, string>;
+  query?: Record<string, string | number | boolean | undefined>;
+  body?: unknown;
+  timeout?: number;
+}
+
+export interface ResponseEnvelope<T> {
+  data: T;
+  status: number;
+  headers: Record<string, string>;
+  meta?: {
+    timestamp: string;
+    duration: number;
+    retryCount?: number;
+    rateLimit?: {
+      limit?: number;
+      remaining?: number;
+      reset?: string;
+      retryAfter?: number;
+    };
+  };
+}
+
+export interface Connector {
+  initialize: (config: ConnectorConfig) => Promise<void> | void;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
+  isConnected: () => boolean;
+  request: <T = unknown>(
+    options: RequestOptions
+  ) => Promise<ResponseEnvelope<T>>;
+  get: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path">
+  ) => Promise<ResponseEnvelope<T>>;
+  post: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  put: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  patch: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  delete: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  batch?: <T = unknown>(
+    requests: RequestOptions[]
+  ) => Promise<ResponseEnvelope<T>[]>;
+  paginate?: <T = unknown>(options: {
+    path: string;
+    pageSize?: number;
+    strategy?: "cursor" | "offset" | "page" | "link-header";
+  }) => AsyncIterable<T[]>;
+}
+```
+
+### Example: add an auth header via a hook
+
+```ts
+const authHook: Hook = {
+  name: "auth-bearer",
+  priority: 1,
+  execute(ctx) {
+    if (ctx.type !== "beforeRequest" || !ctx.request || !ctx.modifyRequest)
+      return;
+    ctx.modifyRequest({
+      headers: {
+        ...(ctx.request.headers ?? {}),
+        Authorization: `Bearer ${process.env.API_TOKEN ?? ""}`,
+      },
+    });
+  },
+};
+```
+
+### Testing checklist
+
+- Unit tests for all public methods
+- Integration tests with mock servers
+- Retry logic (backoff, jitter, circuit breaker)
+- Rate limiting behavior
+- Auth flows and expiry/refresh
+- Error classification and propagation
+- Pagination strategies and edge cases
+
+---
+
+## Developing in this repo
+
+- **Tooling**: TurboRepo + pnpm. Do not override `.env`. Prefer absolute paths in scripts.
+- **Node**: Use Node 20. Example with nvm: `nvm use 20`.
+- **Workspace**: Internal packages use the `@workspace/*` scope.
+
+Common commands:
+
+```bash
+pnpm install
+cd apps/components-docs && pnpm dev
+```
+
+## Roadmap (high level)
+
+- API connectors: spec + templates + generators
+- Blob storage connectors: S3, GCS, Azure
+- Database connectors: Postgres, MySQL, SQLite, MongoDB
+- SaaS connectors: common third‑party APIs with auth presets
+- Distribution tooling: publishable packages and app integration helpers
+
+## Acknowledgements
+
+This project’s philosophy is inspired by shadcn/ui — pragmatic copy‑and‑own code over opaque dependencies.
+
+## API Connector Specification (summary)
+
+The full spec lives in `apps/components-docs/content/specifications/api-connector.mdx`. Key requirements:
+
+- **Lifecycle**: `initialize(config)`, `connect()`, `disconnect()`, `isConnected()`
+- **Requests**: `request(options)` plus `get/post/put/patch/delete`
+- **Advanced ops**: `batch(requests)`, `paginate(options)` with strategies (cursor, offset, page, link‑header)
+- **Configuration**:
+  - Base: `baseUrl`, `timeout`
+  - Auth: `api_key | bearer | basic | oauth2 | custom`
+  - Retries: `maxAttempts`, backoff with jitter, circuit breaker, respect `Retry‑After`
+  - Rate limiting: RPS/RPM/hour, concurrent requests, adaptive updates from headers
+  - Defaults: headers, query params
+  - Hooks: `beforeRequest`, `afterResponse`, `onError`, `onRetry`
+- **Response shape**: `{ data, status, headers, meta: { timestamp, duration, retryCount, rateLimit } }`
+- **Data**: `serialize`, `deserialize`, `validate` with schema support
+- **Errors**: structured with `code`, `statusCode`, `details`, `retryable` and standard codes
+
+### Minimal TypeScript interface
+
+```ts
+export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+export interface ConnectorConfig {
+  baseUrl: string;
+  timeout?: number;
+  auth?: {
+    type: "api_key" | "bearer" | "basic" | "oauth2" | "custom";
+    credentials: unknown;
+  };
+  retry?: {
+    maxAttempts?: number;
+    initialDelay?: number;
+    maxDelay?: number;
+    backoffMultiplier?: number;
+  };
+  rateLimit?: {
+    requestsPerSecond?: number;
+    requestsPerMinute?: number;
+    concurrentRequests?: number;
+  };
+  defaultHeaders?: Record<string, string>;
+  defaultQueryParams?: Record<string, string | number>;
+  hooks?: Partial<Record<HookType, Hook[]>>;
+}
+
+export type HookType =
+  | "beforeRequest"
+  | "afterResponse"
+  | "onError"
+  | "onRetry";
+
+export interface HookContext {
+  type: HookType;
+  request?: RequestOptions;
+  response?: ResponseEnvelope<unknown>;
+  error?: unknown;
+  metadata?: Record<string, unknown>;
+  modifyRequest?: (updates: Partial<RequestOptions>) => void;
+  modifyResponse?: (updates: Partial<ResponseEnvelope<unknown>>) => void;
+  abort?: (reason?: string) => void;
+}
+
+export interface Hook {
+  name: string;
+  priority?: number; // lower runs first
+  execute: (ctx: HookContext) => Promise<void> | void;
+}
+
+export interface RequestOptions {
+  method: HttpMethod;
+  path: string;
+  headers?: Record<string, string>;
+  query?: Record<string, string | number | boolean | undefined>;
+  body?: unknown;
+  timeout?: number;
+}
+
+export interface ResponseEnvelope<T> {
+  data: T;
+  status: number;
+  headers: Record<string, string>;
+  meta?: {
+    timestamp: string;
+    duration: number;
+    retryCount?: number;
+    rateLimit?: {
+      limit?: number;
+      remaining?: number;
+      reset?: string;
+      retryAfter?: number;
+    };
+  };
+}
+
+export interface Connector {
+  initialize: (config: ConnectorConfig) => Promise<void> | void;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
+  isConnected: () => boolean;
+  request: <T = unknown>(
+    options: RequestOptions
+  ) => Promise<ResponseEnvelope<T>>;
+  get: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path">
+  ) => Promise<ResponseEnvelope<T>>;
+  post: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  put: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  patch: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  delete: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  batch?: <T = unknown>(
+    requests: RequestOptions[]
+  ) => Promise<ResponseEnvelope<T>[]>;
+  paginate?: <T = unknown>(options: {
+    path: string;
+    pageSize?: number;
+    strategy?: "cursor" | "offset" | "page" | "link-header";
+  }) => AsyncIterable<T[]>;
+}
+```
+
+### Example: add an auth header via a hook
+
+```ts
+const authHook: Hook = {
+  name: "auth-bearer",
+  priority: 1,
+  execute(ctx) {
+    if (ctx.type !== "beforeRequest" || !ctx.request || !ctx.modifyRequest)
+      return;
+    ctx.modifyRequest({
+      headers: {
+        ...(ctx.request.headers ?? {}),
+        Authorization: `Bearer ${process.env.API_TOKEN ?? ""}`,
+      },
+    });
+  },
+};
+```
+
+### Testing checklist
+
+- Unit tests for all public methods
+- Integration tests with mock servers
+- Retry logic (backoff, jitter, circuit breaker)
+- Rate limiting behavior
+- Auth flows and expiry/refresh
+- Error classification and propagation
+- Pagination strategies and edge cases
+
+---
+
+## Developing in this repo
+
+- **Tooling**: TurboRepo + pnpm. Do not override `.env`. Prefer absolute paths in scripts.
+- **Node**: Use Node 20. Example with nvm: `nvm use 20`.
+- **Workspace**: Internal packages use the `@workspace/*` scope.
+
+Common commands:
+
+```bash
+pnpm install
+cd apps/components-docs && pnpm dev
+```
+
+## Roadmap (high level)
+
+- API connectors: spec + templates + generators
+- Blob storage connectors: S3, GCS, Azure
+- Database connectors: Postgres, MySQL, SQLite, MongoDB
+- SaaS connectors: common third‑party APIs with auth presets
+- Distribution tooling: publishable packages and app integration helpers
+
+## Acknowledgements
+
+This project’s philosophy is inspired by shadcn/ui — pragmatic copy‑and‑own code over opaque dependencies.
+
+## API Connector Specification (summary)
+
+The full spec lives in `apps/components-docs/content/specifications/api-connector.mdx`. Key requirements:
+
+- **Lifecycle**: `initialize(config)`, `connect()`, `disconnect()`, `isConnected()`
+- **Requests**: `request(options)` plus `get/post/put/patch/delete`
+- **Advanced ops**: `batch(requests)`, `paginate(options)` with strategies (cursor, offset, page, link‑header)
+- **Configuration**:
+  - Base: `baseUrl`, `timeout`
+  - Auth: `api_key | bearer | basic | oauth2 | custom`
+  - Retries: `maxAttempts`, backoff with jitter, circuit breaker, respect `Retry‑After`
+  - Rate limiting: RPS/RPM/hour, concurrent requests, adaptive updates from headers
+  - Defaults: headers, query params
+  - Hooks: `beforeRequest`, `afterResponse`, `onError`, `onRetry`
+- **Response shape**: `{ data, status, headers, meta: { timestamp, duration, retryCount, rateLimit } }`
+- **Data**: `serialize`, `deserialize`, `validate` with schema support
+- **Errors**: structured with `code`, `statusCode`, `details`, `retryable` and standard codes
+
+### Minimal TypeScript interface
+
+```ts
+export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+export interface ConnectorConfig {
+  baseUrl: string;
+  timeout?: number;
+  auth?: {
+    type: "api_key" | "bearer" | "basic" | "oauth2" | "custom";
+    credentials: unknown;
+  };
+  retry?: {
+    maxAttempts?: number;
+    initialDelay?: number;
+    maxDelay?: number;
+    backoffMultiplier?: number;
+  };
+  rateLimit?: {
+    requestsPerSecond?: number;
+    requestsPerMinute?: number;
+    concurrentRequests?: number;
+  };
+  defaultHeaders?: Record<string, string>;
+  defaultQueryParams?: Record<string, string | number>;
+  hooks?: Partial<Record<HookType, Hook[]>>;
+}
+
+export type HookType =
+  | "beforeRequest"
+  | "afterResponse"
+  | "onError"
+  | "onRetry";
+
+export interface HookContext {
+  type: HookType;
+  request?: RequestOptions;
+  response?: ResponseEnvelope<unknown>;
+  error?: unknown;
+  metadata?: Record<string, unknown>;
+  modifyRequest?: (updates: Partial<RequestOptions>) => void;
+  modifyResponse?: (updates: Partial<ResponseEnvelope<unknown>>) => void;
+  abort?: (reason?: string) => void;
+}
+
+export interface Hook {
+  name: string;
+  priority?: number; // lower runs first
+  execute: (ctx: HookContext) => Promise<void> | void;
+}
+
+export interface RequestOptions {
+  method: HttpMethod;
+  path: string;
+  headers?: Record<string, string>;
+  query?: Record<string, string | number | boolean | undefined>;
+  body?: unknown;
+  timeout?: number;
+}
+
+export interface ResponseEnvelope<T> {
+  data: T;
+  status: number;
+  headers: Record<string, string>;
+  meta?: {
+    timestamp: string;
+    duration: number;
+    retryCount?: number;
+    rateLimit?: {
+      limit?: number;
+      remaining?: number;
+      reset?: string;
+      retryAfter?: number;
+    };
+  };
+}
+
+export interface Connector {
+  initialize: (config: ConnectorConfig) => Promise<void> | void;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
+  isConnected: () => boolean;
+  request: <T = unknown>(
+    options: RequestOptions
+  ) => Promise<ResponseEnvelope<T>>;
+  get: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path">
+  ) => Promise<ResponseEnvelope<T>>;
+  post: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  put: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  patch: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  delete: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  batch?: <T = unknown>(
+    requests: RequestOptions[]
+  ) => Promise<ResponseEnvelope<T>[]>;
+  paginate?: <T = unknown>(options: {
+    path: string;
+    pageSize?: number;
+    strategy?: "cursor" | "offset" | "page" | "link-header";
+  }) => AsyncIterable<T[]>;
+}
+```
+
+### Example: add an auth header via a hook
+
+```ts
+const authHook: Hook = {
+  name: "auth-bearer",
+  priority: 1,
+  execute(ctx) {
+    if (ctx.type !== "beforeRequest" || !ctx.request || !ctx.modifyRequest)
+      return;
+    ctx.modifyRequest({
+      headers: {
+        ...(ctx.request.headers ?? {}),
+        Authorization: `Bearer ${process.env.API_TOKEN ?? ""}`,
+      },
+    });
+  },
+};
+```
+
+### Testing checklist
+
+- Unit tests for all public methods
+- Integration tests with mock servers
+- Retry logic (backoff, jitter, circuit breaker)
+- Rate limiting behavior
+- Auth flows and expiry/refresh
+- Error classification and propagation
+- Pagination strategies and edge cases
+
+---
+
+## Developing in this repo
+
+- **Tooling**: TurboRepo + pnpm. Do not override `.env`. Prefer absolute paths in scripts.
+- **Node**: Use Node 20. Example with nvm: `nvm use 20`.
+- **Workspace**: Internal packages use the `@workspace/*` scope.
+
+Common commands:
+
+```bash
+pnpm install
+cd apps/components-docs && pnpm dev
+```
+
+## Roadmap (high level)
+
+- API connectors: spec + templates + generators
+- Blob storage connectors: S3, GCS, Azure
+- Database connectors: Postgres, MySQL, SQLite, MongoDB
+- SaaS connectors: common third‑party APIs with auth presets
+- Distribution tooling: publishable packages and app integration helpers
+
+## Acknowledgements
+
+This project’s philosophy is inspired by shadcn/ui — pragmatic copy‑and‑own code over opaque dependencies.
+
+## API Connector Specification (summary)
+
+The full spec lives in `apps/components-docs/content/specifications/api-connector.mdx`. Key requirements:
+
+- **Lifecycle**: `initialize(config)`, `connect()`, `disconnect()`, `isConnected()`
+- **Requests**: `request(options)` plus `get/post/put/patch/delete`
+- **Advanced ops**: `batch(requests)`, `paginate(options)` with strategies (cursor, offset, page, link‑header)
+- **Configuration**:
+  - Base: `baseUrl`, `timeout`
+  - Auth: `api_key | bearer | basic | oauth2 | custom`
+  - Retries: `maxAttempts`, backoff with jitter, circuit breaker, respect `Retry‑After`
+  - Rate limiting: RPS/RPM/hour, concurrent requests, adaptive updates from headers
+  - Defaults: headers, query params
+  - Hooks: `beforeRequest`, `afterResponse`, `onError`, `onRetry`
+- **Response shape**: `{ data, status, headers, meta: { timestamp, duration, retryCount, rateLimit } }`
+- **Data**: `serialize`, `deserialize`, `validate` with schema support
+- **Errors**: structured with `code`, `statusCode`, `details`, `retryable` and standard codes
+
+### Minimal TypeScript interface
+
+```ts
+export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+export interface ConnectorConfig {
+  baseUrl: string;
+  timeout?: number;
+  auth?: {
+    type: "api_key" | "bearer" | "basic" | "oauth2" | "custom";
+    credentials: unknown;
+  };
+  retry?: {
+    maxAttempts?: number;
+    initialDelay?: number;
+    maxDelay?: number;
+    backoffMultiplier?: number;
+  };
+  rateLimit?: {
+    requestsPerSecond?: number;
+    requestsPerMinute?: number;
+    concurrentRequests?: number;
+  };
+  defaultHeaders?: Record<string, string>;
+  defaultQueryParams?: Record<string, string | number>;
+  hooks?: Partial<Record<HookType, Hook[]>>;
+}
+
+export type HookType =
+  | "beforeRequest"
+  | "afterResponse"
+  | "onError"
+  | "onRetry";
+
+export interface HookContext {
+  type: HookType;
+  request?: RequestOptions;
+  response?: ResponseEnvelope<unknown>;
+  error?: unknown;
+  metadata?: Record<string, unknown>;
+  modifyRequest?: (updates: Partial<RequestOptions>) => void;
+  modifyResponse?: (updates: Partial<ResponseEnvelope<unknown>>) => void;
+  abort?: (reason?: string) => void;
+}
+
+export interface Hook {
+  name: string;
+  priority?: number; // lower runs first
+  execute: (ctx: HookContext) => Promise<void> | void;
+}
+
+export interface RequestOptions {
+  method: HttpMethod;
+  path: string;
+  headers?: Record<string, string>;
+  query?: Record<string, string | number | boolean | undefined>;
+  body?: unknown;
+  timeout?: number;
+}
+
+export interface ResponseEnvelope<T> {
+  data: T;
+  status: number;
+  headers: Record<string, string>;
+  meta?: {
+    timestamp: string;
+    duration: number;
+    retryCount?: number;
+    rateLimit?: {
+      limit?: number;
+      remaining?: number;
+      reset?: string;
+      retryAfter?: number;
+    };
+  };
+}
+
+export interface Connector {
+  initialize: (config: ConnectorConfig) => Promise<void> | void;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
+  isConnected: () => boolean;
+  request: <T = unknown>(
+    options: RequestOptions
+  ) => Promise<ResponseEnvelope<T>>;
+  get: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path">
+  ) => Promise<ResponseEnvelope<T>>;
+  post: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  put: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  patch: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  delete: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  batch?: <T = unknown>(
+    requests: RequestOptions[]
+  ) => Promise<ResponseEnvelope<T>[]>;
+  paginate?: <T = unknown>(options: {
+    path: string;
+    pageSize?: number;
+    strategy?: "cursor" | "offset" | "page" | "link-header";
+  }) => AsyncIterable<T[]>;
+}
+```
+
+### Example: add an auth header via a hook
+
+```ts
+const authHook: Hook = {
+  name: "auth-bearer",
+  priority: 1,
+  execute(ctx) {
+    if (ctx.type !== "beforeRequest" || !ctx.request || !ctx.modifyRequest)
+      return;
+    ctx.modifyRequest({
+      headers: {
+        ...(ctx.request.headers ?? {}),
+        Authorization: `Bearer ${process.env.API_TOKEN ?? ""}`,
+      },
+    });
+  },
+};
+```
+
+### Testing checklist
+
+- Unit tests for all public methods
+- Integration tests with mock servers
+- Retry logic (backoff, jitter, circuit breaker)
+- Rate limiting behavior
+- Auth flows and expiry/refresh
+- Error classification and propagation
+- Pagination strategies and edge cases
+
+---
+
+## Developing in this repo
+
+- **Tooling**: TurboRepo + pnpm. Do not override `.env`. Prefer absolute paths in scripts.
+- **Node**: Use Node 20. Example with nvm: `nvm use 20`.
+- **Workspace**: Internal packages use the `@workspace/*` scope.
+
+Common commands:
+
+```bash
+pnpm install
+cd apps/components-docs && pnpm dev
+```
+
+## Roadmap (high level)
+
+- API connectors: spec + templates + generators
+- Blob storage connectors: S3, GCS, Azure
+- Database connectors: Postgres, MySQL, SQLite, MongoDB
+- SaaS connectors: common third‑party APIs with auth presets
+- Distribution tooling: publishable packages and app integration helpers
+
+## Acknowledgements
+
+This project’s philosophy is inspired by shadcn/ui — pragmatic copy‑and‑own code over opaque dependencies.
+
+## API Connector Specification (summary)
+
+The full spec lives in `apps/components-docs/content/specifications/api-connector.mdx`. Key requirements:
+
+- **Lifecycle**: `initialize(config)`, `connect()`, `disconnect()`, `isConnected()`
+- **Requests**: `request(options)` plus `get/post/put/patch/delete`
+- **Advanced ops**: `batch(requests)`, `paginate(options)` with strategies (cursor, offset, page, link‑header)
+- **Configuration**:
+  - Base: `baseUrl`, `timeout`
+  - Auth: `api_key | bearer | basic | oauth2 | custom`
+  - Retries: `maxAttempts`, backoff with jitter, circuit breaker, respect `Retry‑After`
+  - Rate limiting: RPS/RPM/hour, concurrent requests, adaptive updates from headers
+  - Defaults: headers, query params
+  - Hooks: `beforeRequest`, `afterResponse`, `onError`, `onRetry`
+- **Response shape**: `{ data, status, headers, meta: { timestamp, duration, retryCount, rateLimit } }`
+- **Data**: `serialize`, `deserialize`, `validate` with schema support
+- **Errors**: structured with `code`, `statusCode`, `details`, `retryable` and standard codes
+
+### Minimal TypeScript interface
+
+```ts
+export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+export interface ConnectorConfig {
+  baseUrl: string;
+  timeout?: number;
+  auth?: {
+    type: "api_key" | "bearer" | "basic" | "oauth2" | "custom";
+    credentials: unknown;
+  };
+  retry?: {
+    maxAttempts?: number;
+    initialDelay?: number;
+    maxDelay?: number;
+    backoffMultiplier?: number;
+  };
+  rateLimit?: {
+    requestsPerSecond?: number;
+    requestsPerMinute?: number;
+    concurrentRequests?: number;
+  };
+  defaultHeaders?: Record<string, string>;
+  defaultQueryParams?: Record<string, string | number>;
+  hooks?: Partial<Record<HookType, Hook[]>>;
+}
+
+export type HookType =
+  | "beforeRequest"
+  | "afterResponse"
+  | "onError"
+  | "onRetry";
+
+export interface HookContext {
+  type: HookType;
+  request?: RequestOptions;
+  response?: ResponseEnvelope<unknown>;
+  error?: unknown;
+  metadata?: Record<string, unknown>;
+  modifyRequest?: (updates: Partial<RequestOptions>) => void;
+  modifyResponse?: (updates: Partial<ResponseEnvelope<unknown>>) => void;
+  abort?: (reason?: string) => void;
+}
+
+export interface Hook {
+  name: string;
+  priority?: number; // lower runs first
+  execute: (ctx: HookContext) => Promise<void> | void;
+}
+
+export interface RequestOptions {
+  method: HttpMethod;
+  path: string;
+  headers?: Record<string, string>;
+  query?: Record<string, string | number | boolean | undefined>;
+  body?: unknown;
+  timeout?: number;
+}
+
+export interface ResponseEnvelope<T> {
+  data: T;
+  status: number;
+  headers: Record<string, string>;
+  meta?: {
+    timestamp: string;
+    duration: number;
+    retryCount?: number;
+    rateLimit?: {
+      limit?: number;
+      remaining?: number;
+      reset?: string;
+      retryAfter?: number;
+    };
+  };
+}
+
+export interface Connector {
+  initialize: (config: ConnectorConfig) => Promise<void> | void;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
+  isConnected: () => boolean;
+  request: <T = unknown>(
+    options: RequestOptions
+  ) => Promise<ResponseEnvelope<T>>;
+  get: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path">
+  ) => Promise<ResponseEnvelope<T>>;
+  post: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  put: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  patch: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  delete: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  batch?: <T = unknown>(
+    requests: RequestOptions[]
+  ) => Promise<ResponseEnvelope<T>[]>;
+  paginate?: <T = unknown>(options: {
+    path: string;
+    pageSize?: number;
+    strategy?: "cursor" | "offset" | "page" | "link-header";
+  }) => AsyncIterable<T[]>;
+}
+```
+
+### Example: add an auth header via a hook
+
+```ts
+const authHook: Hook = {
+  name: "auth-bearer",
+  priority: 1,
+  execute(ctx) {
+    if (ctx.type !== "beforeRequest" || !ctx.request || !ctx.modifyRequest)
+      return;
+    ctx.modifyRequest({
+      headers: {
+        ...(ctx.request.headers ?? {}),
+        Authorization: `Bearer ${process.env.API_TOKEN ?? ""}`,
+      },
+    });
+  },
+};
+```
+
+### Testing checklist
+
+- Unit tests for all public methods
+- Integration tests with mock servers
+- Retry logic (backoff, jitter, circuit breaker)
+- Rate limiting behavior
+- Auth flows and expiry/refresh
+- Error classification and propagation
+- Pagination strategies and edge cases
+
+---
+
+## Developing in this repo
+
+- **Tooling**: TurboRepo + pnpm. Do not override `.env`. Prefer absolute paths in scripts.
+- **Node**: Use Node 20. Example with nvm: `nvm use 20`.
+- **Workspace**: Internal packages use the `@workspace/*` scope.
+
+Common commands:
+
+```bash
+pnpm install
+cd apps/components-docs && pnpm dev
+```
+
+## Roadmap (high level)
+
+- API connectors: spec + templates + generators
+- Blob storage connectors: S3, GCS, Azure
+- Database connectors: Postgres, MySQL, SQLite, MongoDB
+- SaaS connectors: common third‑party APIs with auth presets
+- Distribution tooling: publishable packages and app integration helpers
+
+## Acknowledgements
+
+This project’s philosophy is inspired by shadcn/ui — pragmatic copy‑and‑own code over opaque dependencies.
+
+## API Connector Specification (summary)
+
+The full spec lives in `apps/components-docs/content/specifications/api-connector.mdx`. Key requirements:
+
+- **Lifecycle**: `initialize(config)`, `connect()`, `disconnect()`, `isConnected()`
+- **Requests**: `request(options)` plus `get/post/put/patch/delete`
+- **Advanced ops**: `batch(requests)`, `paginate(options)` with strategies (cursor, offset, page, link‑header)
+- **Configuration**:
+  - Base: `baseUrl`, `timeout`
+  - Auth: `api_key | bearer | basic | oauth2 | custom`
+  - Retries: `maxAttempts`, backoff with jitter, circuit breaker, respect `Retry‑After`
+  - Rate limiting: RPS/RPM/hour, concurrent requests, adaptive updates from headers
+  - Defaults: headers, query params
+  - Hooks: `beforeRequest`, `afterResponse`, `onError`, `onRetry`
+- **Response shape**: `{ data, status, headers, meta: { timestamp, duration, retryCount, rateLimit } }`
+- **Data**: `serialize`, `deserialize`, `validate` with schema support
+- **Errors**: structured with `code`, `statusCode`, `details`, `retryable` and standard codes
+
+### Minimal TypeScript interface
+
+```ts
+export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+export interface ConnectorConfig {
+  baseUrl: string;
+  timeout?: number;
+  auth?: {
+    type: "api_key" | "bearer" | "basic" | "oauth2" | "custom";
+    credentials: unknown;
+  };
+  retry?: {
+    maxAttempts?: number;
+    initialDelay?: number;
+    maxDelay?: number;
+    backoffMultiplier?: number;
+  };
+  rateLimit?: {
+    requestsPerSecond?: number;
+    requestsPerMinute?: number;
+    concurrentRequests?: number;
+  };
+  defaultHeaders?: Record<string, string>;
+  defaultQueryParams?: Record<string, string | number>;
+  hooks?: Partial<Record<HookType, Hook[]>>;
+}
+
+export type HookType =
+  | "beforeRequest"
+  | "afterResponse"
+  | "onError"
+  | "onRetry";
+
+export interface HookContext {
+  type: HookType;
+  request?: RequestOptions;
+  response?: ResponseEnvelope<unknown>;
+  error?: unknown;
+  metadata?: Record<string, unknown>;
+  modifyRequest?: (updates: Partial<RequestOptions>) => void;
+  modifyResponse?: (updates: Partial<ResponseEnvelope<unknown>>) => void;
+  abort?: (reason?: string) => void;
+}
+
+export interface Hook {
+  name: string;
+  priority?: number; // lower runs first
+  execute: (ctx: HookContext) => Promise<void> | void;
+}
+
+export interface RequestOptions {
+  method: HttpMethod;
+  path: string;
+  headers?: Record<string, string>;
+  query?: Record<string, string | number | boolean | undefined>;
+  body?: unknown;
+  timeout?: number;
+}
+
+export interface ResponseEnvelope<T> {
+  data: T;
+  status: number;
+  headers: Record<string, string>;
+  meta?: {
+    timestamp: string;
+    duration: number;
+    retryCount?: number;
+    rateLimit?: {
+      limit?: number;
+      remaining?: number;
+      reset?: string;
+      retryAfter?: number;
+    };
+  };
+}
+
+export interface Connector {
+  initialize: (config: ConnectorConfig) => Promise<void> | void;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
+  isConnected: () => boolean;
+  request: <T = unknown>(
+    options: RequestOptions
+  ) => Promise<ResponseEnvelope<T>>;
+  get: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path">
+  ) => Promise<ResponseEnvelope<T>>;
+  post: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  put: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  patch: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  delete: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  batch?: <T = unknown>(
+    requests: RequestOptions[]
+  ) => Promise<ResponseEnvelope<T>[]>;
+  paginate?: <T = unknown>(options: {
+    path: string;
+    pageSize?: number;
+    strategy?: "cursor" | "offset" | "page" | "link-header";
+  }) => AsyncIterable<T[]>;
+}
+```
+
+### Example: add an auth header via a hook
+
+```ts
+const authHook: Hook = {
+  name: "auth-bearer",
+  priority: 1,
+  execute(ctx) {
+    if (ctx.type !== "beforeRequest" || !ctx.request || !ctx.modifyRequest)
+      return;
+    ctx.modifyRequest({
+      headers: {
+        ...(ctx.request.headers ?? {}),
+        Authorization: `Bearer ${process.env.API_TOKEN ?? ""}`,
+      },
+    });
+  },
+};
+```
+
+### Testing checklist
+
+- Unit tests for all public methods
+- Integration tests with mock servers
+- Retry logic (backoff, jitter, circuit breaker)
+- Rate limiting behavior
+- Auth flows and expiry/refresh
+- Error classification and propagation
+- Pagination strategies and edge cases
+
+---
+
+## Developing in this repo
+
+- **Tooling**: TurboRepo + pnpm. Do not override `.env`. Prefer absolute paths in scripts.
+- **Node**: Use Node 20. Example with nvm: `nvm use 20`.
+- **Workspace**: Internal packages use the `@workspace/*` scope.
+
+Common commands:
+
+```bash
+pnpm install
+cd apps/components-docs && pnpm dev
+```
+
+## Roadmap (high level)
+
+- API connectors: spec + templates + generators
+- Blob storage connectors: S3, GCS, Azure
+- Database connectors: Postgres, MySQL, SQLite, MongoDB
+- SaaS connectors: common third‑party APIs with auth presets
+- Distribution tooling: publishable packages and app integration helpers
+
+## Acknowledgements
+
+This project’s philosophy is inspired by shadcn/ui — pragmatic copy‑and‑own code over opaque dependencies.
+
+## API Connector Specification (summary)
+
+The full spec lives in `apps/components-docs/content/specifications/api-connector.mdx`. Key requirements:
+
+- **Lifecycle**: `initialize(config)`, `connect()`, `disconnect()`, `isConnected()`
+- **Requests**: `request(options)` plus `get/post/put/patch/delete`
+- **Advanced ops**: `batch(requests)`, `paginate(options)` with strategies (cursor, offset, page, link‑header)
+- **Configuration**:
+  - Base: `baseUrl`, `timeout`
+  - Auth: `api_key | bearer | basic | oauth2 | custom`
+  - Retries: `maxAttempts`, backoff with jitter, circuit breaker, respect `Retry‑After`
+  - Rate limiting: RPS/RPM/hour, concurrent requests, adaptive updates from headers
+  - Defaults: headers, query params
+  - Hooks: `beforeRequest`, `afterResponse`, `onError`, `onRetry`
+- **Response shape**: `{ data, status, headers, meta: { timestamp, duration, retryCount, rateLimit } }`
+- **Data**: `serialize`, `deserialize`, `validate` with schema support
+- **Errors**: structured with `code`, `statusCode`, `details`, `retryable` and standard codes
+
+### Minimal TypeScript interface
+
+```ts
+export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+export interface ConnectorConfig {
+  baseUrl: string;
+  timeout?: number;
+  auth?: {
+    type: "api_key" | "bearer" | "basic" | "oauth2" | "custom";
+    credentials: unknown;
+  };
+  retry?: {
+    maxAttempts?: number;
+    initialDelay?: number;
+    maxDelay?: number;
+    backoffMultiplier?: number;
+  };
+  rateLimit?: {
+    requestsPerSecond?: number;
+    requestsPerMinute?: number;
+    concurrentRequests?: number;
+  };
+  defaultHeaders?: Record<string, string>;
+  defaultQueryParams?: Record<string, string | number>;
+  hooks?: Partial<Record<HookType, Hook[]>>;
+}
+
+export type HookType =
+  | "beforeRequest"
+  | "afterResponse"
+  | "onError"
+  | "onRetry";
+
+export interface HookContext {
+  type: HookType;
+  request?: RequestOptions;
+  response?: ResponseEnvelope<unknown>;
+  error?: unknown;
+  metadata?: Record<string, unknown>;
+  modifyRequest?: (updates: Partial<RequestOptions>) => void;
+  modifyResponse?: (updates: Partial<ResponseEnvelope<unknown>>) => void;
+  abort?: (reason?: string) => void;
+}
+
+export interface Hook {
+  name: string;
+  priority?: number; // lower runs first
+  execute: (ctx: HookContext) => Promise<void> | void;
+}
+
+export interface RequestOptions {
+  method: HttpMethod;
+  path: string;
+  headers?: Record<string, string>;
+  query?: Record<string, string | number | boolean | undefined>;
+  body?: unknown;
+  timeout?: number;
+}
+
+export interface ResponseEnvelope<T> {
+  data: T;
+  status: number;
+  headers: Record<string, string>;
+  meta?: {
+    timestamp: string;
+    duration: number;
+    retryCount?: number;
+    rateLimit?: {
+      limit?: number;
+      remaining?: number;
+      reset?: string;
+      retryAfter?: number;
+    };
+  };
+}
+
+export interface Connector {
+  initialize: (config: ConnectorConfig) => Promise<void> | void;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
+  isConnected: () => boolean;
+  request: <T = unknown>(
+    options: RequestOptions
+  ) => Promise<ResponseEnvelope<T>>;
+  get: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path">
+  ) => Promise<ResponseEnvelope<T>>;
+  post: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  put: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  patch: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  delete: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  batch?: <T = unknown>(
+    requests: RequestOptions[]
+  ) => Promise<ResponseEnvelope<T>[]>;
+  paginate?: <T = unknown>(options: {
+    path: string;
+    pageSize?: number;
+    strategy?: "cursor" | "offset" | "page" | "link-header";
+  }) => AsyncIterable<T[]>;
+}
+```
+
+### Example: add an auth header via a hook
+
+```ts
+const authHook: Hook = {
+  name: "auth-bearer",
+  priority: 1,
+  execute(ctx) {
+    if (ctx.type !== "beforeRequest" || !ctx.request || !ctx.modifyRequest)
+      return;
+    ctx.modifyRequest({
+      headers: {
+        ...(ctx.request.headers ?? {}),
+        Authorization: `Bearer ${process.env.API_TOKEN ?? ""}`,
+      },
+    });
+  },
+};
+```
+
+### Testing checklist
+
+- Unit tests for all public methods
+- Integration tests with mock servers
+- Retry logic (backoff, jitter, circuit breaker)
+- Rate limiting behavior
+- Auth flows and expiry/refresh
+- Error classification and propagation
+- Pagination strategies and edge cases
+
+---
+
+## Developing in this repo
+
+- **Tooling**: TurboRepo + pnpm. Do not override `.env`. Prefer absolute paths in scripts.
+- **Node**: Use Node 20. Example with nvm: `nvm use 20`.
+- **Workspace**: Internal packages use the `@workspace/*` scope.
+
+Common commands:
+
+```bash
+pnpm install
+cd apps/components-docs && pnpm dev
+```
+
+## Roadmap (high level)
+
+- API connectors: spec + templates + generators
+- Blob storage connectors: S3, GCS, Azure
+- Database connectors: Postgres, MySQL, SQLite, MongoDB
+- SaaS connectors: common third‑party APIs with auth presets
+- Distribution tooling: publishable packages and app integration helpers
+
+## Acknowledgements
+
+This project’s philosophy is inspired by shadcn/ui — pragmatic copy‑and‑own code over opaque dependencies.
+
+## API Connector Specification (summary)
+
+The full spec lives in `apps/components-docs/content/specifications/api-connector.mdx`. Key requirements:
+
+- **Lifecycle**: `initialize(config)`, `connect()`, `disconnect()`, `isConnected()`
+- **Requests**: `request(options)` plus `get/post/put/patch/delete`
+- **Advanced ops**: `batch(requests)`, `paginate(options)` with strategies (cursor, offset, page, link‑header)
+- **Configuration**:
+  - Base: `baseUrl`, `timeout`
+  - Auth: `api_key | bearer | basic | oauth2 | custom`
+  - Retries: `maxAttempts`, backoff with jitter, circuit breaker, respect `Retry‑After`
+  - Rate limiting: RPS/RPM/hour, concurrent requests, adaptive updates from headers
+  - Defaults: headers, query params
+  - Hooks: `beforeRequest`, `afterResponse`, `onError`, `onRetry`
+- **Response shape**: `{ data, status, headers, meta: { timestamp, duration, retryCount, rateLimit } }`
+- **Data**: `serialize`, `deserialize`, `validate` with schema support
+- **Errors**: structured with `code`, `statusCode`, `details`, `retryable` and standard codes
+
+### Minimal TypeScript interface
+
+```ts
+export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+export interface ConnectorConfig {
+  baseUrl: string;
+  timeout?: number;
+  auth?: {
+    type: "api_key" | "bearer" | "basic" | "oauth2" | "custom";
+    credentials: unknown;
+  };
+  retry?: {
+    maxAttempts?: number;
+    initialDelay?: number;
+    maxDelay?: number;
+    backoffMultiplier?: number;
+  };
+  rateLimit?: {
+    requestsPerSecond?: number;
+    requestsPerMinute?: number;
+    concurrentRequests?: number;
+  };
+  defaultHeaders?: Record<string, string>;
+  defaultQueryParams?: Record<string, string | number>;
+  hooks?: Partial<Record<HookType, Hook[]>>;
+}
+
+export type HookType =
+  | "beforeRequest"
+  | "afterResponse"
+  | "onError"
+  | "onRetry";
+
+export interface HookContext {
+  type: HookType;
+  request?: RequestOptions;
+  response?: ResponseEnvelope<unknown>;
+  error?: unknown;
+  metadata?: Record<string, unknown>;
+  modifyRequest?: (updates: Partial<RequestOptions>) => void;
+  modifyResponse?: (updates: Partial<ResponseEnvelope<unknown>>) => void;
+  abort?: (reason?: string) => void;
+}
+
+export interface Hook {
+  name: string;
+  priority?: number; // lower runs first
+  execute: (ctx: HookContext) => Promise<void> | void;
+}
+
+export interface RequestOptions {
+  method: HttpMethod;
+  path: string;
+  headers?: Record<string, string>;
+  query?: Record<string, string | number | boolean | undefined>;
+  body?: unknown;
+  timeout?: number;
+}
+
+export interface ResponseEnvelope<T> {
+  data: T;
+  status: number;
+  headers: Record<string, string>;
+  meta?: {
+    timestamp: string;
+    duration: number;
+    retryCount?: number;
+    rateLimit?: {
+      limit?: number;
+      remaining?: number;
+      reset?: string;
+      retryAfter?: number;
+    };
+  };
+}
+
+export interface Connector {
+  initialize: (config: ConnectorConfig) => Promise<void> | void;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
+  isConnected: () => boolean;
+  request: <T = unknown>(
+    options: RequestOptions
+  ) => Promise<ResponseEnvelope<T>>;
+  get: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path">
+  ) => Promise<ResponseEnvelope<T>>;
+  post: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  put: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  patch: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  delete: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  batch?: <T = unknown>(
+    requests: RequestOptions[]
+  ) => Promise<ResponseEnvelope<T>[]>;
+  paginate?: <T = unknown>(options: {
+    path: string;
+    pageSize?: number;
+    strategy?: "cursor" | "offset" | "page" | "link-header";
+  }) => AsyncIterable<T[]>;
+}
+```
+
+### Example: add an auth header via a hook
+
+```ts
+const authHook: Hook = {
+  name: "auth-bearer",
+  priority: 1,
+  execute(ctx) {
+    if (ctx.type !== "beforeRequest" || !ctx.request || !ctx.modifyRequest)
+      return;
+    ctx.modifyRequest({
+      headers: {
+        ...(ctx.request.headers ?? {}),
+        Authorization: `Bearer ${process.env.API_TOKEN ?? ""}`,
+      },
+    });
+  },
+};
+```
+
+### Testing checklist
+
+- Unit tests for all public methods
+- Integration tests with mock servers
+- Retry logic (backoff, jitter, circuit breaker)
+- Rate limiting behavior
+- Auth flows and expiry/refresh
+- Error classification and propagation
+- Pagination strategies and edge cases
+
+---
+
+## Developing in this repo
+
+- **Tooling**: TurboRepo + pnpm. Do not override `.env`. Prefer absolute paths in scripts.
+- **Node**: Use Node 20. Example with nvm: `nvm use 20`.
+- **Workspace**: Internal packages use the `@workspace/*` scope.
+
+Common commands:
+
+```bash
+pnpm install
+cd apps/components-docs && pnpm dev
+```
+
+## Roadmap (high level)
+
+- API connectors: spec + templates + generators
+- Blob storage connectors: S3, GCS, Azure
+- Database connectors: Postgres, MySQL, SQLite, MongoDB
+- SaaS connectors: common third‑party APIs with auth presets
+- Distribution tooling: publishable packages and app integration helpers
+
+## Acknowledgements
+
+This project’s philosophy is inspired by shadcn/ui — pragmatic copy‑and‑own code over opaque dependencies.
+
+## API Connector Specification (summary)
+
+The full spec lives in `apps/components-docs/content/specifications/api-connector.mdx`. Key requirements:
+
+- **Lifecycle**: `initialize(config)`, `connect()`, `disconnect()`, `isConnected()`
+- **Requests**: `request(options)` plus `get/post/put/patch/delete`
+- **Advanced ops**: `batch(requests)`, `paginate(options)` with strategies (cursor, offset, page, link‑header)
+- **Configuration**:
+  - Base: `baseUrl`, `timeout`
+  - Auth: `api_key | bearer | basic | oauth2 | custom`
+  - Retries: `maxAttempts`, backoff with jitter, circuit breaker, respect `Retry‑After`
+  - Rate limiting: RPS/RPM/hour, concurrent requests, adaptive updates from headers
+  - Defaults: headers, query params
+  - Hooks: `beforeRequest`, `afterResponse`, `onError`, `onRetry`
+- **Response shape**: `{ data, status, headers, meta: { timestamp, duration, retryCount, rateLimit } }`
+- **Data**: `serialize`, `deserialize`, `validate` with schema support
+- **Errors**: structured with `code`, `statusCode`, `details`, `retryable` and standard codes
+
+### Minimal TypeScript interface
+
+```ts
+export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+export interface ConnectorConfig {
+  baseUrl: string;
+  timeout?: number;
+  auth?: {
+    type: "api_key" | "bearer" | "basic" | "oauth2" | "custom";
+    credentials: unknown;
+  };
+  retry?: {
+    maxAttempts?: number;
+    initialDelay?: number;
+    maxDelay?: number;
+    backoffMultiplier?: number;
+  };
+  rateLimit?: {
+    requestsPerSecond?: number;
+    requestsPerMinute?: number;
+    concurrentRequests?: number;
+  };
+  defaultHeaders?: Record<string, string>;
+  defaultQueryParams?: Record<string, string | number>;
+  hooks?: Partial<Record<HookType, Hook[]>>;
+}
+
+export type HookType =
+  | "beforeRequest"
+  | "afterResponse"
+  | "onError"
+  | "onRetry";
+
+export interface HookContext {
+  type: HookType;
+  request?: RequestOptions;
+  response?: ResponseEnvelope<unknown>;
+  error?: unknown;
+  metadata?: Record<string, unknown>;
+  modifyRequest?: (updates: Partial<RequestOptions>) => void;
+  modifyResponse?: (updates: Partial<ResponseEnvelope<unknown>>) => void;
+  abort?: (reason?: string) => void;
+}
+
+export interface Hook {
+  name: string;
+  priority?: number; // lower runs first
+  execute: (ctx: HookContext) => Promise<void> | void;
+}
+
+export interface RequestOptions {
+  method: HttpMethod;
+  path: string;
+  headers?: Record<string, string>;
+  query?: Record<string, string | number | boolean | undefined>;
+  body?: unknown;
+  timeout?: number;
+}
+
+export interface ResponseEnvelope<T> {
+  data: T;
+  status: number;
+  headers: Record<string, string>;
+  meta?: {
+    timestamp: string;
+    duration: number;
+    retryCount?: number;
+    rateLimit?: {
+      limit?: number;
+      remaining?: number;
+      reset?: string;
+      retryAfter?: number;
+    };
+  };
+}
+
+export interface Connector {
+  initialize: (config: ConnectorConfig) => Promise<void> | void;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
+  isConnected: () => boolean;
+  request: <T = unknown>(
+    options: RequestOptions
+  ) => Promise<ResponseEnvelope<T>>;
+  get: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path">
+  ) => Promise<ResponseEnvelope<T>>;
+  post: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  put: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  patch: <T = unknown>(
+    path: string,
+    data?: unknown,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  delete: <T = unknown>(
+    path: string,
+    options?: Omit<RequestOptions, "method" | "path" | "body">
+  ) => Promise<ResponseEnvelope<T>>;
+  batch?: <T = unknown>(
+    requests: RequestOptions[]
+  ) => Promise<ResponseEnvelope<T>[]>;
+  paginate?: <T = unknown>(options: {
+    path: string;
+    pageSize?: number;
+    strategy?: "cursor" | "offset" | "page" | "link-header";
+  }) => AsyncIterable<T[]>;
+}
+```
+
+### Example: add an auth header via a hook
+
+```ts
+const authHook: Hook = {
+  name: "auth-bearer",
+  priority: 1,
+  execute(ctx) {
+    if (ctx.type !== "beforeRequest" || !ctx.request || !ctx.modifyRequest)
+      return;
+    ctx.modifyRequest({
+      headers: {
+        ...(ctx.request.headers ?? {}),
+        Authorization: `Bearer ${process.env.API_TOKEN ?? ""}`,
+      },
     });
   },
 };

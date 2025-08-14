@@ -21,7 +21,7 @@
     "@repo/typescript-config": "workspace:*",
     "@tailwindcss/cli": "^4.1.10",
     "@tailwindcss/postcss": "^4.1.10",
-    "@types/react": "^19.1.8",
+    "@types/react": "^19.1.9",
     "@types/react-dom": "^19.1.6",
     "autoprefixer": "^10.4.21",
     "react": "^19.1.0",

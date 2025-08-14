@@ -22,6 +22,13 @@ type DiscoverConnector = {
   sourceType?: string; // from registry meta.category
   extraction?: "batch" | "stream"; // derived from tags/category
   domains?: string[]; // derived from tags minus operational ones
+  language?: string;
+  languages?: string[];
+  reactions?: number;
+  creatorAvatarUrl?: string;
+  creatorAvatarUrls?: string[];
+  comingSoon?: boolean;
+  implementationCount?: number;
 };
 
 export default function DiscoverGrid({
@@ -215,6 +222,15 @@ export default function DiscoverGrid({
             icon={connector.icon}
             tags={connector.tags}
             href={connector.href}
+            language={connector.language}
+            languages={connector.languages}
+            sourceType={connector.sourceType}
+            domains={connector.domains}
+            comingSoon={connector.comingSoon}
+            implementationCount={connector.implementationCount}
+            reactions={connector.reactions}
+            creatorAvatarUrl={connector.creatorAvatarUrl}
+            creatorAvatarUrls={connector.creatorAvatarUrls}
           />
         ))}
       </div>
