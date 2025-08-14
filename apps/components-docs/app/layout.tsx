@@ -21,10 +21,6 @@ export const metadata: Metadata = {
   description: "Build, own, and share connectors as actual code",
 };
 
-// Ensure the root layout is fully static so child routes remain static
-// export const dynamic = "force-static";
-// export const revalidate = false;
-
 export default function RootLayout({
   children,
 }: Readonly<{
