@@ -69,5 +69,5 @@ connector.disconnect()
 ## 🔗 External Resources
 
 - [Shopify Admin API Documentation](https://shopify.dev/api/admin)
-- [API Connector Specification](../../../../../../apps/components-docs/content/docs/specifications/api-connector.mdx)
+- [API Connector Specification](../../../../../../../apps/components-docs/content/docs/specifications/api-connector.mdx)
 - [Shopify Partners](https://partners.shopify.com) (for development stores)

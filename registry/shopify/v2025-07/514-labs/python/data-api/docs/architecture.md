@@ -1,6 +1,6 @@
 # Architecture
 
-This document describes the technical architecture of the Shopify Python connector, including implementation details and how it maps to our [API Connector Specification](../../../../../../apps/components-docs/content/docs/specifications/api-connector.mdx).
+This document describes the technical architecture of the Shopify Python connector, including implementation details and how it maps to our [API Connector Specification](../../../../../../../apps/components-docs/content/docs/specifications/api-connector.mdx).
 
 ## Overview
 

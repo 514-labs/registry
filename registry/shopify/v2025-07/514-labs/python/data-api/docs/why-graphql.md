@@ -206,4 +206,4 @@ The key insight is that **our API specification defines behavior, not transport*
 
 - [Shopify Admin API Documentation](https://shopify.dev/api/admin)
 - [GraphQL vs REST Comparison](https://graphql.org/learn/comparison-with-rest/)
-- [API Connector Specification](../../../../../../apps/components-docs/content/docs/specifications/api-connector.mdx)
+- [API Connector Specification](../../../../../../../apps/components-docs/content/docs/specifications/api-connector.mdx)
