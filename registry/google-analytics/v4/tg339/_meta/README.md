@@ -3,7 +3,12 @@
 This directory contains language-agnostic metadata and documentation for the `google-analytics` connector.
 
 - Name: `google-analytics`
-- Author: `fiveonefour`
+# Google Analytics Connector (by tg339)
+
+This directory contains language-agnostic metadata and documentation for the `google-analytics` connector.
+
+- Name: `google-analytics`
+- Author: `tg339`
 - Category: `api`
 - Languages: `typescript`
 
