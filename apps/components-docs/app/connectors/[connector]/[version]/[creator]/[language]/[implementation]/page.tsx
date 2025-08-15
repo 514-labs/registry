@@ -18,6 +18,7 @@ import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 import { marked } from "marked";
 import SchemaDiagram from "@/components/schema-diagram";
+import { getSchemaDiagramInputs } from "@/src/schema/processing";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -315,7 +316,18 @@ export default async function ConnectorImplementationPage({
           </div>
         </div>
         <div className="col-span-9 space-y-8">
-          <SchemaDiagram />
+          {(() => {
+            const { database, endpoints, files } = getSchemaDiagramInputs(
+              implEntry.path
+            );
+            return (
+              <SchemaDiagram
+                database={database}
+                endpoints={endpoints}
+                files={files}
+              />
+            );
+          })()}
           {docs.length === 0 ? (
             <div className="prose dark:prose-invert">
               <h1>Documentation</h1>
