@@ -252,10 +252,12 @@ export function SchemaDiagram({
   database,
   endpoints,
   files,
+  errors,
 }: {
   database?: { tables?: DiagramTable[]; relationships?: DiagramRelationship[] };
   endpoints?: DiagramEndpoint[];
   files?: DiagramFile[];
+  errors?: string[];
 }) {
   const [active, setActive] = useState<"database" | "endpoints" | "files">(
     "database"
@@ -358,6 +360,46 @@ export function SchemaDiagram({
 
   // Sidebar helpers removed for simplified file list
 
+  const hasDatabase = (database?.tables?.length ?? 0) > 0;
+  const hasEndpoints = (endpoints?.length ?? 0) > 0;
+  const hasFiles = (files?.length ?? 0) > 0;
+  const hasAny = hasDatabase || hasEndpoints || hasFiles;
+
+  // Render error pane if errors present
+  if (errors && errors.length > 0) {
+    return (
+      <Card className="w-full overflow-hidden pt-4">
+        <div className="p-4">
+          <div className="mb-2 font-semibold">Schema errors</div>
+          <div className="rounded-md border bg-destructive/10 text-destructive">
+            <pre className="p-3 text-sm whitespace-pre-wrap break-words">
+              {errors.map((e, i) => `• ${e}`).join("\n")}
+            </pre>
+          </div>
+          <div className="mt-2">
+            <button
+              type="button"
+              className="px-3 py-1.5 text-sm rounded-md border hover:bg-secondary"
+              onClick={() => navigator.clipboard.writeText(errors.join("\n"))}
+            >
+              Copy errors
+            </button>
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
+  if (!hasAny) {
+    return (
+      <Card className="w-full overflow-hidden pt-4">
+        <div className="p-6 text-sm text-muted-foreground">
+          No schema was provided for this connector.
+        </div>
+      </Card>
+    );
+  }
+
   return (
     <Card className="w-full overflow-hidden pt-4">
       <Tabs
@@ -367,201 +409,211 @@ export function SchemaDiagram({
       >
         <div className="flex items-center justify-between px-4">
           <TabsList>
-            <TabsTrigger value="database">Database</TabsTrigger>
-            <TabsTrigger value="endpoints">Endpoints</TabsTrigger>
-            <TabsTrigger value="files">Files</TabsTrigger>
+            {hasDatabase && (
+              <TabsTrigger value="database">Database</TabsTrigger>
+            )}
+            {hasEndpoints && (
+              <TabsTrigger value="endpoints">Endpoints</TabsTrigger>
+            )}
+            {hasFiles && <TabsTrigger value="files">Files</TabsTrigger>}
           </TabsList>
         </div>
         <Separator className="mt-2" />
 
         {/* Database Tab */}
-        <TabsContent value="database" className="m-0">
-          <div className="grid grid-cols-12 gap-0 h-[560px]">
-            <div className="col-span-4 border-r bg-muted/40 h-full">
-              <div className="p-4">
-                <div className="font-medium mb-2">Tables</div>
-                <Input
-                  placeholder="Filter tables, columns..."
-                  className="h-9"
-                />
-              </div>
-              <Separator />
-              <ScrollArea className="h-[calc(560px-72px)]">
-                <div className="p-3 space-y-2">
-                  <ul className="space-y-1">
-                    {(database?.tables ?? []).map((t) => (
-                      <li
-                        key={t.label}
-                        className="flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-secondary"
-                      >
-                        <span className="text-sm">{t.label}</span>
-                        <Badge variant="secondary" className="text-[10px]">
-                          {t.columns?.length ?? 0}
-                        </Badge>
-                      </li>
-                    ))}
-                  </ul>
-                  <Separator className="my-2" />
-                  <div className="text-xs uppercase text-muted-foreground px-1">
-                    Legend
-                  </div>
-                  <div className="grid grid-cols-1 gap-2 p-1">
-                    <div className="flex items-center gap-2 text-sm">
-                      <KeyRound className="h-3.5 w-3.5 text-amber-600" />
-                      <span>Primary Key</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <Link2 className="h-3.5 w-3.5 text-sky-700" />
-                      <span>Foreign Key</span>
-                    </div>
-                  </div>
+        {hasDatabase && (
+          <TabsContent value="database" className="m-0">
+            <div className="grid grid-cols-12 gap-0 h-[560px]">
+              <div className="col-span-4 border-r bg-muted/40 h-full">
+                <div className="p-4">
+                  <div className="font-medium mb-2">Tables</div>
+                  <Input
+                    placeholder="Filter tables, columns..."
+                    className="h-9"
+                  />
                 </div>
-              </ScrollArea>
-            </div>
+                <Separator />
+                <ScrollArea className="h-[calc(560px-72px)]">
+                  <div className="p-3 space-y-2">
+                    <ul className="space-y-1">
+                      {(database?.tables ?? []).map((t) => (
+                        <li
+                          key={t.label}
+                          className="flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-secondary"
+                        >
+                          <span className="text-sm">{t.label}</span>
+                          <Badge variant="secondary" className="text-[10px]">
+                            {t.columns?.length ?? 0}
+                          </Badge>
+                        </li>
+                      ))}
+                    </ul>
+                    <Separator className="my-2" />
+                    <div className="text-xs uppercase text-muted-foreground px-1">
+                      Legend
+                    </div>
+                    <div className="grid grid-cols-1 gap-2 p-1">
+                      <div className="flex items-center gap-2 text-sm">
+                        <KeyRound className="h-3.5 w-3.5 text-amber-600" />
+                        <span>Primary Key</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <Link2 className="h-3.5 w-3.5 text-sky-700" />
+                        <span>Foreign Key</span>
+                      </div>
+                    </div>
+                  </div>
+                </ScrollArea>
+              </div>
 
-            <div className="col-span-8 h-full">
-              <ReactFlow
-                nodes={dbNodes}
-                edges={dbEdges}
-                nodeTypes={allNodeTypes as any}
-                fitView
-                proOptions={{ hideAttribution: true }}
-              >
-                <Background />
-                <MiniMap
-                  pannable
-                  zoomable
-                  style={miniMapStyle}
-                  maskColor={miniMapMaskColor}
-                  nodeColor={miniMapNodeColor}
-                  nodeStrokeColor={miniMapNodeStrokeColor}
-                />
-                <Controls position="bottom-right" />
-                <Panel
-                  position="top-right"
-                  className="rounded-md border bg-card px-2 py-1 text-xs shadow-sm"
+              <div className="col-span-8 h-full">
+                <ReactFlow
+                  nodes={dbNodes}
+                  edges={dbEdges}
+                  nodeTypes={allNodeTypes as any}
+                  fitView
+                  proOptions={{ hideAttribution: true }}
                 >
-                  Example UML-like schema
-                </Panel>
-              </ReactFlow>
+                  <Background />
+                  <MiniMap
+                    pannable
+                    zoomable
+                    style={miniMapStyle}
+                    maskColor={miniMapMaskColor}
+                    nodeColor={miniMapNodeColor}
+                    nodeStrokeColor={miniMapNodeStrokeColor}
+                  />
+                  <Controls position="bottom-right" />
+                  <Panel
+                    position="top-right"
+                    className="rounded-md border bg-card px-2 py-1 text-xs shadow-sm"
+                  >
+                    Example UML-like schema
+                  </Panel>
+                </ReactFlow>
+              </div>
             </div>
-          </div>
-        </TabsContent>
+          </TabsContent>
+        )}
 
         {/* Endpoints Tab */}
-        <TabsContent value="endpoints" className="m-0">
-          <div className="grid grid-cols-12 gap-0 h-[560px]">
-            <div className="col-span-4 border-r bg-muted/40 h-full">
-              <div className="p-4">
-                <div className="font-medium mb-2">Endpoints</div>
-                <Input placeholder="Filter endpoints..." className="h-9" />
-              </div>
-              <Separator />
-              <ScrollArea className="h-[calc(560px-72px)]">
-                <div className="p-3 space-y-2">
-                  <ul className="space-y-1">
-                    {(endpoints ?? []).map((e, idx) => (
-                      <li
-                        key={`${e.title}-${idx}`}
-                        className="rounded-md px-2 py-1.5 hover:bg-secondary flex items-center gap-2"
-                      >
-                        <Badge className="text-[10px]">{e.method}</Badge>
-                        <span className="text-sm">{e.title}</span>
-                      </li>
-                    ))}
-                  </ul>
+        {hasEndpoints && (
+          <TabsContent value="endpoints" className="m-0">
+            <div className="grid grid-cols-12 gap-0 h-[560px]">
+              <div className="col-span-4 border-r bg-muted/40 h-full">
+                <div className="p-4">
+                  <div className="font-medium mb-2">Endpoints</div>
+                  <Input placeholder="Filter endpoints..." className="h-9" />
                 </div>
-              </ScrollArea>
-            </div>
+                <Separator />
+                <ScrollArea className="h-[calc(560px-72px)]">
+                  <div className="p-3 space-y-2">
+                    <ul className="space-y-1">
+                      {(endpoints ?? []).map((e, idx) => (
+                        <li
+                          key={`${e.title}-${idx}`}
+                          className="rounded-md px-2 py-1.5 hover:bg-secondary flex items-center gap-2"
+                        >
+                          <Badge className="text-[10px]">{e.method}</Badge>
+                          <span className="text-sm">{e.title}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </ScrollArea>
+              </div>
 
-            <div className="col-span-8 h-full">
-              <ReactFlow
-                nodes={jsonNodes}
-                edges={jsonEdges}
-                nodeTypes={allNodeTypes as any}
-                fitView
-                proOptions={{ hideAttribution: true }}
-              >
-                <Background />
-                <MiniMap
-                  pannable
-                  zoomable
-                  style={miniMapStyle}
-                  maskColor={miniMapMaskColor}
-                  nodeColor={miniMapNodeColor}
-                  nodeStrokeColor={miniMapNodeStrokeColor}
-                />
-                <Controls position="bottom-right" />
-                <Panel
-                  position="top-right"
-                  className="rounded-md border bg-card px-2 py-1 text-xs shadow-sm"
+              <div className="col-span-8 h-full">
+                <ReactFlow
+                  nodes={jsonNodes}
+                  edges={jsonEdges}
+                  nodeTypes={allNodeTypes as any}
+                  fitView
+                  proOptions={{ hideAttribution: true }}
                 >
-                  Example endpoints and response schemas
-                </Panel>
-              </ReactFlow>
+                  <Background />
+                  <MiniMap
+                    pannable
+                    zoomable
+                    style={miniMapStyle}
+                    maskColor={miniMapMaskColor}
+                    nodeColor={miniMapNodeColor}
+                    nodeStrokeColor={miniMapNodeStrokeColor}
+                  />
+                  <Controls position="bottom-right" />
+                  <Panel
+                    position="top-right"
+                    className="rounded-md border bg-card px-2 py-1 text-xs shadow-sm"
+                  >
+                    Example endpoints and response schemas
+                  </Panel>
+                </ReactFlow>
+              </div>
             </div>
-          </div>
-        </TabsContent>
+          </TabsContent>
+        )}
 
         {/* Files Tab */}
-        <TabsContent value="files" className="m-0">
-          <div className="grid grid-cols-12 gap-0 h-[560px]">
-            <div className="col-span-4 border-r bg-muted/40 h-full">
-              <div className="p-4">
-                <div className="font-medium mb-2">Files</div>
-                <Input placeholder="Filter files..." className="h-9" />
-              </div>
-              <Separator />
-              <ScrollArea className="h-[calc(560px-72px)]">
-                <div className="p-3 space-y-2">
-                  <ul className="space-y-1">
-                    {(files ?? []).map((f, idx) => (
-                      <li key={`${f.name}-${idx}`} className="">
-                        <div className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-secondary">
-                          <FileText className="h-4 w-4" />
-                          <span className="text-sm">{f.name}</span>
-                          <Badge
-                            variant="secondary"
-                            className="ml-auto text-[10px]"
-                          >
-                            {f.format}
-                          </Badge>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
+        {hasFiles && (
+          <TabsContent value="files" className="m-0">
+            <div className="grid grid-cols-12 gap-0 h-[560px]">
+              <div className="col-span-4 border-r bg-muted/40 h-full">
+                <div className="p-4">
+                  <div className="font-medium mb-2">Files</div>
+                  <Input placeholder="Filter files..." className="h-9" />
                 </div>
-              </ScrollArea>
-            </div>
+                <Separator />
+                <ScrollArea className="h-[calc(560px-72px)]">
+                  <div className="p-3 space-y-2">
+                    <ul className="space-y-1">
+                      {(files ?? []).map((f, idx) => (
+                        <li key={`${f.name}-${idx}`} className="">
+                          <div className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-secondary">
+                            <FileText className="h-4 w-4" />
+                            <span className="text-sm">{f.name}</span>
+                            <Badge
+                              variant="secondary"
+                              className="ml-auto text-[10px]"
+                            >
+                              {f.format}
+                            </Badge>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </ScrollArea>
+              </div>
 
-            <div className="col-span-8 h-full">
-              <ReactFlow
-                nodes={fileNodes}
-                edges={fileEdges}
-                nodeTypes={allNodeTypes as any}
-                fitView
-                proOptions={{ hideAttribution: true }}
-              >
-                <Background />
-                <MiniMap
-                  pannable
-                  zoomable
-                  style={miniMapStyle}
-                  maskColor={miniMapMaskColor}
-                  nodeColor={miniMapNodeColor}
-                  nodeStrokeColor={miniMapNodeStrokeColor}
-                />
-                <Controls position="bottom-right" />
-                <Panel
-                  position="top-right"
-                  className="rounded-md border bg-card px-2 py-1 text-xs shadow-sm"
+              <div className="col-span-8 h-full">
+                <ReactFlow
+                  nodes={fileNodes}
+                  edges={fileEdges}
+                  nodeTypes={allNodeTypes as any}
+                  fitView
+                  proOptions={{ hideAttribution: true }}
                 >
-                  Example file schemas
-                </Panel>
-              </ReactFlow>
+                  <Background />
+                  <MiniMap
+                    pannable
+                    zoomable
+                    style={miniMapStyle}
+                    maskColor={miniMapMaskColor}
+                    nodeColor={miniMapNodeColor}
+                    nodeStrokeColor={miniMapNodeStrokeColor}
+                  />
+                  <Controls position="bottom-right" />
+                  <Panel
+                    position="top-right"
+                    className="rounded-md border bg-card px-2 py-1 text-xs shadow-sm"
+                  >
+                    Example file schemas
+                  </Panel>
+                </ReactFlow>
+              </div>
             </div>
-          </div>
-        </TabsContent>
+          </TabsContent>
+        )}
       </Tabs>
     </Card>
   );

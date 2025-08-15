@@ -51,16 +51,21 @@ export type DiagramSchema = {
   database: DiagramDatabase;
   endpoints: DiagramEndpoint[];
   files: DiagramFile[];
+  errors?: string[];
 };
 
 type Json = any;
 
-function readJsonSafe<T = Json>(filePath: string): T | undefined {
+function readJsonSafe<T = Json>(
+  filePath: string,
+  errors?: string[]
+): T | undefined {
   try {
     if (!existsSync(filePath)) return undefined;
     const raw = readFileSync(filePath, "utf-8");
     return JSON.parse(raw) as T;
   } catch {
+    if (errors) errors.push(`Failed to parse JSON: ${filePath}`);
     return undefined;
   }
 }
@@ -104,7 +109,8 @@ function normalizeTablesFromTablesJson(
 
 function loadRelationalTables(
   schemasDir: string,
-  indexJson: any | undefined
+  indexJson: any | undefined,
+  errors?: string[]
 ): DiagramTable[] {
   const tables: DiagramTable[] = [];
   const seenPaths = new Set<string>();
@@ -131,7 +137,15 @@ function loadRelationalTables(
       (ds.kind === "relational" || ds.kind === "tables") &&
       typeof ds.path === "string"
     ) {
-      addFromPath(join(schemasDir, ds.path));
+      const path = join(schemasDir, ds.path);
+      const prevCount: number = tables.length;
+      addFromPath(path);
+      if (tables.length === prevCount) {
+        // likely invalid or duplicate
+        const data = readJsonSafe<any>(path, errors);
+        if (!data)
+          errors?.push(`Missing or invalid relational tables file: ${path}`);
+      }
     }
   }
 
@@ -142,7 +156,14 @@ function loadRelationalTables(
   for (const ent of entities) {
     const relPath: string | undefined = ent?.raw?.relational;
     if (typeof relPath === "string") {
-      addFromPath(join(schemasDir, relPath));
+      const path = join(schemasDir, relPath);
+      const prevCount: number = tables.length;
+      addFromPath(path);
+      if (tables.length === prevCount) {
+        const data = readJsonSafe<any>(path, errors);
+        if (!data)
+          errors?.push(`Missing or invalid relational tables file: ${path}`);
+      }
     }
   }
 
@@ -152,7 +173,13 @@ function loadRelationalTables(
       /relational\/tables\.json$/i.test(p)
     );
     for (const fp of candidates) {
+      const prevCount: number = tables.length;
       addFromPath(fp);
+      if (tables.length === prevCount) {
+        const data = readJsonSafe<any>(fp, errors);
+        if (!data)
+          errors?.push(`Missing or invalid relational tables file: ${fp}`);
+      }
     }
   }
 
@@ -214,7 +241,8 @@ function buildParamsFromJsonSchema(
 
 function loadEndpoints(
   schemasDir: string,
-  indexJson: any | undefined
+  indexJson: any | undefined,
+  errors?: string[]
 ): DiagramEndpoint[] {
   const endpoints: DiagramEndpoint[] = [];
 
@@ -225,7 +253,7 @@ function loadEndpoints(
   for (const ds of datasets) {
     if (ds.kind === "endpoints" && typeof ds.path === "string") {
       const fp = join(schemasDir, ds.path);
-      const json = readJsonSafe<any>(fp);
+      const json = readJsonSafe<any>(fp, errors);
       if (!json) continue;
 
       const meta = json.metadata || ds.metadata || {};
@@ -257,7 +285,7 @@ function loadEndpoints(
     const jsonPath: string | undefined = ent?.raw?.json;
     if (typeof jsonPath === "string") {
       const fp = join(schemasDir, jsonPath);
-      const json = readJsonSafe<any>(fp);
+      const json = readJsonSafe<any>(fp, errors);
       const title = (json?.title || ent?.name || basename(fp)) as string;
       const summary = (json?.description || undefined) as string | undefined;
       const method = "GET";
@@ -273,7 +301,8 @@ function loadEndpoints(
 // ---------- Files (JSON/CSV) ----------
 function loadFileSchemas(
   schemasDir: string,
-  indexJson: any | undefined
+  indexJson: any | undefined,
+  errors?: string[]
 ): DiagramFile[] {
   const files: DiagramFile[] = [];
 
@@ -289,7 +318,7 @@ function loadFileSchemas(
       if (isType) {
         const fp = join(schemasDir, ds.path);
         const name = basename(fp);
-        const schema = readJsonSafe<any>(fp);
+        const schema = readJsonSafe<any>(fp, errors);
         const title = schema?.title as string | undefined;
         files.push({ name, format: "json", details: title });
       }
@@ -339,15 +368,18 @@ export function loadDiagramSchemaForImplementation(
   const implPath = resolve(implementationPath);
   const schemasDir = join(implPath, "schemas");
 
+  const errors: string[] = [];
   let indexJson: any | undefined = undefined;
   if (existsSync(schemasDir)) {
     const indexPath = join(schemasDir, "index.json");
-    indexJson = readJsonSafe<any>(indexPath);
+    indexJson = readJsonSafe<any>(indexPath, errors);
+    if (!indexJson)
+      errors.push(`Missing or invalid schema index: ${indexPath}`);
   }
 
-  const databaseTables = loadRelationalTables(schemasDir, indexJson);
-  const endpoints = loadEndpoints(schemasDir, indexJson);
-  let files = loadFileSchemas(schemasDir, indexJson);
+  const databaseTables = loadRelationalTables(schemasDir, indexJson, errors);
+  const endpoints = loadEndpoints(schemasDir, indexJson, errors);
+  let files = loadFileSchemas(schemasDir, indexJson, errors);
 
   // Shopify Python fallback when no schemas directory exists
   if (
@@ -362,7 +394,12 @@ export function loadDiagramSchemaForImplementation(
     relationships: [], // Relationships are optional; most examples lack FK metadata
   };
 
-  return { database, endpoints, files };
+  return {
+    database,
+    endpoints,
+    files,
+    errors: errors.length ? errors : undefined,
+  };
 }
 
 // Convenience helper: discover the best implementation path from a provider entry
@@ -379,11 +416,13 @@ export function getSchemaDiagramInputs(implementationPath: string): {
   database: { tables: DiagramTable[] };
   endpoints: DiagramEndpoint[];
   files: DiagramFile[];
+  errors?: string[];
 } {
   const schema = loadDiagramSchemaForImplementation(implementationPath);
   return {
     database: { tables: schema.database.tables },
     endpoints: schema.endpoints,
     files: schema.files,
+    errors: schema.errors,
   };
 }

@@ -317,14 +317,14 @@ export default async function ConnectorImplementationPage({
         </div>
         <div className="col-span-9 space-y-8">
           {(() => {
-            const { database, endpoints, files } = getSchemaDiagramInputs(
-              implEntry.path
-            );
+            const { database, endpoints, files, errors } =
+              getSchemaDiagramInputs(implEntry.path);
             return (
               <SchemaDiagram
                 database={database}
                 endpoints={endpoints}
                 files={files}
+                errors={errors}
               />
             );
           })()}
