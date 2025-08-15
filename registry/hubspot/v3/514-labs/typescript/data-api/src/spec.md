@@ -1,9 +1,4 @@
-export const metadata = {
-  title: "HubSpot Connector Spec (v3) – Custom Objects Ready",
-  description: "Concise spec for a HubSpot extractor that supports both default and custom CRM objects"
-}
-
-## HubSpot Connector Spec (v3)
+## HubSpot Connector Spec
 
 This v3 spec documents a compact, production‑oriented extractor for HubSpot CRM. It builds on v2 (typed domains, retries, rate limits, hooks) and clarifies how to add custom objects alongside the defaults.
 
