@@ -1,6 +1,6 @@
 {
   "$schema": "https://turborepo.com/schema.json",
-  "globalEnv": [],
+  "globalEnv": ["GITHUB_PAT"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
