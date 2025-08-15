@@ -164,6 +164,8 @@ validate_connector_exists() {
   if [ ! -d "$full_path" ]; then
     echo "❌ Connector path not found: $rel_path" >&2
     echo "❌ Searched: $full_path" >&2
+    echo ""
+    echo "🔍 Run $SCRIPT_NAME --list to see available connectors."
     exit 1
   fi
 }
