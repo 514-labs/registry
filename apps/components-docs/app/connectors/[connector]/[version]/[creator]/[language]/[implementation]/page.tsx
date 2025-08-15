@@ -17,6 +17,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@ui/components/tabs";
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 import { marked } from "marked";
+import SchemaDiagram from "@/components/schema-diagram";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -313,7 +314,8 @@ export default async function ConnectorImplementationPage({
             </div>
           </div>
         </div>
-        <div className="col-span-9">
+        <div className="col-span-9 space-y-8">
+          <SchemaDiagram />
           {docs.length === 0 ? (
             <div className="prose dark:prose-invert">
               <h1>Documentation</h1>

@@ -21,9 +21,9 @@
     {
       "name": "batchRunReports",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/properties-reporting/batchRunReports.schema.json",
-      "doc": "raw/json/properties-reporting/batchRunReports.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/properties-reporting/batchRunReports.schema.json",
+      "doc": "raw/endpoints/properties-reporting/batchRunReports.md",
       "metadata": {
         "category": "endpoint",
         "apiMethod": "POST"
@@ -32,9 +32,9 @@
     {
       "name": "batchRunPivotReports",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/properties-reporting/batchRunPivotReports.schema.json",
-      "doc": "raw/json/properties-reporting/batchRunPivotReports.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/properties-reporting/batchRunPivotReports.schema.json",
+      "doc": "raw/endpoints/properties-reporting/batchRunPivotReports.md",
       "metadata": {
         "category": "endpoint",
         "apiMethod": "POST"
@@ -43,9 +43,9 @@
     {
       "name": "runReport",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/properties-reporting/runReport.schema.json",
-      "doc": "raw/json/properties-reporting/runReport.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/properties-reporting/runReport.schema.json",
+      "doc": "raw/endpoints/properties-reporting/runReport.md",
       "metadata": {
         "category": "endpoint",
         "apiMethod": "POST"
@@ -54,9 +54,9 @@
     {
       "name": "runRealtimeReport",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/properties-reporting/runRealtimeReport.schema.json",
-      "doc": "raw/json/properties-reporting/runRealtimeReport.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/properties-reporting/runRealtimeReport.schema.json",
+      "doc": "raw/endpoints/properties-reporting/runRealtimeReport.md",
       "metadata": {
         "category": "endpoint",
         "apiMethod": "POST"
@@ -65,9 +65,9 @@
     {
       "name": "runPivotReport",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/properties-reporting/runPivotReport.schema.json",
-      "doc": "raw/json/properties-reporting/runPivotReport.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/properties-reporting/runPivotReport.schema.json",
+      "doc": "raw/endpoints/properties-reporting/runPivotReport.md",
       "metadata": {
         "category": "endpoint",
         "apiMethod": "POST"
@@ -76,9 +76,9 @@
     {
       "name": "checkCompatibility",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/properties-reporting/checkCompatibility.schema.json",
-      "doc": "raw/json/properties-reporting/checkCompatibility.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/properties-reporting/checkCompatibility.schema.json",
+      "doc": "raw/endpoints/properties-reporting/checkCompatibility.md",
       "metadata": {
         "category": "endpoint",
         "apiMethod": "POST"
@@ -87,9 +87,9 @@
     {
       "name": "getMetadata",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/properties-reporting/getMetadata.schema.json",
-      "doc": "raw/json/properties-reporting/getMetadata.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/properties-reporting/getMetadata.schema.json",
+      "doc": "raw/endpoints/properties-reporting/getMetadata.md",
       "metadata": {
         "category": "endpoint",
         "apiMethod": "GET"
@@ -98,9 +98,9 @@
     {
       "name": "audienceExports.create",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/audience-exports/audienceExports.create.schema.json",
-      "doc": "raw/json/audience-exports/audienceExports.create.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/audience-exports/audienceExports.create.schema.json",
+      "doc": "raw/endpoints/audience-exports/audienceExports.create.md",
       "metadata": {
         "category": "endpoint",
         "apiMethod": "POST"
@@ -109,9 +109,9 @@
     {
       "name": "audienceExports.get",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/audience-exports/audienceExports.get.schema.json",
-      "doc": "raw/json/audience-exports/audienceExports.get.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/audience-exports/audienceExports.get.schema.json",
+      "doc": "raw/endpoints/audience-exports/audienceExports.get.md",
       "metadata": {
         "category": "endpoint",
         "apiMethod": "GET"
@@ -120,9 +120,9 @@
     {
       "name": "audienceExports.list",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/audience-exports/audienceExports.list.schema.json",
-      "doc": "raw/json/audience-exports/audienceExports.list.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/audience-exports/audienceExports.list.schema.json",
+      "doc": "raw/endpoints/audience-exports/audienceExports.list.md",
       "metadata": {
         "category": "endpoint",
         "apiMethod": "GET"
@@ -131,9 +131,9 @@
     {
       "name": "audienceExports.query",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/audience-exports/audienceExports.query.schema.json",
-      "doc": "raw/json/audience-exports/audienceExports.query.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/audience-exports/audienceExports.query.schema.json",
+      "doc": "raw/endpoints/audience-exports/audienceExports.query.md",
       "metadata": {
         "category": "endpoint",
         "apiMethod": "POST"
@@ -142,9 +142,9 @@
     {
       "name": "CohortSpec",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/CohortSpec.schema.json",
-      "doc": "raw/json/types/CohortSpec.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/CohortSpec.schema.json",
+      "doc": "raw/endpoints/types/CohortSpec.md",
       "metadata": {
         "category": "type"
       }
@@ -152,9 +152,9 @@
     {
       "name": "Comparison",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/Comparison.schema.json",
-      "doc": "raw/json/types/Comparison.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/Comparison.schema.json",
+      "doc": "raw/endpoints/types/Comparison.md",
       "metadata": {
         "category": "type"
       }
@@ -162,9 +162,9 @@
     {
       "name": "DateRange",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/DateRange.schema.json",
-      "doc": "raw/json/types/DateRange.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/DateRange.schema.json",
+      "doc": "raw/endpoints/types/DateRange.md",
       "metadata": {
         "category": "type"
       }
@@ -172,9 +172,9 @@
     {
       "name": "Dimension",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/Dimension.schema.json",
-      "doc": "raw/json/types/Dimension.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/Dimension.schema.json",
+      "doc": "raw/endpoints/types/Dimension.md",
       "metadata": {
         "category": "type"
       }
@@ -182,9 +182,9 @@
     {
       "name": "DimensionHeader",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/DimensionHeader.schema.json",
-      "doc": "raw/json/types/DimensionHeader.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/DimensionHeader.schema.json",
+      "doc": "raw/endpoints/types/DimensionHeader.md",
       "metadata": {
         "category": "type"
       }
@@ -192,9 +192,9 @@
     {
       "name": "DimensionMetadata",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/DimensionMetadata.schema.json",
-      "doc": "raw/json/types/DimensionMetadata.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/DimensionMetadata.schema.json",
+      "doc": "raw/endpoints/types/DimensionMetadata.md",
       "metadata": {
         "category": "type"
       }
@@ -202,9 +202,9 @@
     {
       "name": "DimensionValue",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/DimensionValue.schema.json",
-      "doc": "raw/json/types/DimensionValue.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/DimensionValue.schema.json",
+      "doc": "raw/endpoints/types/DimensionValue.md",
       "metadata": {
         "category": "type"
       }
@@ -212,9 +212,9 @@
     {
       "name": "FilterExpression",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/FilterExpression.schema.json",
-      "doc": "raw/json/types/FilterExpression.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/FilterExpression.schema.json",
+      "doc": "raw/endpoints/types/FilterExpression.md",
       "metadata": {
         "category": "type"
       }
@@ -222,9 +222,9 @@
     {
       "name": "Metric",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/Metric.schema.json",
-      "doc": "raw/json/types/Metric.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/Metric.schema.json",
+      "doc": "raw/endpoints/types/Metric.md",
       "metadata": {
         "category": "type"
       }
@@ -232,9 +232,9 @@
     {
       "name": "MetricAggregation",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/MetricAggregation.schema.json",
-      "doc": "raw/json/types/MetricAggregation.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/MetricAggregation.schema.json",
+      "doc": "raw/endpoints/types/MetricAggregation.md",
       "metadata": {
         "category": "type"
       }
@@ -242,9 +242,9 @@
     {
       "name": "MetricHeader",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/MetricHeader.schema.json",
-      "doc": "raw/json/types/MetricHeader.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/MetricHeader.schema.json",
+      "doc": "raw/endpoints/types/MetricHeader.md",
       "metadata": {
         "category": "type"
       }
@@ -252,9 +252,9 @@
     {
       "name": "MetricMetadata",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/MetricMetadata.schema.json",
-      "doc": "raw/json/types/MetricMetadata.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/MetricMetadata.schema.json",
+      "doc": "raw/endpoints/types/MetricMetadata.md",
       "metadata": {
         "category": "type"
       }
@@ -262,9 +262,9 @@
     {
       "name": "MetricType",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/MetricType.schema.json",
-      "doc": "raw/json/types/MetricType.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/MetricType.schema.json",
+      "doc": "raw/endpoints/types/MetricType.md",
       "metadata": {
         "category": "type"
       }
@@ -272,9 +272,9 @@
     {
       "name": "OrderBy",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/OrderBy.schema.json",
-      "doc": "raw/json/types/OrderBy.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/OrderBy.schema.json",
+      "doc": "raw/endpoints/types/OrderBy.md",
       "metadata": {
         "category": "type"
       }
@@ -282,9 +282,9 @@
     {
       "name": "Pivot",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/Pivot.schema.json",
-      "doc": "raw/json/types/Pivot.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/Pivot.schema.json",
+      "doc": "raw/endpoints/types/Pivot.md",
       "metadata": {
         "category": "type"
       }
@@ -292,9 +292,9 @@
     {
       "name": "PropertyQuota",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/PropertyQuota.schema.json",
-      "doc": "raw/json/types/PropertyQuota.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/PropertyQuota.schema.json",
+      "doc": "raw/endpoints/types/PropertyQuota.md",
       "metadata": {
         "category": "type"
       }
@@ -302,9 +302,9 @@
     {
       "name": "ResponseMetaData",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/ResponseMetaData.schema.json",
-      "doc": "raw/json/types/ResponseMetaData.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/ResponseMetaData.schema.json",
+      "doc": "raw/endpoints/types/ResponseMetaData.md",
       "metadata": {
         "category": "type"
       }
@@ -312,9 +312,9 @@
     {
       "name": "Row",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/Row.schema.json",
-      "doc": "raw/json/types/Row.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/Row.schema.json",
+      "doc": "raw/endpoints/types/Row.md",
       "metadata": {
         "category": "type"
       }
@@ -322,9 +322,9 @@
     {
       "name": "RunPivotReportResponse",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/RunPivotReportResponse.schema.json",
-      "doc": "raw/json/types/RunPivotReportResponse.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/RunPivotReportResponse.schema.json",
+      "doc": "raw/endpoints/types/RunPivotReportResponse.md",
       "metadata": {
         "category": "type"
       }
@@ -332,9 +332,9 @@
     {
       "name": "RunReportResponse",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/types/RunReportResponse.schema.json",
-      "doc": "raw/json/types/RunReportResponse.md",
+      "kind": "endpoints",
+      "path": "raw/endpoints/types/RunReportResponse.schema.json",
+      "doc": "raw/endpoints/types/RunReportResponse.md",
       "metadata": {
         "category": "type"
       }
