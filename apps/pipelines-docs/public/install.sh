@@ -27,6 +27,7 @@ CONNECTOR_NAME=""
 CONNECTOR_VERSION=""
 CONNECTOR_AUTHOR=""
 CONNECTOR_LANGUAGE=""
+CONNECTOR_IMPLEMENTATION=""
 
 # ===== Internal =====
 TMP_DIR=""
@@ -35,6 +36,7 @@ FILTER_NAME=""
 FILTER_VERSION=""
 FILTER_AUTHOR=""
 FILTER_LANGUAGE=""
+FILTER_IMPLEMENTATION=""
 DESTINATION=""
 
 # Remove temp dir on exit
@@ -53,30 +55,32 @@ print_usage() {
 Install a connector from $REPO_OWNER/$REPO_NAME into a new subdirectory in your current directory.
 
 USAGE:
-  $SCRIPT_NAME <name> <version> <author> <language> [--dest <dir>]
-  $SCRIPT_NAME --list [--name <n1,n2>] [--version <v1,v2>] [--author <a1,a2>] [--language <l1,l2>]
+  $SCRIPT_NAME <name> <version> <author> <language> <implementation> [--dest <dir>]
+  $SCRIPT_NAME --list [--name <n1,n2>] [--version <v1,v2>] [--author <a1,a2>] [--language <l1,l2>] [--implementation <i1,i2>]
   $SCRIPT_NAME --help
 
 EXAMPLES:
   # Install Google Analytics v4 by author fiveonefour in TypeScript into the current directory
-  $SCRIPT_NAME google-analytics v4 fiveonefour typescript
+  $SCRIPT_NAME google-analytics v4 fiveonefour typescript data-api
 
   # List available connectors to install
   $SCRIPT_NAME --list
 
 POSITIONAL ARGUMENTS:
-  name          Connector name (e.g., google-analytics, s3)
-  version       Data source version (e.g., v3, v4)
-  author        Author/vendor (e.g., fiveonefour)
-  language      Language (e.g., typescript, python)
+  name            Connector name (e.g., google-analytics, s3)
+  version         Data source version (e.g., v3, v4)
+  author          Author/vendor (e.g., fiveonefour)
+  language        Language (e.g., typescript, python)
+  implementation  Implementation (e.g., rest, sdk)
 
 FLAGS:
   --list        List available connectors to install
                 Optional filters (comma-separated, case-insensitive substrings):
-                  --name <n1,n2>       Filter by connector name(s)
-                  --version <v1,v2>    Filter by version(s)
-                  --author <a1,a2>     Filter by author(s)
-                  --language <l1,l2>   Filter by language(s)
+                  --name <n1,n2>            Filter by connector name(s)
+                  --version <v1,v2>         Filter by version(s)
+                  --author <a1,a2>          Filter by author(s)
+                  --language <l1,l2>        Filter by language(s)
+                  --implementation <i1,i2>  Filter by implementation(s)
 
   --dest <dir>  Destination directory for installation (absolute or relative)
                 Default: ./<name>
@@ -89,7 +93,7 @@ ENVIRONMENT:
                     Example: REGISTRY_JSON_URL=https://connectors.514.ai/registry.json $SCRIPT_NAME --list
   REPO_BRANCH       Git branch to install from.
                     Default: $DEFAULT_REPO_BRANCH
-                    Example: REPO_BRANCH=my-branch $SCRIPT_NAME google-analytics v4 fiveonefour typescript
+                    Example: REPO_BRANCH=my-branch $SCRIPT_NAME google-analytics v4 fiveonefour typescript data-api
 EOF
 }
 
@@ -192,7 +196,7 @@ copy_connector_into_subdir() {
 list_connectors() {
   echo ""
   echo "🚀 Install a connector with this command:"
-  echo "$SCRIPT_NAME <name> <version> <author> <language>"
+  echo "$SCRIPT_NAME <name> <version> <author> <language> <implementation>"
   echo ""
 
   if ! command -v jq >/dev/null 2>&1; then
@@ -219,19 +223,20 @@ list_connectors() {
     --arg f_name "$FILTER_NAME" \
     --arg f_version "$FILTER_VERSION" \
     --arg f_author "$FILTER_AUTHOR" \
-    --arg f_language "$FILTER_LANGUAGE" '
+    --arg f_language "$FILTER_LANGUAGE" \
+    --arg f_implementation "$FILTER_IMPLEMENTATION" '
     def mkpat(s): (s|split(",")|map(ascii_downcase|gsub("^\\s+|\\s+$";""))|join("|"));
     def want(field; s): (s=="" or (field|ascii_downcase|test(mkpat(s))));
-    (.connectors // [])
-    | .[] as $c
-    | ($c.languages // [])[] as $l
+    (. // [])
+    | .[]
     | select(
-        want($c.name; $f_name) and
-        want($c.version; $f_version) and
-        want($c.author; $f_author) and
-        want($l; $f_language)
+        want(.name; $f_name) and
+        want(.version; $f_version) and
+        want(.author; $f_author) and
+        want(.language; $f_language) and
+        want(.implementation; $f_implementation)
       )
-    | "\($c.name) \($c.version) \($c.author) \($l)"
+    | "\(.name) \(.version) \(.author) \(.language) \(.implementation)"
   ')
 
   if [ -z "$perms" ]; then
@@ -262,6 +267,8 @@ parse_args() {
         FILTER_AUTHOR="${2:-}"; shift 2;;
       --language)
         FILTER_LANGUAGE="${2:-}"; shift 2;;
+      --implementation)
+        FILTER_IMPLEMENTATION="${2:-}"; shift 2;;
       --dest)
         DESTINATION="${2:-}"; shift 2;;
       -h|--help)
@@ -274,8 +281,8 @@ parse_args() {
   done
   # Assign positionals if not in list/help mode
   if [ "$MODE" != "list" ]; then
-    if [ ${#POSITIONALS[@]} -lt 4 ]; then
-      echo "❌ Expected 4 positional arguments: <name> <version> <author> <language>" >&2
+    if [ ${#POSITIONALS[@]} -lt 5 ]; then
+      echo "❌ Expected 5 positional arguments: <name> <version> <author> <language> <implementation>" >&2
       print_usage
       exit 1
     fi
@@ -283,6 +290,7 @@ parse_args() {
     CONNECTOR_VERSION="${POSITIONALS[1]}"
     CONNECTOR_AUTHOR="${POSITIONALS[2]}"
     CONNECTOR_LANGUAGE="${POSITIONALS[3]}"
+    CONNECTOR_IMPLEMENTATION="${POSITIONALS[4]}"
   fi
 }
 
@@ -304,7 +312,7 @@ main() {
   ensure_dependencies
   create_tmpdir
 
-  local rel_path="connector-registry/$CONNECTOR_NAME/$CONNECTOR_VERSION/$CONNECTOR_AUTHOR/$CONNECTOR_LANGUAGE"
+  local rel_path="registry/$CONNECTOR_NAME/$CONNECTOR_VERSION/$CONNECTOR_AUTHOR/$CONNECTOR_LANGUAGE/$CONNECTOR_IMPLEMENTATION"
   echo ""
   echo "Connector: $rel_path"
   echo "Source:    $REPO_OWNER/$REPO_NAME@$REPO_BRANCH"

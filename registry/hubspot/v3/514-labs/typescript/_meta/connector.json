@@ -1,0 +1,7 @@
+{
+  "name": "hubspot",
+  "author": "514-labs",
+  "version": "v3",
+  "language": "typescript",
+  "implementations": ["data-api"]
+}
