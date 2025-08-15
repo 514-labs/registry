@@ -4,8 +4,10 @@ This package provides a HubSpot CRM v3 connector. It exposes a simple lifecycle 
 
 ## Install
 
-- Inside this monorepo: `pnpm -w --filter @workspace/connector-hubspot build`
-- In another project, copy this connector folder structure (root `_meta`, provider `_meta`, and `typescript/`) as needed.
+- Navigate to your project, specifically where you want to install the connector
+- Run `bash -i <(curl https://connectors.514.ai/install.sh) hubspot v3 514-labs typescript`
+- Add the connector to your workspaces if you have that configured
+- Run `npm | pnpm install`
 
 ## Quick start
 
