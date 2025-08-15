@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Background,
   Controls,
@@ -50,7 +50,7 @@ function TableNode(props: NodeProps<TableData>) {
     <div
       className={cn(
         "rounded-md border bg-card text-card-foreground shadow-sm w-[280px]",
-        selected && "ring-2 ring-primary"
+        (selected || (data as any).highlighted) && "ring-2 ring-primary"
       )}
     >
       <div className="flex items-center gap-2 border-b px-3 py-2 bg-secondary/60">
@@ -104,6 +104,7 @@ type EndpointData = {
   title: string;
   summary?: string;
   params?: EndpointParam[];
+  highlighted?: boolean;
 };
 
 function EndpointNode(props: NodeProps<EndpointData>) {
@@ -146,7 +147,7 @@ function EndpointNode(props: NodeProps<EndpointData>) {
     <div
       className={cn(
         "rounded-md border bg-card shadow-sm w-[320px]",
-        selected && "ring-2 ring-primary"
+        (selected || data.highlighted) && "ring-2 ring-primary"
       )}
     >
       <div className="flex items-center gap-2 border-b px-3 py-2 bg-secondary/60">
@@ -185,6 +186,7 @@ type FileData = {
   name: string;
   format: "csv" | "json" | "parquet" | "avro" | "ndjson" | string;
   details?: string;
+  highlighted?: boolean;
 };
 
 function FileNode(props: NodeProps<FileData>) {
@@ -194,7 +196,7 @@ function FileNode(props: NodeProps<FileData>) {
     <div
       className={cn(
         "rounded-md border bg-card shadow-sm w-[260px]",
-        selected && "ring-2 ring-primary"
+        (selected || data.highlighted) && "ring-2 ring-primary"
       )}
     >
       <div className="flex items-center gap-2 border-b px-3 py-2 bg-secondary/60">
@@ -262,6 +264,9 @@ export function SchemaDiagram({
   const [active, setActive] = useState<"database" | "endpoints" | "files">(
     "database"
   );
+  const [dbFilter, setDbFilter] = useState("");
+  const [epFilter, setEpFilter] = useState("");
+  const [fileFilter, setFileFilter] = useState("");
   const miniMapMaskColor = "var(--rf-minimap-mask)";
   const miniMapStyle = {
     backgroundColor: "var(--muted)",
@@ -297,11 +302,13 @@ export function SchemaDiagram({
             isForeignKey: c.isForeignKey,
             nullable: c.nullable,
           })),
+          // @ts-expect-error: augmenting for highlight support
+          highlighted: tableMatches(t, dbFilter) && dbFilter.length > 0,
         },
       });
     });
     return nodes;
-  }, [database]);
+  }, [database, dbFilter]);
 
   const dbEdges = useMemo<Edge[]>(() => {
     const rels = database?.relationships ?? [];
@@ -334,10 +341,11 @@ export function SchemaDiagram({
           title: e.title,
           summary: e.summary,
           params: e.params,
+          highlighted: endpointMatches(e, epFilter) && epFilter.length > 0,
         },
       };
     });
-  }, [endpoints]);
+  }, [endpoints, epFilter]);
 
   const jsonEdges = useMemo<Edge[]>(() => [], []);
 
@@ -351,10 +359,15 @@ export function SchemaDiagram({
         id: `${f.name}-${idx}`,
         type: "file",
         position: { x, y },
-        data: { name: f.name, format: f.format, details: f.details },
+        data: {
+          name: f.name,
+          format: f.format,
+          details: f.details,
+          highlighted: fileMatches(f, fileFilter) && fileFilter.length > 0,
+        },
       };
     });
-  }, [files]);
+  }, [files, fileFilter]);
 
   const fileEdges = useMemo<Edge[]>(() => [], []);
 
@@ -364,6 +377,58 @@ export function SchemaDiagram({
   const hasEndpoints = (endpoints?.length ?? 0) > 0;
   const hasFiles = (files?.length ?? 0) > 0;
   const hasAny = hasDatabase || hasEndpoints || hasFiles;
+
+  // Pick first available tab automatically
+  useEffect(() => {
+    const desired = hasDatabase
+      ? "database"
+      : hasEndpoints
+        ? "endpoints"
+        : hasFiles
+          ? "files"
+          : undefined;
+    if (desired && active !== desired) setActive(desired as any);
+  }, [hasDatabase, hasEndpoints, hasFiles]);
+
+  function includesI(s: string | undefined, q: string): boolean {
+    if (!q) return true;
+    if (!s) return false;
+    return s.toLowerCase().includes(q.toLowerCase());
+  }
+
+  function tableMatches(t: DiagramTable, q: string): boolean {
+    if (!q) return true;
+    if (includesI(t.label, q)) return true;
+    return (t.columns ?? []).some(
+      (c) => includesI(c.name, q) || includesI(c.type, q)
+    );
+  }
+
+  function endpointMatches(e: DiagramEndpoint, q: string): boolean {
+    if (!q) return true;
+    if (
+      includesI(e.title, q) ||
+      includesI(e.path, q) ||
+      includesI(String(e.method), q)
+    )
+      return true;
+    const stack: EndpointParam[] = [...(e.params ?? [])];
+    while (stack.length) {
+      const p = stack.pop()!;
+      if (includesI(p.name, q) || includesI(p.type, q)) return true;
+      if (p.children) stack.push(...p.children);
+    }
+    return false;
+  }
+
+  function fileMatches(f: DiagramFile, q: string): boolean {
+    if (!q) return true;
+    return (
+      includesI(f.name, q) ||
+      includesI(String(f.format), q) ||
+      includesI(f.details, q)
+    );
+  }
 
   // Render error pane if errors present
   if (errors && errors.length > 0) {
@@ -430,23 +495,27 @@ export function SchemaDiagram({
                   <Input
                     placeholder="Filter tables, columns..."
                     className="h-9"
+                    value={dbFilter}
+                    onChange={(e) => setDbFilter(e.target.value)}
                   />
                 </div>
                 <Separator />
                 <ScrollArea className="h-[calc(560px-72px)]">
                   <div className="p-3 space-y-2">
                     <ul className="space-y-1">
-                      {(database?.tables ?? []).map((t) => (
-                        <li
-                          key={t.label}
-                          className="flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-secondary"
-                        >
-                          <span className="text-sm">{t.label}</span>
-                          <Badge variant="secondary" className="text-[10px]">
-                            {t.columns?.length ?? 0}
-                          </Badge>
-                        </li>
-                      ))}
+                      {(database?.tables ?? [])
+                        .filter((t) => tableMatches(t, dbFilter))
+                        .map((t) => (
+                          <li
+                            key={t.label}
+                            className="flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-secondary"
+                          >
+                            <span className="text-sm">{t.label}</span>
+                            <Badge variant="secondary" className="text-[10px]">
+                              {t.columns?.length ?? 0}
+                            </Badge>
+                          </li>
+                        ))}
                     </ul>
                     <Separator className="my-2" />
                     <div className="text-xs uppercase text-muted-foreground px-1">
@@ -503,21 +572,28 @@ export function SchemaDiagram({
               <div className="col-span-4 border-r bg-muted/40 h-full">
                 <div className="p-4">
                   <div className="font-medium mb-2">Endpoints</div>
-                  <Input placeholder="Filter endpoints..." className="h-9" />
+                  <Input
+                    placeholder="Filter endpoints..."
+                    className="h-9"
+                    value={epFilter}
+                    onChange={(e) => setEpFilter(e.target.value)}
+                  />
                 </div>
                 <Separator />
                 <ScrollArea className="h-[calc(560px-72px)]">
                   <div className="p-3 space-y-2">
                     <ul className="space-y-1">
-                      {(endpoints ?? []).map((e, idx) => (
-                        <li
-                          key={`${e.title}-${idx}`}
-                          className="rounded-md px-2 py-1.5 hover:bg-secondary flex items-center gap-2"
-                        >
-                          <Badge className="text-[10px]">{e.method}</Badge>
-                          <span className="text-sm">{e.title}</span>
-                        </li>
-                      ))}
+                      {(endpoints ?? [])
+                        .filter((e) => endpointMatches(e, epFilter))
+                        .map((e, idx) => (
+                          <li
+                            key={`${e.title}-${idx}`}
+                            className="rounded-md px-2 py-1.5 hover:bg-secondary flex items-center gap-2"
+                          >
+                            <Badge className="text-[10px]">{e.method}</Badge>
+                            <span className="text-sm">{e.title}</span>
+                          </li>
+                        ))}
                     </ul>
                   </div>
                 </ScrollArea>
@@ -560,26 +636,33 @@ export function SchemaDiagram({
               <div className="col-span-4 border-r bg-muted/40 h-full">
                 <div className="p-4">
                   <div className="font-medium mb-2">Files</div>
-                  <Input placeholder="Filter files..." className="h-9" />
+                  <Input
+                    placeholder="Filter files..."
+                    className="h-9"
+                    value={fileFilter}
+                    onChange={(e) => setFileFilter(e.target.value)}
+                  />
                 </div>
                 <Separator />
                 <ScrollArea className="h-[calc(560px-72px)]">
                   <div className="p-3 space-y-2">
                     <ul className="space-y-1">
-                      {(files ?? []).map((f, idx) => (
-                        <li key={`${f.name}-${idx}`} className="">
-                          <div className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-secondary">
-                            <FileText className="h-4 w-4" />
-                            <span className="text-sm">{f.name}</span>
-                            <Badge
-                              variant="secondary"
-                              className="ml-auto text-[10px]"
-                            >
-                              {f.format}
-                            </Badge>
-                          </div>
-                        </li>
-                      ))}
+                      {(files ?? [])
+                        .filter((f) => fileMatches(f, fileFilter))
+                        .map((f, idx) => (
+                          <li key={`${f.name}-${idx}`} className="">
+                            <div className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-secondary">
+                              <FileText className="h-4 w-4" />
+                              <span className="text-sm">{f.name}</span>
+                              <Badge
+                                variant="secondary"
+                                className="ml-auto text-[10px]"
+                              >
+                                {f.format}
+                              </Badge>
+                            </div>
+                          </li>
+                        ))}
                     </ul>
                   </div>
                 </ScrollArea>
