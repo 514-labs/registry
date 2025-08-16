@@ -259,11 +259,13 @@ export function SchemaDiagram({
   endpoints,
   files,
   errors,
+  connectorName,
 }: {
   database?: { tables?: DiagramTable[]; relationships?: DiagramRelationship[] };
   endpoints?: DiagramEndpoint[];
   files?: DiagramFile[];
   errors?: string[];
+  connectorName?: string;
 }) {
   const [active, setActive] = useState<"database" | "endpoints" | "files">(
     "database"
@@ -381,6 +383,7 @@ export function SchemaDiagram({
   const hasEndpoints = (endpoints?.length ?? 0) > 0;
   const hasFiles = (files?.length ?? 0) > 0;
   const hasAny = hasDatabase || hasEndpoints || hasFiles;
+  const connectorLabel = connectorName ?? "";
 
   // Pick first available tab automatically
   useEffect(() => {
@@ -688,7 +691,9 @@ export function SchemaDiagram({
                     position="top-right"
                     className="rounded-md border bg-card px-2 py-1 text-xs shadow-sm"
                   >
-                    Example UML-like schema
+                    {connectorLabel
+                      ? `${connectorLabel} Database Schema`
+                      : `Database Schema`}
                   </Panel>
                 </ReactFlow>
               </div>
@@ -742,7 +747,9 @@ export function SchemaDiagram({
                     position="top-right"
                     className="rounded-md border bg-card px-2 py-1 text-xs shadow-sm"
                   >
-                    Example endpoints and response schemas
+                    {connectorLabel
+                      ? `${connectorLabel} Endpoints Schema`
+                      : `Endpoints Schema`}
                   </Panel>
                 </ReactFlow>
               </div>
@@ -811,7 +818,9 @@ export function SchemaDiagram({
                     position="top-right"
                     className="rounded-md border bg-card px-2 py-1 text-xs shadow-sm"
                   >
-                    Example file schemas
+                    {connectorLabel
+                      ? `${connectorLabel} Files Schema`
+                      : `Files Schema`}
                   </Panel>
                 </ReactFlow>
               </div>

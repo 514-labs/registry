@@ -322,6 +322,7 @@ export default async function ConnectorImplementationPage({
                 endpoints={endpoints}
                 files={files}
                 errors={errors}
+                connectorName={displayName}
               />
             );
           })()}
