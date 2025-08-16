@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Background,
   Controls,
   MiniMap,
   Panel,
   ReactFlow,
+  type ReactFlowInstance,
   MarkerType,
   type Edge,
   type Node,
@@ -430,6 +431,9 @@ export function SchemaDiagram({
   } as React.CSSProperties;
   const miniMapNodeColor = "var(--card)";
   const miniMapNodeStrokeColor = "var(--border)";
+  const dbFlowRef = useRef<ReactFlowInstance | null>(null);
+  const jsonFlowRef = useRef<ReactFlowInstance | null>(null);
+  const fileFlowRef = useRef<ReactFlowInstance | null>(null);
 
   // Database schema from props
   const dbNodes = useMemo<Node<TableData>[]>(() => {
@@ -634,6 +638,54 @@ export function SchemaDiagram({
     return false;
   }
 
+  // Focus helpers for centering/zooming to nodes
+  function centerOnNode(
+    instance: ReactFlowInstance | null,
+    predicate: (n: AnyNode) => boolean
+  ) {
+    if (!instance) return;
+    const nodes = instance.getNodes();
+    const target = nodes.find(predicate);
+    if (!target) return;
+    try {
+      instance.fitView({
+        nodes: [target as any],
+        padding: 0.2,
+        duration: 600,
+      } as any);
+    } catch {}
+  }
+
+  function focusTableByLabel(label: string) {
+    centerOnNode(dbFlowRef.current, (n) => {
+      const d: any = (n as any).data;
+      return n.type === "table" && (n.id === label || d?.label === label);
+    });
+  }
+
+  function focusEndpointItem(e: DiagramEndpoint) {
+    const method = String(e.method).toUpperCase();
+    centerOnNode(jsonFlowRef.current, (n) => {
+      const d: any = (n as any).data;
+      return (
+        n.type === "endpoint" &&
+        String(d?.method).toUpperCase() === method &&
+        d?.path === e.path
+      );
+    });
+  }
+
+  function focusFileItem(f: DiagramFile) {
+    centerOnNode(fileFlowRef.current, (n) => {
+      const d: any = (n as any).data;
+      return (
+        n.type === "file" &&
+        d?.name === f.name &&
+        String(d?.format) === String(f.format)
+      );
+    });
+  }
+
   // Build a nested tree by endpoint folders (derived from registry path)
   type EndpointFolderNode = {
     key: string;
@@ -748,8 +800,9 @@ export function SchemaDiagram({
       items.push(
         <li key={`ep-${e.title}-${e.path}`} className="">
           <div
-            className="rounded-md px-2 py-1.5 hover:bg-secondary flex items-center gap-2"
+            className="rounded-md px-2 py-1.5 hover:bg-secondary flex items-center gap-2 cursor-pointer"
             style={{ paddingLeft: depth * 12 + 24 }}
+            onClick={() => focusEndpointItem(e)}
           >
             <Badge className="text-[10px]">{e.method}</Badge>
             <span className="text-sm">{e.title}</span>
@@ -847,7 +900,8 @@ export function SchemaDiagram({
                         .map((t) => (
                           <li
                             key={t.label}
-                            className="flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-secondary"
+                            className="flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-secondary cursor-pointer"
+                            onClick={() => focusTableByLabel(t.label)}
                           >
                             <span className="text-sm">{t.label}</span>
                             <Badge variant="secondary" className="text-[10px]">
@@ -883,6 +937,9 @@ export function SchemaDiagram({
                   nodeTypes={allNodeTypes as any}
                   fitView
                   proOptions={{ hideAttribution: true }}
+                  onInit={(instance) => {
+                    dbFlowRef.current = instance as ReactFlowInstance;
+                  }}
                 >
                   <Background />
                   <MiniMap
@@ -943,6 +1000,9 @@ export function SchemaDiagram({
                   nodeTypes={allNodeTypes as any}
                   fitView
                   proOptions={{ hideAttribution: true }}
+                  onInit={(instance) => {
+                    jsonFlowRef.current = instance as ReactFlowInstance;
+                  }}
                 >
                   <Background />
                   <MiniMap
@@ -990,7 +1050,10 @@ export function SchemaDiagram({
                         .filter((f) => fileMatches(f, fileFilter))
                         .map((f, idx) => (
                           <li key={`${f.name}-${idx}`} className="">
-                            <div className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-secondary">
+                            <div
+                              className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-secondary cursor-pointer"
+                              onClick={() => focusFileItem(f)}
+                            >
                               <FileText className="h-4 w-4" />
                               <span className="text-sm">{f.name}</span>
                               <Badge
@@ -1018,6 +1081,9 @@ export function SchemaDiagram({
                   nodeTypes={allNodeTypes as any}
                   fitView
                   proOptions={{ hideAttribution: true }}
+                  onInit={(instance) => {
+                    fileFlowRef.current = instance as ReactFlowInstance;
+                  }}
                 >
                   <Background />
                   <MiniMap
