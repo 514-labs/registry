@@ -89,7 +89,7 @@
                             {
                               "type": "file",
                               "name": "schema.md",
-                              "template": "# Schema\n\nRefer to `schemas/index.json` and related files.\n\n## Organization\n\nSchemas support nested folder structures for better organization:\n\n- **raw/endpoints/** - Raw API schemas\n  - `endpoints/` - API endpoint schemas\n  - `types/` - Shared type definitions\n  - `events/` - Event payloads\n- **extracted/endpoints/** - Normalized schemas\n  - `entities/` - Business entities\n  - `metrics/` - Aggregated data\n\n## Adding Schemas\n\n1. Create schema files in appropriate nested folders\n2. Update `schemas/index.json` with correct paths\n3. Include metadata for endpoints vs types\n"
+                              "template": "# Schema\n\nRefer to `schemas/index.json` and related files.\n\n## Organization\n\nSchemas support nested folder structures for better organization:\n\n- **raw/** - Raw API schemas\n  - `endpoints/` - API endpoint request/response schemas\n  - `types/` - Shared type definitions for endpoints (not shown as Files)\n  - `events/` - Event payloads\n- **extracted/** - Normalized schemas\n  - `entities/` - Business entities\n  - `metrics/` - Aggregated data\n- **files/** - File-based schemas (CSV/JSON/Parquet/Avro/NDJSON). Only items under `schemas/files` appear in the Files tab.\n\n## Adding Schemas\n\n1. Create schema files in appropriate nested folders\n2. Update `schemas/index.json` with correct paths for endpoints and tables\n3. Place file schemas under `schemas/files` (no index entries needed)\n"
                             },
                             {
                               "type": "file",
@@ -105,7 +105,7 @@
                             {
                               "type": "file",
                               "name": "index.json",
-                              "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/schema-index.schema.json\",\n  \"version\": \"0.1.0\",\n  \"datasets\": [\n    {\n      \"name\": \"events\",\n      \"stage\": \"raw\",\n      \"kind\": \"endpoints\",\n      \"path\": \"raw/endpoints/events.schema.json\",\n      \"doc\": \"raw/endpoints/events.md\"\n    },\n    {\n      \"name\": \"events\",\n      \"stage\": \"extracted\",\n      \"kind\": \"endpoints\",\n      \"path\": \"extracted/endpoints/events.schema.json\",\n      \"doc\": \"extracted/endpoints/events.md\"\n    }\n  ],\n  \"_examples\": {\n    \"_comment\": \"Below are examples of how to use nested folders. Copy and modify these patterns:\",\n    \"endpoint_example\": {\n      \"name\": \"users.create\",\n      \"stage\": \"raw\",\n      \"kind\": \"endpoints\",\n      \"path\": \"raw/endpoints/endpoints/users/create.schema.json\",\n      \"doc\": \"raw/endpoints/endpoints/users/create.md\",\n      \"metadata\": {\n        \"category\": \"endpoint\",\n        \"apiMethod\": \"POST\"\n      }\n    },\n    \"type_example\": {\n      \"name\": \"User\",\n      \"stage\": \"raw\",\n      \"kind\": \"endpoints\",\n      \"path\": \"raw/endpoints/types/User.schema.json\",\n      \"doc\": \"raw/endpoints/types/User.md\",\n      \"metadata\": {\n        \"category\": \"type\"\n      }\n    },\n    \"nested_organization_example\": {\n      \"name\": \"reports.analytics\",\n      \"stage\": \"raw\",\n      \"kind\": \"endpoints\",\n      \"path\": \"raw/endpoints/endpoints/reports/analytics.schema.json\",\n      \"doc\": \"raw/endpoints/endpoints/reports/analytics.md\"\n    }\n  }\n}\n"
+                              "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/schema-index.schema.json\",\n  \"version\": \"0.1.0\",\n  \"datasets\": [\n    {\n      \"name\": \"events\",\n      \"stage\": \"raw\",\n      \"kind\": \"endpoints\",\n      \"path\": \"raw/endpoints/events.schema.json\",\n      \"doc\": \"raw/endpoints/events.md\"\n    },\n    {\n      \"name\": \"events\",\n      \"stage\": \"extracted\",\n      \"kind\": \"endpoints\",\n      \"path\": \"extracted/endpoints/events.schema.json\",\n      \"doc\": \"extracted/endpoints/events.md\"\n    }\n  ],\n  \"_examples\": {\n    \"_comment\": \"Below are examples of how to use nested folders. Copy and modify these patterns:\",\n    \"endpoint_example\": {\n      \"name\": \"users.create\",\n      \"stage\": \"raw\",\n      \"kind\": \"endpoints\",\n      \"path\": \"raw/endpoints/endpoints/users/create.schema.json\",\n      \"doc\": \"raw/endpoints/endpoints/users/create.md\",\n      \"metadata\": {\n        \"category\": \"endpoint\",\n        \"apiMethod\": \"POST\"\n      }\n    },\n    \"nested_organization_example\": {\n      \"name\": \"reports.analytics\",\n      \"stage\": \"raw\",\n      \"kind\": \"endpoints\",\n      \"path\": \"raw/endpoints/endpoints/reports/analytics.schema.json\",\n      \"doc\": \"raw/endpoints/endpoints/reports/analytics.md\"\n    }\n  }\n}\n"
                             },
                             {
                               "type": "dir",
@@ -129,6 +129,17 @@
                                       "type": "file",
                                       "name": "events.md",
                                       "template": "# Raw events (JSON)\n\nDescribe the upstream event payload.\n"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "files",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "README.md",
+                                      "template": "# File schemas\n\nPlace file-based schemas here (CSV/JSON/Parquet/Avro/NDJSON). Files in this folder are shown in the Files tab.\n\nExamples:\n- `events.csv`\n- `events.schema.json` (with title/description)\n"
                                     }
                                   ]
                                 },

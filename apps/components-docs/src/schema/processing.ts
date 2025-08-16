@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "fs";
-import { join, resolve, basename, dirname } from "path";
+import { join, resolve, basename } from "path";
 
 // Types aligned with SchemaDiagram's internal data shapes
 export type DiagramColumn = {
@@ -301,28 +301,38 @@ function loadEndpoints(
 // ---------- Files (JSON/CSV) ----------
 function loadFileSchemas(
   schemasDir: string,
-  indexJson: any | undefined,
+  _indexJson: any | undefined,
   errors?: string[]
 ): DiagramFile[] {
   const files: DiagramFile[] = [];
 
-  // HubSpot-like JSON entities are now represented as endpoints, not files.
+  // New rule: only treat schemas under schemas/files as Files.
+  const filesDir = join(schemasDir, "files");
+  if (!existsSync(filesDir) || !statSync(filesDir).isDirectory()) {
+    return files;
+  }
 
-  // GA4-like: types under endpoints/types/*.schema.json → treat as files
-  const datasets: Array<any> = Array.isArray(indexJson?.datasets)
-    ? indexJson.datasets
-    : [];
-  for (const ds of datasets) {
-    if (ds.kind === "endpoints" && typeof ds.path === "string") {
-      const isType = (ds.metadata?.category ?? "").toLowerCase() === "type";
-      if (isType) {
-        const fp = join(schemasDir, ds.path);
-        const name = basename(fp);
-        const schema = readJsonSafe<any>(fp, errors);
-        const title = schema?.title as string | undefined;
-        files.push({ name, format: "json", details: title });
-      }
+  const candidates = listFilesRecursively(filesDir, (p) =>
+    /(\.schema\.json$|\.json$|\.csv$|\.parquet$|\.avro$|\.ndjson$)/i.test(p)
+  );
+
+  for (const fp of candidates) {
+    const name = basename(fp);
+    const lower = name.toLowerCase();
+    let format: DiagramFile["format"] = "json";
+    if (lower.endsWith(".csv") || lower.includes("csv")) format = "csv";
+    else if (lower.endsWith(".parquet") || lower.includes("parquet")) format = "parquet";
+    else if (lower.endsWith(".avro") || lower.includes("avro")) format = "avro";
+    else if (lower.endsWith(".ndjson") || lower.includes("ndjson") || lower.includes("jsonl"))
+      format = "ndjson";
+
+    let details: string | undefined = undefined;
+    if (/\.json$/i.test(lower)) {
+      const schema = readJsonSafe<any>(fp, errors);
+      details = (schema?.title as string | undefined) ?? (schema?.description as string | undefined);
     }
+
+    files.push({ name, format, details });
   }
 
   return files;
