@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "fs";
-import { join, resolve, basename } from "path";
+import { join, resolve, basename, dirname } from "path";
 
 // Types aligned with SchemaDiagram's internal data shapes
 export type DiagramColumn = {
@@ -34,6 +34,9 @@ export type DiagramEndpoint = {
   title: string;
   summary?: string;
   params?: DiagramEndpointParam[];
+  // Folders derived from the registry schema file path (e.g., raw/endpoints/reports/run.schema.json -> ["reports"])
+  // Used purely for grouping in the UI; optional for backward compatibility
+  folders?: string[];
 };
 
 export type DiagramFile = {
@@ -246,6 +249,22 @@ function loadEndpoints(
 ): DiagramEndpoint[] {
   const endpoints: DiagramEndpoint[] = [];
 
+  function deriveFoldersFromRelativePath(
+    relativePath: string | undefined
+  ): string[] {
+    if (!relativePath || typeof relativePath !== "string") return [];
+    const dir = dirname(relativePath).replace(/\\/g, "/");
+    const parts = dir.split("/").filter(Boolean);
+    // Drop top-level stage folder like "raw" or "extracted"
+    const stageDropped =
+      parts[0] === "raw" || parts[0] === "extracted" ? parts.slice(1) : parts;
+    // Drop the "endpoints" segment if present
+    const idx = stageDropped.indexOf("endpoints");
+    const afterEndpoints =
+      idx >= 0 ? stageDropped.slice(idx + 1) : stageDropped;
+    return afterEndpoints;
+  }
+
   // GA4-like datasets entries for endpoints
   const datasets: Array<any> = Array.isArray(indexJson?.datasets)
     ? indexJson.datasets
@@ -273,7 +292,9 @@ function loadEndpoints(
         ? buildParamsFromJsonSchema(requestSchema)
         : undefined;
 
-      endpoints.push({ method, path, title, summary, params });
+      const folders = deriveFoldersFromRelativePath(ds.path);
+
+      endpoints.push({ method, path, title, summary, params, folders });
     }
   }
 
@@ -291,7 +312,8 @@ function loadEndpoints(
       const method = "GET";
       const path = `/raw/${ent?.name || basename(fp).replace(/\.schema\.json$/i, "")}`;
       const params = buildParamsFromJsonSchema(json);
-      endpoints.push({ method, path, title, summary, params });
+      const folders = deriveFoldersFromRelativePath(jsonPath);
+      endpoints.push({ method, path, title, summary, params, folders });
     }
   }
 

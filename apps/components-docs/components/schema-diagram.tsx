@@ -28,6 +28,9 @@ import {
   Globe,
   FileJson,
   FileText,
+  ChevronRight,
+  ChevronDown,
+  Folder,
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/components/tabs";
 
@@ -242,6 +245,7 @@ type DiagramEndpoint = {
   title: string;
   summary?: string;
   params?: EndpointParam[];
+  folders?: string[];
 };
 
 type DiagramFile = {
@@ -412,6 +416,7 @@ export function SchemaDiagram({
       includesI(String(e.method), q)
     )
       return true;
+    if ((e.folders ?? []).some((f) => includesI(f, q))) return true;
     const stack: EndpointParam[] = [...(e.params ?? [])];
     while (stack.length) {
       const p = stack.pop()!;
@@ -419,6 +424,132 @@ export function SchemaDiagram({
       if (p.children) stack.push(...p.children);
     }
     return false;
+  }
+
+  // Build a nested tree by endpoint folders (derived from registry path)
+  type EndpointFolderNode = {
+    key: string;
+    name: string;
+    children: Map<string, EndpointFolderNode>;
+    endpoints: DiagramEndpoint[];
+  };
+
+  const endpointTree = useMemo<EndpointFolderNode>(() => {
+    const root: EndpointFolderNode = {
+      key: "",
+      name: "",
+      children: new Map(),
+      endpoints: [],
+    };
+    const list = (endpoints ?? []).filter((e) => endpointMatches(e, epFilter));
+    for (const e of list) {
+      const parts = Array.isArray(e.folders) ? e.folders : [];
+      let node = root;
+      let pathAcc = "";
+      for (const part of parts) {
+        pathAcc = pathAcc ? `${pathAcc}/${part}` : part;
+        if (!node.children.has(part)) {
+          node.children.set(part, {
+            key: pathAcc,
+            name: part,
+            children: new Map(),
+            endpoints: [],
+          });
+        }
+        node = node.children.get(part)!;
+      }
+      node.endpoints.push(e);
+    }
+    return root;
+  }, [endpoints, epFilter]);
+
+  function countDescendantEndpoints(node: EndpointFolderNode): number {
+    let total = node.endpoints.length;
+    for (const child of node.children.values())
+      total += countDescendantEndpoints(child);
+    return total;
+  }
+
+  // Track expanded folders
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(
+    new Set()
+  );
+  useEffect(() => {
+    // Auto-expand all when filtering
+    if (epFilter) {
+      const allKeys: string[] = [];
+      const collect = (n: EndpointFolderNode) => {
+        for (const child of n.children.values()) {
+          allKeys.push(child.key);
+          collect(child);
+        }
+      };
+      collect(endpointTree);
+      setExpandedFolders(new Set(allKeys));
+    }
+  }, [epFilter, endpointTree]);
+
+  function toggleFolder(key: string) {
+    setExpandedFolders((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
+
+  function renderEndpointTree(
+    node: EndpointFolderNode,
+    depth = 0
+  ): React.ReactNode {
+    const items: React.ReactNode[] = [];
+    const sortedChildren = Array.from(node.children.values()).sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+    for (const child of sortedChildren) {
+      const isOpen = expandedFolders.has(child.key);
+      const count = countDescendantEndpoints(child);
+      items.push(
+        <li key={`folder-${child.key}`} className="">
+          <div
+            className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-secondary cursor-pointer"
+            style={{ paddingLeft: depth * 12 }}
+            onClick={() => toggleFolder(child.key)}
+          >
+            {isOpen ? (
+              <ChevronDown className="h-4 w-4" />
+            ) : (
+              <ChevronRight className="h-4 w-4" />
+            )}
+            <Folder className="h-4 w-4" />
+            <span className="text-sm font-medium">{child.name}</span>
+            <Badge variant="secondary" className="ml-auto text-[10px]">
+              {count}
+            </Badge>
+          </div>
+          {isOpen ? (
+            <ul className="space-y-1">
+              {renderEndpointTree(child, depth + 1)}
+            </ul>
+          ) : null}
+        </li>
+      );
+    }
+    // leaf endpoints at this level
+    for (const e of node.endpoints) {
+      items.push(
+        <li key={`ep-${e.title}-${e.path}`} className="">
+          <div
+            className="rounded-md px-2 py-1.5 hover:bg-secondary flex items-center gap-2"
+            style={{ paddingLeft: depth * 12 + 24 }}
+          >
+            <Badge className="text-[10px]">{e.method}</Badge>
+            <span className="text-sm">{e.title}</span>
+          </div>
+        </li>
+      );
+    }
+    return items;
   }
 
   function fileMatches(f: DiagramFile, q: string): boolean {
@@ -583,17 +714,7 @@ export function SchemaDiagram({
                 <ScrollArea className="h-[calc(560px-72px)]">
                   <div className="p-3 space-y-2">
                     <ul className="space-y-1">
-                      {(endpoints ?? [])
-                        .filter((e) => endpointMatches(e, epFilter))
-                        .map((e, idx) => (
-                          <li
-                            key={`${e.title}-${idx}`}
-                            className="rounded-md px-2 py-1.5 hover:bg-secondary flex items-center gap-2"
-                          >
-                            <Badge className="text-[10px]">{e.method}</Badge>
-                            <span className="text-sm">{e.title}</span>
-                          </li>
-                        ))}
+                      {renderEndpointTree(endpointTree, 0)}
                     </ul>
                   </div>
                 </ScrollArea>
