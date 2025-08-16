@@ -35,6 +35,11 @@ import {
   Folder,
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/components/tabs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@ui/components/tooltip";
 
 type Column = {
   name: string;
@@ -129,17 +134,30 @@ function EndpointNode(props: NodeProps<EndpointData>) {
   ): React.ReactNode => {
     return params.map((p, idx) => (
       <React.Fragment key={`${p.name}-${idx}`}>
-        <li className="flex items-center justify-between rounded-sm px-2 py-1 hover:bg-muted">
+        <li className="flex items-center justify-between rounded-sm px-2 py-1 hover:bg-muted min-w-0 gap-2">
           <div
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 min-w-0 flex-1"
             style={{ paddingLeft: level * 12 }}
           >
-            <span className="font-medium">{p.name}</span>
-            <span className="text-muted-foreground text-[10px]">
+            <Tooltip delayDuration={1000}>
+              <TooltipTrigger asChild>
+                <span className="font-medium truncate">{p.name}</span>
+              </TooltipTrigger>
+              <TooltipContent
+                side="top"
+                align="start"
+                className="max-w-[520px] break-words"
+              >
+                {p.name}
+              </TooltipContent>
+            </Tooltip>
+            <span className="text-muted-foreground text-[10px] whitespace-nowrap">
               {p.required === false ? "(optional)" : ""}
             </span>
           </div>
-          <span className="text-muted-foreground">{p.type}</span>
+          <span className="text-muted-foreground truncate max-w-[45%]">
+            {p.type}
+          </span>
         </li>
         {p.children && p.children.length > 0
           ? renderParams(p.children, level + 1)
@@ -155,14 +173,25 @@ function EndpointNode(props: NodeProps<EndpointData>) {
         (selected || data.highlighted) && "ring-2 ring-primary"
       )}
     >
-      <div className="flex items-center gap-2 border-b px-3 py-2 bg-secondary/60">
+      <div className="flex items-center gap-2 border-b px-3 py-2 bg-secondary/60 min-w-0">
         <Globe className="h-4 w-4" />
-        <div className="font-medium text-sm truncate" title={data.title}>
-          {data.title}
-        </div>
+        <Tooltip delayDuration={1000}>
+          <TooltipTrigger asChild>
+            <div className="font-medium text-sm truncate min-w-0 flex-1">
+              {data.title}
+            </div>
+          </TooltipTrigger>
+          <TooltipContent
+            side="top"
+            align="start"
+            className="max-w-[520px] break-words"
+          >
+            {data.title}
+          </TooltipContent>
+        </Tooltip>
       </div>
       <div className="p-3 space-y-2">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           <span
             className={cn(
               "px-2 py-0.5 rounded text-xs text-white",
@@ -171,10 +200,25 @@ function EndpointNode(props: NodeProps<EndpointData>) {
           >
             {data.method}
           </span>
-          <code className="text-xs text-muted-foreground">{data.path}</code>
+          <Tooltip delayDuration={1000}>
+            <TooltipTrigger asChild>
+              <code className="text-xs text-muted-foreground truncate min-w-0 flex-1">
+                {data.path}
+              </code>
+            </TooltipTrigger>
+            <TooltipContent
+              side="top"
+              align="start"
+              className="max-w-[520px] break-words"
+            >
+              {data.path}
+            </TooltipContent>
+          </Tooltip>
         </div>
         {data.summary ? (
-          <p className="text-xs text-muted-foreground">{data.summary}</p>
+          <p className="text-xs text-muted-foreground line-clamp-2 break-words">
+            {data.summary}
+          </p>
         ) : null}
         {data.params && data.params.length > 0 ? (
           <ul className="text-xs space-y-0.5">{renderParams(data.params)}</ul>
