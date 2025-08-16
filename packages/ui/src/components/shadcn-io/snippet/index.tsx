@@ -120,7 +120,7 @@ export const SnippetTabsContent = ({
 }: SnippetTabsContentProps) => (
   <TabsContent
     asChild
-    className={cn("mt-0 bg-background p-4 text-sm", className)}
+    className={cn("mt-0 mb-0 bg-background p-4 text-sm", className)}
     {...props}
   >
     <pre className="truncate">{children}</pre>
