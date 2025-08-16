@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Google Analytics Data API v1beta - audienceExports.query Endpoint",
+  "description": "Endpoint for querying and retrieving audience data from an audience export",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Required. The audience export resource name",
+          "pattern": "^properties/[^/]+/audienceExports/[^/]+$"
+        },
+        "offset": {
+          "type": "string",
+          "format": "int64",
+          "description": "Optional. The row count of the start row"
+        },
+        "limit": {
+          "type": "string",
+          "format": "int64",
+          "description": "Optional. The number of rows to return"
+        }
+      },
+      "required": ["name"]
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "audienceExport": {
+          "type": "object",
+          "description": "Configuration data about the audience export",
+          "properties": {
+            "name": { "type": "string" },
+            "audience": { "type": "string" },
+            "audienceDisplayName": { "type": "string" },
+            "dimensions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "dimensionName": { "type": "string" }
+                }
+              }
+            },
+            "state": {
+              "type": "string",
+              "enum": ["STATE_UNSPECIFIED", "CREATING", "ACTIVE", "FAILED"]
+            },
+            "beginCreatingTime": { "type": "string", "format": "date-time" },
+            "creationQuotaTokensCharged": { "type": "integer" },
+            "rowCount": { "type": "integer" },
+            "errorMessage": { "type": "string" },
+            "percentageCompleted": { "type": "number" }
+          }
+        },
+        "audienceRows": {
+          "type": "array",
+          "description": "Rows for each user in the audience export",
+          "items": {
+            "type": "object",
+            "properties": {
+              "dimensionValues": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/DimensionValue"
+                }
+              }
+            }
+          }
+        },
+        "rowCount": {
+          "type": "integer",
+          "description": "The total number of rows in the export"
+        },
+        "audienceDimensionHeaders": {
+          "type": "array",
+          "description": "Headers for the dimensions in the audience export",
+          "items": {
+            "$ref": "#/definitions/DimensionHeader"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "DimensionValue": { "type": "object" },
+    "DimensionHeader": { "type": "object" }
+  },
+  "metadata": {
+    "apiType": "endpoint",
+    "httpMethod": "POST",
+    "apiPath": "v1beta/{name=properties/*/audienceExports/*}:query"
+  }
+}

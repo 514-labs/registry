@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Google Analytics Data API v1beta - DimensionHeader Type",
+  "description": "Describes a dimension column in the report response",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The dimension's name"
+    }
+  },
+  "required": ["name"],
+  "metadata": {
+    "apiType": "type",
+    "description": "Describes dimension columns in report responses"
+  }
+}

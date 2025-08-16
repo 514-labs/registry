@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Google Analytics Data API v1beta - PropertyQuota Type",
+  "description": "Current state of a property's quota usage",
+  "type": "object",
+  "properties": {
+    "tokensPerDay": {
+      "type": "object",
+      "description": "Standard Analytics Properties can use up to 200,000 tokens per day",
+      "properties": {
+        "consumed": { "type": "integer" },
+        "remaining": { "type": "integer" }
+      }
+    },
+    "tokensPerHour": {
+      "type": "object",
+      "description": "Standard Analytics Properties can use up to 40,000 tokens per hour",
+      "properties": {
+        "consumed": { "type": "integer" },
+        "remaining": { "type": "integer" }
+      }
+    },
+    "concurrentRequests": {
+      "type": "object",
+      "description": "Standard Analytics Properties can send up to 10 concurrent requests",
+      "properties": {
+        "consumed": { "type": "integer" },
+        "remaining": { "type": "integer" }
+      }
+    },
+    "serverErrorsPerProjectPerHour": {
+      "type": "object",
+      "description": "Standard Analytics Properties can use up to 10% of their tokens per project per hour",
+      "properties": {
+        "consumed": { "type": "integer" },
+        "remaining": { "type": "integer" }
+      }
+    },
+    "potentiallyThresholdedRequestsPerHour": {
+      "type": "object",
+      "description": "Analytics Properties can use up to 120 requests per hour",
+      "properties": {
+        "consumed": { "type": "integer" },
+        "remaining": { "type": "integer" }
+      }
+    }
+  },
+  "metadata": {
+    "apiType": "type",
+    "description": "Represents quota usage for a Google Analytics property"
+  }
+}

@@ -5,9 +5,9 @@
     {
       "name": "events",
       "stage": "raw",
-      "kind": "json",
-      "path": "raw/json/events.schema.json",
-      "doc": "raw/json/events.md"
+      "kind": "endpoints",
+      "path": "raw/endpoints/events.schema.json",
+      "doc": "raw/endpoints/events.md"
     },
     {
       "name": "events",
@@ -20,9 +20,9 @@
     {
       "name": "events",
       "stage": "extracted",
-      "kind": "json",
-      "path": "extracted/json/events.schema.json",
-      "doc": "extracted/json/events.md"
+      "kind": "endpoints",
+      "path": "extracted/endpoints/events.schema.json",
+      "doc": "extracted/endpoints/events.md"
     },
     {
       "name": "events",

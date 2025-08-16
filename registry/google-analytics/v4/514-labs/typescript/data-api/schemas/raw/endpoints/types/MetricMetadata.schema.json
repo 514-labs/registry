@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Google Analytics Data API v1beta - MetricMetadata Type",
+  "description": "Explains a metric and provides information about its usage",
+  "type": "object",
+  "properties": {
+    "apiName": {
+      "type": "string",
+      "description": "The API name of the metric"
+    },
+    "uiName": {
+      "type": "string",
+      "description": "The display name of the metric in the UI"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of how this metric is used and calculated"
+    },
+    "deprecatedApiNames": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "The names of metrics that have been replaced by this metric"
+    },
+    "type": {
+      "$ref": "#/definitions/MetricType",
+      "description": "The type of this metric"
+    },
+    "expression": {
+      "type": "string",
+      "description": "The mathematical expression for this derived metric"
+    },
+    "customDefinition": {
+      "type": "boolean",
+      "description": "True if the metric is a custom metric for this property"
+    },
+    "blockedReasons": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "If reasons are specified, your access is blocked to this metric"
+    },
+    "category": {
+      "type": "string",
+      "description": "The category of the metric"
+    }
+  },
+  "required": ["apiName"],
+  "definitions": {
+    "MetricType": { "type": "string" }
+  },
+  "metadata": {
+    "apiType": "type",
+    "description": "Provides metadata about available metrics"
+  }
+}

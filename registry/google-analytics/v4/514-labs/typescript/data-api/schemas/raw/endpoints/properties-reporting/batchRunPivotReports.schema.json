@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Google Analytics Data API v1beta - batchRunPivotReports Endpoint",
+  "description": "Endpoint for batch running pivot reports against a Google Analytics 4 property",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "property": {
+          "type": "string",
+          "description": "A Google Analytics 4 property identifier"
+        },
+        "requests": {
+          "type": "array",
+          "description": "Individual pivot report requests in the batch",
+          "items": {
+            "$ref": "#/definitions/RunPivotReportRequest"
+          }
+        }
+      },
+      "required": ["property", "requests"]
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "pivotReports": {
+          "type": "array",
+          "description": "Individual pivot report responses",
+          "items": {
+            "$ref": "#/definitions/RunPivotReportResponse"
+          }
+        },
+        "kind": {
+          "type": "string",
+          "description": "Resource type",
+          "const": "analyticsData#batchRunPivotReportsResponse"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "RunPivotReportRequest": {
+      "type": "object",
+      "properties": {
+        "dimensions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Dimension" }
+        },
+        "metrics": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Metric" }
+        },
+        "dateRanges": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/DateRange" }
+        },
+        "pivots": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Pivot" }
+        },
+        "dimensionFilter": { "$ref": "#/definitions/FilterExpression" },
+        "metricFilter": { "$ref": "#/definitions/FilterExpression" },
+        "currencyCode": { "type": "string" },
+        "cohortSpec": { "$ref": "#/definitions/CohortSpec" },
+        "keepEmptyRows": { "type": "boolean" },
+        "returnPropertyQuota": { "type": "boolean" },
+        "comparisons": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Comparison" }
+        }
+      }
+    },
+    "RunPivotReportResponse": {
+      "type": "object"
+    },
+    "Dimension": { "type": "object" },
+    "Metric": { "type": "object" },
+    "DateRange": { "type": "object" },
+    "Pivot": { "type": "object" },
+    "FilterExpression": { "type": "object" },
+    "CohortSpec": { "type": "object" },
+    "Comparison": { "type": "object" }
+  },
+  "metadata": {
+    "apiType": "endpoint",
+    "httpMethod": "POST",
+    "apiPath": "v1beta/{property=properties/*}:batchRunPivotReports"
+  }
+}

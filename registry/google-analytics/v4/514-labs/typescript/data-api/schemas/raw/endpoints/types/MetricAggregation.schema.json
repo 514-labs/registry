@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Google Analytics Data API v1beta - MetricAggregation Type",
+  "description": "Represents aggregation of metrics",
+  "type": "string",
+  "enum": [
+    "METRIC_AGGREGATION_UNSPECIFIED",
+    "TOTAL",
+    "MINIMUM",
+    "MAXIMUM",
+    "COUNT"
+  ],
+  "metadata": {
+    "apiType": "type",
+    "description": "Specifies how metrics should be aggregated in reports"
+  }
+}

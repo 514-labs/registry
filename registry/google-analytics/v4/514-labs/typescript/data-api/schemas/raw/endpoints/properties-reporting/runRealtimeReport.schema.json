@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Google Analytics Data API v1beta - runRealtimeReport Endpoint",
+  "description": "Endpoint for running a realtime report on a Google Analytics 4 property",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "property": {
+          "type": "string",
+          "description": "A Google Analytics 4 property identifier"
+        },
+        "dimensions": {
+          "type": "array",
+          "description": "The dimensions requested and displayed",
+          "items": { "$ref": "#/definitions/Dimension" }
+        },
+        "metrics": {
+          "type": "array",
+          "description": "The metrics requested and displayed",
+          "items": { "$ref": "#/definitions/Metric" }
+        },
+        "dimensionFilter": {
+          "description": "Dimension filters allow you to ask for only specific dimension values in the report",
+          "$ref": "#/definitions/FilterExpression"
+        },
+        "metricFilter": {
+          "description": "The filter clause of metrics",
+          "$ref": "#/definitions/FilterExpression"
+        },
+        "limit": {
+          "type": "string",
+          "format": "int64",
+          "description": "The number of rows to return"
+        },
+        "metricAggregations": {
+          "type": "array",
+          "description": "Aggregation of metrics",
+          "items": { "$ref": "#/definitions/MetricAggregation" }
+        },
+        "orderBys": {
+          "type": "array",
+          "description": "Specifies how rows are ordered in the response",
+          "items": { "$ref": "#/definitions/OrderBy" }
+        },
+        "returnPropertyQuota": {
+          "type": "boolean",
+          "description": "Toggles whether to return the current state of the Property's Realtime quota"
+        },
+        "minuteRanges": {
+          "type": "array",
+          "description": "The minute ranges of event data to read",
+          "items": { "$ref": "#/definitions/MinuteRange" }
+        }
+      },
+      "required": ["property"]
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "dimensionHeaders": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/DimensionHeader" }
+        },
+        "metricHeaders": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/MetricHeader" }
+        },
+        "rows": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Row" }
+        },
+        "totals": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Row" }
+        },
+        "maximums": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Row" }
+        },
+        "minimums": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Row" }
+        },
+        "rowCount": { "type": "integer" },
+        "propertyQuota": { "$ref": "#/definitions/PropertyQuota" },
+        "kind": { "type": "string" }
+      }
+    }
+  },
+  "definitions": {
+    "Dimension": { "type": "object" },
+    "Metric": { "type": "object" },
+    "FilterExpression": { "type": "object" },
+    "MetricAggregation": { "type": "string" },
+    "OrderBy": { "type": "object" },
+    "MinuteRange": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "startMinutesAgo": { "type": "integer" },
+        "endMinutesAgo": { "type": "integer" }
+      }
+    },
+    "DimensionHeader": { "type": "object" },
+    "MetricHeader": { "type": "object" },
+    "Row": { "type": "object" },
+    "PropertyQuota": { "type": "object" }
+  },
+  "metadata": {
+    "apiType": "endpoint",
+    "httpMethod": "POST",
+    "apiPath": "v1beta/{property=properties/*}:runRealtimeReport"
+  }
+}
