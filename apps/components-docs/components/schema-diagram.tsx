@@ -15,6 +15,8 @@ import {
   Handle,
 } from "reactflow";
 import "reactflow/dist/style.css";
+// @ts-ignore - ELK browser bundle lacks typings in this path
+import ELK from "elkjs/lib/elk.bundled.js";
 import { Card } from "@ui/components/card";
 import { Separator } from "@ui/components/separator";
 import { ScrollArea } from "@ui/components/scroll-area";
@@ -228,6 +230,111 @@ const allNodeTypes = {
   file: FileNode,
 } as const;
 
+// --- ELK layout helpers ----------------------------------------------------
+
+type AnyNode = Node<any>;
+
+const elkInstance = new ELK();
+
+type ElkLayoutOptions = {
+  direction?: "RIGHT" | "DOWN" | "LEFT" | "UP";
+  nodeSpacing?: number;
+  layerSpacing?: number;
+  edgeNodeSpacing?: number;
+};
+
+function estimateNodeSize(n: AnyNode): { width: number; height: number } {
+  // Provide best-effort size hints so ELK can avoid overlaps. These
+  // do not need to be pixel-perfect; we prefer generous spacing.
+  const type = n.type;
+  if (type === "table") {
+    const columns = ((n.data as any)?.columns as any[]) ?? [];
+    const width = 280; // matches TableNode width
+    const base = 56; // header + paddings
+    const row = 24; // per column row
+    return { width, height: base + columns.length * row };
+  }
+  if (type === "endpoint") {
+    const params = ((n.data as any)?.params as any[]) ?? [];
+    const flatten = (ps: any[]): number =>
+      ps.reduce(
+        (acc, p) =>
+          acc + 1 + (Array.isArray(p.children) ? flatten(p.children) : 0),
+        0
+      );
+    const width = 320; // matches EndpointNode width
+    const base = 88; // header + path + summary
+    const per = 18;
+    return { width, height: base + flatten(params) * per };
+  }
+  if (type === "file") {
+    const width = 260; // matches FileNode width
+    const hasDetails = Boolean((n.data as any)?.details);
+    return { width, height: hasDetails ? 120 : 80 };
+  }
+  // default fallback
+  return { width: 200, height: 80 };
+}
+
+async function runElkLayout(
+  nodes: AnyNode[],
+  edges: Edge[],
+  opts?: ElkLayoutOptions
+): Promise<AnyNode[]> {
+  const hasEdges = (edges?.length ?? 0) > 0;
+  const layoutOptions: Record<string, string> = {
+    "elk.algorithm": hasEdges ? "layered" : "force",
+    "elk.direction": opts?.direction ?? "RIGHT",
+    // spacing between nodes in same layer
+    "elk.spacing.nodeNode": String(opts?.nodeSpacing ?? 80),
+    // spacing between layers
+    "elk.layered.spacing.nodeNodeBetweenLayers": String(
+      opts?.layerSpacing ?? 100
+    ),
+    // route edges around nodes instead of through them
+    "elk.edgeRouting": "ORTHOGONAL",
+    // keep some distance between edges and nodes
+    "elk.spacing.edgeNode": String(opts?.edgeNodeSpacing ?? 40),
+    // crossing minimization improves readability
+    "elk.layered.crossingMinimization.strategy": "LAYER_SWEEP",
+  };
+
+  const children = nodes.map((n) => {
+    const size = estimateNodeSize(n);
+    return {
+      id: n.id,
+      width: size.width,
+      height: size.height,
+    };
+  });
+
+  const elkEdges = edges.map((e) => ({
+    id: e.id,
+    sources: [e.source],
+    targets: [e.target],
+  }));
+
+  const graph = {
+    id: "root",
+    layoutOptions,
+    children,
+    edges: elkEdges,
+  } as any;
+
+  const res = (await elkInstance.layout(graph)) as any;
+  const byId = new Map<string, any>(
+    (res.children ?? []).map((c: any) => [c.id, c])
+  );
+  return nodes.map((n) => {
+    const g = byId.get(n.id);
+    if (!g) return n;
+    return {
+      ...n,
+      position: { x: g.x ?? n.position.x, y: g.y ?? n.position.y },
+    };
+  });
+}
+
 type DiagramTable = {
   label: string;
   columns: Column[];
@@ -330,6 +437,24 @@ export function SchemaDiagram({
     }));
   }, [database]);
 
+  // Layouted variants
+  const [dbLayoutNodes, setDbLayoutNodes] = useState<Node<TableData>[]>([]);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const laid = await runElkLayout(dbNodes as AnyNode[], dbEdges, {
+        direction: "RIGHT",
+        nodeSpacing: 80,
+        layerSpacing: 120,
+        edgeNodeSpacing: 50,
+      });
+      if (!cancelled) setDbLayoutNodes(laid as Node<TableData>[]);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [dbNodes, dbEdges]);
+
   // Endpoints from props
   const jsonNodes = useMemo<Node<EndpointData>[]>(() => {
     const eps = endpoints ?? [];
@@ -355,6 +480,25 @@ export function SchemaDiagram({
 
   const jsonEdges = useMemo<Edge[]>(() => [], []);
 
+  const [jsonLayoutNodes, setJsonLayoutNodes] = useState<Node<EndpointData>[]>(
+    []
+  );
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const laid = await runElkLayout(jsonNodes as AnyNode[], jsonEdges, {
+        direction: "RIGHT",
+        nodeSpacing: 80,
+        layerSpacing: 100,
+        edgeNodeSpacing: 40,
+      });
+      if (!cancelled) setJsonLayoutNodes(laid as Node<EndpointData>[]);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [jsonNodes, jsonEdges]);
+
   // Files from props
   const fileNodes = useMemo<Node<FileData>[]>(() => {
     const list = files ?? [];
@@ -376,6 +520,23 @@ export function SchemaDiagram({
   }, [files, fileFilter]);
 
   const fileEdges = useMemo<Edge[]>(() => [], []);
+
+  const [fileLayoutNodes, setFileLayoutNodes] = useState<Node<FileData>[]>([]);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const laid = await runElkLayout(fileNodes as AnyNode[], fileEdges, {
+        direction: "RIGHT",
+        nodeSpacing: 70,
+        layerSpacing: 100,
+        edgeNodeSpacing: 40,
+      });
+      if (!cancelled) setFileLayoutNodes(laid as Node<FileData>[]);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [fileNodes, fileEdges]);
 
   // Sidebar helpers removed for simplified file list
 
@@ -671,7 +832,9 @@ export function SchemaDiagram({
 
               <div className="col-span-8 h-full">
                 <ReactFlow
-                  nodes={dbNodes}
+                  nodes={
+                    (dbLayoutNodes.length ? dbLayoutNodes : dbNodes) as Node[]
+                  }
                   edges={dbEdges}
                   nodeTypes={allNodeTypes as any}
                   fitView
@@ -727,7 +890,11 @@ export function SchemaDiagram({
 
               <div className="col-span-8 h-full">
                 <ReactFlow
-                  nodes={jsonNodes}
+                  nodes={
+                    (jsonLayoutNodes.length
+                      ? jsonLayoutNodes
+                      : jsonNodes) as Node[]
+                  }
                   edges={jsonEdges}
                   nodeTypes={allNodeTypes as any}
                   fitView
@@ -798,7 +965,11 @@ export function SchemaDiagram({
 
               <div className="col-span-8 h-full">
                 <ReactFlow
-                  nodes={fileNodes}
+                  nodes={
+                    (fileLayoutNodes.length
+                      ? fileLayoutNodes
+                      : fileNodes) as Node[]
+                  }
                   edges={fileEdges}
                   nodeTypes={allNodeTypes as any}
                   fitView
