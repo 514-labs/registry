@@ -18,7 +18,11 @@ function readJsonSafe<T = unknown>(filePath: string): T | undefined {
 }
 
 function isVisibleDir(entry: Dirent): boolean {
-  return entry.isDirectory() && !entry.name.startsWith("_") && !entry.name.startsWith(".");
+  return (
+    entry.isDirectory() &&
+    !entry.name.startsWith("_") &&
+    !entry.name.startsWith(".")
+  );
 }
 
 export async function GET() {
@@ -26,20 +30,28 @@ export async function GET() {
   const result: ProviderMeta[] = [];
 
   // Walk: registry/<name>/<version>/<author>/<language>
-  const connectorDirs = readdirSync(registryDir, { withFileTypes: true }).filter(isVisibleDir);
+  const connectorDirs = readdirSync(registryDir, {
+    withFileTypes: true,
+  }).filter(isVisibleDir);
   for (const connectorEntry of connectorDirs) {
     const name = connectorEntry.name;
     const connectorPath = join(registryDir, name);
 
-    const versionEntries = readdirSync(connectorPath, { withFileTypes: true }).filter(isVisibleDir);
+    const versionEntries = readdirSync(connectorPath, {
+      withFileTypes: true,
+    }).filter(isVisibleDir);
     for (const versionEntry of versionEntries) {
       const version = versionEntry.name;
       const versionPath = join(connectorPath, version);
 
-      const authorEntries = readdirSync(versionPath, { withFileTypes: true }).filter(isVisibleDir);
+      const authorEntries = readdirSync(versionPath, {
+        withFileTypes: true,
+      }).filter(isVisibleDir);
       for (const authorEntry of authorEntries) {
         const authorPath = join(versionPath, authorEntry.name);
-        const authorMeta = readJsonSafe<ProviderMeta>(join(authorPath, "_meta", "connector.json"));
+        const authorMeta = readJsonSafe<ProviderMeta>(
+          join(authorPath, "_meta", "connector.json")
+        );
         if (authorMeta) {
           // Push the author-level meta object exactly as-is
           result.push(authorMeta);
@@ -50,5 +62,3 @@ export async function GET() {
 
   return NextResponse.json({ connectors: result });
 }
-
-

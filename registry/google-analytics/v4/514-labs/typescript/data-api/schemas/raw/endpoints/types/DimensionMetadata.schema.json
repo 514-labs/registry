@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Google Analytics Data API v1beta - DimensionMetadata Type",
+  "description": "Explains a dimension and provides information about its usage",
+  "type": "object",
+  "properties": {
+    "apiName": {
+      "type": "string",
+      "description": "The API name of the dimension"
+    },
+    "uiName": {
+      "type": "string",
+      "description": "The display name of the dimension in the UI"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of how this dimension is used and calculated"
+    },
+    "deprecatedApiNames": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "The names of dimensions that have been replaced by this dimension"
+    },
+    "customDefinition": {
+      "type": "boolean",
+      "description": "True if the dimension is a custom dimension for this property"
+    },
+    "category": {
+      "type": "string",
+      "description": "The category of the dimension"
+    }
+  },
+  "required": ["apiName"],
+  "metadata": {
+    "apiType": "type",
+    "description": "Provides metadata about available dimensions"
+  }
+}

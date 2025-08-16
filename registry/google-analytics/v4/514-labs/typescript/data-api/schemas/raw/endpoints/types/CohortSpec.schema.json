@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Google Analytics Data API v1beta - CohortSpec Type",
+  "description": "The specification of cohorts for a cohort report. Cohort reports create a time series of user retention for the cohort",
+  "type": "object",
+  "properties": {
+    "cohorts": {
+      "type": "array",
+      "description": "The cohorts requested for the report",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Assigns a name to this cohort"
+          },
+          "dimension": {
+            "type": "string",
+            "description": "The dimension used by cohort. Required and only supports firstSessionDate"
+          },
+          "dateRange": {
+            "$ref": "#/definitions/DateRange",
+            "description": "The cohort selects users whose first session date is between start date and end date"
+          }
+        },
+        "required": ["dimension", "dateRange"]
+      }
+    },
+    "cohortsRange": {
+      "type": "object",
+      "description": "Specifies the selection criteria for the cohorts",
+      "properties": {
+        "granularity": {
+          "type": "string",
+          "enum": ["GRANULARITY_UNSPECIFIED", "DAILY", "WEEKLY", "MONTHLY"],
+          "description": "The granularity used to interpret the startOffset and endOffset"
+        },
+        "startOffset": {
+          "type": "integer",
+          "description": "startOffset is relative to the first cohort date"
+        },
+        "endOffset": {
+          "type": "integer",
+          "description": "endOffset is relative to the first cohort date"
+        }
+      },
+      "required": ["granularity"]
+    },
+    "cohortReportSettings": {
+      "type": "object",
+      "description": "Settings for the cohort report",
+      "properties": {
+        "accumulate": {
+          "type": "boolean",
+          "description": "If true, accumulates cohort data over the cohort's lifetime"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "DateRange": { "type": "object" }
+  },
+  "metadata": {
+    "apiType": "type",
+    "description": "Defines the specification for cohort reports in Google Analytics"
+  }
+}

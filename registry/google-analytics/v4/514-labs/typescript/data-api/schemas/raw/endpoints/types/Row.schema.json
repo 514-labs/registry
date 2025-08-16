@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Google Analytics Data API v1beta - Row Type",
+  "description": "Report data for each row",
+  "type": "object",
+  "properties": {
+    "dimensionValues": {
+      "type": "array",
+      "description": "List of requested dimension values",
+      "items": { "$ref": "#/definitions/DimensionValue" }
+    },
+    "metricValues": {
+      "type": "array",
+      "description": "List of requested visible metric values",
+      "items": { "$ref": "#/definitions/MetricValue" }
+    }
+  },
+  "definitions": {
+    "DimensionValue": { "type": "object" },
+    "MetricValue": {
+      "type": "object",
+      "properties": {
+        "value": { "type": "string" },
+        "oneValue": { "type": "string" }
+      }
+    }
+  },
+  "metadata": {
+    "apiType": "type",
+    "description": "Represents a single row of data in report responses"
+  }
+}

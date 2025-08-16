@@ -17,6 +17,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@ui/components/tabs";
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 import { marked } from "marked";
+import SchemaDiagram from "@/components/schema-diagram";
+import { getSchemaDiagramInputs } from "@/src/schema/processing";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -231,12 +233,9 @@ export default async function ConnectorImplementationPage({
                 </Badge>
               ))}
 
-              <Badge
-                variant="secondary"
-                className="text-sm flex flex-row items-center gap-2"
-              >
+              <Badge variant="secondary">
                 <Link href={registryUrl} className="flex items-center gap-1">
-                  <SiGithub className="h-4 w-4" />
+                  <SiGithub className="size-3" />
                   <span>Source</span>
                 </Link>
               </Badge>
@@ -251,7 +250,7 @@ export default async function ConnectorImplementationPage({
             <p className="text-muted-foreground">{description}</p>
 
             <div className="grid grid-cols-1 gap-2 ">
-              {creatorsForVersion.length > 0 && (
+              {creatorsForVersion.length > 1 && (
                 <ComboBox
                   withAvatars
                   size="lg"
@@ -266,7 +265,7 @@ export default async function ConnectorImplementationPage({
                 />
               )}
 
-              {versions.length > 0 && (
+              {versions.length > 1 && (
                 <ComboBox
                   withIcons
                   size="lg"
@@ -281,7 +280,7 @@ export default async function ConnectorImplementationPage({
                 />
               )}
 
-              {languages.length > 0 && (
+              {languages.length > 1 && (
                 <ComboBox
                   withIcons
                   size="lg"
@@ -296,7 +295,7 @@ export default async function ConnectorImplementationPage({
                 />
               )}
 
-              {implementationsForLanguage.length > 0 && (
+              {implementationsForLanguage.length > 1 && (
                 <ComboBox
                   withIcons
                   size="lg"
@@ -313,7 +312,20 @@ export default async function ConnectorImplementationPage({
             </div>
           </div>
         </div>
-        <div className="col-span-9">
+        <div className="col-span-9 space-y-8">
+          {(() => {
+            const { database, endpoints, files, errors } =
+              getSchemaDiagramInputs(implEntry.path);
+            return (
+              <SchemaDiagram
+                database={database}
+                endpoints={endpoints}
+                files={files}
+                errors={errors}
+                connectorName={displayName}
+              />
+            );
+          })()}
           {docs.length === 0 ? (
             <div className="prose dark:prose-invert">
               <h1>Documentation</h1>
