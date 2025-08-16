@@ -517,9 +517,9 @@ export function SchemaDiagram({
             onClick={() => toggleFolder(child.key)}
           >
             {isOpen ? (
-              <ChevronDown className="h-4 w-4" />
+              <ChevronDown className="h-4 w-4 ml-2" />
             ) : (
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-4 w-4 ml-2" />
             )}
             <Folder className="h-4 w-4" />
             <span className="text-sm font-medium">{child.name}</span>
