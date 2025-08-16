@@ -233,12 +233,9 @@ export default async function ConnectorImplementationPage({
                 </Badge>
               ))}
 
-              <Badge
-                variant="secondary"
-                className="text-sm flex flex-row items-center gap-2"
-              >
+              <Badge variant="secondary">
                 <Link href={registryUrl} className="flex items-center gap-1">
-                  <SiGithub className="h-4 w-4" />
+                  <SiGithub className="size-3" />
                   <span>Source</span>
                 </Link>
               </Badge>
@@ -253,7 +250,7 @@ export default async function ConnectorImplementationPage({
             <p className="text-muted-foreground">{description}</p>
 
             <div className="grid grid-cols-1 gap-2 ">
-              {creatorsForVersion.length > 0 && (
+              {creatorsForVersion.length > 1 && (
                 <ComboBox
                   withAvatars
                   size="lg"
@@ -268,7 +265,7 @@ export default async function ConnectorImplementationPage({
                 />
               )}
 
-              {versions.length > 0 && (
+              {versions.length > 1 && (
                 <ComboBox
                   withIcons
                   size="lg"
@@ -283,7 +280,7 @@ export default async function ConnectorImplementationPage({
                 />
               )}
 
-              {languages.length > 0 && (
+              {languages.length > 1 && (
                 <ComboBox
                   withIcons
                   size="lg"
@@ -298,7 +295,7 @@ export default async function ConnectorImplementationPage({
                 />
               )}
 
-              {implementationsForLanguage.length > 0 && (
+              {implementationsForLanguage.length > 1 && (
                 <ComboBox
                   withIcons
                   size="lg"
