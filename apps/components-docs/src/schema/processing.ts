@@ -321,15 +321,22 @@ function loadFileSchemas(
     const lower = name.toLowerCase();
     let format: DiagramFile["format"] = "json";
     if (lower.endsWith(".csv") || lower.includes("csv")) format = "csv";
-    else if (lower.endsWith(".parquet") || lower.includes("parquet")) format = "parquet";
+    else if (lower.endsWith(".parquet") || lower.includes("parquet"))
+      format = "parquet";
     else if (lower.endsWith(".avro") || lower.includes("avro")) format = "avro";
-    else if (lower.endsWith(".ndjson") || lower.includes("ndjson") || lower.includes("jsonl"))
+    else if (
+      lower.endsWith(".ndjson") ||
+      lower.includes("ndjson") ||
+      lower.includes("jsonl")
+    )
       format = "ndjson";
 
     let details: string | undefined = undefined;
     if (/\.json$/i.test(lower)) {
       const schema = readJsonSafe<any>(fp, errors);
-      details = (schema?.title as string | undefined) ?? (schema?.description as string | undefined);
+      details =
+        (schema?.title as string | undefined) ??
+        (schema?.description as string | undefined);
     }
 
     files.push({ name, format, details });
