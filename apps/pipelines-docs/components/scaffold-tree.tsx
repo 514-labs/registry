@@ -13,6 +13,35 @@ function normalize(structure: any[]): ScaffNode[] {
   }));
 }
 
+function findFirstDirByName(
+  nodes: ScaffNode[],
+  name: string
+): ScaffNode | undefined {
+  for (const n of nodes) {
+    if (n.type === "dir" && n.name === name) return n;
+    const child = n.children && findFirstDirByName(n.children, name);
+    if (child) return child;
+  }
+  return undefined;
+}
+
+function extractLanguageView(
+  structure: ScaffNode[],
+  language: "python" | "typescript"
+): ScaffNode[] {
+  const lang = findFirstDirByName(structure, language);
+  if (!lang) return [];
+  const impl = (lang.children ?? []).find(
+    (c) => c.type === "dir" && c.name === "{implementation}"
+  );
+  const languageRoot: ScaffNode = {
+    type: "dir",
+    name: lang.name,
+    children: impl ? [impl] : (lang.children ?? []),
+  };
+  return [languageRoot];
+}
+
 function readScaffold(relativePathFromApp: string): ScaffNode[] {
   try {
     const abs = path.resolve(process.cwd(), relativePathFromApp);
@@ -35,6 +64,9 @@ export async function PipelineScaffoldTrees() {
     "../../pipeline-registry/_scaffold/typescript.json"
   );
 
+  const pythonView = extractLanguageView(pythonStructure, "python");
+  const typescriptView = extractLanguageView(typescriptStructure, "typescript");
+
   return (
     <div className="space-y-8">
       <section>
@@ -46,13 +78,13 @@ export async function PipelineScaffoldTrees() {
       <section>
         <h3 className="mt-0">Python implementation scaffold</h3>
         <div className="rounded-md border bg-card p-3">
-          <ScaffoldTreeView nodes={pythonStructure} />
+          <ScaffoldTreeView nodes={pythonView} />
         </div>
       </section>
       <section>
         <h3 className="mt-0">TypeScript implementation scaffold</h3>
         <div className="rounded-md border bg-card p-3">
-          <ScaffoldTreeView nodes={typescriptStructure} />
+          <ScaffoldTreeView nodes={typescriptView} />
         </div>
       </section>
     </div>

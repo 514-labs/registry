@@ -54,7 +54,7 @@ function NodeRow({ node, depth }: { node: ScaffNode; depth: number }) {
       </div>
 
       {isDir && open && node.children && node.children.length > 0 && (
-        <ul className="mt-1">
+        <ul className="mt-1 list-none p-0 m-0">
           {node.children.map((child, idx) => (
             <NodeRow key={idx} node={child} depth={depth + 1} />
           ))}
