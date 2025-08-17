@@ -1,0 +1,337 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/scaffold.schema.json",
+  "scaffold": "python",
+  "version": "0.2.0",
+  "description": "Python implementation scaffold for a connector. Places a Python package under connector/version/author/python/{implementation} with conventional src/tests layout and minimal templates.",
+  "variables": {
+    "connector": {
+      "description": "Connector name (kebab-case).",
+      "example": "stripe",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "version": {
+      "description": "Source version identifier (not necessarily semver). Examples: v4, ga4, 2020-08-27, api-2020.08.27",
+      "example": "v4",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "author": {
+      "description": "GitHub organization or user handle (kebab-case). Used for linking and avatars.",
+      "example": "514-labs",
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,37}[a-z0-9])?$"
+    },
+    "implementation": {
+      "description": "Implementation name nested under the language folder (kebab-case). Defaults to 'default'.",
+      "example": "default",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "default": "default"
+    },
+    "packageName": {
+      "description": "Python package name (snake_case).",
+      "example": "connector_stripe",
+      "pattern": "^[a-z_][a-z0-9_]*$"
+    }
+  },
+  "structure": [
+    {
+      "type": "dir",
+      "name": "{connector}",
+      "children": [
+        {
+          "type": "dir",
+          "name": "{version}",
+          "children": [
+            {
+              "type": "dir",
+              "name": "{author}",
+              "children": [
+                {
+                  "type": "dir",
+                  "name": "python",
+                  "children": [
+                    {
+                      "type": "dir",
+                      "name": "{implementation}",
+                      "children": [
+                        {
+                          "type": "file",
+                          "name": ".gitignore",
+                          "template": "__pycache__/\n.venv/\n.env\n.dist/\n"
+                        },
+                        {
+                          "type": "file",
+                          "name": ".env.example",
+                          "template": "API_KEY=\n"
+                        },
+                        {
+                          "type": "file",
+                          "name": "README.md",
+                          "template": "# {connector} (Python)\n\nPython implementation for `{connector}` by `{author}`.\n\n"
+                        },
+                        {
+                          "type": "file",
+                          "name": "pyproject.toml",
+                          "template": "[project]\nname = \"{packageName}\"\nversion = \"0.1.0\"\nreadme = \"README.md\"\nrequires-python = \">=3.10\"\nlicense = {text = \"MIT\"}\nauthors = [ { name = \"{author}\" } ]\ndependencies = [ ]\n\n[tool.ruff]\nline-length = 100\n\n[build-system]\nrequires = [\"setuptools>=68\",\"wheel\"]\nbuild-backend = \"setuptools.build_meta\"\n"
+                        },
+                        {
+                          "type": "dir",
+                          "name": "docs",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "getting-started.md",
+                              "template": "# Getting started\n\nThis is a placeholder. Document how to configure and run the connector in Python.\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "configuration.md",
+                              "template": "# Configuration\n\nDocument configuration options (auth, scopes, IDs).\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "schema.md",
+                              "template": "# Schema\n\nRefer to `schemas/index.json` and related files.\n\n## Organization\n\nSchemas support nested folder structures for better organization:\n\n- **raw/** - Raw API schemas\n  - `endpoints/` - API endpoint request/response schemas\n  - `types/` - Shared type definitions for endpoints (not shown as Files)\n  - `events/` - Event payloads\n- **extracted/** - Normalized schemas\n  - `entities/` - Business entities\n  - `metrics/` - Aggregated data\n- **files/** - File-based schemas (CSV/JSON/Parquet/Avro/NDJSON). Only items under `schemas/files` appear in the Files tab.\n\n## Adding Schemas\n\n1. Create schema files in appropriate nested folders\n2. Update `schemas/index.json` with correct paths for endpoints and tables\n3. Place file schemas under `schemas/files` (no index entries needed)\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "limits.md",
+                              "template": "# Limits\n\nDescribe API limits, quotas, and rate limiting behavior.\n"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "dir",
+                          "name": "schemas",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "index.json",
+                              "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/schema-index.schema.json\",\n  \"version\": \"0.1.0\",\n  \"datasets\": [\n    {\n      \"name\": \"events\",\n      \"stage\": \"raw\",\n      \"kind\": \"endpoints\",\n      \"path\": \"raw/endpoints/events.schema.json\",\n      \"doc\": \"raw/endpoints/events.md\"\n    },\n    {\n      \"name\": \"events\",\n      \"stage\": \"extracted\",\n      \"kind\": \"endpoints\",\n      \"path\": \"extracted/endpoints/events.schema.json\",\n      \"doc\": \"extracted/endpoints/events.md\"\n    }\n  ],\n  \"_examples\": {\n    \"_comment\": \"Below are examples of how to use nested folders. Copy and modify these patterns:\",\n    \"endpoint_example\": {\n      \"name\": \"users.create\",\n      \"stage\": \"raw\",\n      \"kind\": \"endpoints\",\n      \"path\": \"raw/endpoints/endpoints/users/create.schema.json\",\n      \"doc\": \"raw/endpoints/endpoints/users/create.md\",\n      \"metadata\": {\n        \"category\": \"endpoint\",\n        \"apiMethod\": \"POST\"\n      }\n    },\n    \"nested_organization_example\": {\n      \"name\": \"reports.analytics\",\n      \"stage\": \"raw\",\n      \"kind\": \"endpoints\",\n      \"path\": \"raw/endpoints/endpoints/reports/analytics.schema.json\",\n      \"doc\": \"raw/endpoints/endpoints/reports/analytics.md\"\n    }\n  }\n}\n"
+                            },
+                            {
+                              "type": "dir",
+                              "name": "raw",
+                              "children": [
+                                {
+                                  "type": "dir",
+                                  "name": "json",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "README.md",
+                                      "template": "# Raw JSON Schemas\n\nThis directory contains raw JSON schemas from the source API.\n\n## Organization\n\nSchemas can be organized in nested folders for better structure:\n- `endpoints/` - API endpoint request/response schemas\n- `types/` - Shared type definitions\n- `events/` - Event or webhook payloads\n- Or any logical grouping that makes sense for your connector\n\n## Example Structure\n\n```\njson/\n├── endpoints/\n│   ├── users.schema.json\n│   └── users.md\n├── types/\n│   ├── User.schema.json\n│   └── User.md\n└── events.schema.json\n```\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "events.schema.json",
+                                      "template": "{\\n  \\\"$schema\\\": \\\"http://json-schema.org/draft-07/schema#\\\",\\n  \\\"title\\\": \\\"Raw Event\\\",\\n  \\\"type\\\": \\\"object\\\",\\n  \\\"additionalProperties\\\": true\\n}\\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "events.md",
+                                      "template": "# Raw events (JSON)\n\nDescribe the upstream event payload.\n"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "files",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "README.md",
+                                      "template": "# File schemas\n\nPlace file-based schemas here (CSV/JSON/Parquet/Avro/NDJSON). Files in this folder are shown in the Files tab.\n\nExamples:\n- `events.csv`\n- `events.schema.json` (with title/description)\n"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "relational",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "tables.json",
+                                      "template": "{\\n  \\\"tables\\\": []\\n}\\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "tables.sql",
+                                      "template": "-- DDL placeholders for raw tables\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "README.md",
+                                      "template": "# Raw relational schema\n\nDescribe tables and relationships.\n"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "dir",
+                              "name": "extracted",
+                              "children": [
+                                {
+                                  "type": "dir",
+                                  "name": "json",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "README.md",
+                                      "template": "# Extracted JSON Schemas\n\nThis directory contains normalized/transformed JSON schemas.\n\n## Organization\n\nLike raw schemas, extracted schemas can be organized in nested folders:\n- `entities/` - Normalized business entities\n- `metrics/` - Calculated metrics or aggregations\n- `reports/` - Structured report schemas\n- Or any logical grouping for your transformed data\n\n## Naming Convention\n\nUse the same folder structure as in `raw/endpoints/` when there's a 1:1 mapping, or create new logical groupings for transformed data.\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "events.schema.json",
+                                      "template": "{\\n  \\\"$schema\\\": \\\"http://json-schema.org/draft-07/schema#\\\",\\n  \\\"title\\\": \\\"Extracted Event\\\",\\n  \\\"type\\\": \\\"object\\\",\\n  \\\"additionalProperties\\\": false,\\n  \\\"properties\\\": {}\\n}\\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "events.md",
+                                      "template": "# Extracted events (JSON)\n\nDescribe the normalized event shape.\n"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "relational",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "tables.json",
+                                      "template": "{\\n  \\\"tables\\\": []\\n}\\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "tables.sql",
+                                      "template": "-- DDL placeholders for extracted tables\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "README.md",
+                                      "template": "# Extracted relational schema\n\nDescribe normalized tables and relationships.\n"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "dir",
+                          "name": "src",
+                          "children": [
+                            {
+                              "type": "dir",
+                              "name": "{packageName}",
+                              "children": [
+                                {
+                                  "type": "file",
+                                  "name": "__init__.py",
+                                  "template": "__version__ = \"0.1.0\"\n"
+                                },
+                                {
+                                  "type": "file",
+                                  "name": "client.py",
+                                  "template": "class Client:\n    def __init__(self, config: dict):\n        self.config = config\n\n    def ping(self) -> bool:\n        return True\n"
+                                },
+                                {
+                                  "type": "file",
+                                  "name": "config.py",
+                                  "template": "from dataclasses import dataclass\n\n@dataclass\nclass ConnectorConfig:\n    api_key: str\n"
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "auth",
+                                  "children": [
+                                    { "type": "file", "name": "__init__.py" },
+                                    {
+                                      "type": "file",
+                                      "name": "base.py",
+                                      "template": "class AuthStrategy:\n    def apply(self, headers: dict) -> dict:\n        return headers\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "api_key.py",
+                                      "template": "from .base import AuthStrategy\n\nclass ApiKeyAuth(AuthStrategy):\n    def __init__(self, api_key: str):\n        self.api_key = api_key\n\n    def apply(self, headers: dict) -> dict:\n        headers[\"Authorization\"] = f\"Bearer {self.api_key}\"\n        return headers\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "oauth2.py",
+                                      "template": "from .base import AuthStrategy\n\nclass OAuth2(AuthStrategy):\n    pass\n"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "extract",
+                                  "children": [
+                                    { "type": "file", "name": "__init__.py" },
+                                    {
+                                      "type": "file",
+                                      "name": "base_extractor.py",
+                                      "template": "class BaseExtractor:\n    def run(self):\n        raise NotImplementedError\n"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "transform",
+                                  "children": [
+                                    { "type": "file", "name": "__init__.py" },
+                                    {
+                                      "type": "file",
+                                      "name": "base_transformer.py",
+                                      "template": "class BaseTransformer:\n    def transform(self, record):\n        return record\n"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "load",
+                                  "children": [
+                                    { "type": "file", "name": "__init__.py" },
+                                    {
+                                      "type": "file",
+                                      "name": "base_loader.py",
+                                      "template": "class BaseLoader:\n    def load(self, records):\n        pass\n"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "dir",
+                          "name": "tests",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "test_client.py",
+                              "template": "def test_ping():\n    from {packageName}.client import Client\n    assert Client({}).ping() is True\n"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "dir",
+                          "name": "examples",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "basic_usage.py",
+                              "template": "from {packageName}.client import Client\n\nclient = Client({})\nprint(client.ping())\n"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

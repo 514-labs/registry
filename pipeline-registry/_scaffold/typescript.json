@@ -1,0 +1,337 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/scaffold.schema.json",
+  "scaffold": "typescript",
+  "version": "0.5.0",
+  "description": "TypeScript implementation scaffold with support for an implementation layer under the language directory.",
+  "variables": {
+    "connector": {
+      "description": "Connector name (kebab-case).",
+      "example": "stripe",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "version": {
+      "description": "Source version identifier (not necessarily semver). Examples: v4, ga4, 2020-08-27, api-2020.08.27",
+      "example": "v4",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "author": {
+      "description": "GitHub organization or user handle (kebab-case). Used for linking and avatars.",
+      "example": "514-labs",
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,37}[a-z0-9])?$"
+    },
+    "implementation": {
+      "description": "Implementation name nested under the language folder (kebab-case). Defaults to 'default'.",
+      "example": "default",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "default": "default"
+    },
+    "packageName": {
+      "description": "npm package name for the connector (use @workspace/ prefix if publishing in this monorepo).",
+      "example": "@workspace/connector-stripe",
+      "pattern": "^(@[a-z0-9-~][a-z0-9-._~]*)?/[a-z0-9-~][a-z0-9-._~]*$|^[a-z0-9-~][a-z0-9-._~]*$"
+    }
+  },
+  "structure": [
+    {
+      "type": "dir",
+      "name": "{connector}",
+      "children": [
+        {
+          "type": "dir",
+          "name": "{version}",
+          "children": [
+            {
+              "type": "dir",
+              "name": "{author}",
+              "children": [
+                {
+                  "type": "dir",
+                  "name": "typescript",
+                  "children": [
+                    {
+                      "type": "dir",
+                      "name": "{implementation}",
+                      "children": [
+                        {
+                          "type": "file",
+                          "name": ".gitignore",
+                          "template": "node_modules/\ndist/\n.env\n"
+                        },
+                        {
+                          "type": "file",
+                          "name": ".env.example",
+                          "template": "API_KEY=\n"
+                        },
+                        {
+                          "type": "file",
+                          "name": "README.md",
+                          "template": "# {connector} (TypeScript)\n\nTypeScript implementation for `{connector}` by `{author}`.\n\nSchemas: see `schemas/index.json` for machine-readable definitions and accompanying Markdown docs.\n"
+                        },
+                        {
+                          "type": "file",
+                          "name": "package.json",
+                          "template": "{\n  \"name\": \"{packageName}\",\n  \"version\": \"0.1.0\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\",\n  \"scripts\": {\n    \"build\": \"tsup src/index.ts --dts --format esm,cjs\",\n    \"test\": \"vitest run\"\n  },\n  \"engines\": {\"node\": \">=20\"},\n  \"dependencies\": {},\n  \"devDependencies\": {\n    \"tsup\": \"^8.0.0\",\n    \"typescript\": \"^5.4.0\",\n    \"vitest\": \"^1.6.0\"\n  }\n}\n"
+                        },
+                        {
+                          "type": "file",
+                          "name": "tsconfig.json",
+                          "template": "{\n  \"compilerOptions\": {\n    \"target\": \"ES2022\",\n    \"module\": \"ESNext\",\n    \"moduleResolution\": \"Bundler\",\n    \"outDir\": \"dist\",\n    \"declaration\": true,\n    \"declarationMap\": true,\n    \"strict\": true,\n    \"skipLibCheck\": true\n  },\n  \"include\": [\"src\"]\n}\n"
+                        },
+                        {
+                          "type": "file",
+                          "name": "vitest.config.ts",
+                          "template": "import { defineConfig } from 'vitest/config'\nexport default defineConfig({ test: { environment: 'node' } })\n"
+                        },
+                        {
+                          "type": "dir",
+                          "name": "docs",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "getting-started.md",
+                              "template": "# Getting started\n\nThis is a placeholder. Document how to configure and run the connector in TypeScript.\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "configuration.md",
+                              "template": "# Configuration\n\nDocument configuration options (auth, scopes, IDs).\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "schema.md",
+                              "template": "# Schema\n\nRefer to `schemas/index.json` and related files.\n\n## Organization\n\nSchemas support nested folder structures for better organization:\n\n- **raw/** - Raw API schemas\n  - `endpoints/` - API endpoint request/response schemas\n  - `types/` - Shared type definitions for endpoints (not shown as Files)\n  - `events/` - Event payloads\n- **extracted/** - Normalized schemas\n  - `entities/` - Business entities\n  - `metrics/` - Aggregated data\n- **files/** - File-based schemas (CSV/JSON/Parquet/Avro/NDJSON). Only items under `schemas/files` appear in the Files tab.\n\n## Adding Schemas\n\n1. Create schema files in appropriate nested folders\n2. Update `schemas/index.json` with correct paths for endpoints and tables\n3. Place file schemas under `schemas/files` (no index entries needed)\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "limits.md",
+                              "template": "# Limits\n\nDescribe API limits, quotas, and rate limiting behavior.\n"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "dir",
+                          "name": "schemas",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "index.json",
+                              "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/schema-index.schema.json\",\n  \"version\": \"0.1.0\",\n  \"datasets\": [\n    {\n      \"name\": \"events\",\n      \"stage\": \"raw\",\n      \"kind\": \"endpoints\",\n      \"path\": \"raw/endpoints/events.schema.json\",\n      \"doc\": \"raw/endpoints/events.md\"\n    },\n    {\n      \"name\": \"events\",\n      \"stage\": \"extracted\",\n      \"kind\": \"endpoints\",\n      \"path\": \"extracted/endpoints/events.schema.json\",\n      \"doc\": \"extracted/endpoints/events.md\"\n    }\n  ],\n  \"_examples\": {\n    \"_comment\": \"Below are examples of how to use nested folders. Copy and modify these patterns:\",\n    \"endpoint_example\": {\n      \"name\": \"users.create\",\n      \"stage\": \"raw\",\n      \"kind\": \"endpoints\",\n      \"path\": \"raw/endpoints/endpoints/users/create.schema.json\",\n      \"doc\": \"raw/endpoints/endpoints/users/create.md\",\n      \"metadata\": {\n        \"category\": \"endpoint\",\n        \"apiMethod\": \"POST\"\n      }\n    },\n    \"nested_organization_example\": {\n      \"name\": \"reports.analytics\",\n      \"stage\": \"raw\",\n      \"kind\": \"endpoints\",\n      \"path\": \"raw/endpoints/endpoints/reports/analytics.schema.json\",\n      \"doc\": \"raw/endpoints/endpoints/reports/analytics.md\"\n    }\n  }\n}\n"
+                            },
+                            {
+                              "type": "dir",
+                              "name": "raw",
+                              "children": [
+                                {
+                                  "type": "dir",
+                                  "name": "json",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "README.md",
+                                      "template": "# Raw JSON Schemas\n\nThis directory contains raw JSON schemas from the source API.\n\n## Organization\n\nSchemas can be organized in nested folders for better structure:\n- `endpoints/` - API endpoint request/response schemas\n- `types/` - Shared type definitions\n- `events/` - Event or webhook payloads\n- Or any logical grouping that makes sense for your connector\n\n## Example Structure\n\n```\njson/\n├── endpoints/\n│   ├── users.schema.json\n│   └── users.md\n├── types/\n│   ├── User.schema.json\n│   └── User.md\n└── events.schema.json\n```\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "events.schema.json",
+                                      "template": "{\\n  \\\"$schema\\\": \\\"http://json-schema.org/draft-07/schema#\\\",\\n  \\\"title\\\": \\\"Raw Event\\\",\\n  \\\"type\\\": \\\"object\\\",\\n  \\\"additionalProperties\\\": true\\n}\\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "events.md",
+                                      "template": "# Raw events (JSON)\n\nDescribe the upstream event payload.\n"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "files",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "README.md",
+                                      "template": "# File schemas\n\nPlace file-based schemas here (CSV/JSON/Parquet/Avro/NDJSON). Files in this folder are shown in the Files tab.\n\nExamples:\n- `events.csv`\n- `events.schema.json` (with title/description)\n"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "relational",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "tables.json",
+                                      "template": "{\\n  \\\"tables\\\": []\\n}\\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "tables.sql",
+                                      "template": "-- DDL placeholders for raw tables\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "README.md",
+                                      "template": "# Raw relational schema\n\nDescribe tables and relationships.\n"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "dir",
+                              "name": "extracted",
+                              "children": [
+                                {
+                                  "type": "dir",
+                                  "name": "json",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "README.md",
+                                      "template": "# Extracted JSON Schemas\n\nThis directory contains normalized/transformed JSON schemas.\n\n## Organization\n\nLike raw schemas, extracted schemas can be organized in nested folders:\n- `entities/` - Normalized business entities\n- `metrics/` - Calculated metrics or aggregations\n- `reports/` - Structured report schemas\n- Or any logical grouping for your transformed data\n\n## Naming Convention\n\nUse the same folder structure as in `raw/endpoints/` when there's a 1:1 mapping, or create new logical groupings for transformed data.\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "events.schema.json",
+                                      "template": "{\\n  \\\"$schema\\\": \\\"http://json-schema.org/draft-07/schema#\\\",\\n  \\\"title\\\": \\\"Extracted Event\\\",\\n  \\\"type\\\": \\\"object\\\",\\n  \\\"additionalProperties\\\": false,\\n  \\\"properties\\\": {}\\n}\\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "events.md",
+                                      "template": "# Extracted events (JSON)\n\nDescribe the normalized event shape.\n"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "relational",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "tables.json",
+                                      "template": "{\\n  \\\"tables\\\": []\\n}\\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "tables.sql",
+                                      "template": "-- DDL placeholders for extracted tables\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "README.md",
+                                      "template": "# Extracted relational schema\n\nDescribe normalized tables and relationships.\n"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "dir",
+                          "name": "src",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "index.ts",
+                              "template": "export * from './client'\nexport * from './config'\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "client.ts",
+                              "template": "export class Client {\n  constructor(public config: Record<string, unknown>) {}\n  ping(): boolean { return true }\n}\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "config.ts",
+                              "template": "export type ConnectorConfig = { apiKey: string }\n"
+                            },
+                            {
+                              "type": "dir",
+                              "name": "auth",
+                              "children": [
+                                {
+                                  "type": "file",
+                                  "name": "base.ts",
+                                  "template": "export interface AuthStrategy { apply(headers: Record<string,string>): Record<string,string> }\n"
+                                },
+                                {
+                                  "type": "file",
+                                  "name": "apiKey.ts",
+                                  "template": "import type { AuthStrategy } from './base'\nexport class ApiKeyAuth implements AuthStrategy {\n  constructor(private apiKey: string) {}\n  apply(headers: Record<string,string>) { return { ...headers, Authorization: `Bearer ${this.apiKey}` } }\n}\n"
+                                },
+                                {
+                                  "type": "file",
+                                  "name": "oauth2.ts",
+                                  "template": "export {}\n"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "dir",
+                              "name": "extract",
+                              "children": [
+                                {
+                                  "type": "file",
+                                  "name": "baseExtractor.ts",
+                                  "template": "export abstract class BaseExtractor { abstract run(): Promise<void> }\n"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "dir",
+                              "name": "transform",
+                              "children": [
+                                {
+                                  "type": "file",
+                                  "name": "baseTransformer.ts",
+                                  "template": "export class BaseTransformer<T = unknown> { transform(record: T): T { return record } }\n"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "dir",
+                              "name": "load",
+                              "children": [
+                                {
+                                  "type": "file",
+                                  "name": "baseLoader.ts",
+                                  "template": "export class BaseLoader<T = unknown> { async load(records: T[]): Promise<void> {} }\n"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "dir",
+                          "name": "tests",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "client.test.ts",
+                              "template": "import { describe, it, expect } from 'vitest'\nimport { Client } from '../src/client'\n\ndescribe('client', () => {\n  it('ping', () => {\n    expect(new Client({}).ping()).toBe(true)\n  })\n})\n"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "dir",
+                          "name": "examples",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "basic-usage.ts",
+                              "template": "import { Client } from './src/client'\nconsole.log(new Client({}).ping())\n"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
