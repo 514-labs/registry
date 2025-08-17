@@ -47,12 +47,12 @@ function Hero() {
           to get involved
         </Badge>
         <h1 className="text-6xl mb-0">
-          Connectors{" "}
+          Pipelines{" "}
           <span className="text-muted-foreground">as copyable code</span>
         </h1>
         <div className="flex flex-row gap-5">
           <Button asChild>
-            <Link href="discover">All connectors</Link>
+            <Link href="discover">All pipelines</Link>
           </Button>
           <Button asChild variant="outline">
             <Link href="/docs">Learn More</Link>
@@ -61,9 +61,20 @@ function Hero() {
       </div>
       <div className="flex flex-col gap-10">
         <h2 className="text-lg text-muted-foreground">
-          A starter kit for building, testing and sharing analytical connectors
-          for extracting data and metadata from any analytical data system.
-          Heavily inspired by Shadcn/ui .
+          A starter kit for building, testing and sharing pipelines to move data
+          from a source and landing it in an analytical data system. Built on
+          the{" "}
+          <Link
+            href="https://docs.fiveonefour.com/moose"
+            className=" text-primary"
+          >
+            MooseStack
+          </Link>{" "}
+          and heavily inspired by{" "}
+          <Link href="https://ui.shadcn.com" className="text-primary">
+            Shadcn/ui
+          </Link>
+          .
         </h2>
         <div className="flex flex-col gap-5 text-lg">
           {valueProps.map((prop) => (

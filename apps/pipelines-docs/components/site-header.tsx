@@ -11,6 +11,8 @@ import { Separator } from "@ui/components/separator";
 
 export async function SiteHeader() {
   const githubStars = await getGithubStars();
+  const connectorsBaseUrl =
+    process.env.NEXT_PUBLIC_CONNECTORS_DOCS_URL || "http://localhost:3000";
 
   return (
     <header className="flex justify-between items-center p-4 w-full h-[var(--header-height)] sticky top-0 z-10 bg-background">
@@ -40,10 +42,10 @@ export async function SiteHeader() {
         <NavButton href="/share" label="Share" />
       </div>
       <div className="flex flex-row items-center gap-2 h-full">
-        <NavButton href="/pipelines" label="Pipelines" />
+        <NavButton href={connectorsBaseUrl} label="Connectors" />
         <Separator orientation="vertical" />
-        <SearchButton />
         <NavButton href="/docs" label="Docs" />
+        <SearchButton />
         <SidebarTrigger />
         <ThemeToggle />
         <Button asChild variant="ghost" size="sm" className="h-7 px-2">

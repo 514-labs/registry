@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm -C apps/connectors-docs dev",
+    "dev": "turbo run dev --parallel --filter=connectors-docs --filter=pipelines-docs",
     "build": "pnpm registry:sync:issues && turbo run build",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",

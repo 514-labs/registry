@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack -p 3000",
     "predev": "tsx ./scripts/sync-logos.mjs || true",
     "build": "tsx ./scripts/sync-logos.mjs || true && next build && pagefind --site .next/server/app --output-path ./public/pagefind",
     "start": "next start",
