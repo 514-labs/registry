@@ -1,30 +1,7 @@
 import React from "react";
 import fs from "node:fs";
 import path from "node:path";
-
-type ScaffNode = {
-  type: "dir" | "file";
-  name: string;
-  children?: ScaffNode[];
-};
-
-function renderTree(nodes: ScaffNode[]): React.ReactNode {
-  return (
-    <ul className="ml-4">
-      {nodes.map((node, idx) => (
-        <li key={idx} className="font-mono text-sm leading-6">
-          <span className="select-text">
-            {node.type === "dir" ? "📁 " : "📄 "}
-            {node.name}
-          </span>
-          {node.children &&
-            node.children.length > 0 &&
-            renderTree(node.children)}
-        </li>
-      ))}
-    </ul>
-  );
-}
+import ScaffoldTreeView, { ScaffNode } from "./scaffold-tree-view";
 
 function normalize(structure: any[]): ScaffNode[] {
   return structure.map((n) => ({
@@ -61,14 +38,14 @@ export async function ConnectorScaffoldTrees() {
       <section>
         <h3 className="mt-0">Meta scaffold</h3>
         <div className="rounded-md border bg-card p-3">
-          {renderTree(metaStructure)}
+          <ScaffoldTreeView nodes={metaStructure} />
         </div>
       </section>
       <section>
         <h3 className="mt-0">Python implementation scaffold</h3>
         <div className="rounded-md border bg-card p-3">
           {pythonStructure.length ? (
-            renderTree(pythonStructure)
+            <ScaffoldTreeView nodes={pythonStructure} />
           ) : (
             <div className="text-sm text-muted-foreground">
               No Python scaffold found.
@@ -79,7 +56,7 @@ export async function ConnectorScaffoldTrees() {
       <section>
         <h3 className="mt-0">TypeScript implementation scaffold</h3>
         <div className="rounded-md border bg-card p-3">
-          {renderTree(typescriptStructure)}
+          <ScaffoldTreeView nodes={typescriptStructure} />
         </div>
       </section>
     </div>
