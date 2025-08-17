@@ -62,7 +62,7 @@ function Hero() {
       <div className="flex flex-col gap-10">
         <h2 className="text-lg text-muted-foreground">
           A starter kit for building, testing and sharing analytical connectors
-          for extracting data and metadata from any anlytical data system.
+          for extracting data and metadata from any analytical data system.
           Heavily inspired by Shadcn/ui .
         </h2>
         <div className="flex flex-col gap-5 text-lg">
