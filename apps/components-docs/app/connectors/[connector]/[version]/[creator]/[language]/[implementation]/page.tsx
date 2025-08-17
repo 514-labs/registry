@@ -250,65 +250,61 @@ export default async function ConnectorImplementationPage({
             <p className="text-muted-foreground">{description}</p>
 
             <div className="grid grid-cols-1 gap-2 ">
-              {creatorsForVersion.length > 1 && (
-                <ComboBox
-                  withAvatars
-                  size="lg"
-                  value={creator}
-                  items={creatorsForVersion.map((c) => ({
-                    value: c,
-                    label: c,
-                    href: pathFor(version, c),
-                    avatarUrl: creatorAvatars[c] ?? undefined,
-                  }))}
-                  placeholder="Select author"
-                />
-              )}
+              <ComboBox
+                withAvatars
+                size="lg"
+                value={creator}
+                items={creatorsForVersion.map((c) => ({
+                  value: c,
+                  label: c,
+                  href: pathFor(version, c),
+                  avatarUrl: creatorAvatars[c] ?? undefined,
+                }))}
+                placeholder="Select author"
+                disabled={creatorsForVersion.length <= 1}
+              />
 
-              {versions.length > 1 && (
-                <ComboBox
-                  withIcons
-                  size="lg"
-                  value={version}
-                  items={versions.map((v) => ({
-                    value: v,
-                    label: v,
-                    href: pathFor(v, creator),
-                    icon: <GitBranch />,
-                  }))}
-                  placeholder="Select version"
-                />
-              )}
+              <ComboBox
+                withIcons
+                size="lg"
+                value={version}
+                items={versions.map((v) => ({
+                  value: v,
+                  label: v,
+                  href: pathFor(v, creator),
+                  icon: <GitBranch />,
+                }))}
+                placeholder="Select version"
+                disabled={versions.length <= 1}
+              />
 
-              {languages.length > 1 && (
-                <ComboBox
-                  withIcons
-                  size="lg"
-                  value={language}
-                  items={languages.map((l) => ({
-                    value: l,
-                    label: l,
-                    href: pathFor(version, creator, l),
-                    icon: <Code2 />,
-                  }))}
-                  placeholder="Select language"
-                />
-              )}
+              <ComboBox
+                withIcons
+                size="lg"
+                value={language}
+                items={languages.map((l) => ({
+                  value: l,
+                  label: l,
+                  href: pathFor(version, creator, l),
+                  icon: <Code2 />,
+                }))}
+                placeholder="Select language"
+                disabled={languages.length <= 1}
+              />
 
-              {implementationsForLanguage.length > 1 && (
-                <ComboBox
-                  withIcons
-                  size="lg"
-                  value={implEntry.implementation}
-                  items={implementationsForLanguage.map((im) => ({
-                    value: im,
-                    label: im,
-                    href: pathFor(version, creator, language, im),
-                    icon: <Wrench />,
-                  }))}
-                  placeholder="Select implementation"
-                />
-              )}
+              <ComboBox
+                withIcons
+                size="lg"
+                value={implEntry.implementation}
+                items={implementationsForLanguage.map((im) => ({
+                  value: im,
+                  label: im,
+                  href: pathFor(version, creator, language, im),
+                  icon: <Wrench />,
+                }))}
+                placeholder="Select implementation"
+                disabled={implementationsForLanguage.length <= 1}
+              />
             </div>
           </div>
         </div>

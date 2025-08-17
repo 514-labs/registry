@@ -35,6 +35,7 @@ export function ComboBox({
   buttonClassName,
   size = "default",
   withIcons = false,
+  disabled = false,
 }: {
   items: ComboBoxItem[];
   value: string;
@@ -43,6 +44,7 @@ export function ComboBox({
   buttonClassName?: string;
   size?: "sm" | "default" | "lg";
   withIcons?: boolean;
+  disabled?: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
@@ -76,7 +78,10 @@ export function ComboBox({
   }, []);
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover
+      open={disabled ? false : open}
+      onOpenChange={(o) => !disabled && setOpen(o)}
+    >
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -84,6 +89,7 @@ export function ComboBox({
           aria-expanded={open}
           size={size}
           className={buttonClassName ?? "w-full justify-between"}
+          disabled={disabled}
         >
           <span className="flex items-center gap-3">
             {withAvatars && selected?.avatarUrl ? (
