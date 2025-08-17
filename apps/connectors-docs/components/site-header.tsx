@@ -42,8 +42,8 @@ export async function SiteHeader() {
       <div className="flex flex-row items-center gap-2 h-full">
         <NavButton href="/pipelines" label="Pipelines" />
         <Separator orientation="vertical" />
-        <SearchButton />
         <NavButton href="/docs" label="Docs" />
+        <SearchButton />
         <SidebarTrigger />
         <ThemeToggle />
         <Button asChild variant="ghost" size="sm" className="h-7 px-2">
