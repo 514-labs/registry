@@ -1,0 +1,215 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/scaffold.schema.json",
+  "scaffold": "typescript",
+  "version": "1.0.0",
+  "description": "TypeScript implementation scaffold for a pipeline. Includes lineage generation to provider _meta/assets.",
+  "variables": {
+    "pipeline": {
+      "description": "Pipeline name (kebab-case).",
+      "example": "ga-to-clickhouse",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "version": {
+      "description": "Pipeline version identifier (not necessarily semver). Examples: v1, 2024-10-01",
+      "example": "v1",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "author": {
+      "description": "GitHub organization or user handle (kebab-case). Used for linking and avatars.",
+      "example": "514-labs",
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,37}[a-z0-9])?$"
+    },
+    "implementation": {
+      "description": "Implementation name nested under the language folder (kebab-case). Defaults to 'default'.",
+      "example": "default",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "default": "default"
+    },
+    "packageName": {
+      "description": "npm package name for the pipeline helpers (use @workspace/ prefix if publishing in this monorepo).",
+      "example": "@workspace/pipeline-ga-to-clickhouse",
+      "pattern": "^(@[a-z0-9-~][a-z0-9-._~]*)?/[a-z0-9-~][a-z0-9-._~]*$|^[a-z0-9-~][a-z0-9-._~]*$"
+    }
+  },
+  "structure": [
+    {
+      "type": "dir",
+      "name": "{pipeline}",
+      "children": [
+        {
+          "type": "dir",
+          "name": "{version}",
+          "children": [
+            {
+              "type": "dir",
+              "name": "{author}",
+              "children": [
+                {
+                  "type": "dir",
+                  "name": "typescript",
+                  "children": [
+                    {
+                      "type": "dir",
+                      "name": "{implementation}",
+                      "children": [
+                        {
+                          "type": "file",
+                          "name": ".gitignore",
+                          "template": "node_modules/\ndist/\n.env\n"
+                        },
+                        {
+                          "type": "file",
+                          "name": ".env.example",
+                          "template": "# Example environment variables for the pipeline implementation\nAPI_KEY=\n"
+                        },
+                        {
+                          "type": "file",
+                          "name": "README.md",
+                          "template": "# {pipeline} (TypeScript)\n\nTypeScript helpers for the `{pipeline}` pipeline by `{author}`.\n\n- Run lineage generation: `pnpm run lineage` or `pnpm run lineage:svg`\n- See `schemas/index.json` for optional machine-readable dataset definitions and accompanying Markdown docs.\n"
+                        },
+                        {
+                          "type": "file",
+                          "name": "package.json",
+                          "template": "{\n  \"name\": \"{packageName}\",\n  \"version\": \"0.1.0\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\",\n  \"scripts\": {\n    \"build\": \"tsup src/index.ts --dts --format esm,cjs\",\n    \"test\": \"vitest run\",\n    \"lineage\": \"node scripts/lineage.mjs\",\n    \"lineage:svg\": \"node scripts/lineage.mjs --svg\"\n  },\n  \"engines\": {\"node\": \">=20\"},\n  \"dependencies\": {},\n  \"devDependencies\": {\n    \"tsup\": \"^8.0.0\",\n    \"typescript\": \"^5.4.0\",\n    \"vitest\": \"^1.6.0\",\n    \"@mermaid-js/mermaid-cli\": \"^10.9.0\"\n  }\n}\n"
+                        },
+                        {
+                          "type": "file",
+                          "name": "tsconfig.json",
+                          "template": "{\n  \"compilerOptions\": {\n    \"target\": \"ES2022\",\n    \"module\": \"ESNext\",\n    \"moduleResolution\": \"Bundler\",\n    \"outDir\": \"dist\",\n    \"declaration\": true,\n    \"declarationMap\": true,\n    \"strict\": true,\n    \"skipLibCheck\": true\n  },\n  \"include\": [\"src\"]\n}\n"
+                        },
+                        {
+                          "type": "file",
+                          "name": "vitest.config.ts",
+                          "template": "import { defineConfig } from 'vitest/config'\nexport default defineConfig({ test: { environment: 'node' } })\n"
+                        },
+                        {
+                          "type": "dir",
+                          "name": "docs",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "getting-started.md",
+                              "template": "# Getting started\n\nDocument how to configure and operate this pipeline implementation.\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "configuration.md",
+                              "template": "# Configuration\n\nDocument configuration options (auth, scopes, IDs, destinations).\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "outputs.md",
+                              "template": "# Outputs\n\nDescribe pipeline outputs (datasets/tables) and link to `schemas/index.json` if used.\n"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "dir",
+                          "name": "schemas",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "index.json",
+                              "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/schema-index.schema.json\",\n  \"version\": \"0.1.0\",\n  \"datasets\": [],\n  \"_examples\": {\n    \"_comment\": \"Examples for organizing dataset schemas if your pipeline produces tables/files.\"\n  }\n}\n"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "dir",
+                          "name": "src",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "index.ts",
+                              "template": "export * from './runner'\nexport * from './config'\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "runner.ts",
+                              "template": "export class PipelineRunner {\n  constructor(public config: Record<string, unknown>) {}\n  ping(): boolean { return true }\n}\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "config.ts",
+                              "template": "export type PipelineConfig = { schedule?: { cron: string; timezone?: string } }\n"
+                            },
+                            {
+                              "type": "dir",
+                              "name": "extract",
+                              "children": [
+                                {
+                                  "type": "file",
+                                  "name": "baseExtractor.ts",
+                                  "template": "export abstract class BaseExtractor { abstract run(): Promise<void> }\n"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "dir",
+                              "name": "transform",
+                              "children": [
+                                {
+                                  "type": "file",
+                                  "name": "baseTransformer.ts",
+                                  "template": "export class BaseTransformer<T = unknown> { transform(record: T): T { return record } }\n"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "dir",
+                              "name": "load",
+                              "children": [
+                                {
+                                  "type": "file",
+                                  "name": "baseLoader.ts",
+                                  "template": "export class BaseLoader<T = unknown> { async load(records: T[]): Promise<void> {} }\n"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "dir",
+                          "name": "scripts",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "lineage.mjs",
+                              "template": "import { readFile, writeFile, mkdir } from 'node:fs/promises'\nimport path from 'node:path'\nimport { spawn } from 'node:child_process'\n\nconst providerMetaDir = path.resolve(process.cwd(), '../../_meta')\nconst assetsDir = path.join(providerMetaDir, 'assets')\nconst pipelineJsonPath = path.join(providerMetaDir, 'pipeline.json')\nconst mmdPath = path.join(assetsDir, 'lineage.mmd')\nconst svgPath = path.join(assetsDir, 'lineage.svg')\n\nfunction shapeFor(kind) {\n  if (kind === 'source') return '([%LABEL%])'\n  if (kind === 'transform') return '{{%LABEL%}}'\n  return '[(%LABEL%)]' // system and destination\n}\n\nfunction labelForDestination(dest) {\n  if (!dest) return 'Destination'\n  const parts = [dest.system || 'dest']\n  if (dest.database) parts.push(dest.database)\n  if (dest.table) parts[parts.length - 1] += `.${dest.table}`\n  return parts.join(' ')\n}\n\nfunction deriveFromSpec(spec) {\n  const nodes = []\n  const edges = []\n  const sourceId = 'source'\n  nodes.push({ id: sourceId, kind: 'source', label: spec?.source?.connector?.name || spec?.source?.type || 'source' })\n  const systemIds = []\n  for (let i = 0; i < (spec.systems?.length || 0); i++) {\n    const sys = spec.systems[i]\n    const id = sys.id || `system_${i + 1}`\n    nodes.push({ id, kind: 'system', label: sys.label || sys.type || id })\n    systemIds.push(id)\n  }\n  const transformIds = []\n  for (let i = 0; i < (spec.transformations?.length || 0); i++) {\n    const t = spec.transformations[i]\n    const id = t.id || `transform_${i + 1}`\n    nodes.push({ id, kind: 'transform', label: t.label || t.type || id })\n    transformIds.push(id)\n  }\n  const destId = 'dest'\n  nodes.push({ id: destId, kind: 'destination', label: labelForDestination(spec.destination) })\n  // Chain: source -> systems -> transforms -> dest\n  let prev = sourceId\n  const chain = [...systemIds, ...transformIds, destId]\n  for (const next of chain) { edges.push({ from: prev, to: next }) ; prev = next }\n  return { nodes, edges }\n}\n\nfunction toMermaid(lineage) {\n  const lines = ['flowchart TD']\n  for (const n of lineage.nodes) {\n    const shape = shapeFor(n.kind)\n    const safeLabel = (n.label || n.id).replace(/\\n/g, ' ')\n    lines.push(`  ${n.id}${shape.replace('%LABEL%', safeLabel)}`)\n  }\n  for (const e of lineage.edges) {\n    const lbl = e.label ? `|${e.label}|` : ''\n    lines.push(`  ${e.from} -->${lbl} ${e.to}`)\n  }\n  return lines.join('\n') + '\n'\n}\n\nasync function main() {\n  await mkdir(assetsDir, { recursive: true })\n  const raw = await readFile(pipelineJsonPath, 'utf8')\n  const spec = JSON.parse(raw)\n  const lineage = (spec.lineage && spec.lineage.nodes?.length) ? spec.lineage : deriveFromSpec(spec)\n  const mermaid = toMermaid(lineage)\n  await writeFile(mmdPath, mermaid, 'utf8')\n  if (process.argv.includes('--svg')) {\n    await new Promise((resolve) => {\n      const child = spawn(process.platform === 'win32' ? 'npx.cmd' : 'npx', ['-y', '-p', '@mermaid-js/mermaid-cli', 'mmdc', '-i', mmdPath, '-o', svgPath], { stdio: 'inherit' })\n      child.on('exit', () => resolve())\n    })\n  }\n  console.log('Wrote', mmdPath, process.argv.includes('--svg') ? 'and SVG' : '')\n}\n\nmain().catch((err) => { console.error(err); process.exit(1) })\n"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "dir",
+                          "name": "tests",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "runner.test.ts",
+                              "template": "import { describe, it, expect } from 'vitest'\nimport { PipelineRunner } from '../src/runner'\n\ndescribe('PipelineRunner', () => {\n  it('ping', () => {\n    expect(new PipelineRunner({}).ping()).toBe(true)\n  })\n})\n"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "dir",
+                          "name": "examples",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "basic-usage.ts",
+                              "template": "import { PipelineRunner } from './src/runner'\nconsole.log(new PipelineRunner({}).ping())\n"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
