@@ -78,7 +78,13 @@ export async function PipelineScaffoldTrees() {
       <section>
         <h3 className="mt-0">Python implementation scaffold</h3>
         <div className="rounded-md border bg-card p-3">
-          <ScaffoldTreeView nodes={pythonView} />
+          {pythonView.length ? (
+            <ScaffoldTreeView nodes={pythonView} />
+          ) : (
+            <div className="text-sm text-muted-foreground">
+              No Python scaffold found.
+            </div>
+          )}
         </div>
       </section>
       <section>
