@@ -6,5 +6,5 @@
   "tags": ["Database", "Extract", "CDC"],
   "description": "Pull your transactional data from MySQL into your data warehouse.",
   "homepage": "https://dev.mysql.com",
-  "registryUrl": "https://github.com/514-labs/connector-factory/tree/main/connector-registry/mysql"
+  "registryUrl": "https://github.com/514-labs/factory/tree/main/connector-registry/mysql"
 }

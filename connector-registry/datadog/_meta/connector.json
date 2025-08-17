@@ -6,5 +6,5 @@
   "tags": ["observability"],
   "description": "",
   "homepage": "",
-  "registryUrl": "https://github.com/514-labs/connector-factory/tree/main/connector-registry/datadog"
+  "registryUrl": "https://github.com/514-labs/factory/tree/main/connector-registry/datadog"
 }

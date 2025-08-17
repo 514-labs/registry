@@ -3,7 +3,7 @@
 # Connector Factory installer
 #
 # Responsibilities:
-# - Download the 514-labs/connector-factory repo archive (zip) to a temp dir
+# - Download the 514-labs/factory repo archive (zip) to a temp dir
 # - Extract it
 # - Copy a chosen connector (by name, version, author, language) into the current directory
 # - Provide --help and --list
@@ -16,7 +16,7 @@ SCRIPT_NAME="bash -i <(curl https://connectors.514.ai/install.sh)"
 
 # ===== Constants =====
 REPO_OWNER="514-labs"
-REPO_NAME="connector-factory"
+REPO_NAME="factory"
 DEFAULT_REPO_BRANCH="main"
 # Allow override via environment
 REPO_BRANCH="${REPO_BRANCH:-$DEFAULT_REPO_BRANCH}"
@@ -237,7 +237,7 @@ list_connectors() {
   if [ -z "$perms" ]; then
     echo "No connectors matched your filters."
     echo ""
-    echo "❤️  We would love your contributions: https://github.com/514-labs/connector-factory"
+    echo "❤️  We would love your contributions: https://github.com/$REPO_OWNER/$REPO_NAME"
     echo ""
     return
   fi

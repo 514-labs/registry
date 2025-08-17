@@ -2,34 +2,23 @@
   "name": "hubspot",
   "author": "514-labs",
   "version": "v3",
-  "languages": [
-    "typescript"
-  ],
-  "category": "CRM",
+  "languages": ["typescript"],
+  "category": "api",
   "capabilities": {
     "extract": true,
-    "transform": true,
+    "transform": false,
     "load": false
   },
   "source": {
     "type": "openapi",
     "spec": "",
-    "homepage": "https://developers.hubspot.com/docs/reference/api"
+    "homepage": "https://developers.hubspot.com"
   },
-  "tags": [
-    "crm",
-    "saas",
-    "extract"
-  ],
-  "maintainers": [
-    {
-      "name": "514-labs",
-      "email": ""
-    }
-  ],
+  "tags": [],
+  "maintainers": [],
   "issues": {
     "typescript": {
-      "data-api": "https://github.com/514-labs/connector-factory/issues/26"
+      "data-api": "https://github.com/514-labs/factory/issues/26"
     }
   }
 }

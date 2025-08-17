@@ -1,6 +1,6 @@
 "use server";
 
-const REPO = "514-labs/connector-factory";
+const REPO = "514-labs/factory";
 const revalidateSeconds = 60 * 30; // 30 minutes
 
 export async function getGithubStars(): Promise<number | null> {
@@ -13,10 +13,10 @@ export async function getGithubStars(): Promise<number | null> {
     });
     if (!res.ok) return null;
     const data = (await res.json()) as { stargazers_count?: number };
-    return typeof data.stargazers_count === "number" ? data.stargazers_count : null;
+    return typeof data.stargazers_count === "number"
+      ? data.stargazers_count
+      : null;
   } catch {
     return null;
   }
 }
-
-

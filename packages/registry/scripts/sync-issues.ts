@@ -71,7 +71,7 @@ function getTrailingNewline(content: string): string {
   return content.endsWith("\n") ? "\n" : "";
 }
 
-// env owner/repo are fixed to 514-labs/connector-factory per product requirement
+// env owner/repo are fixed to 514-labs/factory per product requirement
 
 async function searchExistingIssue(
   token: string,
@@ -162,7 +162,7 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  const ownerRepo = { owner: "514-labs", repo: "connector-factory" };
+  const ownerRepo = { owner: "514-labs", repo: "factory" };
 
   const connectors = listDirectories(registryRoot);
   const summary: Array<{
