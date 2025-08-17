@@ -1,0 +1,10 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "name": "segment",
+  "title": "Segment",
+  "category": "api",
+  "tags": ["CDP", "Events", "SaaS"],
+  "description": "Capture events and metrics from Segment.",
+  "homepage": "https://segment.com",
+  "registryUrl": "https://github.com/514-labs/factory/tree/main/connector-registry/segment"
+}

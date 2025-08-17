@@ -33,7 +33,7 @@ function findMonorepoRoot(startDir: string): string {
 }
 
 const MONOREPO_ROOT = findMonorepoRoot(process.cwd());
-const REGISTRY_DIR = join(MONOREPO_ROOT, "registry");
+const REGISTRY_DIR = join(MONOREPO_ROOT, "connector-registry");
 
 function readJsonSafe<T>(filePath: string): T | undefined {
   try {
