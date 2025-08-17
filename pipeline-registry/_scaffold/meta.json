@@ -1,17 +1,17 @@
 {
   "$schema": "https://schemas.connector-factory.dev/scaffold.schema.json",
   "scaffold": "meta",
-  "version": "0.6.0",
-  "description": "Scaffold connector root _meta (connector-level metadata) and provider _meta (author-level metadata).",
+  "version": "1.0.0",
+  "description": "Scaffold pipeline root _meta (pipeline-level metadata), version _meta, and provider _meta (author-level metadata).",
   "variables": {
-    "connector": {
-      "description": "Connector name (kebab-case).",
-      "example": "stripe",
+    "pipeline": {
+      "description": "Pipeline name (kebab-case).",
+      "example": "ga-to-clickhouse",
       "pattern": "^[a-z0-9][a-z0-9-]*$"
     },
     "version": {
-      "description": "Source version identifier (not necessarily semver). Examples: v4, ga4, 2020-08-27, api-2020.08.27",
-      "example": "v4",
+      "description": "Pipeline version identifier (not necessarily semver). Examples: v1, 2024-10-01",
+      "example": "v1",
       "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
     },
     "author": {
@@ -23,7 +23,7 @@
   "structure": [
     {
       "type": "dir",
-      "name": "{connector}",
+      "name": "{pipeline}",
       "children": [
         {
           "type": "dir",
@@ -32,12 +32,12 @@
             {
               "type": "file",
               "name": "README.md",
-              "template": "# {connector} (connector root)\n\nShared, provider-agnostic docs and assets for `{connector}`.\n"
+              "template": "# {pipeline} (pipeline root)\n\nShared, provider-agnostic docs and assets for `{pipeline}`.\n"
             },
             {
               "type": "file",
-              "name": "connector.json",
-              "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector-root.schema.json\",\n  \"name\": \"{connector}\",\n  \"title\": \"{connector}\",\n  \"category\": \"api|db|stream\",\n  \"tags\": [],\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"registryUrl\": \"https://github.com/514-labs/factory/tree/main/connector-registry/{connector}\"\n}\n"
+              "name": "pipeline.json",
+              "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/pipeline-root.schema.json\",\n  \"name\": \"{pipeline}\",\n  \"title\": \"{pipeline}\",\n  \"tags\": [],\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"registryUrl\": \"https://github.com/514-labs/factory/tree/main/pipeline-registry/{pipeline}\"\n}\n"
             },
             { "type": "dir", "name": "assets" }
           ]
@@ -53,12 +53,12 @@
                 {
                   "type": "file",
                   "name": "README.md",
-                  "template": "# {connector} {version}\n\nVersion-level metadata and assets for `{connector}`.\n"
+                  "template": "# {pipeline} {version}\n\nVersion-level metadata and assets for `{pipeline}`.\n"
                 },
                 {
                   "type": "file",
                   "name": "version.json",
-                  "template": "{\n  \"name\": \"{connector}\",\n  \"version\": \"{version}\",\n  \"status\": \"experimental\",\n  \"releasedAt\": \"\",\n  \"notes\": \"\"\n}\n"
+                  "template": "{\n  \"name\": \"{pipeline}\",\n  \"version\": \"{version}\",\n  \"status\": \"experimental\",\n  \"releasedAt\": \"\",\n  \"notes\": \"\"\n}\n"
                 },
                 { "type": "dir", "name": "assets" }
               ]
@@ -74,18 +74,18 @@
                     {
                       "type": "file",
                       "name": "README.md",
-                      "template": "# {connector}\n\n> Maintained by {author}\n\n"
+                      "template": "# {pipeline}\n\n> Maintained by {author}\n\nThis folder contains provider-level metadata and lineage assets.\n"
                     },
                     {
                       "type": "file",
                       "name": "CHANGELOG.md",
-                      "template": "# Changelog\n\nAll notable changes to `{connector}` by `{author}`.\n\n"
+                      "template": "# Changelog\n\nAll notable changes to `{pipeline}` by `{author}`.\n\n"
                     },
                     { "type": "file", "name": "LICENSE", "template": "MIT\n" },
                     {
                       "type": "file",
-                      "name": "connector.json",
-                      "template": "{\n  \"name\": \"{connector}\",\n  \"author\": \"{author}\",\n  \"authorType\": \"organization\",\n  \"avatarUrlOverride\": \"\",\n  \"version\": \"{version}\",\n  \"languages\": [],\n  \"tags\": [],\n  \"category\": \"api|db|stream\",\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"license\": \"MIT\",\n  \"source\": {\"type\":\"api\",\"spec\":\"\"},\n  \"capabilities\": {\"extract\": true, \"transform\": true, \"load\": true},\n  \"maintainers\": [],\n  \"issues\": {\n    \"typescript\": {\n      \"default\": \"\"\n    },\n    \"python\": {\n      \"default\": \"\"\n    }\n  },\n  \"registryUrl\": \"https://github.com/514-labs/factory/tree/main/connector-registry/{connector}/{version}/{author}\"\n}\n"
+                      "name": "pipeline.json",
+                      "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/pipeline.schema.json\",\n  \"name\": \"{pipeline}\",\n  \"author\": \"{author}\",\n  \"authorType\": \"organization\",\n  \"version\": \"{version}\",\n  \"description\": \"\",\n  \"tags\": [],\n  \"schedule\": { \"cron\": \"0 * * * *\", \"timezone\": \"UTC\" },\n  \"source\": { \"type\": \"connector\", \"connector\": { \"name\": \"\", \"version\": \"\", \"author\": \"\" }, \"stream\": \"\" },\n  \"systems\": [],\n  \"transformations\": [],\n  \"destination\": { \"system\": \"clickhouse\", \"database\": \"\", \"table\": \"\" },\n  \"lineage\": { \"nodes\": [], \"edges\": [] },\n  \"maintainers\": []\n}\n"
                     },
                     { "type": "dir", "name": "assets" }
                   ]
