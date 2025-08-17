@@ -9,37 +9,70 @@ import {
   getIssuePositiveReactionsCountFromUrl,
 } from "@workspace/registry";
 import type { ConnectorRootMeta } from "@workspace/registry/types";
+import { Wrench, BadgeCheck, Activity, ScrollText } from "lucide-react";
+
+const valueProps = [
+  {
+    text: "Easy to tweak for your use case",
+    icon: <Wrench />,
+  },
+  {
+    text: "Best practices backed in",
+    icon: <BadgeCheck />,
+  },
+  {
+    text: "Easy to monitor, debug and scale",
+    icon: <Activity />,
+  },
+  {
+    text: "Own it. MIT License Forever",
+    icon: <ScrollText />,
+  },
+];
 
 function Hero() {
   return (
-    <div className="flex flex-col text-center items-center container py-16 max-w-2xl gap-4 mx-auto">
-      <Badge>
-        This Project is a WIP. Join our{" "}
-        <Link
-          href="https://join.slack.com/t/moose-community/shared_invite/zt-2fjh5n3wz-cnOmM9Xe9DYAgQrNu8xKxg"
-          className="underline"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          slack
-        </Link>{" "}
-        to get involved
-      </Badge>
-      <h1 className="text-5xl">
-        Bullet-proof, customizable, connectors... as code
-      </h1>
-      <h2 className="text-lg text-muted-foreground">
-        A starter kit for building, testing and sharing customizable,
-        embeddable, analytical connectors for extracting data and metadata from
-        source systems.
-      </h2>
-      <div className="flex flex-row gap-4">
-        <Button asChild>
-          <Link href="discover">All connectors</Link>
-        </Button>
-        <Button asChild variant="outline">
-          <Link href="/docs">Learn More</Link>
-        </Button>
+    <div className="grid grid-cols-2 container max-w-6xl mx-auto gap-5 py-16">
+      <div className="flex flex-col gap-10">
+        <Badge variant="outline">
+          This Project is a WIP. Join our{" "}
+          <Link
+            href="https://join.slack.com/t/moose-community/shared_invite/zt-2fjh5n3wz-cnOmM9Xe9DYAgQrNu8xKxg"
+            className="underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            slack
+          </Link>{" "}
+          to get involved
+        </Badge>
+        <h1 className="text-6xl mb-0">
+          Connectors{" "}
+          <span className="text-muted-foreground">as copyable code</span>
+        </h1>
+        <div className="flex flex-row gap-5">
+          <Button asChild>
+            <Link href="discover">All connectors</Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href="/docs">Learn More</Link>
+          </Button>
+        </div>
+      </div>
+      <div className="flex flex-col gap-10">
+        <h2 className="text-lg text-muted-foreground">
+          A starter kit for building, testing and sharing analytical connectors
+          for extracting data and metadata from any anlytical data system.
+          Heavily inspired by Shadcn/ui .
+        </h2>
+        <div className="flex flex-col gap-5 text-lg">
+          {valueProps.map((prop) => (
+            <div key={prop.text} className="flex flex-row gap-5 items-center">
+              {prop.icon}
+              {prop.text}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -218,8 +251,8 @@ export default async function Home() {
       <main className="flex flex-col items-center sm:items-start">
         <Hero />
         {/* Connectors */}
-        <div className="mx-auto w-full max-w-6xl px-4 lg:px-6 py-6">
-          <div className="grid grid-cols-3 gap-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-3">
+        <div className="mx-auto w-full max-w-6xl px-4  py-6">
+          <div className="grid grid-cols-3 gap-5 @xl/main:grid-cols-2 @5xl/main:grid-cols-3">
             {connectors.map((connector) => (
               <ConnectorCard
                 key={connector.name}
