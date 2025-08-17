@@ -1,0 +1,24 @@
+{
+  "name": "hubspot",
+  "author": "514-labs",
+  "version": "v3",
+  "languages": ["typescript"],
+  "category": "api",
+  "capabilities": {
+    "extract": true,
+    "transform": false,
+    "load": false
+  },
+  "source": {
+    "type": "openapi",
+    "spec": "",
+    "homepage": "https://developers.hubspot.com"
+  },
+  "tags": [],
+  "maintainers": [],
+  "issues": {
+    "typescript": {
+      "data-api": "https://github.com/514-labs/factory/issues/26"
+    }
+  }
+}

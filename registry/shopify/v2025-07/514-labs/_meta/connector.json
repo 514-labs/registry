@@ -1,9 +1,0 @@
-{
-  "name": "shopify",
-  "author": "514-labs",
-  "issues": {
-    "python": {
-      "data-api": "https://github.com/514-labs/connector-factory/issues/27"
-    }
-  }
-}

@@ -1,0 +1,28 @@
+## Database Connectors
+
+Connectors for various database systems including SQL and NoSQL databases.
+
+### Goals
+
+- Uniform connection configuration (host, port, database, credentials, SSL)
+- Pooled connections with sane defaults
+- Unified query/command execution with typed results where applicable
+
+### Core Capabilities
+
+1. Health check and version info
+2. Query execution (parameterized) with streaming for large result sets
+3. Transaction support with commit/rollback
+4. Schema inspection (tables, columns, indexes) where supported
+
+### Error Handling
+
+- Syntax/constraint errors surfaced with provider codes
+- Connection errors retried with backoff, transparent pool recovery
+
+### Observability
+
+- Metrics for query counts, latency, rows, errors
+- Trace spans for query execution and transactions
+
+

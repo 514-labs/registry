@@ -1,0 +1,10 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "name": "stripe",
+  "title": "Stripe",
+  "category": "api",
+  "tags": ["Product Analytics", "Events", "Extract", "SaaS"],
+  "description": "Pull your up-to-date Stripe data into your data warehouse.",
+  "homepage": "https://stripe.com",
+  "registryUrl": "https://github.com/514-labs/factory/tree/main/connector-registry/stripe"
+}
