@@ -76,6 +76,7 @@ export default async function DiscoverPage() {
       const language = firstProvider?.implementations?.[0]?.language;
       const implementation =
         firstProvider?.implementations?.[0]?.implementation;
+      const version = firstProvider?.path.split("/").slice(-2)[0];
 
       // Collect all unique languages across providers/implementations
       const languages = Array.from(
@@ -151,12 +152,17 @@ export default async function DiscoverPage() {
         .filter((u): u is string => Boolean(u))
         .slice(0, 10);
 
+      const deepHref =
+        firstProvider && language && implementation && version
+          ? `/connectors/${conn.connectorId}/${version}/${firstProvider.authorId}/${language}/${implementation}`
+          : undefined;
+
       return {
         name: displayName,
         description,
         tags: displayTags,
         icon: `connector-logos/${conn.connectorId}.png`,
-        href: `/connectors/${conn.connectorId}`,
+        href: deepHref ?? "#",
         sourceType: category ? formatLabel(category) : undefined,
         extraction,
         domains,
