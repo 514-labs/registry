@@ -50,7 +50,7 @@ For Python use an analogous structure under `{connector}/{author}/python/src/{pa
 
 ## Scaffolds
 
-The `registry/scaffold/` directory contains JSON files that describe how to generate connector folders/files.
+The `connector-registry/scaffold/` directory contains JSON files that describe how to generate connector folders/files.
 
 - `meta.json`: root and provider `_meta` scaffold (assets only)
 - `python.json`: Python implementation scaffold
@@ -70,8 +70,8 @@ A generator can interpret the `structure` array and create files/directories wit
 
 1. Choose connector and author names (kebab-case). The author must be a GitHub organization or user handle.
 2. Create connector root `_meta/` with `connector.json` and assets only.
-3. Generate the provider `_meta` scaffold using `registry/scaffold/meta.json` with your variables.
-4. Add language-specific implementations using `registry/scaffold/python.json` and/or `registry/scaffold/typescript.json`.
+3. Generate the provider `_meta` scaffold using `connector-registry/scaffold/meta.json` with your variables.
+4. Add language-specific implementations using `connector-registry/scaffold/python.json` and/or `connector-registry/scaffold/typescript.json`.
 5. Put documentation into the language-specific implementations (not `_meta`).
 6. Add language-specific `schemas/` trees with raw and extracted schema definitions, an `index.json`, and Markdown explainers.
 7. Implement `client` and related modules in the chosen language(s). Add tests and examples.
@@ -150,4 +150,4 @@ Connectors can be copied into a target codebase similarly to shadcn components:
 - For TypeScript inside this monorepo, prefer package names prefixed with `@workspace/` and use pnpm.
 - For Python, use `pyproject.toml` to build and publish to your internal index if desired.
 
-If you need additional language scaffolds (e.g., Go or Java), follow the patterns used in `python.json` and `typescript.json` and add a new scaffold in `registry/scaffold/`.
+If you need additional language scaffolds (e.g., Go or Java), follow the patterns used in `python.json` and `typescript.json` and add a new scaffold in `connector-registry/scaffold/`.

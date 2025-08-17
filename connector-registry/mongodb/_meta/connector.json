@@ -6,6 +6,5 @@
   "tags": ["Database", "Extract", "CDC"],
   "description": "Extract your transactional data from MongoDB into your data warehouse.",
   "homepage": "https://www.mongodb.com",
-  "registryUrl": "https://github.com/514-labs/connector-factory/tree/main/registry/mongodb"
+  "registryUrl": "https://github.com/514-labs/connector-factory/tree/main/connector-registry/mongodb"
 }
-

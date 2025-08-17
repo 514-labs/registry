@@ -24,7 +24,7 @@ export SHOPIFY_ACCESS_TOKEN="<your-admin-api-access-token>"  # REQUIRED
 
 1. **Clone and navigate to the project:**
    ```bash
-   cd registry/shopify/v2025-07/514-labs/python/data-api
+   cd connector-registry/shopify/v2025-07/514-labs/python/data-api
    ```
 
 2. **Create and activate virtual environment:**

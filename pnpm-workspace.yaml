@@ -1,5 +1,4 @@
 packages:
   - "apps/*"
-  - "registry/**"
+  - "connector-registry/**"
   - "packages/*"
-  

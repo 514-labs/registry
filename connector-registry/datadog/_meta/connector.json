@@ -2,10 +2,9 @@
   "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
   "name": "datadog",
   "title": "Datadog",
-  "category": "api",
-  "tags": ["Observability", "Events", "Extract", "SaaS"],
-  "description": "Pull your up-to-date Datadog telemetry into your observability data warehouse.",
-  "homepage": "https://www.datadoghq.com",
-  "registryUrl": "https://github.com/514-labs/connector-factory/tree/main/registry/datadog"
+  "category": "observability",
+  "tags": ["observability"],
+  "description": "",
+  "homepage": "",
+  "registryUrl": "https://github.com/514-labs/connector-factory/tree/main/connector-registry/datadog"
 }
-

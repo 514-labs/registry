@@ -146,7 +146,7 @@ async function main(): Promise<void> {
   const __dirname = pathDirname(__filename);
   const registryDir = resolve(__dirname, "..");
   const monorepoRoot = resolve(registryDir, "..", "..");
-  const registryRoot = join(monorepoRoot, "registry");
+  const registryRoot = join(monorepoRoot, "connector-registry");
 
   dotenv.config({ path: join(monorepoRoot, ".env") });
   const token = (process.env.GITHUB_PAT || "").trim();
@@ -257,8 +257,8 @@ async function main(): Promise<void> {
               `Implementation: ${impl}`,
               "",
               "Paths:",
-              `- Provider: registry/${connectorId}/${versionId}/${providerId}`,
-              `- Implementation: registry/${connectorId}/${versionId}/${providerId}/${language}${impl === "default" ? "" : "/" + impl}`,
+              `- Provider: connector-registry/${connectorId}/${versionId}/${providerId}`,
+              `- Implementation: connector-registry/${connectorId}/${versionId}/${providerId}/${language}${impl === "default" ? "" : "/" + impl}`,
               `- Filesystem: ${implPath}`,
             ].join("\n");
 

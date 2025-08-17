@@ -4,7 +4,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*", "registry/**"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*", "connector-registry/**"],
       "outputs": ["dist/**"]
     },
     "build:styles": {

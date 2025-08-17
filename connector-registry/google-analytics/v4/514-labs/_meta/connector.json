@@ -2,9 +2,7 @@
   "name": "google-analytics",
   "author": "514-labs",
   "version": "v4",
-  "languages": [
-    "typescript"
-  ],
+  "languages": ["typescript"],
   "category": "api",
   "capabilities": {
     "extract": true,
@@ -16,18 +14,14 @@
     "spec": "",
     "homepage": "https://developers.google.com/analytics"
   },
-  "tags": [
-    "analytics",
-    "events",
-    "saas"
-  ],
+  "tags": ["analytics", "events", "saas"],
   "maintainers": [
     {
       "name": "514-labs",
       "email": ""
     }
   ],
-  "registryUrl": "https://github.com/514-labs/connector-factory/tree/main/registry/google-analytics/v4/514-labs",
+  "registryUrl": "https://github.com/514-labs/connector-factory/tree/main/connector-registry/google-analytics/v4/514-labs",
   "issues": {
     "typescript": {
       "data-api": "https://github.com/514-labs/connector-factory/issues/20"
