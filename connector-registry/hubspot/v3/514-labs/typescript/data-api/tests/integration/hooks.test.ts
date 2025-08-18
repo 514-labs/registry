@@ -1,3 +1,5 @@
+/* eslint-env jest */
+/* global describe, it, expect */
 import { createHubSpotConnector } from "../../src";
 import type { Hook } from "../../src/types/hooks";
 
