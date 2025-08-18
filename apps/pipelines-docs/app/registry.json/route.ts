@@ -2,24 +2,9 @@ import { NextResponse } from "next/server";
 import { readdirSync, Dirent, existsSync, readFileSync } from "fs";
 import { join } from "path";
 import { getRegistryPath } from "@workspace/registry";
+import type { ProviderMeta } from "@workspace/registry/types";
 
 export const dynamic = "force-static";
-
-type LanguageLevelMeta = {
-  name: string;
-  author: string;
-  version: string;
-  language: string;
-  implementations: string[];
-};
-
-type RegistryItem = {
-  name: string;
-  author: string;
-  version: string;
-  language: string;
-  implementation: string;
-};
 
 function readJsonSafe<T = unknown>(filePath: string): T | undefined {
   try {
@@ -42,10 +27,12 @@ function isVisibleDir(entry: Dirent): boolean {
 
 export async function GET() {
   const registryDir = getRegistryPath();
-  const result: RegistryItem[] = [];
+  const result: ProviderMeta[] = [];
 
-  // Walk: registry/<name>/<version>/<author>/<language>/<implementation>
-  const connectorDirs = readdirSync(registryDir, { withFileTypes: true }).filter(isVisibleDir);
+  // Walk: connector-registry/<name>/<version>/<author>/<language>
+  const connectorDirs = readdirSync(registryDir, {
+    withFileTypes: true,
+  }).filter(isVisibleDir);
   for (const connectorEntry of connectorDirs) {
     const name = connectorEntry.name;
     const connectorPath = join(registryDir, name);
@@ -61,31 +48,17 @@ export async function GET() {
         withFileTypes: true,
       }).filter(isVisibleDir);
       for (const authorEntry of authorEntries) {
-        const author = authorEntry.name;
-        const authorPath = join(versionPath, author);
-
-        const languageEntries = readdirSync(authorPath, { withFileTypes: true }).filter(isVisibleDir);
-        for (const languageEntry of languageEntries) {
-          const language = languageEntry.name;
-          const languagePath = join(authorPath, language);
-          const metaPath = join(languagePath, "_meta", "connector.json");
-          const languageMeta = readJsonSafe<LanguageLevelMeta>(metaPath);
-
-          if (!languageMeta) continue;
-
-          for (const implementation of languageMeta.implementations) {
-            result.push({
-              name: languageMeta.name,
-              author: languageMeta.author,
-              version: languageMeta.version,
-              language: languageMeta.language,
-              implementation,
-            });
-          }
+        const authorPath = join(versionPath, authorEntry.name);
+        const authorMeta = readJsonSafe<ProviderMeta>(
+          join(authorPath, "_meta", "connector.json")
+        );
+        if (authorMeta) {
+          // Push the author-level meta object exactly as-is
+          result.push(authorMeta);
         }
       }
     }
   }
 
-  return NextResponse.json(result);
+  return NextResponse.json({ connectors: result });
 }
