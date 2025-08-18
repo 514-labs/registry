@@ -10,16 +10,16 @@ bash -i <(curl https://connectors.514.ai/install.sh) --list
 
 ## 2. Install a connector
 
-Run the installer with: `<connector> <version> <author> <language>`.
+Run the installer with: `<connector> <version> <author> <language> <implementation>`.
 
 ```bash
-bash -i <(curl https://connectors.514.ai/install.sh) <connector> <version> <author> <language>
+bash -i <(curl https://connectors.514.ai/install.sh) <connector> <version> <author> <language> <implementation>
 ```
 
 Examples:
 
 ```bash
-bash -i <(curl https://connectors.514.ai/install.sh) google-analytics v4 fiveonefour typescript
+bash -i <(curl https://connectors.514.ai/install.sh) google-analytics v4 fiveonefour typescript data-api
 ```
 
 The installer will scaffold the connector into your current directory under the name of the connector.
