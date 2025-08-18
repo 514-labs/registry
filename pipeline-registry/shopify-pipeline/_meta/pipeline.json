@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/pipeline-root.schema.json",
+  "name": "shopify-pipeline",
+  "title": "shopify-pipeline",
+  "tags": [
+    "shopify",
+    "moose"
+  ],
+  "description": "Ingest Shopify data into Moose dev server.",
+  "homepage": "",
+  "registryUrl": "https://github.com/514-labs/factory/tree/main/pipeline-registry/shopify-pipeline"
+}
