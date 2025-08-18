@@ -1,5 +1,5 @@
+import { listConnectors } from "@workspace/registry/connectors";
 import {
-  listRegistry,
   getIssuePositiveReactionsCountFromMeta,
   getIssuePositiveReactionsCountFromUrl,
 } from "@workspace/registry";
@@ -40,7 +40,7 @@ function formatLabel(tag: string): string {
 // Note: Uppercase versions derived at render time; we only match with lowercase constants above
 
 export default async function DiscoverPage() {
-  const registry = listRegistry();
+  const registry = listConnectors();
   const connectors = await Promise.all(
     registry.map(async (conn) => {
       const meta = (conn.root.meta ?? {}) as ConnectorRootMeta;

@@ -3,8 +3,8 @@ import Link from "next/link";
 import { Button } from "@ui/components/button";
 import { Badge } from "@ui/components/badge";
 import { PagefindMeta } from "@/components/pagefind-meta";
+import { listConnectors } from "@workspace/registry/connectors";
 import {
-  listRegistry,
   getIssuePositiveReactionsCountFromMeta,
   getIssuePositiveReactionsCountFromUrl,
 } from "@workspace/registry";
@@ -121,7 +121,7 @@ export default async function Home() {
       .join(" ");
   }
 
-  const registry = listRegistry();
+  const registry = listConnectors();
   const connectors = await Promise.all(
     registry.map(async (conn) => {
       const meta = (conn.root.meta ?? {}) as ConnectorRootMeta;

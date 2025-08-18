@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { readdirSync, Dirent, existsSync, readFileSync } from "fs";
 import { join } from "path";
-import { getRegistryPath } from "@workspace/registry";
+import { getConnectorsRegistryPath } from "@workspace/registry/connectors";
 import type { ProviderMeta } from "@workspace/registry/types";
 
 export const dynamic = "force-static";
@@ -26,7 +26,7 @@ function isVisibleDir(entry: Dirent): boolean {
 }
 
 export async function GET() {
-  const registryDir = getRegistryPath();
+  const registryDir = getConnectorsRegistryPath();
   const result: ProviderMeta[] = [];
 
   // Walk: connector-registry/<name>/<version>/<author>/<language>

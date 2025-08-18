@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { readdirSync, Dirent, existsSync, readFileSync } from "fs";
 import { join } from "path";
-import { getRegistryPath } from "@workspace/registry";
+import { getConnectorsRegistryPath } from "@workspace/registry/connectors";
 
 export const dynamic = "force-static";
 
@@ -41,11 +41,13 @@ function isVisibleDir(entry: Dirent): boolean {
 }
 
 export async function GET() {
-  const registryDir = getRegistryPath();
+  const registryDir = getConnectorsRegistryPath();
   const result: RegistryItem[] = [];
 
   // Walk: connector-registry/<name>/<version>/<author>/<language>/<implementation>
-  const connectorDirs = readdirSync(registryDir, { withFileTypes: true }).filter(isVisibleDir);
+  const connectorDirs = readdirSync(registryDir, {
+    withFileTypes: true,
+  }).filter(isVisibleDir);
   for (const connectorEntry of connectorDirs) {
     const connectorName = connectorEntry.name;
     const connectorPath = join(registryDir, connectorName);
@@ -64,7 +66,9 @@ export async function GET() {
         const author = authorEntry.name;
         const authorPath = join(versionPath, author);
 
-        const languageEntries = readdirSync(authorPath, { withFileTypes: true }).filter(isVisibleDir);
+        const languageEntries = readdirSync(authorPath, {
+          withFileTypes: true,
+        }).filter(isVisibleDir);
         for (const languageEntry of languageEntries) {
           const language = languageEntry.name;
           const languagePath = join(authorPath, language);

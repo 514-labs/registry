@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readdirSync, copyFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import * as registry from "@workspace/registry";
+import { getConnectorsRegistryPath } from "@workspace/registry/connectors";
 
 function ensureDir(dir) {
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
@@ -16,12 +16,15 @@ function getCwd() {
 
 function main() {
   const appRoot = getCwd();
-  const registryPath = registry.getRegistryPath();
+  const registryPath = getConnectorsRegistryPath();
   const publicDir = join(appRoot, "public", "connector-logos");
   ensureDir(publicDir);
 
   const connectors = readdirSync(registryPath, { withFileTypes: true })
-    .filter((d) => d.isDirectory() && !d.name.startsWith("_") && !d.name.startsWith("."))
+    .filter(
+      (d) =>
+        d.isDirectory() && !d.name.startsWith("_") && !d.name.startsWith(".")
+    )
     .map((d) => d.name);
 
   for (const id of connectors) {
@@ -42,5 +45,3 @@ function main() {
 }
 
 main();
-
-
