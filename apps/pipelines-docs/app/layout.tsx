@@ -17,8 +17,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Connectors by 514",
-  description: "Build, own, and share connectors as actual code",
+  title: "Pipelines by 514",
+  description:
+    "Build, own, and share pipelines as actual code | Powered by the Moose Stack",
 };
 
 export default function RootLayout({
