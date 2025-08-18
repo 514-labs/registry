@@ -36,7 +36,7 @@ bash -i <(curl https://connectors.514.ai/install.sh) --list
 Install a connector: (arguments: connector, version, author, language)
 
 ```bash
-bash -i <(curl https://connectors.514.ai/install.sh) google-analytics v4 fiveonefour typescript
+bash -i <(curl https://connectors.514.ai/install.sh) google-analytics v4 fiveonefour typescript data-api
 ```
 
 ## Contributors

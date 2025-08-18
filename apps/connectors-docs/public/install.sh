@@ -27,6 +27,7 @@ CONNECTOR_NAME=""
 CONNECTOR_VERSION=""
 CONNECTOR_AUTHOR=""
 CONNECTOR_LANGUAGE=""
+CONNECTOR_IMPLEMENTATION=""
 
 # ===== Internal =====
 TMP_DIR=""
@@ -35,7 +36,9 @@ FILTER_NAME=""
 FILTER_VERSION=""
 FILTER_AUTHOR=""
 FILTER_LANGUAGE=""
+FILTER_IMPLEMENTATION=""
 DESTINATION=""
+RESOLVE_FROM_REGISTRY=0
 
 # Remove temp dir on exit
 cleanup() {
@@ -53,30 +56,36 @@ print_usage() {
 Install a connector from $REPO_OWNER/$REPO_NAME into a new subdirectory in your current directory.
 
 USAGE:
-  $SCRIPT_NAME <name> <version> <author> <language> [--dest <dir>]
-  $SCRIPT_NAME --list [--name <n1,n2>] [--version <v1,v2>] [--author <a1,a2>] [--language <l1,l2>]
+  $SCRIPT_NAME <name>
+  $SCRIPT_NAME <name> <version> <author> <language> <implementation> [--dest <dir>]
+  $SCRIPT_NAME --list [--name <n1,n2>] [--version <v1,v2>] [--author <a1,a2>] [--language <l1,l2>] [--implementation <i1,i2>]
   $SCRIPT_NAME --help
 
 EXAMPLES:
+  # Auto-resolve version/author/language/implementation if unique
+  $SCRIPT_NAME google-analytics
+
   # Install Google Analytics v4 by author fiveonefour in TypeScript into the current directory
-  $SCRIPT_NAME google-analytics v4 fiveonefour typescript
+  $SCRIPT_NAME google-analytics v4 fiveonefour typescript data-api
 
   # List available connectors to install
   $SCRIPT_NAME --list
 
 POSITIONAL ARGUMENTS:
-  name          Connector name (e.g., google-analytics, s3)
-  version       Data source version (e.g., v3, v4)
-  author        Author/vendor (e.g., fiveonefour)
-  language      Language (e.g., typescript, python)
+  name            Connector name (e.g., google-analytics, s3)
+  version         Data source version (e.g., v3, v4)
+  author          Author/vendor (e.g., fiveonefour)
+  language        Language (e.g., typescript, python)
+  implementation  Implementation (e.g., rest, sdk)
 
 FLAGS:
   --list        List available connectors to install
                 Optional filters (comma-separated, case-insensitive substrings):
-                  --name <n1,n2>       Filter by connector name(s)
-                  --version <v1,v2>    Filter by version(s)
-                  --author <a1,a2>     Filter by author(s)
-                  --language <l1,l2>   Filter by language(s)
+                  --name <n1,n2>            Filter by connector name(s)
+                  --version <v1,v2>         Filter by version(s)
+                  --author <a1,a2>          Filter by author(s)
+                  --language <l1,l2>        Filter by language(s)
+                  --implementation <i1,i2>  Filter by implementation(s)
 
   --dest <dir>  Destination directory for installation (absolute or relative)
                 Default: ./<name>
@@ -89,7 +98,7 @@ ENVIRONMENT:
                     Example: REGISTRY_JSON_URL=https://connectors.514.ai/registry.json $SCRIPT_NAME --list
   REPO_BRANCH       Git branch to install from.
                     Default: $DEFAULT_REPO_BRANCH
-                    Example: REPO_BRANCH=my-branch $SCRIPT_NAME google-analytics v4 fiveonefour typescript
+                    Example: REPO_BRANCH=my-branch $SCRIPT_NAME google-analytics v4 fiveonefour typescript data-api
 EOF
 }
 
@@ -160,6 +169,8 @@ validate_connector_exists() {
   if [ ! -d "$full_path" ]; then
     echo "❌ Connector path not found: $rel_path" >&2
     echo "❌ Searched: $full_path" >&2
+    echo ""
+    echo "🔍 Run $SCRIPT_NAME --list to see available connectors."
     exit 1
   fi
 }
@@ -192,7 +203,7 @@ copy_connector_into_subdir() {
 list_connectors() {
   echo ""
   echo "🚀 Install a connector with this command:"
-  echo "$SCRIPT_NAME <name> <version> <author> <language>"
+  echo "$SCRIPT_NAME <name> <version> <author> <language> <implementation>"
   echo ""
 
   if ! command -v jq >/dev/null 2>&1; then
@@ -219,19 +230,20 @@ list_connectors() {
     --arg f_name "$FILTER_NAME" \
     --arg f_version "$FILTER_VERSION" \
     --arg f_author "$FILTER_AUTHOR" \
-    --arg f_language "$FILTER_LANGUAGE" '
+    --arg f_language "$FILTER_LANGUAGE" \
+    --arg f_implementation "$FILTER_IMPLEMENTATION" '
     def mkpat(s): (s|split(",")|map(ascii_downcase|gsub("^\\s+|\\s+$";""))|join("|"));
     def want(field; s): (s=="" or (field|ascii_downcase|test(mkpat(s))));
-    (.connectors // [])
-    | .[] as $c
-    | ($c.languages // [])[] as $l
+    (. // [])
+    | .[]
     | select(
-        want($c.name; $f_name) and
-        want($c.version; $f_version) and
-        want($c.author; $f_author) and
-        want($l; $f_language)
+        want(.name; $f_name) and
+        want(.version; $f_version) and
+        want(.author; $f_author) and
+        want(.language; $f_language) and
+        want(.implementation; $f_implementation)
       )
-    | "\($c.name) \($c.version) \($c.author) \($l)"
+    | "\(.name) \(.version) \(.author) \(.language) \(.implementation)"
   ')
 
   if [ -z "$perms" ]; then
@@ -245,6 +257,83 @@ list_connectors() {
   echo "🔍 Available connectors:"
   echo "$perms"
   echo ""
+}
+
+# Resolve a unique permutation from the registry given only the connector name
+resolve_from_registry() {
+  require_cmd curl
+  require_cmd jq
+
+  local resp http_status body
+  resp=$(curl -sS -w "HTTPSTATUS:%{http_code}" "$REGISTRY_JSON_URL" || true)
+  http_status="${resp##*HTTPSTATUS:}"
+  body="${resp%HTTPSTATUS:*}"
+
+  if [ "$http_status" != "200" ] || [ -z "$body" ]; then
+    echo ""
+    echo "❌ Unable to fetch $REGISTRY_JSON_URL to resolve '$CONNECTOR_NAME'" >&2
+    echo "   HTTP status: ${http_status:-unknown}" >&2
+    echo "   You can also browse: https://github.com/$REPO_OWNER/$REPO_NAME/tree/$REPO_BRANCH/registry" >&2
+    exit 1
+  fi
+
+  local match
+  match=$(printf '%s' "$body" | jq -r \
+    --arg name "$CONNECTOR_NAME" '
+      map(select(.name == $name))
+      | unique_by(.version + "|" + .author + "|" + .language + "|" + .implementation)
+      | if length == 1 then .[0] else empty end
+    ')
+
+  if [ -z "$match" ]; then
+    echo ""
+    echo "❌ Could not uniquely resolve '$CONNECTOR_NAME' to exactly one connector implementation." >&2
+    echo "🔍 Run $SCRIPT_NAME --list to see available connectors." >&2
+    exit 1
+  fi
+
+  CONNECTOR_VERSION=$(printf '%s' "$match" | jq -r '.version')
+  CONNECTOR_AUTHOR=$(printf '%s' "$match" | jq -r '.author')
+  CONNECTOR_LANGUAGE=$(printf '%s' "$match" | jq -r '.language')
+  CONNECTOR_IMPLEMENTATION=$(printf '%s' "$match" | jq -r '.implementation')
+}
+
+# Best-effort validation that the provided 5-arg tuple exists in the registry
+preflight_validate_tuple() {
+  require_cmd curl
+
+  local resp http_status body
+  resp=$(curl -sS -w "HTTPSTATUS:%{http_code}" "$REGISTRY_JSON_URL" || true)
+  http_status="${resp##*HTTPSTATUS:}"
+  body="${resp%HTTPSTATUS:*}"
+
+  if [ "$http_status" != "200" ] || [ -z "$body" ]; then
+    echo "ℹ️  Skipping registry preflight (status: ${http_status:-unknown}). Continuing with provided arguments." >&2
+    return 0
+  fi
+
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "ℹ️  Registry fetched but 'jq' not found; skipping preflight validation." >&2
+    return 0
+  fi
+
+  local ok
+  ok=$(printf '%s' "$body" | jq -e -r \
+    --arg n "$CONNECTOR_NAME" \
+    --arg v "$CONNECTOR_VERSION" \
+    --arg a "$CONNECTOR_AUTHOR" \
+    --arg l "$CONNECTOR_LANGUAGE" \
+    --arg i "$CONNECTOR_IMPLEMENTATION" '
+      map(select(.name==$n and .version==$v and .author==$a and .language==$l and .implementation==$i))
+      | length == 1
+    ' 2>/dev/null || true)
+
+  if [ "$ok" != "true" ]; then
+    echo "❌ The specified connector tuple was not found in the registry:" >&2
+    echo "   $CONNECTOR_NAME $CONNECTOR_VERSION $CONNECTOR_AUTHOR $CONNECTOR_LANGUAGE $CONNECTOR_IMPLEMENTATION" >&2
+    echo "🔍 Run $SCRIPT_NAME --list --name $CONNECTOR_NAME to view available options." >&2
+    exit 1
+  fi
 }
 
 # Parse flags and positional arguments
@@ -262,6 +351,8 @@ parse_args() {
         FILTER_AUTHOR="${2:-}"; shift 2;;
       --language)
         FILTER_LANGUAGE="${2:-}"; shift 2;;
+      --implementation)
+        FILTER_IMPLEMENTATION="${2:-}"; shift 2;;
       --dest)
         DESTINATION="${2:-}"; shift 2;;
       -h|--help)
@@ -274,15 +365,20 @@ parse_args() {
   done
   # Assign positionals if not in list/help mode
   if [ "$MODE" != "list" ]; then
-    if [ ${#POSITIONALS[@]} -lt 4 ]; then
-      echo "❌ Expected 4 positional arguments: <name> <version> <author> <language>" >&2
+    if [ ${#POSITIONALS[@]} -eq 1 ]; then
+      CONNECTOR_NAME="${POSITIONALS[0]}"
+      RESOLVE_FROM_REGISTRY=1
+    elif [ ${#POSITIONALS[@]} -eq 5 ]; then
+      CONNECTOR_NAME="${POSITIONALS[0]}"
+      CONNECTOR_VERSION="${POSITIONALS[1]}"
+      CONNECTOR_AUTHOR="${POSITIONALS[2]}"
+      CONNECTOR_LANGUAGE="${POSITIONALS[3]}"
+      CONNECTOR_IMPLEMENTATION="${POSITIONALS[4]}"
+    else
+      echo "❌ Expected either 1 arg (<name>) or 5 args (<name> <version> <author> <language> <implementation>)" >&2
       print_usage
       exit 1
     fi
-    CONNECTOR_NAME="${POSITIONALS[0]}"
-    CONNECTOR_VERSION="${POSITIONALS[1]}"
-    CONNECTOR_AUTHOR="${POSITIONALS[2]}"
-    CONNECTOR_LANGUAGE="${POSITIONALS[3]}"
   fi
 }
 
@@ -304,7 +400,14 @@ main() {
   ensure_dependencies
   create_tmpdir
 
-  local rel_path="connector-registry/$CONNECTOR_NAME/$CONNECTOR_VERSION/$CONNECTOR_AUTHOR/$CONNECTOR_LANGUAGE"
+  # Preflight via registry
+  if [ "$RESOLVE_FROM_REGISTRY" = "1" ]; then
+    resolve_from_registry
+  else
+    preflight_validate_tuple || true
+  fi
+
+  local rel_path="connector-registry/$CONNECTOR_NAME/$CONNECTOR_VERSION/$CONNECTOR_AUTHOR/$CONNECTOR_LANGUAGE/$CONNECTOR_IMPLEMENTATION"
   echo ""
   echo "Connector: $rel_path"
   echo "Source:    $REPO_OWNER/$REPO_NAME@$REPO_BRANCH"
