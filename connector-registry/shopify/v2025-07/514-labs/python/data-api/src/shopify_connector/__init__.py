@@ -20,6 +20,8 @@ Example:
     connector.disconnect()
 """
 
+from importlib.metadata import version, PackageNotFoundError
+
 from .connector import ShopifyConnector
 from .config.schema import ShopifyConnectorConfig
 from .auth import BaseAuth, BearerAuth
@@ -49,7 +51,11 @@ from .errors.base import (
 )
 from .errors.codes import ErrorCode
 
-__version__ = "0.1.8"
+try:
+    __version__ = version("shopify-connector")
+except PackageNotFoundError:
+    __version__ = "0.0.0"
+
 __author__ = "FiveOneFour"
 __description__ = "Shopify connector implementing the API Connector Specification"
 
