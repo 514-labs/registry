@@ -308,13 +308,13 @@ export default async function ConnectorImplementationPage({
           </div>
         </div>
         <div className="col-span-9 space-y-8">
-          {/* <SchemaDiagram
+          <SchemaDiagram
             database={database}
             endpoints={endpoints}
             files={files}
             errors={errors}
             connectorName={displayName}
-          /> */}
+          />
           {docs.length === 0 ? (
             <div className="prose dark:prose-invert">
               <h1>Documentation</h1>
