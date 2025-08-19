@@ -5,8 +5,8 @@ import { Badge } from "@ui/components/badge";
 import {
   listConnectorIds,
   readConnector,
-  getIssuePositiveReactionsCountFromMeta,
-} from "@workspace/registry";
+} from "@workspace/registry/connectors";
+import { getIssuePositiveReactionsCountFromMeta } from "@workspace/registry";
 import { PagefindMeta } from "@/components/pagefind-meta";
 import { GitBranch, Code2, Wrench } from "lucide-react";
 import Link from "next/link";

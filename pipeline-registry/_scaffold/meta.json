@@ -39,7 +39,34 @@
               "name": "pipeline.json",
               "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/pipeline-root.schema.json\",\n  \"name\": \"{pipeline}\",\n  \"title\": \"{pipeline}\",\n  \"tags\": [],\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"registryUrl\": \"https://github.com/514-labs/factory/tree/main/pipeline-registry/{pipeline}\"\n}\n"
             },
-            { "type": "dir", "name": "assets" }
+            {
+              "type": "dir",
+              "name": "assets",
+              "children": [
+                {
+                  "type": "dir",
+                  "name": "from",
+                  "children": [
+                    {
+                      "type": "file",
+                      "name": "README.md",
+                      "template": "Place the source system logo here as 'logo.png' (or .svg/.jpg/.jpeg/.webp).\n"
+                    }
+                  ]
+                },
+                {
+                  "type": "dir",
+                  "name": "to",
+                  "children": [
+                    {
+                      "type": "file",
+                      "name": "README.md",
+                      "template": "Place the destination system logo here as 'logo.png' (or .svg/.jpg/.jpeg/.webp).\n"
+                    }
+                  ]
+                }
+              ]
+            }
           ]
         },
         {
