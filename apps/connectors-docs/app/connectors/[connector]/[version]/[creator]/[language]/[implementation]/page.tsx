@@ -64,21 +64,62 @@ export default async function ConnectorImplementationPage({
   const { connector, version, creator, language, implementation } =
     await params;
 
+  // Log received params for debugging
+  console.log("[ConnectorImplementationPage] Received params:", {
+    connector,
+    version,
+    creator,
+    language,
+    implementation,
+  });
+
   const conn = readConnector(connector);
-  if (!conn) return notFound();
+  if (!conn) {
+    console.error(
+      `[ConnectorImplementationPage] Failed to find connector: "${connector}"`
+    );
+    console.error("Available connectors:", listConnectorIds());
+    return notFound();
+  }
 
   const provider = conn.providers.find((p) => {
     const pVersion = p.path.split("/").slice(-2)[0];
     return p.authorId === creator && pVersion === version;
   });
-  if (!provider) return notFound();
+  if (!provider) {
+    console.error(
+      `[ConnectorImplementationPage] Failed to find provider with:`,
+      {
+        creator,
+        version,
+        availableProviders: conn.providers.map((p) => ({
+          authorId: p.authorId,
+          version: p.path.split("/").slice(-2)[0],
+        })),
+      }
+    );
+    return notFound();
+  }
 
   const implEntry =
     provider.implementations.find(
       (impl) =>
         impl.language === language && impl.implementation === implementation
     ) ?? provider.implementations.find((impl) => impl.language === language);
-  if (!implEntry) return notFound();
+  if (!implEntry) {
+    console.error(
+      `[ConnectorImplementationPage] Failed to find implementation with:`,
+      {
+        language,
+        implementation,
+        availableImplementations: provider.implementations.map((impl) => ({
+          language: impl.language,
+          implementation: impl.implementation,
+        })),
+      }
+    );
+    return notFound();
+  }
 
   const meta = conn.root.meta;
   const displayName = meta?.title ?? meta?.name ?? conn.connectorId;
