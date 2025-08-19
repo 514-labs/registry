@@ -7,20 +7,50 @@ import { join, resolve } from "path";
 // that are tailored to pipeline-registry structure.
 
 // Resolve the monorepo root by walking up from the current working directory
-function findMonorepoRoot(startDir: string): string {
+function findMonorepoRoot(startDir: string): string | undefined {
   let dir = startDir;
-  for (let i = 0; i < 5; i += 1) {
+  for (let i = 0; i < 7; i += 1) {
     const candidate = join(dir, "pnpm-workspace.yaml");
     if (existsSync(candidate)) return dir;
     const parent = resolve(dir, "..");
     if (parent === dir) break;
     dir = parent;
   }
-  return startDir;
+  return undefined;
 }
 
-const MONOREPO_ROOT = findMonorepoRoot(process.cwd());
-const PIPELINES_REGISTRY_DIR = join(MONOREPO_ROOT, "pipeline-registry");
+function findUpwardsForDir(
+  startDir: string,
+  targetDirName: string
+): string | undefined {
+  let dir = startDir;
+  for (let i = 0; i < 10; i += 1) {
+    const candidate = join(dir, targetDirName);
+    if (existsSync(candidate)) return candidate;
+    const parent = resolve(dir, "..");
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return undefined;
+}
+
+function resolvePipelinesRegistryDir(): string {
+  const fromEnv = process.env.PIPELINES_REGISTRY_DIR;
+  if (fromEnv && existsSync(fromEnv)) return fromEnv;
+
+  const mono = findMonorepoRoot(process.cwd());
+  if (mono) {
+    const p = join(mono, "pipeline-registry");
+    if (existsSync(p)) return p;
+  }
+
+  const fromCwd = findUpwardsForDir(process.cwd(), "pipeline-registry");
+  if (fromCwd) return fromCwd;
+  const fromHere = findUpwardsForDir(__dirname, "pipeline-registry");
+  if (fromHere) return fromHere;
+
+  return join(process.cwd(), "pipeline-registry");
+}
 
 function readJsonSafe<T>(filePath: string): T | undefined {
   try {
@@ -33,7 +63,7 @@ function readJsonSafe<T>(filePath: string): T | undefined {
 }
 
 export function getPipelinesRegistryPath(): string {
-  return PIPELINES_REGISTRY_DIR;
+  return resolvePipelinesRegistryDir();
 }
 
 export type PipelineRootMeta = {
@@ -83,7 +113,8 @@ export type RegistryPipeline = {
 };
 
 export function listPipelineIds(): string[] {
-  const entries: Dirent[] = readdirSync(PIPELINES_REGISTRY_DIR, {
+  const registryDir = getPipelinesRegistryPath();
+  const entries: Dirent[] = readdirSync(registryDir, {
     withFileTypes: true,
   });
   return entries
@@ -94,7 +125,8 @@ export function listPipelineIds(): string[] {
 }
 
 export function readPipeline(pipelineId: string): RegistryPipeline | undefined {
-  const pipelinePath = join(PIPELINES_REGISTRY_DIR, pipelineId);
+  const registryDir = getPipelinesRegistryPath();
+  const pipelinePath = join(registryDir, pipelineId);
   if (!existsSync(pipelinePath) || !statSync(pipelinePath).isDirectory())
     return undefined;
 
