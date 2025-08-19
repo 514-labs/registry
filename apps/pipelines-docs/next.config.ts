@@ -10,6 +10,13 @@ const nextConfig: NextConfig = {
   // Configure `pageExtensions` to include markdown and MDX files
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   transpilePackages: ["@workspace/registry"],
+  output: "standalone",
+  // Ensure file tracing can include files outside the app (monorepo root)
+  outputFileTracingRoot: resolve(__dirname, "../../"),
+  // Include both registries so ISR/static routes can access them at runtime
+  outputFileTracingIncludes: {
+    "/**/*": ["connector-registry/**/*", "pipeline-registry/**/*"],
+  },
   env: {
     GITHUB_PAT: process.env.GITHUB_PAT,
   },
