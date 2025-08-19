@@ -1,18 +1,13 @@
 /// <reference types="node" />
 import { existsSync, readFileSync, readdirSync, statSync, Dirent } from "fs";
-import { join, resolve, dirname } from "path";
-import { fileURLToPath } from "url";
+import { join, resolve } from "path";
 import type {
   ConnectorRootMeta,
   ProviderMeta,
   RegistryConnector,
 } from "./types";
 
-// Get the directory of this file
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Resolve the monorepo root by walking up from the package directory
+// Resolve the monorepo root by walking up from the current working directory
 function findMonorepoRoot(startDir: string): string {
   // First, check environment variable
   if (process.env.MONOREPO_ROOT) {
@@ -46,10 +41,39 @@ function findMonorepoRoot(startDir: string): string {
   return startDir;
 }
 
-// Start from the package directory instead of process.cwd()
-// This is more reliable in production builds
-const packageDir = resolve(__dirname, "..", "..", "..");
-const MONOREPO_ROOT = findMonorepoRoot(packageDir);
+// Try multiple strategies to find the monorepo root
+function getMonorepoRoot(): string {
+  // Strategy 1: Environment variable
+  if (process.env.MONOREPO_ROOT) {
+    return process.env.MONOREPO_ROOT;
+  }
+
+  // Strategy 2: Walk up from cwd
+  const fromCwd = findMonorepoRoot(process.cwd());
+  if (existsSync(join(fromCwd, "connector-registry"))) {
+    return fromCwd;
+  }
+
+  // Strategy 3: Try common Next.js build paths
+  const possibleRoots = [
+    process.cwd(),
+    resolve(process.cwd(), ".."),
+    resolve(process.cwd(), "../.."),
+    resolve(process.cwd(), "../../.."),
+    "/vercel/path0", // Common Vercel build path
+  ];
+
+  for (const root of possibleRoots) {
+    if (existsSync(join(root, "connector-registry"))) {
+      return root;
+    }
+  }
+
+  // Fallback to cwd
+  return process.cwd();
+}
+
+const MONOREPO_ROOT = getMonorepoRoot();
 const CONNECTORS_REGISTRY_DIR = join(MONOREPO_ROOT, "connector-registry");
 
 function readJsonSafe<T>(filePath: string): T | undefined {
