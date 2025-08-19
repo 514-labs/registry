@@ -119,10 +119,7 @@ export default function DiscoverGrid({
   ]);
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 lg:px-6 py-6">
-      <div className="mb-6 flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold">Discover pipelines</h1>
-      </div>
+    <main className="mx-auto w-full max-w-6xl py-6">
       <div>
         <div className="mb-6 flex flex-row items-center justify-between gap-4">
           <Input
