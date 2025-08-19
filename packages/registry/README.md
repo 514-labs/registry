@@ -1,11 +1,25 @@
 # Registry package
 
-This package contains the registries for connectors and pipelines.
+Utilities to enumerate and read the Connector and Pipeline registries in this monorepo.
 
-It is used to store the connectors and pipelines in a database and to serve them to the clients.
-
-## How to use
+## Connectors subpath
 
 ```ts
-import { Registry } from "@workspace/registry";
+import {
+  getConnectorsRegistryPath,
+  listConnectorIds,
+  readConnector,
+  listConnectors,
+} from "@workspace/registry/connectors";
+```
+
+## Pipelines subpath
+
+```ts
+import {
+  getPipelinesRegistryPath,
+  listPipelineIds,
+  readPipeline,
+  listPipelines,
+} from "@workspace/registry/pipelines";
 ```

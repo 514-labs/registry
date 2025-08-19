@@ -32,3 +32,7 @@ nohup.out
 services/*/temp_migration/
 services/*/dev-*.log
 services/*/.moose/
+
+# Search index artifacts (Pagefind)
+apps/connectors-docs/public/pagefind/
+apps/pipelines-docs/public/pagefind/

@@ -1,6 +1,6 @@
 "use client";
 
-import ConnectorCard from "@/components/connector-card";
+import PipelineCard from "@/components/pipeline-card";
 import { Input } from "@ui/components/input";
 import { Button } from "@ui/components/button";
 import {
@@ -13,28 +13,39 @@ import {
 } from "@ui/components/dropdown-menu";
 import { useMemo, useState } from "react";
 
-type DiscoverConnector = {
+type DiscoverPipeline = {
   name: string;
   description: string;
-  icon: string;
-  tags: string[];
+  icon: string; // path relative to public
   href: string;
-  sourceType?: string; // from registry meta.category
-  extraction?: "batch" | "stream"; // derived from tags/category
-  domains?: string[]; // derived from tags minus operational ones
-  language?: string;
+  tags: string[];
+
   languages?: string[];
-  reactions?: number;
-  creatorAvatarUrl?: string;
-  creatorAvatarUrls?: string[];
   comingSoon?: boolean;
   implementationCount?: number;
+
+  // Optional meta visualizations / filters
+  sourceType?: string;
+  extraction?: "batch" | "stream";
+  domains?: string[];
+
+  // Scheduling and endpoints
+  scheduleCron?: string;
+  scheduleTimezone?: string;
+  sourceSystem?: string;
+  destinationSystem?: string;
+  fromIcon?: string;
+  toIcon?: string;
+
+  // Creators
+  creatorAvatarUrl?: string;
+  creatorAvatarUrls?: string[];
 };
 
 export default function DiscoverGrid({
-  connectors,
+  pipelines,
 }: {
-  connectors: DiscoverConnector[];
+  pipelines: DiscoverPipeline[];
 }) {
   const [query, setQuery] = useState("");
   const [selectedSourceTypes, setSelectedSourceTypes] = useState<string[]>([]);
@@ -49,7 +60,7 @@ export default function DiscoverGrid({
     const extractionSet = new Set<"batch" | "stream">();
     const domainsSet = new Set<string>();
     const tagsSet = new Set<string>();
-    for (const c of connectors) {
+    for (const c of pipelines) {
       if (c.sourceType) sourceTypesSet.add(c.sourceType);
       if (c.extraction) extractionSet.add(c.extraction);
       if (c.domains) for (const d of c.domains) domainsSet.add(d);
@@ -61,36 +72,36 @@ export default function DiscoverGrid({
       domains: Array.from(domainsSet).sort(),
       tags: Array.from(tagsSet).sort(),
     };
-  }, [connectors]);
+  }, [pipelines]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const matchesText = (c: DiscoverConnector) => {
+    const matchesText = (c: DiscoverPipeline) => {
       if (!q) return true;
       const haystack =
         `${c.name} ${c.description} ${c.tags.join(" ")}`.toLowerCase();
       return haystack.includes(q);
     };
-    const matchesSourceType = (c: DiscoverConnector) => {
+    const matchesSourceType = (c: DiscoverPipeline) => {
       if (selectedSourceTypes.length === 0) return true;
       return c.sourceType ? selectedSourceTypes.includes(c.sourceType) : false;
     };
-    const matchesExtraction = (c: DiscoverConnector) => {
+    const matchesExtraction = (c: DiscoverPipeline) => {
       if (selectedExtractions.length === 0) return true;
       return c.extraction ? selectedExtractions.includes(c.extraction) : false;
     };
-    const matchesDomains = (c: DiscoverConnector) => {
+    const matchesDomains = (c: DiscoverPipeline) => {
       if (selectedDomains.length === 0) return true;
       const cDomains = c.domains ?? [];
       return cDomains.some((d) => selectedDomains.includes(d));
     };
-    const matchesTags = (c: DiscoverConnector) => {
+    const matchesTags = (c: DiscoverPipeline) => {
       if (selectedTags.length === 0) return true;
       const cTagsLower = (c.tags ?? []).map((t) => t.toLowerCase());
       return selectedTags.some((t) => cTagsLower.includes(t.toLowerCase()));
     };
 
-    return connectors.filter(
+    return pipelines.filter(
       (c) =>
         matchesText(c) &&
         matchesSourceType(c) &&
@@ -99,7 +110,7 @@ export default function DiscoverGrid({
         matchesTags(c)
     );
   }, [
-    connectors,
+    pipelines,
     query,
     selectedSourceTypes,
     selectedExtractions,
@@ -108,14 +119,11 @@ export default function DiscoverGrid({
   ]);
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 lg:px-6 py-6">
-      <div className="mb-6 flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold">Discover connectors</h1>
-      </div>
+    <main className="mx-auto w-full max-w-6xl py-6">
       <div>
         <div className="mb-6 flex flex-row items-center justify-between gap-4">
           <Input
-            placeholder="Search connectors..."
+            placeholder="Search pipelines..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="flex-1"
@@ -214,23 +222,25 @@ export default function DiscoverGrid({
       </div>
 
       <div className="grid grid-cols-3 gap-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-3">
-        {filtered.map((connector) => (
-          <ConnectorCard
-            key={connector.name}
-            name={connector.name}
-            description={connector.description}
-            icon={connector.icon}
-            tags={connector.tags}
-            href={connector.href}
-            language={connector.language}
-            languages={connector.languages}
-            sourceType={connector.sourceType}
-            domains={connector.domains}
-            comingSoon={connector.comingSoon}
-            implementationCount={connector.implementationCount}
-            reactions={connector.reactions}
-            creatorAvatarUrl={connector.creatorAvatarUrl}
-            creatorAvatarUrls={connector.creatorAvatarUrls}
+        {filtered.map((p) => (
+          <PipelineCard
+            key={p.name}
+            name={p.name}
+            description={p.description}
+            icon={p.icon}
+            tags={p.tags}
+            href={p.href}
+            languages={p.languages}
+            comingSoon={p.comingSoon}
+            implementationCount={p.implementationCount}
+            creatorAvatarUrl={p.creatorAvatarUrl}
+            creatorAvatarUrls={p.creatorAvatarUrls}
+            sourceSystem={p.sourceSystem}
+            destinationSystem={p.destinationSystem}
+            scheduleCron={p.scheduleCron}
+            scheduleTimezone={p.scheduleTimezone}
+            fromIcon={p.fromIcon}
+            toIcon={p.toIcon}
           />
         ))}
       </div>
