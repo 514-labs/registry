@@ -108,7 +108,22 @@ export default async function ConnectorImplementationPage({
     // If we're here, it means a non-statically-generated path was accessed
     console.error(
       "[ConnectorImplementationPage] Unexpected runtime execution in production for:",
-      { connector, version, creator, language, implementation }
+      {
+        connector,
+        version,
+        creator,
+        language,
+        implementation,
+        // Log the exact URL path that was requested
+        requestedPath: `/connectors/${connector}/${version}/${creator}/${language}/${implementation}`,
+        // These are the paths we statically generated:
+        expectedPaths: [
+          "/connectors/google-analytics/v4/514-labs/typescript/data-api",
+          "/connectors/google-analytics/v4/tg339/typescript/data-api",
+          "/connectors/hubspot/v3/514-labs/typescript/data-api",
+          "/connectors/shopify/v2025-07/514-labs/python/data-api",
+        ],
+      }
     );
     return notFound();
   }
