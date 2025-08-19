@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/pipeline-root.schema.json",
+  "name": "google-analytics-to-clickhouse",
+  "title": "google-analytics-to-clickhouse",
+  "tags": ["google-analytics", "ga4", "clickhouse"],
+  "description": "Ingest GA4 events into ClickHouse.",
+  "homepage": "",
+  "registryUrl": "https://github.com/514-labs/factory/tree/main/pipeline-registry/google-analytics-to-clickhouse"
+}

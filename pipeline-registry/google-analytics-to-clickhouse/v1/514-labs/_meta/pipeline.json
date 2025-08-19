@@ -1,0 +1,28 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/pipeline.schema.json",
+  "name": "google-analytics-to-clickhouse",
+  "author": "514-labs",
+  "authorType": "organization",
+  "version": "v1",
+  "description": "Ingest GA4 events and load into ClickHouse",
+  "tags": ["ga4", "clickhouse", "etl"],
+  "schedule": { "cron": "0 * * * *", "timezone": "UTC" },
+  "source": {
+    "type": "connector",
+    "connector": {
+      "name": "google-analytics",
+      "version": "v4",
+      "author": "514-labs"
+    },
+    "stream": "events"
+  },
+  "systems": [],
+  "transformations": [],
+  "destination": {
+    "system": "clickhouse",
+    "database": "analytics",
+    "table": "events"
+  },
+  "lineage": { "nodes": [], "edges": [] },
+  "maintainers": []
+}

@@ -251,7 +251,7 @@ export default async function Home() {
       <main className="flex flex-col items-center sm:items-start">
         <Hero />
         {/* Connectors */}
-        <div className="mx-auto w-full max-w-6xl px-4  py-6">
+        <div className="mx-auto w-full max-w-6xl px-4 xl:px-0 py-6">
           <div className="grid grid-cols-3 gap-5 @xl/main:grid-cols-2 @5xl/main:grid-cols-3">
             {connectors.map((connector) => (
               <ConnectorCard
