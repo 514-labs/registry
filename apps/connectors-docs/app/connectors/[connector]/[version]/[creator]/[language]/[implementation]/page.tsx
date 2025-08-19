@@ -215,6 +215,11 @@ export default async function ConnectorImplementationPage({
     return `/connectors/${connector}/${v}/${targetProvider.authorId}/${lang}/${impl}`;
   };
 
+  // Pre-compute schema diagram data at build time
+  const { database, endpoints, files, errors } = getSchemaDiagramInputs(
+    implEntry.path
+  );
+
   return (
     <div className="container mx-auto py-16 ">
       <PagefindMeta type="connector" />
@@ -308,19 +313,13 @@ export default async function ConnectorImplementationPage({
           </div>
         </div>
         <div className="col-span-9 space-y-8">
-          {(() => {
-            const { database, endpoints, files, errors } =
-              getSchemaDiagramInputs(implEntry.path);
-            return (
-              <SchemaDiagram
-                database={database}
-                endpoints={endpoints}
-                files={files}
-                errors={errors}
-                connectorName={displayName}
-              />
-            );
-          })()}
+          <SchemaDiagram
+            database={database}
+            endpoints={endpoints}
+            files={files}
+            errors={errors}
+            connectorName={displayName}
+          />
           {docs.length === 0 ? (
             <div className="prose dark:prose-invert">
               <h1>Documentation</h1>
