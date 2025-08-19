@@ -12,6 +12,8 @@ import {
   DropdownMenuSeparator,
 } from "@ui/components/dropdown-menu";
 import { useMemo, useState } from "react";
+import ReactionsBadge from "@/components/ReactionsBadge";
+import { Badge } from "@ui/components/badge";
 
 type DiscoverConnector = {
   name: string;
@@ -29,6 +31,7 @@ type DiscoverConnector = {
   creatorAvatarUrls?: string[];
   comingSoon?: boolean;
   implementationCount?: number;
+  issueUrls?: string[];
 };
 
 export default function DiscoverGrid({
@@ -228,6 +231,7 @@ export default function DiscoverGrid({
             reactions={connector.reactions}
             creatorAvatarUrl={connector.creatorAvatarUrl}
             creatorAvatarUrls={connector.creatorAvatarUrls}
+            issueUrls={connector.issueUrls}
           />
         ))}
       </div>

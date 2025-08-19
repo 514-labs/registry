@@ -21,6 +21,7 @@ export type DiscoverConnector = {
   creatorAvatarUrls?: string[];
   comingSoon?: boolean;
   implementationCount?: number;
+  issueUrls?: string[];
 };
 
 // Filter and label helpers (case-insensitive)
@@ -187,6 +188,7 @@ export async function buildDiscoverConnectors(): Promise<DiscoverConnector[]> {
         reactions,
         creatorAvatarUrl,
         creatorAvatarUrls,
+        issueUrls: uniqueIssueUrls,
       } satisfies DiscoverConnector;
     })
   );

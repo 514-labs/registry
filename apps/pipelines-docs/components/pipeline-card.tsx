@@ -8,6 +8,7 @@ import {
 import { Badge } from "@ui/components/badge";
 import Image from "next/image";
 import Link from "next/link";
+import ReactionsBadge from "@/components/ReactionsBadge";
 
 // Utility function to escape HTML entities
 function escapeHtml(str: string): string {
@@ -31,6 +32,8 @@ export interface PipelineCardProps {
   languages?: string[];
   comingSoon?: boolean;
   implementationCount?: number;
+  reactions?: number;
+  issueUrls?: string[];
 
   // Optional meta visualizations
   sourceSystem?: string; // e.g., "google-analytics"
@@ -54,6 +57,8 @@ export default function PipelineCard({
   languages,
   comingSoon,
   implementationCount,
+  reactions,
+  issueUrls,
   sourceSystem,
   destinationSystem,
   scheduleCron,
@@ -135,6 +140,7 @@ export default function PipelineCard({
                 Coming soon
               </Badge>
             ) : null}
+            <ReactionsBadge urls={issueUrls} initial={reactions} />
           </div>
         </CardHeader>
         <CardHeader>

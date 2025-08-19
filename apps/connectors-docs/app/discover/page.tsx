@@ -1,3 +1,6 @@
+export const dynamic = "force-static";
+export const revalidate = false;
+
 import DiscoverGrid from "@/app/discover/DiscoverGrid";
 import { buildDiscoverConnectors } from "@/lib/discover";
 

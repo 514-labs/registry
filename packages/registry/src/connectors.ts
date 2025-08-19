@@ -9,12 +9,12 @@ import type {
 
 // Resolve the monorepo root by walking up from the current working directory
 function findMonorepoRoot(startDir: string): string {
-  // heuristics: look for pnpm-workspace.yaml at or above
-  // avoid heavy fs ops; walk a few levels up
+  // Heuristics: look for common monorepo markers or the registries themselves
   let dir = startDir;
-  for (let i = 0; i < 5; i += 1) {
-    const candidate = join(dir, "pnpm-workspace.yaml");
-    if (existsSync(candidate)) return dir;
+  for (let i = 0; i < 10; i += 1) {
+    if (existsSync(join(dir, "pnpm-workspace.yaml"))) return dir;
+    if (existsSync(join(dir, "connector-registry"))) return dir;
+    if (existsSync(join(dir, "pipeline-registry"))) return dir;
     const parent = resolve(dir, "..");
     if (parent === dir) break;
     dir = parent;

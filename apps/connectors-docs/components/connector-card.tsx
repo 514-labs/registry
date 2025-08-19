@@ -8,6 +8,7 @@ import {
 import { Badge } from "@ui/components/badge";
 import Image from "next/image";
 import Link from "next/link";
+import ReactionsBadge from "@/components/ReactionsBadge";
 
 // Utility function to escape HTML entities
 function escapeHtml(str: string): string {
@@ -34,6 +35,7 @@ interface ConnectorCardProps {
   reactions?: number;
   creatorAvatarUrl?: string;
   creatorAvatarUrls?: string[];
+  issueUrls?: string[];
 }
 
 function ConnectorCard({
@@ -51,6 +53,7 @@ function ConnectorCard({
   reactions,
   creatorAvatarUrl,
   creatorAvatarUrls,
+  issueUrls,
 }: ConnectorCardProps) {
   const base = icon.startsWith("/") ? icon : `/${icon}`;
   const candidates = [
@@ -89,16 +92,7 @@ function ConnectorCard({
                 Coming soon
               </Badge>
             ) : null}
-            {typeof reactions === "number" && reactions > 0 ? (
-              <Badge
-                variant="secondary"
-                className="text-sm flex items-center gap-1"
-              >
-                <span>❤️</span>
-                <span className="-ml-1">👍</span>
-                <span>{reactions}</span>
-              </Badge>
-            ) : null}
+            <ReactionsBadge urls={issueUrls} initial={reactions} />
           </div>
         </CardHeader>
         <CardHeader>

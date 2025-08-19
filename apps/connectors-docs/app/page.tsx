@@ -1,3 +1,6 @@
+export const dynamic = "force-static";
+export const revalidate = false;
+
 import DiscoverGrid from "@/app/discover/DiscoverGrid";
 import Link from "next/link";
 import { Button } from "@ui/components/button";

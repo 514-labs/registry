@@ -39,6 +39,7 @@ export async function getIssueThumbsUpCountFromUrl(
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         "X-GitHub-Api-Version": "2022-11-28",
       },
+      next: { revalidate: 600 },
     }
   );
 
@@ -84,6 +85,7 @@ export async function getIssuePositiveReactionsCountFromUrl(
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         "X-GitHub-Api-Version": "2022-11-28",
       },
+      next: { revalidate: 600 },
     }
   );
 
@@ -128,6 +130,7 @@ export async function getUserAvatar(
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       "X-GitHub-Api-Version": "2022-11-28",
     },
+    next: { revalidate: 3600 },
   });
 
   if (!res.ok) return null;
@@ -148,6 +151,7 @@ export async function getOrganizationAvatar(
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       "X-GitHub-Api-Version": "2022-11-28",
     },
+    next: { revalidate: 3600 },
   });
 
   if (!res.ok) return null;

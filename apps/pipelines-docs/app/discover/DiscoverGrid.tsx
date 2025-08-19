@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
 } from "@ui/components/dropdown-menu";
 import { useMemo, useState } from "react";
+import ReactionsBadge from "@/components/ReactionsBadge";
 
 type DiscoverPipeline = {
   name: string;
@@ -40,6 +41,7 @@ type DiscoverPipeline = {
   // Creators
   creatorAvatarUrl?: string;
   creatorAvatarUrls?: string[];
+  issueUrls?: string[];
 };
 
 export default function DiscoverGrid({
@@ -241,6 +243,7 @@ export default function DiscoverGrid({
             scheduleTimezone={p.scheduleTimezone}
             fromIcon={p.fromIcon}
             toIcon={p.toIcon}
+            issueUrls={p.issueUrls}
           />
         ))}
       </div>

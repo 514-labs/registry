@@ -1,8 +1,5 @@
 import { listPipelines } from "@workspace/registry/pipelines";
-import type {
-  PipelineRootMeta,
-  PipelineProviderMeta,
-} from "@workspace/registry/pipelines";
+import type { PipelineRootMeta } from "@workspace/registry/pipelines";
 import { existsSync } from "fs";
 import { join } from "path";
 
@@ -33,6 +30,7 @@ export type DiscoverPipeline = {
   // Creators
   creatorAvatarUrl?: string;
   creatorAvatarUrls?: string[];
+  issueUrls?: string[];
 };
 
 // Filter helpers (case-insensitive)
@@ -95,7 +93,7 @@ export function buildDiscoverPipelines(): DiscoverPipeline[] {
     const rawTags = ((rootMeta.tags ?? []) as string[]).filter(Boolean);
 
     const firstProvider = p.providers[0];
-    const firstMeta = (firstProvider?.meta ?? {}) as PipelineProviderMeta;
+    const firstMeta = (firstProvider?.meta ?? {}) as any;
 
     // Collect languages
     const languages = Array.from(
@@ -180,6 +178,18 @@ export function buildDiscoverPipelines(): DiscoverPipeline[] {
       fromIcon: getPublicLogoPath(`${p.pipelineId}-from`),
       toIcon: getPublicLogoPath(`${p.pipelineId}-to`),
       domains,
+      issueUrls: p.providers
+        .flatMap((prov) => {
+          const issues = (prov.meta as any)?.issues ?? {};
+          return Object.values(issues).flatMap((v) => {
+            if (typeof v === "string") return [] as string[];
+            return Object.entries(v || {})
+              .filter(([implKey]) => implKey !== "default")
+              .map(([, url]) => url as string);
+          });
+        })
+        .filter((u): u is string => Boolean(u))
+        .filter((u, i, arr) => arr.indexOf(u) === i),
     } as DiscoverPipeline;
   });
 

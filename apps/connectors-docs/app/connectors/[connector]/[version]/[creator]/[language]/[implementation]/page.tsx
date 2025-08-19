@@ -19,9 +19,11 @@ import { join } from "path";
 import { marked } from "marked";
 import SchemaDiagram from "@/components/schema-diagram";
 import { getSchemaDiagramInputs } from "@/src/schema/processing";
+import ReactionsBadge from "@/components/ReactionsBadge";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
+export const revalidate = false;
 
 type Params = {
   connector: string;
@@ -90,6 +92,14 @@ export default async function ConnectorImplementationPage({
     implEntry.language,
     implEntry.implementation
   );
+  const issueUrls: string[] = (() => {
+    const value = provider.meta?.issues?.[implEntry.language];
+    if (value && typeof value === "object") {
+      const url = value[implEntry.implementation] ?? value["default"];
+      return url ? [url] : [];
+    }
+    return [];
+  })();
 
   // Get URLs from metadata
   const registryUrl =
@@ -239,13 +249,9 @@ export default async function ConnectorImplementationPage({
                   <span>Source</span>
                 </Link>
               </Badge>
-              <Badge variant="secondary">
-                <Link href={issueUrl} className="flex items-center gap-1">
-                  <span>👍</span>
-                  <span className="-ml-1">❤️</span>
-                  <span>{reactions}</span>
-                </Link>
-              </Badge>
+              <Link href={issueUrl} className="flex items-center gap-1">
+                <ReactionsBadge urls={issueUrls} initial={reactions} />
+              </Link>
             </div>
             <p className="text-muted-foreground">{description}</p>
 
