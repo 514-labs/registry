@@ -8,22 +8,54 @@ import type {
 } from "./types";
 
 // Resolve the monorepo root by walking up from the current working directory
-function findMonorepoRoot(startDir: string): string {
-  // heuristics: look for pnpm-workspace.yaml at or above
-  // avoid heavy fs ops; walk a few levels up
+function findMonorepoRoot(startDir: string): string | undefined {
   let dir = startDir;
-  for (let i = 0; i < 5; i += 1) {
+  for (let i = 0; i < 7; i += 1) {
     const candidate = join(dir, "pnpm-workspace.yaml");
     if (existsSync(candidate)) return dir;
     const parent = resolve(dir, "..");
     if (parent === dir) break;
     dir = parent;
   }
-  return startDir;
+  return undefined;
 }
 
-const MONOREPO_ROOT = findMonorepoRoot(process.cwd());
-const CONNECTORS_REGISTRY_DIR = join(MONOREPO_ROOT, "connector-registry");
+function findUpwardsForDir(
+  startDir: string,
+  targetDirName: string
+): string | undefined {
+  let dir = startDir;
+  for (let i = 0; i < 10; i += 1) {
+    const candidate = join(dir, targetDirName);
+    if (existsSync(candidate)) return candidate;
+    const parent = resolve(dir, "..");
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return undefined;
+}
+
+function resolveConnectorsRegistryDir(): string {
+  // 1) Explicit override
+  const fromEnv = process.env.CONNECTORS_REGISTRY_DIR;
+  if (fromEnv && existsSync(fromEnv)) return fromEnv;
+
+  // 2) Monorepo root (during local/dev builds)
+  const mono = findMonorepoRoot(process.cwd());
+  if (mono) {
+    const p = join(mono, "connector-registry");
+    if (existsSync(p)) return p;
+  }
+
+  // 3) Look upwards from CWD and from this file's dir (for standalone/serverless)
+  const fromCwd = findUpwardsForDir(process.cwd(), "connector-registry");
+  if (fromCwd) return fromCwd;
+  const fromHere = findUpwardsForDir(__dirname, "connector-registry");
+  if (fromHere) return fromHere;
+
+  // 4) Fallback to CWD/connector-registry (may not exist, but keeps path consistent)
+  return join(process.cwd(), "connector-registry");
+}
 
 function readJsonSafe<T>(filePath: string): T | undefined {
   try {
@@ -36,11 +68,12 @@ function readJsonSafe<T>(filePath: string): T | undefined {
 }
 
 export function getConnectorsRegistryPath(): string {
-  return CONNECTORS_REGISTRY_DIR;
+  return resolveConnectorsRegistryDir();
 }
 
 export function listConnectorIds(): string[] {
-  const entries: Dirent[] = readdirSync(CONNECTORS_REGISTRY_DIR, {
+  const registryDir = getConnectorsRegistryPath();
+  const entries: Dirent[] = readdirSync(registryDir, {
     withFileTypes: true,
   });
   return entries
@@ -53,7 +86,8 @@ export function listConnectorIds(): string[] {
 export function readConnector(
   connectorId: string
 ): RegistryConnector | undefined {
-  const connectorPath = join(CONNECTORS_REGISTRY_DIR, connectorId);
+  const registryDir = getConnectorsRegistryPath();
+  const connectorPath = join(registryDir, connectorId);
   if (!existsSync(connectorPath) || !statSync(connectorPath).isDirectory())
     return undefined;
 

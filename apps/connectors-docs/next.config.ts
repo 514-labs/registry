@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: resolve(__dirname, "../../"),
   // Include the connector registry so ISR/static routes can access it at runtime
   outputFileTracingIncludes: {
-    "/**/*": ["connector-registry/**/*"],
+    "/**/*": ["../../connector-registry/**/*"],
   },
 
   env: {

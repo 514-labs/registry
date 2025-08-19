@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: resolve(__dirname, "../../"),
   // Include both registries so ISR/static routes can access them at runtime
   outputFileTracingIncludes: {
-    "/**/*": ["connector-registry/**/*", "pipeline-registry/**/*"],
+    "/**/*": ["../../connector-registry/**/*", "../../pipeline-registry/**/*"],
   },
   env: {
     GITHUB_PAT: process.env.GITHUB_PAT,
