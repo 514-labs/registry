@@ -20,6 +20,7 @@ import { marked } from "marked";
 import SchemaDiagram from "@/components/schema-diagram";
 import { getSchemaDiagramInputs } from "@/src/schema/processing";
 import ReactionsBadge from "@/components/ReactionsBadge";
+import { notFound } from "next/navigation";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -57,26 +58,25 @@ export async function generateStaticParams(): Promise<Params[]> {
 export default async function ConnectorImplementationPage({
   params,
 }: {
-  params: Promise<Params>;
+  params: Params;
 }) {
-  const { connector, version, creator, language, implementation } =
-    await params;
+  const { connector, version, creator, language, implementation } = params;
 
   const conn = readConnector(connector);
-  if (!conn) return null;
+  if (!conn) return notFound();
 
   const provider = conn.providers.find((p) => {
     const pVersion = p.path.split("/").slice(-2)[0];
     return p.authorId === creator && pVersion === version;
   });
-  if (!provider) return null;
+  if (!provider) return notFound();
 
   const implEntry =
     provider.implementations.find(
       (impl) =>
         impl.language === language && impl.implementation === implementation
     ) ?? provider.implementations.find((impl) => impl.language === language);
-  if (!implEntry) return null;
+  if (!implEntry) return notFound();
 
   const meta = conn.root.meta;
   const displayName = meta?.title ?? meta?.name ?? conn.connectorId;
