@@ -124,9 +124,15 @@ export default async function DiscoverPage() {
       if (parts.length === 2) sourceSystem = parts[0];
     }
 
-    const formattedTags = Array.from(
-      new Set(rawTags.map((t) => t.trim()).filter(Boolean))
-    ).map(formatLabel);
+    const tagsLower = rawTags.map((t) => t.toLowerCase());
+    const domainsLower = tagsLower.filter((t) =>
+      KNOWN_DOMAIN_TAGS_LOWER.has(t)
+    );
+    const domains = Array.from(new Set(domainsLower)).map(formatLabel);
+    const otherTagsLower = tagsLower.filter(
+      (t) => !KNOWN_DOMAIN_TAGS_LOWER.has(t) && !OPERATIONAL_TAGS_LOWER.has(t)
+    );
+    const displayTags = Array.from(new Set(otherTagsLower)).map(formatLabel);
 
     const iconPath =
       getPublicLogoPath(p.pipelineId) ?? `pipeline-logos/${p.pipelineId}.png`;
@@ -134,7 +140,7 @@ export default async function DiscoverPage() {
     return {
       name: displayName,
       description,
-      tags: formattedTags,
+      tags: displayTags,
       icon: iconPath,
       href: "#",
       languages: languages.map(formatLabel),
@@ -148,6 +154,7 @@ export default async function DiscoverPage() {
       scheduleTimezone,
       fromIcon: getPublicLogoPath(`${p.pipelineId}-from`),
       toIcon: getPublicLogoPath(`${p.pipelineId}-to`),
+      domains,
     };
   });
 
