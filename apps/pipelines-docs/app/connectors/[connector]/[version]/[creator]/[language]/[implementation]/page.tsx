@@ -56,9 +56,10 @@ export async function generateStaticParams(): Promise<Params[]> {
 export default async function ConnectorImplementationPage({
   params,
 }: {
-  params: Params;
+  params: Promise<Params>;
 }) {
-  const { connector, version, creator, language, implementation } = params;
+  const { connector, version, creator, language, implementation } =
+    await params;
 
   const conn = readConnector(connector);
   if (!conn) return null;
