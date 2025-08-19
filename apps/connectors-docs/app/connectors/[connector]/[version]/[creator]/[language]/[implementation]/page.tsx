@@ -248,7 +248,7 @@ export default async function ConnectorImplementationPage({
                 </Link>
               </Badge>
               <Link href={issueUrl} className="flex items-center gap-1">
-                <ReactionsBadge urls={issueUrls} initial={reactions} />
+                {/* <ReactionsBadge urls={issueUrls} initial={reactions} /> */}
               </Link>
             </div>
             <p className="text-muted-foreground">{description}</p>
