@@ -11,7 +11,8 @@ import type { Hook } from "../../src/types/hooks";
 const token = process.env.HUBSPOT_TOKEN;
 const itif = token ? it : it.skip;
 
-describe("hooks integration (live)", () => {
+// Unskip this test if the hubspot token has access to contacts
+describe.skip("hooks integration (live)", () => {
   itif("transforms contacts via afterResponse hook (adds fullName)", async () => {
     // Arrange: create connector and register an afterResponse hook that maps the raw HubSpot response
     // into a simplified shape. We verify the hook executes by asserting on the transformed structure.
