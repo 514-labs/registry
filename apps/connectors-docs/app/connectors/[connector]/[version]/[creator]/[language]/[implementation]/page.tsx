@@ -99,9 +99,13 @@ export default async function ConnectorImplementationPage({
     return notFound();
   }
 
-  // In production with SSG and dynamicParams=false, this should never run
-  // If we're here, it means a non-statically-generated path was accessed
-  if (process.env.NODE_ENV === "production") {
+  // During build, Next.js needs to access the filesystem to generate static pages
+  // Only log warnings if we can't find the connector registry
+  const isBuilding = process.env.NEXT_PHASE === "phase-production-build";
+
+  if (!isBuilding && process.env.NODE_ENV === "production") {
+    // In production runtime with SSG and dynamicParams=false, this should never run
+    // If we're here, it means a non-statically-generated path was accessed
     console.error(
       "[ConnectorImplementationPage] Unexpected runtime execution in production for:",
       { connector, version, creator, language, implementation }
@@ -109,14 +113,16 @@ export default async function ConnectorImplementationPage({
     return notFound();
   }
 
-  // Log received params for debugging
-  console.log("[ConnectorImplementationPage] Received params:", {
-    connector,
-    version,
-    creator,
-    language,
-    implementation,
-  });
+  // Log received params for debugging in development
+  if (process.env.NODE_ENV !== "production") {
+    console.log("[ConnectorImplementationPage] Received params:", {
+      connector,
+      version,
+      creator,
+      language,
+      implementation,
+    });
+  }
 
   const conn = readConnector(connector);
   if (!conn) {
