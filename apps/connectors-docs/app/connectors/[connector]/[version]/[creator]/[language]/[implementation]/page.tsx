@@ -56,15 +56,10 @@ export async function generateStaticParams(): Promise<Params[]> {
 
 export default async function ConnectorImplementationPage({
   params,
-  searchParams,
 }: {
-  params: Promise<Params>;
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  params: Params;
 }) {
-  const { connector, version, creator, language, implementation } =
-    await params;
-  const sp = await searchParams;
-  // const page = (Array.isArray(sp.page) ? sp.page[0] : sp.page) ?? "readme";
+  const { connector, version, creator, language, implementation } = params;
 
   const conn = readConnector(connector);
   if (!conn) return null;
@@ -179,10 +174,7 @@ export default async function ConnectorImplementationPage({
     });
 
   const defaultTab =
-    docs.find((d) => d.slug === (Array.isArray(sp.page) ? sp.page[0] : sp.page))
-      ?.slug ||
-    docs.find((d) => d.slug === "getting-started")?.slug ||
-    docs[0]?.slug;
+    docs.find((d) => d.slug === "getting-started")?.slug || docs[0]?.slug;
 
   // Preload creator avatars for the current version
   const providersForVersion = conn.providers.filter(
