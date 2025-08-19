@@ -9,7 +9,7 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*", "connector-registry/**"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", ".next/**", "public/pagefind/**"]
     },
     "lint": {},
     "clean": {
