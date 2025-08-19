@@ -1,28 +1,55 @@
 /// <reference types="node" />
 import { existsSync, readFileSync, readdirSync, statSync, Dirent } from "fs";
-import { join, resolve } from "path";
+import { join, resolve, dirname } from "path";
+import { fileURLToPath } from "url";
 import type {
   ConnectorRootMeta,
   ProviderMeta,
   RegistryConnector,
 } from "./types";
 
-// Resolve the monorepo root by walking up from the current working directory
+// Get the directory of this file
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Resolve the monorepo root by walking up from the package directory
 function findMonorepoRoot(startDir: string): string {
+  // First, check environment variable
+  if (process.env.MONOREPO_ROOT) {
+    return process.env.MONOREPO_ROOT;
+  }
+
   // Heuristics: look for common monorepo markers or the registries themselves
   let dir = startDir;
   for (let i = 0; i < 10; i += 1) {
-    if (existsSync(join(dir, "pnpm-workspace.yaml"))) return dir;
-    if (existsSync(join(dir, "connector-registry"))) return dir;
-    if (existsSync(join(dir, "pipeline-registry"))) return dir;
+    if (existsSync(join(dir, "pnpm-workspace.yaml"))) {
+      return dir;
+    }
+    if (existsSync(join(dir, "connector-registry"))) {
+      return dir;
+    }
+    if (existsSync(join(dir, "pipeline-registry"))) {
+      return dir;
+    }
     const parent = resolve(dir, "..");
     if (parent === dir) break;
     dir = parent;
   }
+
+  // If we can't find the monorepo root, log an error in development
+  if (process.env.NODE_ENV !== "production") {
+    console.error(
+      "[findMonorepoRoot] Failed to find monorepo root from:",
+      startDir
+    );
+  }
   return startDir;
 }
 
-const MONOREPO_ROOT = findMonorepoRoot(process.cwd());
+// Start from the package directory instead of process.cwd()
+// This is more reliable in production builds
+const packageDir = resolve(__dirname, "..", "..", "..");
+const MONOREPO_ROOT = findMonorepoRoot(packageDir);
 const CONNECTORS_REGISTRY_DIR = join(MONOREPO_ROOT, "connector-registry");
 
 function readJsonSafe<T>(filePath: string): T | undefined {
@@ -40,14 +67,27 @@ export function getConnectorsRegistryPath(): string {
 }
 
 export function listConnectorIds(): string[] {
+  if (!existsSync(CONNECTORS_REGISTRY_DIR)) {
+    if (process.env.NODE_ENV !== "production") {
+      console.error(
+        "[listConnectorIds] Directory does not exist:",
+        CONNECTORS_REGISTRY_DIR
+      );
+    }
+    return [];
+  }
+
   const entries: Dirent[] = readdirSync(CONNECTORS_REGISTRY_DIR, {
     withFileTypes: true,
   });
-  return entries
+
+  const connectorIds = entries
     .filter((entry: Dirent) => entry.isDirectory())
     .map((entry: Dirent) => entry.name)
     .filter((name: string) => !name.startsWith(".") && !name.startsWith("_"))
     .filter((name: string) => /^[a-zA-Z0-9_-]+$/.test(name));
+
+  return connectorIds;
 }
 
 export function readConnector(

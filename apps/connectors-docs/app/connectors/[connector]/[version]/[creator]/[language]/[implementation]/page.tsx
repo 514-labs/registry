@@ -55,6 +55,18 @@ export async function generateStaticParams(): Promise<Params[]> {
   return params;
 }
 
+/**
+ * ConnectorImplementationPage - Dynamic page for connector implementations
+ *
+ * Debugging param failures:
+ * - Check console logs for detailed error messages
+ * - Missing params will be listed with received values
+ * - Failed lookups will show available options
+ * - Common issues:
+ *   - Connector not found: check connector-registry folder names
+ *   - Provider not found: check version/creator combination
+ *   - Implementation not found: check language/implementation names
+ */
 export default async function ConnectorImplementationPage({
   params,
 }: {
@@ -63,6 +75,39 @@ export default async function ConnectorImplementationPage({
 }) {
   const { connector, version, creator, language, implementation } =
     await params;
+
+  // Validate params
+  const missingParams: string[] = [];
+  if (!connector) missingParams.push("connector");
+  if (!version) missingParams.push("version");
+  if (!creator) missingParams.push("creator");
+  if (!language) missingParams.push("language");
+  if (!implementation) missingParams.push("implementation");
+
+  if (missingParams.length > 0) {
+    console.error(
+      "[ConnectorImplementationPage] Missing required params:",
+      missingParams
+    );
+    console.error("Received params:", {
+      connector,
+      version,
+      creator,
+      language,
+      implementation,
+    });
+    return notFound();
+  }
+
+  // In production with SSG and dynamicParams=false, this should never run
+  // If we're here, it means a non-statically-generated path was accessed
+  if (process.env.NODE_ENV === "production") {
+    console.error(
+      "[ConnectorImplementationPage] Unexpected runtime execution in production for:",
+      { connector, version, creator, language, implementation }
+    );
+    return notFound();
+  }
 
   // Log received params for debugging
   console.log("[ConnectorImplementationPage] Received params:", {
