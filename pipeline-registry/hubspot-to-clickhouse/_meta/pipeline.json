@@ -1,0 +1,10 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/pipeline-root.schema.json",
+  "name": "hubspot-to-clickhouse",
+  "title": "hubspot-to-clickhouse",
+  "tags": ["hubspot", "clickhouse"],
+  "description": "Ingest HubSpot data into ClickHouse.",
+  "homepage": "",
+  "registryUrl": "https://github.com/514-labs/factory/tree/main/pipeline-registry/hubspot-to-clickhouse"
+}
+
