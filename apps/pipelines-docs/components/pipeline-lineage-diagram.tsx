@@ -276,6 +276,8 @@ export function PipelineLineageDiagram({
   );
 
   const flowRef = useRef<ReactFlowInstance | null>(null);
+  const [flowReady, setFlowReady] = useState(false);
+  const [hasAutoCentered, setHasAutoCentered] = useState(false);
 
   function centerOnNodes(ids: string[]) {
     const instance = flowRef.current;
@@ -421,6 +423,20 @@ export function PipelineLineageDiagram({
     );
   }, [edgeItems, searchQuery]);
 
+  // Auto-center once after nodes have been laid out and the flow is ready
+  useEffect(() => {
+    if (!flowReady || hasAutoCentered) return;
+    const nodes = currentNodes;
+    if (!nodes || nodes.length === 0) return;
+    try {
+      const instance = flowRef.current;
+      if (instance) {
+        instance.fitView({ padding: 0.2, duration: 400 } as any);
+        setHasAutoCentered(true);
+      }
+    } catch {}
+  }, [flowReady, hasAutoCentered, currentNodes]);
+
   return (
     <Card className="w-full overflow-hidden py-0">
       <div className="h-[520px]">
@@ -432,6 +448,7 @@ export function PipelineLineageDiagram({
           proOptions={{ hideAttribution: true }}
           onInit={(instance) => {
             flowRef.current = instance as ReactFlowInstance;
+            setFlowReady(true);
           }}
         >
           <Background />
