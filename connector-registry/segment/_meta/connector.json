@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
-  "name": "segment",
-  "title": "Segment",
+  "identifier": "segment",
+  "name": "Segment",
   "category": "api",
   "tags": ["CDP", "Events", "SaaS"],
   "description": "Capture events and metrics from Segment.",

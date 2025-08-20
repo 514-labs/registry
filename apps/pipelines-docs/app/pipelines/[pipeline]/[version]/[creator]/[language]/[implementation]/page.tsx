@@ -76,7 +76,7 @@ export default async function PipelineImplementationPage({
   if (!implEntry) return null;
 
   const meta = reg.root.meta;
-  const displayName = meta?.title ?? meta?.name ?? reg.pipelineId;
+  const displayName = meta?.name ?? reg.pipelineId;
   const description = meta?.description ?? "";
   const tags = meta?.tags ?? [];
 

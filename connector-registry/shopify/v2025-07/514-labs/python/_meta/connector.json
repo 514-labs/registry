@@ -1,9 +1,8 @@
 {
-  "name": "shopify",
+  "identifier": "shopify",
+  "name": "Shopify",
   "author": "514-labs",
   "version": "v2025-07",
   "language": "python",
   "implementations": ["data-api"]
 }
-
-

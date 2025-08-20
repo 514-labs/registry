@@ -81,7 +81,7 @@ export default async function ConnectorImplementationPage({
   if (!implEntry) return null;
 
   const meta = conn.root.meta;
-  const displayName = meta?.title ?? meta?.name ?? conn.connectorId;
+  const displayName = meta?.name ?? conn.connectorId;
   const description = meta?.description ?? "";
   const tags = meta?.tags ?? [];
 

@@ -1,5 +1,6 @@
 {
-  "name": "google-analytics",
+  "identifier": "google-analytics",
+  "name": "Google Analytics",
   "author": "tg339",
   "version": "v4",
   "language": "typescript",

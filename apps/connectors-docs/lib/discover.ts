@@ -59,9 +59,7 @@ export async function buildDiscoverConnectors(): Promise<DiscoverConnector[]> {
   const connectors = await Promise.all(
     registry.map(async (conn) => {
       const meta = (conn.root.meta ?? {}) as ConnectorRootMeta;
-      const displayName = (meta.title ??
-        meta.name ??
-        conn.connectorId) as string;
+      const displayName = (meta.name ?? conn.connectorId) as string;
       const description = (meta.description ?? "") as string;
       const rawTags = ((meta.tags ?? []) as string[]).filter(Boolean);
       const category = ((meta.category ?? "") as string).toLowerCase();

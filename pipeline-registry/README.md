@@ -40,6 +40,11 @@ Pipeline metadata is captured in JSON. There is a root-level descriptor and a pr
 
 The provider-level `pipeline.json` includes the full runnable definition: source, systems, transformations, destination, schedule, and lineage hints.
 
+Root descriptor fields:
+
+- `identifier` (kebab-case ID, matches folder name)
+- `name` (display name)
+
 Example provider-level `pipeline.json`:
 
 ```json

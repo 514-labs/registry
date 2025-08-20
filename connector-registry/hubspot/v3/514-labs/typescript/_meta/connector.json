@@ -1,5 +1,6 @@
 {
-  "name": "hubspot",
+  "identifier": "hubspot",
+  "name": "HubSpot",
   "author": "514-labs",
   "version": "v3",
   "language": "typescript",

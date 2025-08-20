@@ -128,7 +128,9 @@ postgres/
 
 Connector-level fields:
 
-- `name`, `title`, `version`, `category`, `tags`, `description`, `homepage`
+- `identifier` (kebab-case ID, matches folder name)
+- `name` (display name)
+- `version`, `category`, `tags`, `description`, `homepage`
 
 ## Provider metadata (`{connector}/{author}/_meta/connector.json`)
 

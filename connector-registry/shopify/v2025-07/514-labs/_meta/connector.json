@@ -1,5 +1,6 @@
 {
-  "name": "shopify",
+  "identifier": "shopify",
+  "name": "Shopify",
   "author": "514-labs",
   "authorType": "organization",
   "version": "v2025-07",

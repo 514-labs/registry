@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
-  "name": "datadog",
-  "title": "Datadog",
+  "identifier": "datadog",
+  "name": "Datadog",
   "category": "observability",
   "tags": ["observability"],
   "description": "",
