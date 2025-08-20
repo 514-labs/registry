@@ -9,9 +9,8 @@ import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 import { marked } from "marked";
 import { PagefindMeta } from "@/components/pagefind-meta";
-import SchemaDiagram from "@/components/schema-diagram";
+
 import {
-  getSchemaDiagramInputs,
   getPipelineLineageDiagramInputs,
   getMooseLineageGraph,
 } from "@/src/schema/processing";
