@@ -1,0 +1,47 @@
+## Moose Lineage Manifest
+
+The lineage manifest is a static description of a pipeline's systems and data flow. It lives under the implementation directory at `moose/lineage.manifest.json` (preferred) or `lineage/manifest.json`.
+
+For full details on entity and relationship types, see the sections below.
+
+### Entities (Nodes)
+
+Each node has: `id`, `type`, `name`, `namespace`, `version`, `attrs`.
+
+- Allowed types: connector, ingest_api, stream, dlq, transform, sync, table, materialized_view, external_table, consumption_api, openapi_spec, client, workflow
+- Required attrs per type (minimal):
+  - connector: `{ mode: "webhook"|"etl"|"cdc", schema_hash }`
+  - ingest_api: `{ route, version, auth: { method: "jwt"|"api_key"|"none", audience?: string } }`
+  - stream: `{ partitions, retention_seconds }`
+  - dlq: `{ backing: "stream"|"table" }`
+  - transform: `{ code_ref: { repo, path, commit, line? }, dlq?: nodeId }`
+  - sync: `{ semantics: "at_least_once", flush: { rows?, interval_ms? }, offset_tracking: true }`
+  - table: `{ physical_name, engine, order_by, deduplicate?: boolean }`
+  - materialized_view: `{ target_table, select_from: string[] }`
+  - external_table: `{ provider: "clickpipes"|"debezium"|"aws_dms", lifecycle: "externally_managed" }`
+  - consumption_api: `{ route, query_spec: { params_schema_ref, tables_referenced: string[] }, auth }`
+  - openapi_spec: `{ path: ".moose/openapi.yaml" }`
+  - client: `{ kind: "dashboard"|"service"|"agent", sdk?: { language, version } }`
+  - workflow: `{ kind: "workflow"|"task", schedule?: string }`
+
+Recommended extras for `connector` nodes:
+
+- `connector`: `{ name, version?, author?, language?, implementation? }`
+- `identifier` (e.g., GA4 property `properties/1234`)
+- `schema_path` (repo-relative path to a relevant schema file)
+
+### Relationships (Edges)
+
+Each edge has: `from`, `to`, `type`, `attrs`.
+
+- Allowed types: produces, publishes, dead_letters_to, transforms, emits, syncs_to, writes, derives, reads, queries, serves, documents, triggers, backfills, retries_from
+- Common edge attrs (optional):
+  - `schema_from_hash`, `schema_to_hash`
+  - `privacy_tags: string[]` (e.g., ["pii_email","pii_phone"])
+  - `policy: { retention_days?, encryption?: "at_rest"|"none" }`
+
+### Source of truth for types
+
+Runtime types live in `packages/models/src/lineage.ts`. Keep docs and scaffolds in sync with these types.
+
+

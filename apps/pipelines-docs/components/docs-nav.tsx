@@ -20,6 +20,7 @@ export default function DocsNav() {
     { title: "Introduction", href: "/docs" },
     { title: "Installation", href: "/docs/installation" },
     { title: "Scaffold", href: "/docs/scaffold" },
+    { title: "Lineage", href: "/docs/lineage" },
     {
       title: "Specifications",
       href: "/docs/specifications",

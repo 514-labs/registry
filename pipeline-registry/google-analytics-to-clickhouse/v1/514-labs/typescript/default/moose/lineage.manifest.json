@@ -1,0 +1,131 @@
+{
+  "version": "1.0",
+  "namespace": "moose",
+  "nodes": [
+    {
+      "id": "conn.ga4.reports",
+      "type": "connector",
+      "name": "Google Analytics 4 Reports API",
+      "namespace": "google-analytics",
+      "version": "1",
+      "attrs": {
+        "mode": "etl",
+        "schema_hash": "sha256:placeholder",
+        "connector": {
+          "name": "google-analytics",
+          "version": "v4",
+          "author": "514-labs",
+          "language": "typescript",
+          "implementation": "data-api"
+        },
+        "identifier": "properties/1234",
+        "schema_path": "connector-registry/google-analytics/v4/514-labs/typescript/data-api/schemas/raw/endpoints/properties-reporting/runReport.schema.json"
+      }
+    },
+    {
+      "id": "ingest.ga4",
+      "type": "ingest_api",
+      "name": "Ingest GA4 Data",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": {
+        "route": "/ingest/ga4",
+        "version": "1",
+        "auth": { "method": "none" }
+      }
+    },
+    {
+      "id": "stream.ga4.events",
+      "type": "stream",
+      "name": "ga4_events",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": { "partitions": 6, "retention_seconds": 604800 }
+    },
+    {
+      "id": "dlq.ga4",
+      "type": "dlq",
+      "name": "ga4_dlq",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": { "backing": "stream" }
+    },
+    {
+      "id": "sync.ga4.events",
+      "type": "sync",
+      "name": "sync_ga4_events",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": {
+        "semantics": "at_least_once",
+        "flush": { "rows": 100000, "interval_ms": 1000 },
+        "offset_tracking": true
+      }
+    },
+    {
+      "id": "table.ga4_events_0_1",
+      "type": "table",
+      "name": "ga4_events_0_1",
+      "namespace": "moose",
+      "version": "0.1",
+      "attrs": {
+        "physical_name": "ga4_events_0_1",
+        "engine": "MergeTree",
+        "order_by": "(event_date,event_name)"
+      }
+    },
+    {
+      "id": "api.top_events",
+      "type": "consumption_api",
+      "name": "GET /consumption/top_events",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": {
+        "route": "/consumption/top_events",
+        "query_spec": {
+          "params_schema_ref": "#/schemas/topEvents",
+          "tables_referenced": ["ga4_events_0_1"]
+        },
+        "auth": { "method": "api_key" }
+      }
+    },
+    {
+      "id": "openapi.main",
+      "type": "openapi_spec",
+      "name": "openapi.yaml",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": { "path": ".moose/openapi.yaml" }
+    },
+    {
+      "id": "client.dashboard",
+      "type": "client",
+      "name": "Ops Dashboard",
+      "namespace": "acme",
+      "version": "1",
+      "attrs": { "kind": "dashboard" }
+    }
+  ],
+  "edges": [
+    { "from": "conn.ga4.reports", "to": "ingest.ga4", "type": "produces" },
+    { "from": "ingest.ga4", "to": "stream.ga4.events", "type": "publishes" },
+    { "from": "ingest.ga4", "to": "dlq.ga4", "type": "dead_letters_to" },
+    {
+      "from": "stream.ga4.events",
+      "to": "sync.ga4.events",
+      "type": "syncs_to"
+    },
+    {
+      "from": "sync.ga4.events",
+      "to": "table.ga4_events_0_1",
+      "type": "writes"
+    },
+    {
+      "from": "table.ga4_events_0_1",
+      "to": "api.top_events",
+      "type": "queries"
+    },
+    { "from": "api.top_events", "to": "openapi.main", "type": "documents" },
+    { "from": "api.top_events", "to": "client.dashboard", "type": "serves" }
+  ]
+}

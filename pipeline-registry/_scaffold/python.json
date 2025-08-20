@@ -117,6 +117,66 @@
                         },
                         {
                           "type": "dir",
+                          "name": "lineage",
+                          "children": [
+                            {
+                              "type": "dir",
+                              "name": "schemas",
+                              "children": [
+                                {
+                                  "type": "file",
+                                  "name": "index.json",
+                                  "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/schema-index.schema.json\",\n  \"version\": \"0.1.0\",\n  \"datasets\": [\n    {\n      \"name\": \"source-connector\",\n      \"kind\": \"pointer\",\n      \"connector\": { \"name\": \"<connector-id>\", \"version\": \"<vX>\", \"author\": \"<author>\" }\n    },\n    {\n      \"name\": \"transformed.tables\",\n      \"stage\": \"extracted\",\n      \"kind\": \"tables\",\n      \"path\": \"relational/tables.json\"\n    },\n    {\n      \"name\": \"outputs.files\",\n      \"stage\": \"extracted\",\n      \"kind\": \"files\",\n      \"path\": \"files/manifest.json\"\n    }\n  ]\n}\n"
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "relational",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "tables.json",
+                                      "template": "{\n  \"tables\": [\n    { \"name\": \"events\", \"columns\": [ { \"name\": \"event_id\", \"type\": \"string\" } ] }\n  ]\n}\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "README.md",
+                                      "template": "# Lineage Relational Schemas\n\nTables produced by the pipeline after transformations.\n"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "files",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "manifest.json",
+                                      "template": "{ \n  \"files\": [ ] \n}\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "README.md",
+                                      "template": "# Lineage Files\n\nFile outputs from the pipeline (CSV/JSON/Parquet/etc).\n"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "dir",
+                          "name": "moose",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "lineage.manifest.json",
+                              "template": "{\n  \"version\": \"1.0\",\n  \"namespace\": \"moose\",\n  \"nodes\": [\n    {\n      \"id\": \"conn.source\",\n      \"type\": \"connector\",\n      \"name\": \"Source Connector\",\n      \"namespace\": \"{pipeline}\",\n      \"version\": \"1\",\n      \"attrs\": {\n        \"mode\": \"etl\",\n        \"schema_hash\": \"sha256:<hash>\",\n        \"connector\": { \"name\": \"<connector-id>\", \"version\": \"<vX>\", \"author\": \"<author>\", \"language\": \"<language>\", \"implementation\": \"<implementation>\" },\n        \"identifier\": \"<external-identifier>\",\n        \"schema_path\": \"<path/to/repo-relative/schema.json>\"\n      }\n    }\n  ],\n  \"edges\": []\n}\n"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "dir",
                           "name": "src",
                           "children": [
                             {
