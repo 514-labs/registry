@@ -86,7 +86,7 @@ async function main() {
   const mermaid = toMermaid(lineage);
   await writeFile(mmdPath, mermaid, "utf8");
   if (process.argv.includes("--svg")) {
-    await new Promise((resolve) => {
+    await new Promise((resolve, reject) => {
       const child = spawn(
         process.platform === "win32" ? "npx.cmd" : "npx",
         [
