@@ -1,3 +1,4 @@
+import "dotenv/config";
 export * from "./ingest/hubspotModels";
 export * from "./ingest/hubspotTransforms";
 export * from "./apis/hubspotDeals";

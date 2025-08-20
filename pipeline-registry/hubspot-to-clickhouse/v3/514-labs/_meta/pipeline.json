@@ -3,7 +3,7 @@
   "name": "hubspot-to-clickhouse",
   "author": "514-labs",
   "authorType": "organization",
-  "version": "v2025-07",
+  "version": "v3",
   "description": "Ingest HubSpot objects and load into ClickHouse",
   "tags": ["hubspot", "clickhouse", "etl"],
   "schedule": { "cron": "0 * * * *", "timezone": "UTC" },

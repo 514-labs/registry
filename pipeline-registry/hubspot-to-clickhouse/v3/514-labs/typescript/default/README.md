@@ -9,9 +9,9 @@ Moose-based pipeline to ingest HubSpot deals into ClickHouse with consumption AP
 pnpm i
 ```
 
-2) Install the HubSpot connector
+2) Install the HubSpot connector (pin to v3)
 ```bash
-bash -i <(curl https://connectors.514.ai/install.sh) hubspot
+bash -i <(curl https://connectors.514.ai/install.sh) hubspot v3 514-labs typescript
 ```
 
 3) Set env vars
