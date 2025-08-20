@@ -687,7 +687,8 @@ function tryReadFirstExistingJson<T = any>(
         return JSON.parse(raw) as T;
       }
     } catch {
-      errors?.push(`Failed to parse JSON: ${p}`);
+    } catch (err) {
+      errors?.push(`Failed to parse JSON: ${p} - ${err instanceof Error ? err.message : String(err)}`);
     }
   }
   return null;
