@@ -9,6 +9,7 @@ import BlobStorageSpecification from "@/content/docs/specifications/blob-storage
 import DatabaseSpecification from "@/content/docs/specifications/databases.mdx";
 import SaaSSpecification from "@/content/docs/specifications/saas.mdx";
 import AnalyticalConnectorsSpecification from "@/content/docs/specifications/common.mdx";
+// Lineage is a general docs page, not a spec tab
 import CopySpecDropdown from "@/components/copy-spec-dropdown";
 
 export default function SpecificationsPage() {
@@ -35,6 +36,7 @@ export default function SpecificationsPage() {
           <TabsTrigger value="blob-storage">Blob Storage</TabsTrigger>
           <TabsTrigger value="databases">Databases</TabsTrigger>
           <TabsTrigger value="saas">SaaS</TabsTrigger>
+          {/* Lineage moved to docs/lineage, not part of specs */}
         </TabsList>
 
         <TabsContent value="apis" forceMount>

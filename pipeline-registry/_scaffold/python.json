@@ -166,6 +166,17 @@
                         },
                         {
                           "type": "dir",
+                          "name": "moose",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "lineage.manifest.json",
+                              "template": "{\n  \"version\": \"1.0\",\n  \"namespace\": \"moose\",\n  \"nodes\": [\n    {\n      \"id\": \"conn.source\",\n      \"type\": \"connector\",\n      \"name\": \"Source Connector\",\n      \"namespace\": \"{pipeline}\",\n      \"version\": \"1\",\n      \"attrs\": {\n        \"mode\": \"etl\",\n        \"schema_hash\": \"sha256:<hash>\",\n        \"connector\": { \"name\": \"<connector-id>\", \"version\": \"<vX>\", \"author\": \"<author>\", \"language\": \"<language>\", \"implementation\": \"<implementation>\" },\n        \"identifier\": \"<external-identifier>\",\n        \"schema_path\": \"<path/to/repo-relative/schema.json>\"\n      }\n    }\n  ],\n  \"edges\": []\n}\n"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "dir",
                           "name": "src",
                           "children": [
                             {

@@ -651,58 +651,13 @@ export function getPipelineLineageDiagramInputs(implementationPath: string): {
 
 // ---------- Moose-native lineage manifest (static graph, no runs) ----------
 
-export type MooseLineageNode = {
-  id: string;
-  type:
-    | "connector"
-    | "ingest_api"
-    | "stream"
-    | "dlq"
-    | "transform"
-    | "sync"
-    | "table"
-    | "materialized_view"
-    | "external_table"
-    | "consumption_api"
-    | "openapi_spec"
-    | "client"
-    | "workflow"
-    | string;
-  name: string;
-  namespace: string;
-  version: string;
-  attrs?: Record<string, unknown>;
-};
+import type {
+  MooseLineageManifest,
+  MooseLineageNode,
+  MooseLineageEdge,
+} from "@workspace/models";
 
-export type MooseLineageEdge = {
-  from: string;
-  to: string;
-  type:
-    | "produces"
-    | "publishes"
-    | "dead_letters_to"
-    | "transforms"
-    | "emits"
-    | "syncs_to"
-    | "writes"
-    | "derives"
-    | "reads"
-    | "queries"
-    | "serves"
-    | "documents"
-    | "triggers"
-    | "backfills"
-    | "retries_from"
-    | string;
-  attrs?: Record<string, unknown>;
-};
-
-export type MooseLineageManifest = {
-  version: string;
-  namespace: string;
-  nodes: MooseLineageNode[];
-  edges: MooseLineageEdge[];
-};
+// local aliases remain the same via import types above
 
 export type UiLineageNode = {
   id: string;
@@ -768,7 +723,7 @@ export function getMooseLineageGraph(
     return null;
   }
 
-  const nodes: UiLineageNode[] = manifest.nodes.map((n) => ({
+  const nodes: UiLineageNode[] = manifest.nodes.map((n: MooseLineageNode) => ({
     id: n.id,
     kind: n.type,
     title: n.name || n.id,
@@ -776,14 +731,16 @@ export function getMooseLineageGraph(
     raw: n,
   }));
 
-  const edges: UiLineageEdge[] = manifest.edges.map((e, idx) => ({
-    id: `${e.from}__${e.type}__${e.to}__${idx}`,
-    from: e.from,
-    to: e.to,
-    kind: e.type,
-    label: e.type,
-    raw: e,
-  }));
+  const edges: UiLineageEdge[] = manifest.edges.map(
+    (e: MooseLineageEdge, idx: number) => ({
+      id: `${e.from}__${e.type}__${e.to}__${idx}`,
+      from: e.from,
+      to: e.to,
+      kind: e.type,
+      label: e.type,
+      raw: e,
+    })
+  );
 
   return { nodes, edges };
 }

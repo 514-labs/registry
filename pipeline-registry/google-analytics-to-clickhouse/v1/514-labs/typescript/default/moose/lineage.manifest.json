@@ -9,9 +9,17 @@
       "namespace": "google-analytics",
       "version": "1",
       "attrs": {
-        "vendor": "google-analytics",
         "mode": "etl",
-        "schema_hash": "sha256:placeholder"
+        "schema_hash": "sha256:placeholder",
+        "connector": {
+          "name": "google-analytics",
+          "version": "v4",
+          "author": "514-labs",
+          "language": "typescript",
+          "implementation": "data-api"
+        },
+        "identifier": "properties/1234",
+        "schema_path": "connector-registry/google-analytics/v4/514-labs/typescript/data-api/schemas/raw/endpoints/properties-reporting/runReport.schema.json"
       }
     },
     {
