@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Background,
   Controls,
   MiniMap,
   Panel,
   ReactFlow,
+  type ReactFlowInstance,
   type Edge,
   type Node,
   Position,
@@ -18,6 +19,13 @@ import "reactflow/dist/style.css";
 import ELK from "elkjs/lib/elk.bundled.js";
 import { Card } from "@ui/components/card";
 import { Badge } from "@ui/components/badge";
+import { Input } from "@ui/components/input";
+import {
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from "@ui/components/command";
 import { cn } from "@ui/lib/utils";
 import {
   Database,
@@ -267,27 +275,249 @@ export function PipelineLineageDiagram({
     []
   );
 
+  const flowRef = useRef<ReactFlowInstance | null>(null);
+
+  function centerOnNodes(ids: string[]) {
+    const instance = flowRef.current;
+    if (!instance || ids.length === 0) return;
+    const nodes = instance.getNodes().filter((n) => ids.includes(n.id));
+    if (!nodes.length) return;
+    try {
+      instance.fitView({
+        nodes: nodes as any,
+        padding: 0.2,
+        duration: 600,
+      } as any);
+    } catch {}
+  }
+
+  function focusNodeById(id: string) {
+    centerOnNodes([id]);
+  }
+
+  function focusEdgeById(id: string) {
+    const e = rawEdges.find((x) => x.id === id);
+    if (!e) return;
+    centerOnNodes([e.source, e.target]);
+  }
+
+  function displayNameForNode(n: AnyNode): string {
+    if (n.type === "moose") {
+      const title = String((n as any).data?.title ?? "");
+      return title || n.id;
+    }
+    if (n.type === "source")
+      return `Source: ${String((n as any).data?.name ?? "")}`;
+    if (n.type === "transform")
+      return `Transformation: ${String((n as any).data?.name ?? "")}`;
+    if (n.type === "schema") {
+      const name = String((n as any).data?.name ?? "Schema");
+      return name ? `Schema: ${name}` : "Schema";
+    }
+    return n.id;
+  }
+
+  const currentNodes = useMemo(
+    () => (layoutNodes.length ? layoutNodes : rawNodes),
+    [layoutNodes, rawNodes]
+  );
+  const nodeNameById = useMemo(() => {
+    const m = new Map<string, string>();
+    currentNodes.forEach((n) => m.set(n.id, displayNameForNode(n)));
+    return m;
+  }, [currentNodes]);
+
+  type SearchNodeItem = {
+    kind: "node";
+    id: string;
+    label: string;
+    sub?: string;
+    icon?: React.ReactNode;
+  };
+  type SearchEdgeItem = {
+    kind: "edge";
+    id: string;
+    label: string;
+    sub?: string;
+    icon?: React.ReactNode;
+  };
+
+  const nodeItems = useMemo<SearchNodeItem[]>(() => {
+    return currentNodes.map((n) => {
+      const label = displayNameForNode(n);
+      const sub = (() => {
+        if (n.type === "moose")
+          return String(
+            (n as any).data?.subtitle ?? (n as any).data?.kind ?? ""
+          );
+        if (n.type === "transform") return String((n as any).data?.sub ?? "");
+        if (n.type === "source") return "Source";
+        if (n.type === "schema") return "Schema";
+        return "";
+      })();
+      const icon =
+        n.type === "moose" ? (
+          <PipelineIcon className="h-4 w-4" />
+        ) : n.type === "source" ? (
+          <Package className="h-4 w-4" />
+        ) : n.type === "transform" ? (
+          <Boxes className="h-4 w-4" />
+        ) : (
+          <Database className="h-4 w-4" />
+        );
+      return { kind: "node", id: n.id, label, sub, icon };
+    });
+  }, [currentNodes]);
+
+  const edgeItems = useMemo<SearchEdgeItem[]>(() => {
+    return rawEdges.map((e) => {
+      const from = nodeNameById.get(e.source) ?? e.source;
+      const to = nodeNameById.get(e.target) ?? e.target;
+      const label = e.label ? String(e.label) : `${from} → ${to}`;
+      const sub = e.label ? `${from} → ${to}` : undefined;
+      return {
+        kind: "edge",
+        id: e.id,
+        label,
+        sub,
+        icon: <ArrowRight className="h-4 w-4" />,
+      };
+    });
+  }, [rawEdges, nodeNameById]);
+
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (!t) return;
+      if (searchRef.current && !searchRef.current.contains(t)) {
+        setSearchOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  function includesI(s: string | undefined, q: string): boolean {
+    if (!q) return true;
+    if (!s) return false;
+    return s.toLowerCase().includes(q.toLowerCase());
+  }
+
+  const filteredNodeItems = useMemo(() => {
+    if (!searchQuery) return nodeItems;
+    return nodeItems.filter(
+      (it) => includesI(it.label, searchQuery) || includesI(it.sub, searchQuery)
+    );
+  }, [nodeItems, searchQuery]);
+
+  const filteredEdgeItems = useMemo(() => {
+    if (!searchQuery) return edgeItems;
+    return edgeItems.filter(
+      (it) => includesI(it.label, searchQuery) || includesI(it.sub, searchQuery)
+    );
+  }, [edgeItems, searchQuery]);
+
   return (
-    <Card className="w-full overflow-hidden">
-      <div className="p-4 font-medium">Pipeline Lineage</div>
-      <div className="h-[420px]">
+    <Card className="w-full overflow-hidden py-0">
+      <div className="h-[520px]">
         <ReactFlow
           nodes={(layoutNodes.length ? layoutNodes : rawNodes) as Node[]}
           edges={rawEdges}
           nodeTypes={nodeTypes as any}
           fitView
           proOptions={{ hideAttribution: true }}
+          onInit={(instance) => {
+            flowRef.current = instance as ReactFlowInstance;
+          }}
         >
           <Background />
           <MiniMap pannable zoomable />
           <Controls position="bottom-right" />
-          <Panel
-            position="top-right"
-            className="rounded-md border bg-card px-2 py-1 text-xs shadow-sm"
-          >
-            {mooseGraph && mooseGraph.nodes.length > 0
-              ? "Moose Lineage Graph"
-              : "Source → Transformations → Schema"}
+          <Panel position="top-right" className="space-y-2">
+            <div className="w-[320px] relative" ref={searchRef}>
+              <Input
+                placeholder="Search nodes or edges..."
+                className="h-8"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setSearchOpen(true);
+                }}
+                onFocus={() => setSearchOpen(true)}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") {
+                    setSearchOpen(false);
+                    (e.target as HTMLInputElement).blur();
+                  }
+                }}
+              />
+              {searchOpen ? (
+                <div className="absolute left-0 right-0 mt-1 z-10 rounded-md border bg-popover text-popover-foreground shadow-md">
+                  <Command>
+                    <CommandList>
+                      {filteredNodeItems.length > 0 ? (
+                        <CommandGroup heading="Nodes">
+                          {filteredNodeItems.map((it) => (
+                            <CommandItem
+                              key={`node-${it.id}`}
+                              value={`${it.label} ${it.sub ?? ""}`}
+                              onSelect={() => {
+                                focusNodeById(it.id);
+                                setSearchOpen(false);
+                              }}
+                            >
+                              <span className="mr-2 text-muted-foreground">
+                                {it.icon}
+                              </span>
+                              <span className="truncate">{it.label}</span>
+                              {it.sub ? (
+                                <span className="ml-auto text-xs text-muted-foreground">
+                                  {it.sub}
+                                </span>
+                              ) : null}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      ) : null}
+                      {filteredEdgeItems.length > 0 ? (
+                        <CommandGroup heading="Edges">
+                          {filteredEdgeItems.map((it) => (
+                            <CommandItem
+                              key={`edge-${it.id}`}
+                              value={`${it.label} ${it.sub ?? ""}`}
+                              onSelect={() => {
+                                focusEdgeById(it.id);
+                                setSearchOpen(false);
+                              }}
+                            >
+                              <span className="mr-2 text-muted-foreground">
+                                {it.icon}
+                              </span>
+                              <span className="truncate">{it.label}</span>
+                              {it.sub ? (
+                                <span className="ml-auto text-xs text-muted-foreground">
+                                  {it.sub}
+                                </span>
+                              ) : null}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      ) : null}
+                      {filteredNodeItems.length === 0 &&
+                      filteredEdgeItems.length === 0 ? (
+                        <div className="px-3 py-2 text-sm text-muted-foreground">
+                          No results
+                        </div>
+                      ) : null}
+                    </CommandList>
+                  </Command>
+                </div>
+              ) : null}
+            </div>
           </Panel>
         </ReactFlow>
       </div>
