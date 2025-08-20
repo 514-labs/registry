@@ -40,6 +40,7 @@ export async function SiteHeader() {
         <NavButton href="/discover" label="Discover" />
         <NavButton href="/create" label="Create" />
         <NavButton href="/share" label="Share" />
+        <NavButton href={`${connectorsBaseUrl}/request`} label="Request" />
       </div>
       <div className="flex flex-row items-center gap-2 h-full">
         <NavButton href={connectorsBaseUrl} label="Connectors" />
