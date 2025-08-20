@@ -23,7 +23,6 @@
     "@workspace/registry": "workspace:*",
     "@workspace/models": "workspace:*",
     "@workspace/ui": "workspace:*",
-    "marked": "^12.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dotenv": "^16.6.1",

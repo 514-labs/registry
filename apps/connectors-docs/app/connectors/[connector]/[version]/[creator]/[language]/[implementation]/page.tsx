@@ -16,7 +16,8 @@ import ComboBox from "@/components/combobox";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@ui/components/tabs";
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
-import { marked } from "marked";
+// Render docs with markdown so we can enhance code blocks with our Snippet UI
+import { MarkdownContent } from "@ui";
 import SchemaDiagram from "@/components/schema-diagram";
 import { getSchemaDiagramInputs } from "@/src/schema/processing";
 
@@ -137,7 +138,7 @@ export default async function ConnectorImplementationPage({
         .sort()
     : ([] as string[]);
 
-  type DocPage = { slug: string; title: string; html: string };
+  type DocPage = { slug: string; title: string; content: string };
   const preferredOrder = [
     "getting-started",
     "installation",
@@ -156,8 +157,8 @@ export default async function ConnectorImplementationPage({
       const title =
         firstHeadingMatch?.[1]?.trim() || file.replace(/\.(md|mdx)$/i, "");
       const slug = file.replace(/\.(md|mdx)$/i, "");
-      const html = marked.parse(raw) as string;
-      return { slug, title, html } as DocPage;
+      const content = raw;
+      return { slug, title, content } as DocPage;
     })
     .sort((a, b) => {
       const ia = preferredOrder.indexOf(a.slug);
@@ -346,10 +347,7 @@ export default async function ConnectorImplementationPage({
               </TabsList>
               {docs.map((d) => (
                 <TabsContent key={d.slug} value={d.slug}>
-                  <div
-                    className="prose dark:prose-invert max-w-none"
-                    dangerouslySetInnerHTML={{ __html: d.html }}
-                  />
+                  <MarkdownContent content={d.content} />
                 </TabsContent>
               ))}
             </Tabs>

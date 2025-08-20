@@ -37,6 +37,7 @@ export * from "./components/skeleton";
 export * from "./components/slider";
 export * from "./components/switch";
 export * from "./components/tabs";
+export * from "./components/markdown-content";
 export * from "./components/toggle";
 export * from "./components/tooltip";
 
