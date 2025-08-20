@@ -162,12 +162,22 @@ export function buildDiscoverPipelines(): DiscoverPipeline[] {
     const iconPath =
       getPublicLogoPath(p.pipelineId) ?? `pipeline-logos/${p.pipelineId}.png`;
 
+    // Deep link to first available implementation
+    const firstVersion = firstProvider?.path.split("/").slice(-2)[0];
+    const firstLanguage = firstProvider?.implementations?.[0]?.language;
+    const firstImplementation =
+      firstProvider?.implementations?.[0]?.implementation;
+    const deepHref =
+      firstProvider && firstVersion && firstLanguage && firstImplementation
+        ? `/pipelines/${p.pipelineId}/${firstVersion}/${firstProvider.authorId}/${firstLanguage}/${firstImplementation}`
+        : "#";
+
     return {
       name: displayName,
       description,
       tags: displayTags,
       icon: iconPath,
-      href: "#",
+      href: deepHref,
       languages: languages.map(formatLabel),
       comingSoon,
       implementationCount,

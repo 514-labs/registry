@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "fs";
 import { join, resolve, basename, dirname } from "path";
+import { readConnector } from "@workspace/registry/connectors";
 
 // Types aligned with SchemaDiagram's internal data shapes
 export type DiagramColumn = {
@@ -464,4 +465,325 @@ export function getSchemaDiagramInputs(implementationPath: string): {
     files: schema.files,
     errors: schema.errors,
   };
+}
+
+// ---------- Pipeline Lineage (lineage/schemas) ----------
+
+type LineagePointerDataset = {
+  kind: "pointer";
+  name?: string;
+  connector?: {
+    name: string;
+    version?: string;
+    author?: string;
+    language?: string;
+    implementation?: string;
+  };
+};
+
+function isPointerDataset(x: any): x is LineagePointerDataset {
+  return (
+    x &&
+    x.kind === "pointer" &&
+    x.connector &&
+    typeof x.connector.name === "string"
+  );
+}
+
+function mergeUniqueTables(target: DiagramTable[], add: DiagramTable[]) {
+  const seen = new Set(target.map((t) => t.label));
+  for (const t of add)
+    if (!seen.has(t.label)) {
+      seen.add(t.label);
+      target.push(t);
+    }
+}
+
+function mergeEndpoints(target: DiagramEndpoint[], add: DiagramEndpoint[]) {
+  const seen = new Set(
+    target.map((e) => `${String(e.method).toUpperCase()} ${e.path}`)
+  );
+  for (const e of add) {
+    const key = `${String(e.method).toUpperCase()} ${e.path}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      target.push(e);
+    }
+  }
+}
+
+function mergeFiles(target: DiagramFile[], add: DiagramFile[]) {
+  const seen = new Set(target.map((f) => `${f.name}|${String(f.format)}`));
+  for (const f of add) {
+    const key = `${f.name}|${String(f.format)}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      target.push(f);
+    }
+  }
+}
+
+export function getPipelineLineageDiagramInputs(implementationPath: string): {
+  database: { tables: DiagramTable[] };
+  endpoints: DiagramEndpoint[];
+  files: DiagramFile[];
+  errors?: string[];
+} {
+  const implPath = resolve(implementationPath);
+  const lineageDir = join(implPath, "lineage");
+  const schemasDir = join(lineageDir, "schemas");
+
+  // Fallback: if lineage folder is missing, reuse regular schemas
+  if (!existsSync(schemasDir)) {
+    return getSchemaDiagramInputs(implementationPath);
+  }
+
+  const errors: string[] = [];
+  const indexPath = join(schemasDir, "index.json");
+  const indexJson = readJsonSafe<any>(indexPath, errors);
+  if (!indexJson)
+    errors.push(`Missing or invalid lineage schema index: ${indexPath}`);
+
+  // Load local lineage-defined schemas
+  const tables = loadRelationalTables(schemasDir, indexJson, errors);
+  const endpoints = loadEndpoints(schemasDir, indexJson, errors);
+  let files = loadFileSchemas(schemasDir, indexJson, errors);
+
+  // Manifest support: lineage/schemas/files/manifest.json can enumerate file outputs
+  try {
+    const manifestPath = join(schemasDir, "files", "manifest.json");
+    const manifest = readJsonSafe<any>(manifestPath);
+    if (manifest && Array.isArray(manifest.files)) {
+      const extras: DiagramFile[] = manifest.files.map((it: any) => {
+        if (typeof it === "string") {
+          const name = basename(String(it));
+          const lower = name.toLowerCase();
+          let format: DiagramFile["format"] = "json";
+          if (lower.endsWith(".csv") || lower.includes("csv")) format = "csv";
+          else if (lower.endsWith(".parquet") || lower.includes("parquet"))
+            format = "parquet";
+          else if (lower.endsWith(".avro") || lower.includes("avro"))
+            format = "avro";
+          else if (
+            lower.endsWith(".ndjson") ||
+            lower.includes("ndjson") ||
+            lower.includes("jsonl")
+          )
+            format = "ndjson";
+          return { name, format } as DiagramFile;
+        }
+        const name: string = String(
+          it?.name ?? basename(String(it?.path ?? "file"))
+        );
+        const raw: string =
+          `${it?.format ?? it?.path ?? it?.name ?? "json"}`.toLowerCase();
+        let format: DiagramFile["format"] = "json";
+        if (raw.includes("csv")) format = "csv";
+        else if (raw.includes("parquet")) format = "parquet";
+        else if (raw.includes("avro")) format = "avro";
+        else if (raw.includes("ndjson") || raw.includes("jsonl"))
+          format = "ndjson";
+        const details: string | undefined = it?.details
+          ? String(it.details)
+          : undefined;
+        return { name, format, details } as DiagramFile;
+      });
+      mergeFiles(files, extras);
+    }
+  } catch {
+    // ignore
+  }
+
+  // Process pointer datasets to include connector schemas
+  const datasets: Array<any> = Array.isArray(indexJson?.datasets)
+    ? indexJson.datasets
+    : [];
+  for (const ds of datasets) {
+    if (!isPointerDataset(ds)) continue;
+    const c = ds.connector!;
+    try {
+      const conn = readConnector(c.name);
+      if (!conn) {
+        errors.push(`Pointer: connector '${c.name}' not found`);
+        continue;
+      }
+      // Choose provider by version/author, or first available
+      const provider =
+        conn.providers.find((p) => {
+          const v = p.path.split("/").slice(-2)[0];
+          const vOk = c.version ? v === c.version : true;
+          const aOk = c.author ? p.authorId === c.author : true;
+          return vOk && aOk;
+        }) || conn.providers[0];
+      if (!provider) {
+        errors.push(`Pointer: no providers for connector '${c.name}'`);
+        continue;
+      }
+      // Choose implementation by language/name or first
+      const impl =
+        provider.implementations.find((i) => {
+          const lOk = c.language ? i.language === c.language : true;
+          const imOk = c.implementation
+            ? i.implementation === c.implementation
+            : true;
+          return lOk && imOk;
+        }) || provider.implementations[0];
+      if (!impl) {
+        errors.push(`Pointer: no implementations for connector '${c.name}'`);
+        continue;
+      }
+      const schema = loadDiagramSchemaForImplementation(impl.path);
+      mergeUniqueTables(tables, schema.database.tables);
+      mergeEndpoints(endpoints, schema.endpoints);
+      mergeFiles(files, schema.files);
+    } catch {
+      errors.push(`Pointer: failed to load connector '${c.name}'`);
+    }
+  }
+
+  return {
+    database: { tables },
+    endpoints,
+    files,
+    errors: errors.length ? errors : undefined,
+  };
+}
+
+// ---------- Moose-native lineage manifest (static graph, no runs) ----------
+
+export type MooseLineageNode = {
+  id: string;
+  type:
+    | "connector"
+    | "ingest_api"
+    | "stream"
+    | "dlq"
+    | "transform"
+    | "sync"
+    | "table"
+    | "materialized_view"
+    | "external_table"
+    | "consumption_api"
+    | "openapi_spec"
+    | "client"
+    | "workflow"
+    | string;
+  name: string;
+  namespace: string;
+  version: string;
+  attrs?: Record<string, unknown>;
+};
+
+export type MooseLineageEdge = {
+  from: string;
+  to: string;
+  type:
+    | "produces"
+    | "publishes"
+    | "dead_letters_to"
+    | "transforms"
+    | "emits"
+    | "syncs_to"
+    | "writes"
+    | "derives"
+    | "reads"
+    | "queries"
+    | "serves"
+    | "documents"
+    | "triggers"
+    | "backfills"
+    | "retries_from"
+    | string;
+  attrs?: Record<string, unknown>;
+};
+
+export type MooseLineageManifest = {
+  version: string;
+  namespace: string;
+  nodes: MooseLineageNode[];
+  edges: MooseLineageEdge[];
+};
+
+export type UiLineageNode = {
+  id: string;
+  kind: string; // same as manifest node.type
+  title: string; // human display
+  subtitle?: string; // e.g., namespace or version
+  raw?: MooseLineageNode;
+};
+
+export type UiLineageEdge = {
+  id: string;
+  from: string;
+  to: string;
+  kind: string; // same as manifest edge.type
+  label?: string; // display label
+  raw?: MooseLineageEdge;
+};
+
+function tryReadFirstExistingJson<T = any>(
+  paths: string[],
+  errors?: string[]
+): T | null {
+  for (const p of paths) {
+    try {
+      if (existsSync(p)) {
+        const raw = readFileSync(p, "utf-8");
+        return JSON.parse(raw) as T;
+      }
+    } catch {
+      errors?.push(`Failed to parse JSON: ${p}`);
+    }
+  }
+  return null;
+}
+
+export function loadMooseLineageManifest(implementationPath: string): {
+  manifest: MooseLineageManifest | null;
+  errors?: string[];
+} {
+  const implPath = resolve(implementationPath);
+  const candidates = [
+    join(implPath, "moose", "lineage.manifest.json"),
+    join(implPath, "lineage", "manifest.json"),
+    join(implPath, "lineage", "lineage.manifest.json"),
+  ];
+  const errors: string[] = [];
+  const manifest = tryReadFirstExistingJson<MooseLineageManifest>(
+    candidates,
+    errors
+  );
+  return { manifest, errors: errors.length ? errors : undefined };
+}
+
+export function getMooseLineageGraph(
+  implementationPath: string
+): { nodes: UiLineageNode[]; edges: UiLineageEdge[] } | null {
+  const { manifest } = loadMooseLineageManifest(implementationPath);
+  if (
+    !manifest ||
+    !Array.isArray(manifest.nodes) ||
+    !Array.isArray(manifest.edges)
+  ) {
+    return null;
+  }
+
+  const nodes: UiLineageNode[] = manifest.nodes.map((n) => ({
+    id: n.id,
+    kind: n.type,
+    title: n.name || n.id,
+    subtitle: `${n.namespace}${n.version ? ` • v${n.version}` : ""}`,
+    raw: n,
+  }));
+
+  const edges: UiLineageEdge[] = manifest.edges.map((e, idx) => ({
+    id: `${e.from}__${e.type}__${e.to}__${idx}`,
+    from: e.from,
+    to: e.to,
+    kind: e.type,
+    label: e.type,
+    raw: e,
+  }));
+
+  return { nodes, edges };
 }
