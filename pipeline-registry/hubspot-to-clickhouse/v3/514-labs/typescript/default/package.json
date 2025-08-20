@@ -6,23 +6,26 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsup src/index.ts --dts --format esm,cjs",
+    "build": "cd app/hubspot; pnpm run build; cd ../..; moose-cli build --docker",
     "test": "vitest run",
     "dev": "moose-cli dev",
     "moose": "moose-cli",
     "lineage": "node scripts/lineage.mjs",
     "lineage:svg": "node scripts/lineage.mjs --svg"
   },
-  "engines": {"node": ">=20"},
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "@514labs/moose-lib": "latest",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "typia": "^9.6.1"
   },
   "devDependencies": {
     "@514labs/moose-cli": "latest",
+    "@mermaid-js/mermaid-cli": "^10.9.0",
     "tsup": "^8.0.0",
     "typescript": "^5.4.0",
-    "vitest": "^1.6.0",
-    "@mermaid-js/mermaid-cli": "^10.9.0"
+    "vitest": "^3.2.4"
   }
 }

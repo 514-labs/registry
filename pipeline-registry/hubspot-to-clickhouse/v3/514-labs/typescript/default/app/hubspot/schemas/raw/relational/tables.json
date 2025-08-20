@@ -1,0 +1,75 @@
+{
+  "tables": [
+    {
+      "name": "hubspot_raw_contacts",
+      "columns": [
+        { "name": "id", "type": "text", "nullable": false },
+        { "name": "properties", "type": "jsonb", "nullable": false },
+        { "name": "created_at", "type": "timestamptz", "nullable": false },
+        { "name": "updated_at", "type": "timestamptz", "nullable": false },
+        { "name": "archived", "type": "boolean", "nullable": false }
+      ],
+      "primaryKey": ["id"],
+      "indexes": [
+        { "name": "idx_hubspot_raw_contacts_updated_at", "columns": ["updated_at"] }
+      ]
+    },
+    {
+      "name": "hubspot_raw_companies",
+      "columns": [
+        { "name": "id", "type": "text", "nullable": false },
+        { "name": "properties", "type": "jsonb", "nullable": false },
+        { "name": "created_at", "type": "timestamptz", "nullable": false },
+        { "name": "updated_at", "type": "timestamptz", "nullable": false },
+        { "name": "archived", "type": "boolean", "nullable": false }
+      ],
+      "primaryKey": ["id"],
+      "indexes": [
+        { "name": "idx_hubspot_raw_companies_updated_at", "columns": ["updated_at"] }
+      ]
+    },
+    {
+      "name": "hubspot_raw_deals",
+      "columns": [
+        { "name": "id", "type": "text", "nullable": false },
+        { "name": "properties", "type": "jsonb", "nullable": false },
+        { "name": "created_at", "type": "timestamptz", "nullable": false },
+        { "name": "updated_at", "type": "timestamptz", "nullable": false },
+        { "name": "archived", "type": "boolean", "nullable": false }
+      ],
+      "primaryKey": ["id"],
+      "indexes": [
+        { "name": "idx_hubspot_raw_deals_updated_at", "columns": ["updated_at"] }
+      ]
+    },
+    {
+      "name": "hubspot_raw_tickets",
+      "columns": [
+        { "name": "id", "type": "text", "nullable": false },
+        { "name": "properties", "type": "jsonb", "nullable": false },
+        { "name": "created_at", "type": "timestamptz", "nullable": false },
+        { "name": "updated_at", "type": "timestamptz", "nullable": false },
+        { "name": "archived", "type": "boolean", "nullable": false }
+      ],
+      "primaryKey": ["id"],
+      "indexes": [
+        { "name": "idx_hubspot_raw_tickets_updated_at", "columns": ["updated_at"] }
+      ]
+    },
+    {
+      "name": "hubspot_raw_engagements",
+      "columns": [
+        { "name": "id", "type": "text", "nullable": false },
+        { "name": "object_type", "type": "text", "nullable": false },
+        { "name": "properties", "type": "jsonb", "nullable": false },
+        { "name": "created_at", "type": "timestamptz", "nullable": false },
+        { "name": "updated_at", "type": "timestamptz", "nullable": false },
+        { "name": "archived", "type": "boolean", "nullable": false }
+      ],
+      "primaryKey": ["id", "object_type"],
+      "indexes": [
+        { "name": "idx_hubspot_raw_engagements_updated_at", "columns": ["updated_at"] }
+      ]
+    }
+  ]
+}

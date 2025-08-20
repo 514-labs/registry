@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { PipelineRunner } from '../src/runner'
+import { PipelineRunner } from '../app/runner'
 
 describe('PipelineRunner', () => {
   it('ping', () => {

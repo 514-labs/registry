@@ -14,12 +14,6 @@ From the repository root:
 pnpm install
 ```
 
-## Install the HubSpot connector (v3)
-```bash
-cd app
-bash -i <(curl https://connectors.514.ai/install.sh) hubspot v3 514-labs typescript
-```
-
 ## Configure environment
 Create a local `.env` (auto-loaded) or export in your shell. See `ENV.EXAMPLE` for a template.
 

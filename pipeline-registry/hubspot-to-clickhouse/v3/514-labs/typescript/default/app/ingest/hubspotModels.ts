@@ -62,8 +62,11 @@ export const HubSpotDealRawPipeline = new IngestPipeline<HubSpotDealRaw>("HubSpo
 
 /** Processed HubSpot deal storage */
 export const HubSpotDealPipeline = new IngestPipeline<HubSpotDeal>("HubSpotDeal", {
-  table: { engine: ClickHouseEngines.ReplacingMergeTree, orderByFields: ["id"], database: "analytics", tableName: "hubspot_deals" },
-  stream: true,
-  ingest: false,
-  deadLetterQueue: { destination: hubspotDeadLetterTable },
+  table: {engine: ClickHouseEngines.MergeTree, orderByFields: ["id"]}, // Store processed data in ClickHouse
+  stream: true, // Buffer processed records
+  ingest: false, // No direct API; only derived from raw data
+  deadLetterQueue: {
+    destination: hubspotDeadLetterTable,
+  },
 });
+
