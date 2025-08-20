@@ -636,9 +636,10 @@ export function getPipelineLineageDiagramInputs(implementationPath: string): {
       mergeUniqueTables(tables, schema.database.tables);
       mergeEndpoints(endpoints, schema.endpoints);
       mergeFiles(files, schema.files);
-    } catch {
     } catch (err) {
-      errors.push(`Pointer: failed to load connector '${c.name}': ${err instanceof Error ? err.message : String(err)}`);
+      errors.push(
+        `Pointer: failed to load connector '${c.name}': ${err instanceof Error ? err.message : String(err)}`
+      );
     }
   }
 
@@ -687,9 +688,10 @@ function tryReadFirstExistingJson<T = any>(
         const raw = readFileSync(p, "utf-8");
         return JSON.parse(raw) as T;
       }
-    } catch {
     } catch (err) {
-      errors?.push(`Failed to parse JSON: ${p} - ${err instanceof Error ? err.message : String(err)}`);
+      errors?.push(
+        `Failed to parse JSON: ${p} - ${err instanceof Error ? err.message : String(err)}`
+      );
     }
   }
   return null;
