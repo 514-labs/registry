@@ -180,6 +180,9 @@ importers:
       '@types/mdx':
         specifier: ^2.0.13
         version: 2.0.13
+      '@workspace/models':
+        specifier: workspace:*
+        version: link:../../packages/models
       '@workspace/registry':
         specifier: workspace:*
         version: link:../../packages/registry
