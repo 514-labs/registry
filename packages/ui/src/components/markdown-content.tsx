@@ -12,6 +12,14 @@ import {
   SnippetTabsTrigger,
   SnippetTabsContent,
 } from "./shadcn-io/snippet";
+import {
+  CodeBlock,
+  CodeBlockHeader,
+  CodeBlockBody,
+  CodeBlockItem,
+  CodeBlockContent,
+  CodeBlockCopyButton,
+} from "./shadcn-io/code-block";
 import { cn } from "../lib/utils";
 
 export type MarkdownContentProps = {
@@ -41,25 +49,57 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
             };
             const className: string = codeProps.className ?? "";
             const languageMatch = /(?:^|\s)language-([^\s]+)/.exec(className);
-            const language = (languageMatch && languageMatch[1]) || "text";
+            const language = (
+              (languageMatch && languageMatch[1]) ||
+              "text"
+            ).toLowerCase();
 
             const rawChildren = codeProps.children;
             const code = Array.isArray(rawChildren)
               ? rawChildren.join("")
               : (rawChildren?.toString?.() ?? "");
 
+            const isShell = ["sh", "bash", "shell", "zsh"].includes(language);
+
+            if (isShell) {
+              return (
+                <Snippet defaultValue={language}>
+                  <SnippetHeader>
+                    <SnippetTabsList>
+                      <SnippetTabsTrigger value={language}>
+                        {language}
+                      </SnippetTabsTrigger>
+                    </SnippetTabsList>
+                    <SnippetCopyButton aria-label="Copy" value={code} />
+                  </SnippetHeader>
+                  <SnippetTabsContent value={language}>
+                    {code}
+                  </SnippetTabsContent>
+                </Snippet>
+              );
+            }
+
             return (
-              <Snippet defaultValue={language}>
-                <SnippetHeader>
-                  <SnippetTabsList>
-                    <SnippetTabsTrigger value={language}>
-                      {language}
-                    </SnippetTabsTrigger>
-                  </SnippetTabsList>
-                  <SnippetCopyButton aria-label="Copy" value={code} />
-                </SnippetHeader>
-                <SnippetTabsContent value={language}>{code}</SnippetTabsContent>
-              </Snippet>
+              <CodeBlock
+                defaultValue={language}
+                data={[{ language, filename: "", code }]}
+              >
+                <CodeBlockHeader className="flex justify-between">
+                  <div className="px-4 py-1.5 text-muted-foreground text-xs">
+                    {language}
+                  </div>
+                  <CodeBlockCopyButton aria-label="Copy" />
+                </CodeBlockHeader>
+                <CodeBlockBody>
+                  {(item) => (
+                    <CodeBlockItem key={item.language} value={item.language}>
+                      <CodeBlockContent language={item.language}>
+                        {item.code}
+                      </CodeBlockContent>
+                    </CodeBlockItem>
+                  )}
+                </CodeBlockBody>
+              </CodeBlock>
             );
           },
         }}
