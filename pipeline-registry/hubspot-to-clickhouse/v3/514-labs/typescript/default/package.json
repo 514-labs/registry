@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "cd app/hubspot; pnpm run build; cd ../..; moose-cli build --docker",
+    "build": "cd app/hubspot; pnpm run build; cd ../..",
     "test": "vitest run",
     "dev": "moose-cli dev",
     "moose": "moose-cli",

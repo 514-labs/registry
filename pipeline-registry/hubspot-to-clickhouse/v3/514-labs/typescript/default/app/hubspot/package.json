@@ -1,5 +1,5 @@
 {
-  "name": "@workspace/connector-hubspot",
+  "name": "connector-hubspot",
   "version": "0.0.0",
   "private": true,
   "description": "Self-contained TypeScript HubSpot connector (CRM v3) with Private App Token auth",
