@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HubSpot Raw Company",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "properties": {
+      "type": "object",
+      "properties": {
+        "name": { "type": ["string", "null"] },
+        "domain": { "type": ["string", "null"] },
+        "country": { "type": ["string", "null"] },
+        "industry": { "type": ["string", "null"] },
+        "description": { "type": ["string", "null"] },
+        "phone": { "type": ["string", "null"] },
+        "address": { "type": ["string", "null"] },
+        "address2": { "type": ["string", "null"] },
+        "city": { "type": ["string", "null"] },
+        "state": { "type": ["string", "null"] },
+        "zip": { "type": ["string", "null"] },
+        "web_technologies": { "type": ["string", "null"] },
+        "numberofemployees": { "type": ["string", "null"] },
+        "annualrevenue": { "type": ["string", "null"] },
+        "type": { "type": ["string", "null"] },
+        "createdate": { "type": ["string", "null"] },
+        "hs_lastmodifieddate": { "type": ["string", "null"] },
+        "hs_object_id": { "type": ["string", "null"] }
+      },
+      "additionalProperties": { "type": ["string", "null"] }
+    },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "archived": { "type": "boolean" }
+  },
+  "required": ["id", "properties", "createdAt", "updatedAt", "archived"],
+  "additionalProperties": true
+}
