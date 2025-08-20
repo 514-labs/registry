@@ -1,5 +1,5 @@
 import { Task, Workflow } from "@514labs/moose-lib";
-import { createHubSpotConnector, type HubSpotConnector } from "connector-hubspot";
+import { createHubSpotConnector, type HubSpotConnector } from "./hubspot/src";
 
 interface HubSpotDealRawIngestion {
   id: string;

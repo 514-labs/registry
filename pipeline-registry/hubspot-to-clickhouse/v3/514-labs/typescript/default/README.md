@@ -2,21 +2,38 @@
 
 Moose-based pipeline to ingest HubSpot deals into ClickHouse with consumption APIs and a sync workflow.
 
+IMPORTANT: THIS PROJECT REQUIRES AT LEAST NODEJS 20.19 AND PNPM
+
 ## Getting started
+
+### Pre-config
+This project comes from a monorepo. To prepare it for use outside of a monorepo simply edit the `package.json` and remove the `@workspace/` fom the value of the name field. That's it - save your changes and continue.
+
+### Installing
 
 1) Install dependencies
 ```bash
 pnpm i
 ```
 
-2) Install the HubSpot connector (pin to v3)
+2) Build the Hubspot connector code
 ```bash
-bash -i <(curl https://connectors.514.ai/install.sh) hubspot v3 514-labs typescript
+cd app/hubspot
+pnpm i
+cd ../..
 ```
 
-3) Set env vars
+3) Set env vars or use .env file
 ```bash
-export HUBSPOT_TOKEN=xxx
+export HUBSPOT_TOKEN=hs_pat_xxx
+export ANONYMIZE_DATA=true # true to anonmize real hubspot data, false to use actual data
+```
+
+or
+
+```bash
+cp ENV.EXAMPLE .env
+vi .env
 ```
 
 4) Run Moose dev
