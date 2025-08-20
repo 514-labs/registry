@@ -567,11 +567,14 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@4.1.11)
 
-  pipeline-registry/hubspot-to-clickhouse/v2025-07/514-labs/typescript/default:
+  pipeline-registry/hubspot-to-clickhouse/v3/514-labs/typescript/default:
     dependencies:
       '@514labs/moose-lib':
         specifier: latest
         version: 0.5.29(@swc/core@1.13.3(@swc/helpers@0.5.17))(@swc/helpers@0.5.17)(@types/node@24.2.0)(esbuild@0.25.8)(ts-patch@3.3.0)(typia@7.6.4(@samchon/openapi@2.5.3)(typescript@5.8.3))
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.6.1
     devDependencies:
       '@514labs/moose-cli':
         specifier: latest
