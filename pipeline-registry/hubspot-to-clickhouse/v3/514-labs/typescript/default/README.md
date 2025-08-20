@@ -6,11 +6,6 @@ IMPORTANT: THIS PROJECT REQUIRES AT LEAST NODEJS 20.19 AND PNPM
 
 ## Getting started
 
-### Pre-config
-This project comes from a monorepo. To prepare it for use outside of a monorepo simply edit the `package.json` and remove the `@workspace/` fom the value of the name field. That's it - save your changes and continue.
-
-### Installing
-
 1) Install dependencies
 ```bash
 pnpm i
