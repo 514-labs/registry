@@ -8,12 +8,17 @@
   "scripts": {
     "build": "tsup src/index.ts --dts --format esm,cjs",
     "test": "vitest run",
+    "dev": "moose-cli dev",
+    "moose": "moose-cli",
     "lineage": "node scripts/lineage.mjs",
     "lineage:svg": "node scripts/lineage.mjs --svg"
   },
   "engines": {"node": ">=20"},
-  "dependencies": {},
+  "dependencies": {
+    "@514labs/moose-lib": "latest"
+  },
   "devDependencies": {
+    "@514labs/moose-cli": "latest",
     "tsup": "^8.0.0",
     "typescript": "^5.4.0",
     "vitest": "^1.6.0",
