@@ -22,6 +22,7 @@
     "@types/mdx": "^2.0.13",
     "@workspace/registry": "workspace:*",
     "@workspace/ui": "workspace:*",
+    "next-auth": "^5.0.0-beta.25",
     "zod": "^3.25.76",
     "marked": "^12.0.2",
     "class-variance-authority": "^0.7.0",

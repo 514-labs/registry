@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { RequestConnectorForm } from "./request-form";
 
 export default function RequestPage() {
@@ -7,7 +8,9 @@ export default function RequestPage() {
       <p className="text-muted-foreground mb-6">
         Tell us what you need. We’ll open an issue so others can upvote it.
       </p>
-      <RequestConnectorForm />
+      <Suspense fallback={null}>
+        <RequestConnectorForm />
+      </Suspense>
     </div>
   );
 }

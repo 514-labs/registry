@@ -1,6 +1,6 @@
-"use server";
-
+import { NextRequest } from "next/server";
 import { z } from "zod";
+import { auth } from "@/auth";
 
 const schema = z.object({
   identifier: z
@@ -16,20 +16,28 @@ const schema = z.object({
   homepage: z.string().trim().url(),
 });
 
-type Input = z.infer<typeof schema>;
-
-type Result = { ok: true; issueUrl?: string } | { ok: false; error?: string };
-
-export async function requestConnector(input: Input): Promise<Result> {
-  const parsed = schema.safeParse(input);
-  if (!parsed.success) return { ok: false, error: "Invalid input" };
+export async function POST(req: NextRequest) {
+  const json = await req.json().catch(() => null);
+  const parsed = schema.safeParse(json);
+  if (!parsed.success) {
+    return Response.json(
+      { ok: false, error: "invalid-input" },
+      { status: 400 }
+    );
+  }
 
   const { identifier, name, category, tags, description, homepage } =
     parsed.data;
 
   const owner = "514-labs";
   const repo = "factory";
-  const token = (process.env.GITHUB_PAT ?? "").trim();
+
+  const session = await auth();
+  const token = (
+    (session as any)?.accessToken ??
+    process.env.GITHUB_PAT ??
+    ""
+  ).trim();
 
   const title = `Connector request: ${name} (${identifier})`;
   const bodyLines: string[] = [];
@@ -42,12 +50,12 @@ export async function requestConnector(input: Input): Promise<Result> {
   bodyLines.push("Description:");
   bodyLines.push(description);
 
-  // If no token, we cannot create the issue server-side. Return a client-side fallback link.
   if (!token) {
-    const url = new URL(`https://github.com/${owner}/${repo}/issues/new`);
-    url.searchParams.set("title", title);
-    url.searchParams.set("body", bodyLines.join("\n"));
-    return { ok: true, issueUrl: url.toString() };
+    // Require auth: client should invoke signIn("github")
+    return Response.json(
+      { ok: false, error: "auth-required" },
+      { status: 401 }
+    );
   }
 
   // Try to search for an existing issue with same title to avoid duplicates
@@ -68,11 +76,10 @@ export async function requestConnector(input: Input): Promise<Result> {
         items?: Array<{ html_url: string; title: string }>;
       };
       const match = data.items?.find((i) => i.title === title);
-      if (match) return { ok: true, issueUrl: match.html_url };
+      if (match) return Response.json({ ok: true, issueUrl: match.html_url });
     }
   } catch {}
 
-  // Create new issue
   try {
     const res = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/issues`,
@@ -89,14 +96,20 @@ export async function requestConnector(input: Input): Promise<Result> {
     );
     if (!res.ok) {
       const text = await res.text();
-      return {
-        ok: false,
-        error: `GitHub error: ${res.status} ${res.statusText} - ${text}`,
-      };
+      return Response.json(
+        {
+          ok: false,
+          error: `github-error: ${res.status} ${res.statusText} - ${text}`,
+        },
+        { status: 502 }
+      );
     }
     const data = (await res.json()) as { html_url?: string };
-    return { ok: true, issueUrl: data.html_url };
+    return Response.json({ ok: true, issueUrl: data.html_url });
   } catch (err) {
-    return { ok: false, error: (err as Error).message };
+    return Response.json(
+      { ok: false, error: (err as Error).message },
+      { status: 500 }
+    );
   }
 }

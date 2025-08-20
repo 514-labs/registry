@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { z } from "zod";
 import { Input } from "@ui/components/input";
 import { Textarea } from "@ui/components/textarea";
 import { Label } from "@ui/components/label";
 import { Button } from "@ui/components/button";
 import { Card, CardContent } from "@ui/components/card";
-import { requestConnector } from "./request-server";
+import { signIn } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const formSchema = z.object({
   identifier: z
@@ -29,6 +30,8 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export function RequestConnectorForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [values, setValues] = useState<FormValues>({
     identifier: "",
     name: "",
@@ -43,15 +46,18 @@ export function RequestConnectorForm() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [successUrl, setSuccessUrl] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const autoSubmittedRef = useRef(false);
+
+  const DRAFT_KEY = "connector-request-draft";
 
   function handleChange<K extends keyof FormValues>(key: K, val: string) {
     setValues((s) => ({ ...s, [key]: val }));
   }
 
-  async function onSubmit() {
+  async function submitWithValues(formValues: FormValues) {
     setServerError(null);
     setSuccessUrl(null);
-    const parsed = formSchema.safeParse(values);
+    const parsed = formSchema.safeParse(formValues);
     if (!parsed.success) {
       const fieldErrors: Partial<Record<keyof FormValues, string>> = {};
       for (const issue of parsed.error.issues) {
@@ -63,14 +69,57 @@ export function RequestConnectorForm() {
     }
     setErrors({});
     startTransition(async () => {
-      const res = await requestConnector(parsed.data);
-      if (res.ok) {
-        setSuccessUrl(res.issueUrl ?? null);
+      const res = await fetch("/api/request-connector", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(parsed.data),
+      });
+      const json = (await res.json()) as {
+        ok: boolean;
+        issueUrl?: string;
+        error?: string;
+      };
+      if (json.ok) {
+        setSuccessUrl(json.issueUrl ?? null);
+        try {
+          window.localStorage.removeItem(DRAFT_KEY);
+        } catch {}
       } else {
-        setServerError(res.error ?? "Something went wrong");
+        if (res.status === 401 || json.error === "auth-required") {
+          try {
+            window.localStorage.setItem(DRAFT_KEY, JSON.stringify(formValues));
+          } catch {}
+          await signIn("github", {
+            redirect: true,
+            callbackUrl: "/request?auto=1",
+          });
+          return;
+        }
+        setServerError(json.error ?? "Something went wrong");
       }
     });
   }
+
+  async function onSubmit() {
+    await submitWithValues(values);
+  }
+
+  // After GitHub auth redirect, load draft and auto-submit
+  useEffect(() => {
+    const shouldAuto = searchParams.get("auto") === "1";
+    if (!shouldAuto || autoSubmittedRef.current) return;
+    autoSubmittedRef.current = true;
+    try {
+      const raw = window.localStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      const draft = JSON.parse(raw) as FormValues;
+      setValues(draft);
+      setTimeout(() => {
+        submitWithValues(draft);
+        router.replace("/request");
+      }, 0);
+    } catch {}
+  }, [searchParams, router]);
 
   return (
     <Card>
@@ -169,7 +218,7 @@ export function RequestConnectorForm() {
 
         <div className="flex justify-end">
           <Button disabled={isPending} onClick={onSubmit}>
-            {isPending ? "Submitting..." : "Submit request"}
+            {isPending ? "Submitting..." : "Submit via GitHub"}
           </Button>
         </div>
       </CardContent>
