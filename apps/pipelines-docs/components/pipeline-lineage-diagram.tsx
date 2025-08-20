@@ -549,13 +549,7 @@ function SourceNode({
           <img
             src={data.icon}
             alt="source"
-          <Image
-            src={data.icon}
-            alt="source"
-            width={32}
-            height={32}
             className="h-8 w-8 rounded-sm object-contain"
-            unoptimized
           />
         ) : (
           <Package className="h-8 w-8 text-muted-foreground" />
