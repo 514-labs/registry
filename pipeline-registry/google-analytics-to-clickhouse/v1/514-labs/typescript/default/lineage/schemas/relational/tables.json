@@ -1,0 +1,14 @@
+{
+  "tables": [
+    {
+      "name": "events",
+      "primaryKey": ["event_id"],
+      "columns": [
+        { "name": "event_id", "type": "string" },
+        { "name": "event_name", "type": "string" },
+        { "name": "event_timestamp", "type": "timestamp" },
+        { "name": "user_pseudo_id", "type": "string" }
+      ]
+    }
+  ]
+}

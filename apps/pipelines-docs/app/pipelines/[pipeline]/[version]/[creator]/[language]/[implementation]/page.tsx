@@ -1,30 +1,27 @@
 import Image from "next/image";
 import { Badge } from "@ui/components/badge";
-// import { Card } from "@ui/components/card";
-// import { cn } from "@/lib/utils";
-import {
-  listConnectorIds,
-  readConnector,
-} from "@workspace/registry/connectors";
-import { getIssuePositiveReactionsCountFromMeta } from "@workspace/registry";
-import { PagefindMeta } from "@/components/pagefind-meta";
-import { GitBranch, Code2, Wrench } from "lucide-react";
 import Link from "next/link";
+import { GitBranch, Code2, Wrench } from "lucide-react";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 import ComboBox from "@/components/combobox";
-// import { Separator } from "@ui/components/separator";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@ui/components/tabs";
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 import { marked } from "marked";
-import SchemaDiagram from "@/components/schema-diagram";
-import { getSchemaDiagramInputs } from "@/src/schema/processing";
+import { PagefindMeta } from "@/components/pagefind-meta";
+
+import {
+  getPipelineLineageDiagramInputs,
+  getMooseLineageGraph,
+} from "@/src/schema/processing";
+import { listPipelineIds, readPipeline } from "@workspace/registry/pipelines";
+import PipelineLineageDiagram from "@/components/pipeline-lineage-diagram";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
 
 type Params = {
-  connector: string;
+  pipeline: string;
   version: string;
   creator: string;
   language: string;
@@ -33,14 +30,14 @@ type Params = {
 
 export async function generateStaticParams(): Promise<Params[]> {
   const params: Params[] = [];
-  for (const connector of listConnectorIds()) {
-    const conn = readConnector(connector);
-    if (!conn) continue;
-    for (const provider of conn.providers) {
+  for (const pipeline of listPipelineIds()) {
+    const p = readPipeline(pipeline);
+    if (!p) continue;
+    for (const provider of p.providers) {
       const version = provider.path.split("/").slice(-2)[0];
       for (const impl of provider.implementations) {
         params.push({
-          connector,
+          pipeline,
           version,
           creator: provider.authorId,
           language: impl.language,
@@ -52,22 +49,20 @@ export async function generateStaticParams(): Promise<Params[]> {
   return params;
 }
 
-export default async function ConnectorImplementationPage({
+export default async function PipelineImplementationPage({
   params,
   searchParams,
 }: {
   params: Promise<Params>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const { connector, version, creator, language, implementation } =
-    await params;
+  const { pipeline, version, creator, language, implementation } = await params;
   const sp = await searchParams;
-  // const page = (Array.isArray(sp.page) ? sp.page[0] : sp.page) ?? "readme";
 
-  const conn = readConnector(connector);
-  if (!conn) return null;
+  const reg = readPipeline(pipeline);
+  if (!reg) return null;
 
-  const provider = conn.providers.find((p) => {
+  const provider = reg.providers.find((p) => {
     const pVersion = p.path.split("/").slice(-2)[0];
     return p.authorId === creator && pVersion === version;
   });
@@ -80,41 +75,25 @@ export default async function ConnectorImplementationPage({
     ) ?? provider.implementations.find((impl) => impl.language === language);
   if (!implEntry) return null;
 
-  const meta = conn.root.meta;
-  const displayName = meta?.title ?? meta?.name ?? conn.connectorId;
+  const meta = reg.root.meta;
+  const displayName = meta?.title ?? meta?.name ?? reg.pipelineId;
   const description = meta?.description ?? "";
   const tags = meta?.tags ?? [];
 
-  const reactions = await getIssuePositiveReactionsCountFromMeta(
-    provider.meta,
-    implEntry.language,
-    implEntry.implementation
-  );
-
-  // Get URLs from metadata
+  // URLs
   const registryUrl =
-    provider.meta?.registryUrl ??
     meta?.registryUrl ??
-    `https://github.com/514-labs/factory/tree/main/connector-registry/${connector}/${version}/${creator}`;
-
-  // Get issue URL for current language/implementation
-  const issueValue = provider.meta?.issues?.[implEntry.language];
-  const issueUrl =
-    typeof issueValue === "string"
-      ? issueValue
-      : issueValue && typeof issueValue === "object"
-        ? (issueValue[implEntry.implementation] ?? issueValue["default"])
-        : `https://github.com/514-labs/factory/issues`;
+    `https://github.com/514-labs/factory/tree/main/pipeline-registry/${pipeline}/${version}/${creator}`;
 
   // Build lists and navigation helpers
   const getProviderVersion = (pPath: string): string =>
     pPath.split("/").slice(-2)[0];
   const versions = Array.from(
-    new Set(conn.providers.map((p) => getProviderVersion(p.path)))
+    new Set(reg.providers.map((p) => getProviderVersion(p.path)))
   );
   const creatorsForVersion = Array.from(
     new Set(
-      conn.providers
+      reg.providers
         .filter((p) => getProviderVersion(p.path) === version)
         .map((p) => p.authorId)
     )
@@ -175,7 +154,7 @@ export default async function ConnectorImplementationPage({
     docs[0]?.slug;
 
   // Preload creator avatars for the current version
-  const providersForVersion = conn.providers.filter(
+  const providersForVersion = reg.providers.filter(
     (p) => getProviderVersion(p.path) === version
   );
   const creatorAvatarsEntries = providersForVersion.map((p) => {
@@ -202,29 +181,43 @@ export default async function ConnectorImplementationPage({
 
   const pathFor = (v: string, c: string, l?: string, im?: string): string => {
     const targetProvider =
-      conn.providers.find(
+      reg.providers.find(
         (p) => p.authorId === c && getProviderVersion(p.path) === v
-      ) ?? conn.providers.find((p) => getProviderVersion(p.path) === v)!;
+      ) || reg.providers.find((p) => getProviderVersion(p.path) === v)!;
 
     const lang = l ?? getDefaultLanguage(targetProvider);
     const impl =
       im ?? firstImplForLanguage(targetProvider, lang ?? language) ?? "default";
-    return `/connectors/${connector}/${v}/${targetProvider.authorId}/${lang}/${impl}`;
+    return `/pipelines/${pipeline}/${v}/${targetProvider.authorId}/${lang}/${impl}`;
   };
+
+  // Attempt to show from → to logos when available
+  const fromLogo = `/pipeline-logos/${reg.pipelineId}-from.png`;
+  const toLogo = `/pipeline-logos/${reg.pipelineId}-to.png`;
 
   return (
     <div className="container mx-auto py-16 ">
-      <PagefindMeta type="connector" />
+      <PagefindMeta type="pipeline" />
       <div className="grid grid-cols-12 gap-16">
         <div className="col-span-3">
           <div className="flex flex-col gap-4">
-            <Image
-              src={`/connector-logos/${conn.connectorId}.png`}
-              alt={`${displayName} logo`}
-              width={48}
-              height={48}
-              className="h-12 w-12 rounded-sm object-contain "
-            />
+            <div className="flex items-center gap-2">
+              <Image
+                src={fromLogo}
+                alt={`from logo`}
+                width={32}
+                height={32}
+                className="h-8 w-8 rounded-sm object-contain "
+              />
+              <span className="text-muted-foreground">→</span>
+              <Image
+                src={toLogo}
+                alt={`to logo`}
+                width={32}
+                height={32}
+                className="h-8 w-8 rounded-sm object-contain "
+              />
+            </div>
             <h1 className="text-2xl ">{displayName}</h1>
             <div className="flex flex-wrap gap-2 items-center">
               {tags.map((tag: string) => (
@@ -237,13 +230,6 @@ export default async function ConnectorImplementationPage({
                 <Link href={registryUrl} className="flex items-center gap-1">
                   <SiGithub className="size-3" />
                   <span>Source</span>
-                </Link>
-              </Badge>
-              <Badge variant="secondary">
-                <Link href={issueUrl} className="flex items-center gap-1">
-                  <span>👍</span>
-                  <span className="-ml-1">❤️</span>
-                  <span>{reactions}</span>
                 </Link>
               </Badge>
             </div>
@@ -308,20 +294,59 @@ export default async function ConnectorImplementationPage({
             </div>
           </div>
         </div>
+
         <div className="col-span-9 space-y-8">
+          <h1 className="text-2xl">Lineage</h1>
           {(() => {
-            const { database, endpoints, files, errors } =
-              getSchemaDiagramInputs(implEntry.path);
+            const sourceName =
+              ((provider.meta as any)?.source?.connector?.name as
+                | string
+                | undefined) ||
+              reg.pipelineId.split("-to-")[0] ||
+              "Source";
+            const destinationName =
+              ((provider.meta as any)?.destination?.system as
+                | string
+                | undefined) ||
+              reg.pipelineId.split("-to-")[1] ||
+              "Destination";
+            const transformations = Array.isArray(
+              (provider.meta as any)?.transformations
+            )
+              ? (
+                  (provider.meta as any)?.transformations as Array<
+                    Record<string, any>
+                  >
+                ).map((t) => ({
+                  name: (t as any).name ?? undefined,
+                  type: (t as any).type ?? undefined,
+                  description: (t as any).description ?? undefined,
+                }))
+              : [];
+            const { database } = getPipelineLineageDiagramInputs(
+              implEntry.path
+            );
+            const moose = getMooseLineageGraph(implEntry.path);
+            const schemaTables = (database?.tables ?? []).map((t) => ({
+              label: t.label,
+              columns: (t.columns ?? []).map((c) => ({
+                name: c.name,
+                type: c.type,
+              })),
+            }));
             return (
-              <SchemaDiagram
-                database={database}
-                endpoints={endpoints}
-                files={files}
-                errors={errors}
-                connectorName={displayName}
+              <PipelineLineageDiagram
+                sourceName={sourceName}
+                sourceIcon={fromLogo}
+                destinationName={destinationName}
+                destinationIcon={toLogo}
+                transformations={transformations}
+                schemaTables={schemaTables}
+                mooseGraph={moose}
               />
             );
           })()}
+
           {docs.length === 0 ? (
             <div className="prose dark:prose-invert">
               <h1>Documentation</h1>

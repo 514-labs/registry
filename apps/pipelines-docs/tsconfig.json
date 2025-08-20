@@ -24,7 +24,8 @@
       "@ui": ["../../packages/ui/src/index.ts"],
       "@ui/*": ["../../packages/ui/src/*"],
       "@workspace/registry": ["../../packages/registry/src/index.ts"],
-      "@workspace/registry/types": ["../../packages/registry/src/types.ts"]
+      "@workspace/registry/types": ["../../packages/registry/src/types.ts"],
+      "@workspace/models": ["../../packages/models/src/index.ts"]
     }
   },
   "include": [
