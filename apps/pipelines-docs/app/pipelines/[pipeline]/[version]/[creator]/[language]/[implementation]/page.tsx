@@ -8,7 +8,9 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@ui/components/tabs";
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 // Render docs with markdown so we can enhance code blocks with our Snippet UI
-import { MarkdownContent } from "@ui";
+
+import { MarkdownContent } from "@ui/components/markdown-content";
+
 import { PagefindMeta } from "@/components/pagefind-meta";
 
 import {
