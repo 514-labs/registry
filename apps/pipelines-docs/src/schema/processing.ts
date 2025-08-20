@@ -637,7 +637,8 @@ export function getPipelineLineageDiagramInputs(implementationPath: string): {
       mergeEndpoints(endpoints, schema.endpoints);
       mergeFiles(files, schema.files);
     } catch {
-      errors.push(`Pointer: failed to load connector '${c.name}'`);
+    } catch (err) {
+      errors.push(`Pointer: failed to load connector '${c.name}': ${err instanceof Error ? err.message : String(err)}`);
     }
   }
 
