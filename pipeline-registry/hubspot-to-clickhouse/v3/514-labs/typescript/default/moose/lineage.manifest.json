@@ -1,0 +1,112 @@
+{
+  "version": "1.0",
+  "namespace": "moose",
+  "nodes": [
+    {
+      "id": "conn.hubspot.objects",
+      "type": "connector",
+      "name": "HubSpot Objects API",
+      "namespace": "hubspot",
+      "version": "3",
+      "attrs": {
+        "mode": "etl",
+        "schema_hash": "sha256:placeholder",
+        "connector": {
+          "name": "hubspot",
+          "version": "v3",
+          "author": "514-labs",
+          "language": "typescript",
+          "implementation": "default"
+        },
+        "identifier": "account/placeholder",
+        "schema_path": "pipeline-registry/hubspot-to-clickhouse/v3/514-labs/typescript/default/schemas/index.json"
+      }
+    },
+    {
+      "id": "ingest.hubspot.objects",
+      "type": "ingest_api",
+      "name": "Ingest HubSpot Objects",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": {
+        "route": "/ingest/HubSpotDealRaw",
+        "version": "1",
+        "auth": { "method": "none" }
+      }
+    },
+    {
+      "id": "stream.hubspot.deals",
+      "type": "stream",
+      "name": "hubspot_deals",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": { "partitions": 3, "retention_seconds": 604800 }
+    },
+    {
+      "id": "sync.hubspot.deals",
+      "type": "sync",
+      "name": "sync_hubspot_deals",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": {
+        "semantics": "at_least_once",
+        "flush": { "rows": 100000, "interval_ms": 1000 },
+        "offset_tracking": true
+      }
+    },
+    {
+      "id": "table.hubspot_deals_0_1",
+      "type": "table",
+      "name": "hubspot_deals_0_1",
+      "namespace": "moose",
+      "version": "0.1",
+      "attrs": {
+        "physical_name": "hubspot_deals_0_1",
+        "engine": "MergeTree",
+        "order_by": "(deal_id,stage)"
+      }
+    },
+    {
+      "id": "api.deals_analytics",
+      "type": "consumption_api",
+      "name": "GET /consumption/hubspot-deals-analytics",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": {
+        "route": "/consumption/hubspot-deals-analytics",
+        "query_spec": {
+          "params_schema_ref": "#/schemas/dealsAnalytics",
+          "tables_referenced": ["hubspot_deals_0_1"]
+        },
+        "auth": { "method": "api_key" }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "conn.hubspot.objects",
+      "to": "ingest.hubspot.objects",
+      "type": "produces"
+    },
+    {
+      "from": "ingest.hubspot.objects",
+      "to": "stream.hubspot.deals",
+      "type": "publishes"
+    },
+    {
+      "from": "stream.hubspot.deals",
+      "to": "sync.hubspot.deals",
+      "type": "syncs_to"
+    },
+    {
+      "from": "sync.hubspot.deals",
+      "to": "table.hubspot_deals_0_1",
+      "type": "writes"
+    },
+    {
+      "from": "table.hubspot_deals_0_1",
+      "to": "api.deals_analytics",
+      "type": "queries"
+    }
+  ]
+}

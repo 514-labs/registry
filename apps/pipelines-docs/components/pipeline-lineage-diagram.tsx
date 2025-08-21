@@ -81,6 +81,13 @@ export function PipelineLineageDiagram({
 }) {
   type AnyNode = Node<any>;
 
+  const miniMapMaskColor = "var(--rf-minimap-mask)";
+  const miniMapStyle = {
+    backgroundColor: "var(--muted)",
+  } as React.CSSProperties;
+  const miniMapNodeColor = "var(--card)";
+  const miniMapNodeStrokeColor = "var(--border)";
+
   const elk = useMemo(() => new ELK(), []);
 
   function estimateNodeSize(n: AnyNode): { width: number; height: number } {
@@ -483,7 +490,14 @@ export function PipelineLineageDiagram({
           }}
         >
           <Background />
-          <MiniMap pannable zoomable />
+          <MiniMap
+            pannable
+            zoomable
+            style={miniMapStyle}
+            maskColor={miniMapMaskColor}
+            nodeColor={miniMapNodeColor}
+            nodeStrokeColor={miniMapNodeStrokeColor}
+          />
           <Controls position="bottom-right" />
           <Panel position="top-right" className="space-y-2">
             <div className="w-[320px] relative" ref={searchRef}>

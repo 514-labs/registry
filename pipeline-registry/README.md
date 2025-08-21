@@ -86,27 +86,14 @@ Example provider-level `pipeline.json`:
 }
 ```
 
-## Lineage diagram generation
+## Lineage
 
-Every pipeline should include a clear lineage diagram that shows the source, intermediate systems/transformations, and destination. The TypeScript scaffold includes a script that reads provider-level `pipeline.json` and emits a Mermaid flowchart to the provider `_meta/assets` folder. You can then convert it to SVG with Mermaid CLI.
+Every pipeline should include a clear lineage representation that shows the source, intermediate systems/transformations, and destination.
 
-Example Mermaid (simplified):
+- Prefer a Moose lineage manifest at `moose/lineage.manifest.json` within each implementation. The docs render this manifest directly.
+- Optionally, define a lineage schema overlay under `lineage/schemas/` to enumerate outputs (tables, files) and pointer datasets to connectors. The docs UI derives diagrams from those schemas when present.
 
-```mermaid
-flowchart TD
-  source([GA4]) --> s3_raw[(S3 raw)]
-  s3_raw --> normalize_events{{Normalize}}
-  normalize_events --> dest[(ClickHouse analytics.events)]
-```
-
-Generation (from a TypeScript implementation):
-
-```
-pnpm -C {pipeline}/{version}/{author}/typescript/{implementation} run lineage
-pnpm -C {pipeline}/{version}/{author}/typescript/{implementation} run lineage:svg
-```
-
-This will write `lineage.mmd` and `lineage.svg` under `{pipeline}/{version}/{author}/_meta/assets/`.
+We no longer scaffold or ship per-implementation lineage generator scripts. Instead, author the manifest and schemas directly alongside the implementation.
 
 ## Scaffolds
 
@@ -114,7 +101,7 @@ The `_scaffold/` directory contains JSON files that describe how to generate pip
 
 - `meta.json`: root, version, and provider `_meta` scaffolds (assets only; no docs). Creates `pipeline.json` descriptors
 - `python.json`: Python implementation scaffold focused on pipeline transforms/utilities
-- `typescript.json`: TypeScript implementation scaffold (includes docs and lineage generation scripts)
+- `typescript.json`: TypeScript implementation scaffold (includes docs and lineage placeholders; no lineage scripts)
 
 Each scaffold uses variables:
 

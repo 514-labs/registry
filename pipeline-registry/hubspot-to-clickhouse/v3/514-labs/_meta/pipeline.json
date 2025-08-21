@@ -1,6 +1,7 @@
 {
   "$schema": "https://schemas.connector-factory.dev/pipeline.schema.json",
-  "name": "hubspot-to-clickhouse",
+  "identifier": "hubspot-to-clickhouse",
+  "name": "HubSpot to ClickHouse",
   "author": "514-labs",
   "authorType": "organization",
   "version": "v3",
@@ -14,7 +15,11 @@
   },
   "systems": [],
   "transformations": [],
-  "destination": { "system": "clickhouse", "database": "analytics", "table": "hubspot_objects" },
+  "destination": {
+    "system": "clickhouse",
+    "database": "analytics",
+    "table": "hubspot_objects"
+  },
   "lineage": { "nodes": [], "edges": [] },
   "maintainers": []
 }

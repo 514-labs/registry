@@ -2,7 +2,7 @@
   "$schema": "https://schemas.connector-factory.dev/scaffold.schema.json",
   "scaffold": "typescript",
   "version": "1.0.0",
-  "description": "TypeScript implementation scaffold for a pipeline. Includes lineage generation to provider _meta/assets.",
+  "description": "TypeScript implementation scaffold for a pipeline.",
   "variables": {
     "pipeline": {
       "description": "Pipeline name (kebab-case).",
@@ -65,12 +65,12 @@
                         {
                           "type": "file",
                           "name": "README.md",
-                          "template": "# {pipeline} (TypeScript)\n\nTypeScript helpers for the `{pipeline}` pipeline by `{author}`.\n\n- Run lineage generation: `pnpm run lineage` or `pnpm run lineage:svg`\n- See `schemas/index.json` for optional machine-readable dataset definitions and accompanying Markdown docs.\n"
+                          "template": "# {pipeline} (TypeScript)\n\nTypeScript helpers for the `{pipeline}` pipeline by `{author}`.\n\n- See `schemas/index.json` for optional machine-readable dataset definitions and accompanying Markdown docs.\n- Maintain lineage in `moose/lineage.manifest.json` and optionally under `lineage/schemas`.\n"
                         },
                         {
                           "type": "file",
                           "name": "package.json",
-                          "template": "{\n  \"name\": \"{packageName}\",\n  \"version\": \"0.1.0\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\",\n  \"scripts\": {\n    \"build\": \"tsup src/index.ts --dts --format esm,cjs\",\n    \"test\": \"vitest run\",\n    \"lineage\": \"node scripts/lineage.mjs\",\n    \"lineage:svg\": \"node scripts/lineage.mjs --svg\"\n  },\n  \"engines\": {\"node\": \">=20\"},\n  \"dependencies\": {},\n  \"devDependencies\": {\n    \"tsup\": \"^8.0.0\",\n    \"typescript\": \"^5.4.0\",\n    \"vitest\": \"^1.6.0\",\n    \"@mermaid-js/mermaid-cli\": \"^10.9.0\"\n  }\n}\n"
+                          "template": "{\n  \"name\": \"{packageName}\",\n  \"version\": \"0.1.0\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\",\n  \"scripts\": {\n    \"build\": \"tsup src/index.ts --dts --format esm,cjs\",\n    \"test\": \"vitest run\"\n  },\n  \"engines\": {\"node\": \">=20\"},\n  \"dependencies\": {},\n  \"devDependencies\": {\n    \"tsup\": \"^8.0.0\",\n    \"typescript\": \"^5.4.0\",\n    \"vitest\": \"^1.6.0\"\n  }\n}\n"
                         },
                         {
                           "type": "file",
@@ -228,17 +228,7 @@
                             }
                           ]
                         },
-                        {
-                          "type": "dir",
-                          "name": "scripts",
-                          "children": [
-                            {
-                              "type": "file",
-                              "name": "lineage.mjs",
-                              "template": "import { readFile, writeFile, mkdir } from 'node:fs/promises'\nimport path from 'node:path'\nimport { spawn } from 'node:child_process'\n\nconst providerMetaDir = path.resolve(process.cwd(), '../../_meta')\nconst assetsDir = path.join(providerMetaDir, 'assets')\nconst pipelineJsonPath = path.join(providerMetaDir, 'pipeline.json')\nconst mmdPath = path.join(assetsDir, 'lineage.mmd')\nconst svgPath = path.join(assetsDir, 'lineage.svg')\n\nfunction shapeFor(kind) {\n  if (kind === 'source') return '([%LABEL%])'\n  if (kind === 'transform') return '{{%LABEL%}}'\n  return '[(%LABEL%)]' // system and destination\n}\n\nfunction labelForDestination(dest) {\n  if (!dest) return 'Destination'\n  const parts = [dest.system || 'dest']\n  if (dest.database) parts.push(dest.database)\n  if (dest.table) parts[parts.length - 1] += `.${dest.table}`\n  return parts.join(' ')\n}\n\nfunction deriveFromSpec(spec) {\n  const nodes = []\n  const edges = []\n  const sourceId = 'source'\n  nodes.push({ id: sourceId, kind: 'source', label: spec?.source?.connector?.name || spec?.source?.type || 'source' })\n  const systemIds = []\n  for (let i = 0; i < (spec.systems?.length || 0); i++) {\n    const sys = spec.systems[i]\n    const id = sys.id || `system_${i + 1}`\n    nodes.push({ id, kind: 'system', label: sys.label || sys.type || id })\n    systemIds.push(id)\n  }\n  const transformIds = []\n  for (let i = 0; i < (spec.transformations?.length || 0); i++) {\n    const t = spec.transformations[i]\n    const id = t.id || `transform_${i + 1}`\n    nodes.push({ id, kind: 'transform', label: t.label || t.type || id })\n    transformIds.push(id)\n  }\n  const destId = 'dest'\n  nodes.push({ id: destId, kind: 'destination', label: labelForDestination(spec.destination) })\n  // Chain: source -> systems -> transforms -> dest\n  let prev = sourceId\n  const chain = [...systemIds, ...transformIds, destId]\n  for (const next of chain) { edges.push({ from: prev, to: next }) ; prev = next }\n  return { nodes, edges }\n}\n\nfunction toMermaid(lineage) {\n  const lines = ['flowchart TD']\n  for (const n of lineage.nodes) {\n    const shape = shapeFor(n.kind)\n    const safeLabel = (n.label || n.id).replace(/\\n/g, ' ')\n    lines.push(`  ${n.id}${shape.replace('%LABEL%', safeLabel)}`)\n  }\n  for (const e of lineage.edges) {\n    const lbl = e.label ? `|${e.label}|` : ''\n    lines.push(`  ${e.from} -->${lbl} ${e.to}`)\n  }\n  return lines.join('\n') + '\n'\n}\n\nasync function main() {\n  await mkdir(assetsDir, { recursive: true })\n  const raw = await readFile(pipelineJsonPath, 'utf8')\n  const spec = JSON.parse(raw)\n  const lineage = (spec.lineage && spec.lineage.nodes?.length) ? spec.lineage : deriveFromSpec(spec)\n  const mermaid = toMermaid(lineage)\n  await writeFile(mmdPath, mermaid, 'utf8')\n  if (process.argv.includes('--svg')) {\n    await new Promise((resolve) => {\n      const child = spawn(process.platform === 'win32' ? 'npx.cmd' : 'npx', ['-y', '-p', '@mermaid-js/mermaid-cli', 'mmdc', '-i', mmdPath, '-o', svgPath], { stdio: 'inherit' })\n      child.on('exit', () => resolve())\n    })\n  }\n  console.log('Wrote', mmdPath, process.argv.includes('--svg') ? 'and SVG' : '')\n}\n\nmain().catch((err) => { console.error(err); process.exit(1) })\n"
-                            }
-                          ]
-                        },
+
                         {
                           "type": "dir",
                           "name": "tests",

@@ -7,9 +7,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsup src/index.ts --dts --format esm,cjs",
-    "test": "vitest run",
-    "lineage": "node scripts/lineage.mjs",
-    "lineage:svg": "node scripts/lineage.mjs --svg"
+    "test": "vitest run"
   },
   "engines": {
     "node": ">=20"
@@ -18,7 +16,6 @@
   "devDependencies": {
     "tsup": "^8.0.0",
     "typescript": "^5.4.0",
-    "vitest": "^1.6.0",
-    "@mermaid-js/mermaid-cli": "^10.9.0"
+    "vitest": "^1.6.0"
   }
 }
