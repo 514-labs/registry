@@ -22,6 +22,10 @@ DEFAULT_REPO_BRANCH="main"
 REPO_BRANCH="${REPO_BRANCH:-$DEFAULT_REPO_BRANCH}"
 REGISTRY_JSON_URL="${REGISTRY_JSON_URL:-https://pipelines.514.ai/registry.json}"
 
+# Optional post-install setup behavior
+RUN_SETUP="${RUN_SETUP:-1}"
+SETUP_STRICT="${SETUP_STRICT:-0}"
+
 # Positional args (required)
 PIPELINE_ID=""
 PIPELINE_VERSION=""
@@ -83,6 +87,9 @@ FLAGS:
                   --author <a1,a2>          Filter by author(s)
                   --language <l1,l2>        Filter by language(s)
                   --implementation <i1,i2>  Filter by implementation(s)
+
+  --no-setup       Skip running scripts/initial-setup.sh post-install
+  --setup-strict   Treat initial-setup.sh failure as fatal (default: warn only)
 
   --dest <dir>  Destination directory for installation (absolute or relative)
                 Default: ./<name>
@@ -271,6 +278,10 @@ parse_args() {
         FILTER_LANGUAGE="${2:-}"; shift 2;;
       --implementation)
         FILTER_IMPLEMENTATION="${2:-}"; shift 2;;
+      --no-setup)
+        RUN_SETUP="0"; shift;;
+      --setup-strict)
+        SETUP_STRICT="1"; shift;;
       --dest)
         DESTINATION="${2:-}"; shift 2;;
       -h|--help)
@@ -305,6 +316,33 @@ show_next_steps() {
   echo "  - Review $dest_dir/README.md"
   echo "  - Review $dest_dir/docs/getting-started.md"
   echo "  - Review $dest_dir/examples/"
+}
+
+# Optionally run scripts/initial-setup.sh inside the installed pipeline directory
+run_initial_setup() {
+  local dest_dir="$1"
+  if [ "${RUN_SETUP:-1}" != "1" ]; then
+    return
+  fi
+
+  local setup_script="$dest_dir/scripts/initial-setup.sh"
+  if [ -f "$setup_script" ]; then
+    echo "🔧 Running post-install setup: scripts/initial-setup.sh"
+    chmod +x "$setup_script" || true
+    (
+      cd "$dest_dir"
+      "$setup_script"
+    )
+    local rc=$?
+    if [ $rc -ne 0 ]; then
+      echo "⚠️  initial-setup.sh exited with code $rc"
+      if [ "${SETUP_STRICT:-0}" = "1" ]; then
+        exit $rc
+      fi
+    else
+      echo "✅ Post-install setup completed"
+    fi
+  fi
 }
 
 main() {
@@ -344,6 +382,8 @@ main() {
   fi
   copy_connector_into_subdir "$src_dir" "$dest_dir"
   echo ""
+
+  run_initial_setup "$dest_dir"
 
   show_next_steps
 }
