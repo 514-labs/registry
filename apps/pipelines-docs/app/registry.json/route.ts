@@ -1,64 +1,32 @@
 import { NextResponse } from "next/server";
-import { readdirSync, Dirent, existsSync, readFileSync } from "fs";
-import { join } from "path";
-import { getConnectorsRegistryPath } from "@workspace/registry/connectors";
-import type { ProviderMeta } from "@workspace/registry/types";
+import { listPipelines } from "@workspace/registry/pipelines";
 
 export const dynamic = "force-static";
 
-function readJsonSafe<T = unknown>(filePath: string): T | undefined {
-  try {
-    if (!existsSync(filePath)) return undefined;
-    const raw = readFileSync(filePath, "utf-8");
-    return JSON.parse(raw) as T;
-  } catch (error) {
-    console.error(`Error parsing JSON file: ${filePath}`, error);
-    return undefined;
-  }
-}
-
-function isVisibleDir(entry: Dirent): boolean {
-  return (
-    entry.isDirectory() &&
-    !entry.name.startsWith("_") &&
-    !entry.name.startsWith(".")
-  );
-}
-
 export async function GET() {
-  const registryDir = getConnectorsRegistryPath();
-  const result: ProviderMeta[] = [];
+  // Flatten to a list of pipeline permutations suitable for the installer
+  // Shape: [{ name, version, author, language, implementation }]
+  const pipelines = listPipelines();
 
-  // Walk: connector-registry/<name>/<version>/<author>/<language>
-  const connectorDirs = readdirSync(registryDir, {
-    withFileTypes: true,
-  }).filter(isVisibleDir);
-  for (const connectorEntry of connectorDirs) {
-    const name = connectorEntry.name;
-    const connectorPath = join(registryDir, name);
+  // Re-derive properties accurately since we have all components in paths
+  const accurate = pipelines.flatMap((p) =>
+    p.providers.flatMap((provider) =>
+      provider.implementations.map((impl) => {
+        // provider.path: pipeline-registry/<id>/<version>/<author>
+        const parts = provider.path.split("/");
+        const len = parts.length;
+        const version = parts[len - 2];
+        const author = parts[len - 1];
+        return {
+          name: p.pipelineId,
+          version,
+          author,
+          language: impl.language,
+          implementation: impl.implementation,
+        };
+      })
+    )
+  );
 
-    const versionEntries = readdirSync(connectorPath, {
-      withFileTypes: true,
-    }).filter(isVisibleDir);
-    for (const versionEntry of versionEntries) {
-      const version = versionEntry.name;
-      const versionPath = join(connectorPath, version);
-
-      const authorEntries = readdirSync(versionPath, {
-        withFileTypes: true,
-      }).filter(isVisibleDir);
-      for (const authorEntry of authorEntries) {
-        const authorPath = join(versionPath, authorEntry.name);
-        const authorMeta = readJsonSafe<ProviderMeta>(
-          join(authorPath, "_meta", "connector.json")
-        );
-        if (authorMeta) {
-          // Push the author-level meta object exactly as-is
-          result.push(authorMeta);
-        }
-      }
-    }
-  }
-
-  return NextResponse.json({ connectors: result });
+  return NextResponse.json(accurate);
 }

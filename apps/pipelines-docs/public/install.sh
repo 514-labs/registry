@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Connector Factory installer
+# Pipeline Registry installer
 #
 # Responsibilities:
 # - Download the 514-labs/factory repo archive (zip) to a temp dir
@@ -12,7 +12,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-SCRIPT_NAME="bash -i <(curl https://connectors.514.ai/install.sh)"
+SCRIPT_NAME="bash -i <(curl https://pipelines.514.ai/install.sh)"
 
 # ===== Constants =====
 REPO_OWNER="514-labs"
@@ -20,13 +20,14 @@ REPO_NAME="factory"
 DEFAULT_REPO_BRANCH="main"
 # Allow override via environment
 REPO_BRANCH="${REPO_BRANCH:-$DEFAULT_REPO_BRANCH}"
-REGISTRY_JSON_URL="${REGISTRY_JSON_URL:-https://connectors.514.ai/registry.json}"
+REGISTRY_JSON_URL="${REGISTRY_JSON_URL:-https://pipelines.514.ai/registry.json}"
 
 # Positional args (required)
-CONNECTOR_NAME=""
-CONNECTOR_VERSION=""
-CONNECTOR_AUTHOR=""
-CONNECTOR_LANGUAGE=""
+PIPELINE_ID=""
+PIPELINE_VERSION=""
+PIPELINE_AUTHOR=""
+PIPELINE_LANGUAGE=""
+PIPELINE_IMPLEMENTATION="default"
 
 # ===== Internal =====
 TMP_DIR=""
@@ -35,6 +36,7 @@ FILTER_NAME=""
 FILTER_VERSION=""
 FILTER_AUTHOR=""
 FILTER_LANGUAGE=""
+FILTER_IMPLEMENTATION=""
 DESTINATION=""
 
 # Remove temp dir on exit
@@ -50,33 +52,37 @@ trap cleanup EXIT INT TERM
 # Print help and usage information
 print_usage() {
   cat <<EOF
-Install a connector from $REPO_OWNER/$REPO_NAME into a new subdirectory in your current directory.
+Install a pipeline from $REPO_OWNER/$REPO_NAME into a new subdirectory in your current directory.
 
 USAGE:
-  $SCRIPT_NAME <name> <version> <author> <language> [--dest <dir>]
-  $SCRIPT_NAME --list [--name <n1,n2>] [--version <v1,v2>] [--author <a1,a2>] [--language <l1,l2>]
+  $SCRIPT_NAME <name> <version> <author> <language> [implementation] [--dest <dir>]
+  $SCRIPT_NAME --list [--name <n1,n2>] [--version <v1,v2>] [--author <a1,a2>] [--language <l1,l2>] [--implementation <i1,i2>]
   $SCRIPT_NAME --help
 
 EXAMPLES:
-  # Install Google Analytics v4 by author fiveonefour in TypeScript into the current directory
-  $SCRIPT_NAME google-analytics v4 fiveonefour typescript
+  # Install the GA→ClickHouse pipeline v1 by 514-labs in TypeScript (default implementation)
+  $SCRIPT_NAME google-analytics-to-clickhouse v1 514-labs typescript
+  # Or specify implementation explicitly
+  $SCRIPT_NAME google-analytics-to-clickhouse v1 514-labs typescript default
 
-  # List available connectors to install
+  # List available pipelines to install
   $SCRIPT_NAME --list
 
 POSITIONAL ARGUMENTS:
-  name          Connector name (e.g., google-analytics, s3)
-  version       Data source version (e.g., v3, v4)
-  author        Author/vendor (e.g., fiveonefour)
-  language      Language (e.g., typescript, python)
+  name            Pipeline id (e.g., google-analytics-to-clickhouse)
+  version         Pipeline version (e.g., v1)
+  author          Author/vendor (e.g., 514-labs)
+  language        Language (e.g., typescript, python)
+  implementation  Implementation (e.g., default) — optional; defaults to "default"
 
 FLAGS:
-  --list        List available connectors to install
+  --list        List available pipelines to install
                 Optional filters (comma-separated, case-insensitive substrings):
-                  --name <n1,n2>       Filter by connector name(s)
-                  --version <v1,v2>    Filter by version(s)
-                  --author <a1,a2>     Filter by author(s)
-                  --language <l1,l2>   Filter by language(s)
+                  --name <n1,n2>            Filter by pipeline id(s)
+                  --version <v1,v2>         Filter by version(s)
+                  --author <a1,a2>          Filter by author(s)
+                  --language <l1,l2>        Filter by language(s)
+                  --implementation <i1,i2>  Filter by implementation(s)
 
   --dest <dir>  Destination directory for installation (absolute or relative)
                 Default: ./<name>
@@ -84,12 +90,12 @@ FLAGS:
   -h, --help    Show this help
 
 ENVIRONMENT:
-  REGISTRY_JSON_URL URL to fetch connector registry JSON from.
+  REGISTRY_JSON_URL URL to fetch pipeline registry JSON from.
                     Default: $REGISTRY_JSON_URL
-                    Example: REGISTRY_JSON_URL=https://connectors.514.ai/registry.json $SCRIPT_NAME --list
+                    Example: REGISTRY_JSON_URL=https://pipelines.514.ai/registry.json $SCRIPT_NAME --list
   REPO_BRANCH       Git branch to install from.
                     Default: $DEFAULT_REPO_BRANCH
-                    Example: REPO_BRANCH=my-branch $SCRIPT_NAME google-analytics v4 fiveonefour typescript
+                    Example: REPO_BRANCH=my-branch $SCRIPT_NAME google-analytics-to-clickhouse v1 514-labs typescript
 EOF
 }
 
@@ -152,13 +158,13 @@ find_extract_root() {
   echo "$root"
 }
 
-# Verify that the connector path exists within the extracted tree
-validate_connector_exists() {
+# Verify that the pipeline path exists within the extracted tree
+validate_pipeline_exists() {
   local root_dir="$1"; local rel_path="$2"
   local full_path="$root_dir/$rel_path"
 
   if [ ! -d "$full_path" ]; then
-    echo "❌ Connector path not found: $rel_path" >&2
+    echo "❌ Pipeline path not found: $rel_path" >&2
     echo "❌ Searched: $full_path" >&2
     exit 1
   fi
@@ -188,16 +194,16 @@ copy_connector_into_subdir() {
   echo "✅ Installed into $dest_dir"
 }
 
-# List connectors in a copy-pasteable format
-list_connectors() {
+# List pipelines in a copy-pasteable format
+list_pipelines() {
   echo ""
-  echo "🚀 Install a connector with this command:"
-  echo "$SCRIPT_NAME <name> <version> <author> <language>"
+  echo "🚀 Install a pipeline with this command:"
+  echo "$SCRIPT_NAME <name> <version> <author> <language> [implementation]"
   echo ""
 
   if ! command -v jq >/dev/null 2>&1; then
     echo "❌ --list requires 'jq' for readable permutations." >&2
-    echo "Install jq or browse: https://github.com/$REPO_OWNER/$REPO_NAME/tree/$REPO_BRANCH/connector-registry" >&2
+    echo "Install jq or browse: https://github.com/$REPO_OWNER/$REPO_NAME/tree/$REPO_BRANCH/pipeline-registry" >&2
     exit 1
   fi
 
@@ -210,7 +216,7 @@ list_connectors() {
   if [ "$http_status" != "200" ]; then
     echo "❌ Unable to fetch $REGISTRY_JSON_URL" >&2
     echo "   HTTP status: ${http_status:-unknown}" >&2
-    echo "   You can also browse: https://github.com/$REPO_OWNER/$REPO_NAME/tree/$REPO_BRANCH/connector-registry" >&2
+    echo "   You can also browse: https://github.com/$REPO_OWNER/$REPO_NAME/tree/$REPO_BRANCH/pipeline-registry" >&2
     return
   fi
 
@@ -219,19 +225,20 @@ list_connectors() {
     --arg f_name "$FILTER_NAME" \
     --arg f_version "$FILTER_VERSION" \
     --arg f_author "$FILTER_AUTHOR" \
-    --arg f_language "$FILTER_LANGUAGE" '
+    --arg f_language "$FILTER_LANGUAGE" \
+    --arg f_impl "$FILTER_IMPLEMENTATION" '
     def mkpat(s): (s|split(",")|map(ascii_downcase|gsub("^\\s+|\\s+$";""))|join("|"));
     def want(field; s): (s=="" or (field|ascii_downcase|test(mkpat(s))));
-    (.connectors // [])
-    | .[] as $c
-    | ($c.languages // [])[] as $l
+    (. // [])
+    | .[]
     | select(
-        want($c.name; $f_name) and
-        want($c.version; $f_version) and
-        want($c.author; $f_author) and
-        want($l; $f_language)
+        want(.name; $f_name) and
+        want(.version; $f_version) and
+        want(.author; $f_author) and
+        want(.language; $f_language) and
+        want(.implementation; $f_impl)
       )
-    | "\($c.name) \($c.version) \($c.author) \($l)"
+    | "\(.name) \(.version) \(.author) \(.language) \(.implementation)"
   ')
 
   if [ -z "$perms" ]; then
@@ -242,7 +249,7 @@ list_connectors() {
     return
   fi
 
-  echo "🔍 Available connectors:"
+  echo "🔍 Available pipelines:"
   echo "$perms"
   echo ""
 }
@@ -262,6 +269,8 @@ parse_args() {
         FILTER_AUTHOR="${2:-}"; shift 2;;
       --language)
         FILTER_LANGUAGE="${2:-}"; shift 2;;
+      --implementation)
+        FILTER_IMPLEMENTATION="${2:-}"; shift 2;;
       --dest)
         DESTINATION="${2:-}"; shift 2;;
       -h|--help)
@@ -275,14 +284,19 @@ parse_args() {
   # Assign positionals if not in list/help mode
   if [ "$MODE" != "list" ]; then
     if [ ${#POSITIONALS[@]} -lt 4 ]; then
-      echo "❌ Expected 4 positional arguments: <name> <version> <author> <language>" >&2
+      echo "❌ Expected at least 4 positional arguments: <name> <version> <author> <language> [implementation]" >&2
       print_usage
       exit 1
     fi
-    CONNECTOR_NAME="${POSITIONALS[0]}"
-    CONNECTOR_VERSION="${POSITIONALS[1]}"
-    CONNECTOR_AUTHOR="${POSITIONALS[2]}"
-    CONNECTOR_LANGUAGE="${POSITIONALS[3]}"
+    PIPELINE_ID="${POSITIONALS[0]}"
+    PIPELINE_VERSION="${POSITIONALS[1]}"
+    PIPELINE_AUTHOR="${POSITIONALS[2]}"
+    PIPELINE_LANGUAGE="${POSITIONALS[3]}"
+    if [ ${#POSITIONALS[@]} -ge 5 ]; then
+      PIPELINE_IMPLEMENTATION="${POSITIONALS[4]}"
+    else
+      PIPELINE_IMPLEMENTATION="default"
+    fi
   fi
 }
 
@@ -297,16 +311,16 @@ main() {
   parse_args "$@"
 
   if [ "$MODE" = "list" ]; then
-    list_connectors
+    list_pipelines
     exit 0
   fi
 
   ensure_dependencies
   create_tmpdir
 
-  local rel_path="connector-registry/$CONNECTOR_NAME/$CONNECTOR_VERSION/$CONNECTOR_AUTHOR/$CONNECTOR_LANGUAGE"
+  local rel_path="pipeline-registry/$PIPELINE_ID/$PIPELINE_VERSION/$PIPELINE_AUTHOR/$PIPELINE_LANGUAGE/$PIPELINE_IMPLEMENTATION"
   echo ""
-  echo "Connector: $rel_path"
+  echo "Pipeline: $rel_path"
   echo "Source:    $REPO_OWNER/$REPO_NAME@$REPO_BRANCH"
   echo ""
 
@@ -320,13 +334,13 @@ main() {
   echo ""
 
   root=$(find_extract_root)
-  validate_connector_exists "$root" "$rel_path"
+  validate_pipeline_exists "$root" "$rel_path"
 
   src_dir="$root/$rel_path"
   if [ -n "${DESTINATION:-}" ]; then
     dest_dir="$DESTINATION"
   else
-    dest_dir="$PWD/$CONNECTOR_NAME"
+    dest_dir="$PWD/$PIPELINE_ID"
   fi
   copy_connector_into_subdir "$src_dir" "$dest_dir"
   echo ""
