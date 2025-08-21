@@ -68,7 +68,7 @@ export const HubSpotDealsAnalyticsApi = new ConsumptionApi<
           count(case when isWon then 1 end) as wonCount,
           round(count(case when isWon then 1 end) * 100.0 / count(*), 2) as winRate,
           avg(daysToClose) as avgDaysToClose
-        FROM HubSpotDeal FINAL
+        FROM HubSpotDeal
         WHERE isArchived = ${includeArchived} AND currency = ${currency}
         GROUP BY pipeline, pipelineLabel
         ORDER BY totalAmount DESC
@@ -86,7 +86,7 @@ export const HubSpotDealsAnalyticsApi = new ConsumptionApi<
           count(case when isWon then 1 end) as wonCount,
           round(count(case when isWon then 1 end) * 100.0 / count(*), 2) as winRate,
           avg(daysToClose) as avgDaysToClose
-        FROM HubSpotDeal FINAL
+        FROM HubSpotDeal 
         WHERE isArchived = ${includeArchived}
         GROUP BY pipeline, pipelineLabel
         ORDER BY totalAmount DESC
@@ -106,7 +106,7 @@ export const HubSpotDealsAnalyticsApi = new ConsumptionApi<
           count(case when isWon then 1 end) as wonCount,
           round(count(case when isWon then 1 end) * 100.0 / count(*), 2) as winRate,
           avg(daysToClose) as avgDaysToClose
-        FROM HubSpotDeal FINAL
+        FROM HubSpotDeal
         WHERE isArchived = ${includeArchived} AND currency = ${currency}
         GROUP BY toYYYYMM(createdAt), formatDateTime(createdAt, '%Y-%m')
         ORDER BY groupField DESC
@@ -124,7 +124,7 @@ export const HubSpotDealsAnalyticsApi = new ConsumptionApi<
           count(case when isWon then 1 end) as wonCount,
           round(count(case when isWon then 1 end) * 100.0 / count(*), 2) as winRate,
           avg(daysToClose) as avgDaysToClose
-        FROM HubSpotDeal FINAL
+        FROM HubSpotDeal 
         WHERE isArchived = ${includeArchived}
         GROUP BY toYYYYMM(createdAt), formatDateTime(createdAt, '%Y-%m')
         ORDER BY groupField DESC
@@ -144,7 +144,7 @@ export const HubSpotDealsAnalyticsApi = new ConsumptionApi<
           count(case when isWon then 1 end) as wonCount,
           round(count(case when isWon then 1 end) * 100.0 / count(*), 2) as winRate,
           avg(daysToClose) as avgDaysToClose
-        FROM HubSpotDeal FINAL
+        FROM HubSpotDeal
         WHERE isArchived = ${includeArchived} AND currency = ${currency}
         GROUP BY stage, stageLabel
         ORDER BY totalAmount DESC
@@ -162,7 +162,7 @@ export const HubSpotDealsAnalyticsApi = new ConsumptionApi<
           count(case when isWon then 1 end) as wonCount,
           round(count(case when isWon then 1 end) * 100.0 / count(*), 2) as winRate,
           avg(daysToClose) as avgDaysToClose
-        FROM HubSpotDeal FINAL
+        FROM HubSpotDeal
         WHERE isArchived = ${includeArchived}
         GROUP BY stage, stageLabel
         ORDER BY totalAmount DESC
@@ -191,7 +191,7 @@ export const HubSpotDealLookupApi = new ConsumptionApi<
         id, dealName, amount, currency, stage, stageLabel, pipeline, pipelineLabel,
         closeDate, createdAt, ownerId, isWon, isClosed, contactCount,
         associatedContacts, associatedCompanies
-      FROM HubSpotDeal FINAL
+      FROM HubSpotDeal 
       WHERE id = ${dealId}
       ORDER BY lastModifiedAt DESC
       LIMIT ${limit}
@@ -202,7 +202,7 @@ export const HubSpotDealLookupApi = new ConsumptionApi<
         id, dealName, amount, currency, stage, stageLabel, pipeline, pipelineLabel,
         closeDate, createdAt, ownerId, isWon, isClosed, contactCount,
         associatedContacts, associatedCompanies
-      FROM HubSpotDeal FINAL
+      FROM HubSpotDeal 
       WHERE dealName ILIKE ${`%${dealName}%`} AND ownerId = ${ownerId} AND stage = ${stage}
       ORDER BY lastModifiedAt DESC
       LIMIT ${limit}
@@ -213,7 +213,7 @@ export const HubSpotDealLookupApi = new ConsumptionApi<
         id, dealName, amount, currency, stage, stageLabel, pipeline, pipelineLabel,
         closeDate, createdAt, ownerId, isWon, isClosed, contactCount,
         associatedContacts, associatedCompanies
-      FROM HubSpotDeal FINAL
+      FROM HubSpotDeal 
       WHERE dealName ILIKE ${`%${dealName}%`} AND ownerId = ${ownerId}
       ORDER BY lastModifiedAt DESC
       LIMIT ${limit}
@@ -224,7 +224,7 @@ export const HubSpotDealLookupApi = new ConsumptionApi<
         id, dealName, amount, currency, stage, stageLabel, pipeline, pipelineLabel,
         closeDate, createdAt, ownerId, isWon, isClosed, contactCount,
         associatedContacts, associatedCompanies
-      FROM HubSpotDeal FINAL
+      FROM HubSpotDeal 
       WHERE dealName ILIKE ${`%${dealName}%`} AND stage = ${stage}
       ORDER BY lastModifiedAt DESC
       LIMIT ${limit}
@@ -235,7 +235,7 @@ export const HubSpotDealLookupApi = new ConsumptionApi<
         id, dealName, amount, currency, stage, stageLabel, pipeline, pipelineLabel,
         closeDate, createdAt, ownerId, isWon, isClosed, contactCount,
         associatedContacts, associatedCompanies
-      FROM HubSpotDeal FINAL
+      FROM HubSpotDeal 
       WHERE dealName ILIKE ${`%${dealName}%`}
       ORDER BY lastModifiedAt DESC
       LIMIT ${limit}
@@ -246,7 +246,7 @@ export const HubSpotDealLookupApi = new ConsumptionApi<
         id, dealName, amount, currency, stage, stageLabel, pipeline, pipelineLabel,
         closeDate, createdAt, ownerId, isWon, isClosed, contactCount,
         associatedContacts, associatedCompanies
-      FROM HubSpotDeal FINAL
+      FROM HubSpotDeal 
       WHERE ownerId = ${ownerId} AND stage = ${stage}
       ORDER BY lastModifiedAt DESC
       LIMIT ${limit}
@@ -257,7 +257,7 @@ export const HubSpotDealLookupApi = new ConsumptionApi<
         id, dealName, amount, currency, stage, stageLabel, pipeline, pipelineLabel,
         closeDate, createdAt, ownerId, isWon, isClosed, contactCount,
         associatedContacts, associatedCompanies
-      FROM HubSpotDeal FINAL
+      FROM HubSpotDeal 
       WHERE ownerId = ${ownerId}
       ORDER BY lastModifiedAt DESC
       LIMIT ${limit}
@@ -268,7 +268,7 @@ export const HubSpotDealLookupApi = new ConsumptionApi<
         id, dealName, amount, currency, stage, stageLabel, pipeline, pipelineLabel,
         closeDate, createdAt, ownerId, isWon, isClosed, contactCount,
         associatedContacts, associatedCompanies
-      FROM HubSpotDeal FINAL
+      FROM HubSpotDeal 
       WHERE stage = ${stage}
       ORDER BY lastModifiedAt DESC
       LIMIT ${limit}
@@ -279,7 +279,7 @@ export const HubSpotDealLookupApi = new ConsumptionApi<
         id, dealName, amount, currency, stage, stageLabel, pipeline, pipelineLabel,
         closeDate, createdAt, ownerId, isWon, isClosed, contactCount,
         associatedContacts, associatedCompanies
-      FROM HubSpotDeal FINAL
+      FROM HubSpotDeal 
       ORDER BY lastModifiedAt DESC
       LIMIT ${limit}
     `;
@@ -320,7 +320,7 @@ export const HubSpotDealPipelineApi = new ConsumptionApi<
       sum(case when isClosed and not isWon then 1 else 0 end) as lostDeals,
       avg(case when isClosed then daysToClose end) as avgDaysToClose,
       round(sum(case when isWon then 1 else 0 end) * 100.0 / count(*), 2) as conversionRate
-    FROM HubSpotDeal FINAL
+    FROM HubSpotDeal 
     WHERE createdAt >= subtractDays(now(), ${daysBack})
     GROUP BY pipeline, pipelineLabel
     ORDER BY totalValue DESC
