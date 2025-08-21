@@ -5,6 +5,13 @@ import { z } from "zod";
 import { Input } from "@ui/components/input";
 import { Textarea } from "@ui/components/textarea";
 import { Label } from "@ui/components/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@ui/components/select";
 import { Button } from "@ui/components/button";
 import { Card, CardContent } from "@ui/components/card";
 import { signIn } from "next-auth/react";
@@ -151,13 +158,22 @@ export function RequestConnectorForm() {
         </div>
 
         <div className="grid gap-2">
-          <Label htmlFor="category">Category</Label>
-          <Input
-            id="category"
-            placeholder="e.g. api, saas, database, observability"
-            value={values.category}
-            onChange={(e) => handleChange("category", e.target.value)}
-          />
+          <Label htmlFor="category">Connector type</Label>
+          <Select
+            value={values.category || undefined}
+            onValueChange={(val) => handleChange("category", val)}
+          >
+            <SelectTrigger id="category" className="w-full">
+              <SelectValue placeholder="Select a type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="api">API</SelectItem>
+              <SelectItem value="saas">SaaS</SelectItem>
+              <SelectItem value="database">Database</SelectItem>
+              <SelectItem value="observability">Observability</SelectItem>
+              <SelectItem value="blob-storage">Blob storage</SelectItem>
+            </SelectContent>
+          </Select>
           {errors.category ? (
             <p className="text-xs text-destructive">{errors.category}</p>
           ) : null}
