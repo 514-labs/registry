@@ -63,7 +63,7 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
 
             if (isShell) {
               return (
-                <Snippet defaultValue={language}>
+                <Snippet defaultValue={language} className="not-prose">
                   <SnippetHeader>
                     <SnippetTabsList>
                       <SnippetTabsTrigger value={language}>
@@ -83,6 +83,7 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
               <CodeBlock
                 defaultValue={language}
                 data={[{ language, filename: "", code }]}
+                className="not-prose"
               >
                 <CodeBlockHeader className="flex justify-between">
                   <div className="px-4 py-1.5 text-muted-foreground text-xs">

@@ -489,7 +489,7 @@ type CodeBlockFallbackProps = HTMLAttributes<HTMLDivElement>;
 
 const CodeBlockFallback = ({ children, ...props }: CodeBlockFallbackProps) => (
   <div {...props}>
-    <pre className="w-full mt-0 mb-0">
+    <pre className="w-full">
       <code>
         {children
           ?.toString()

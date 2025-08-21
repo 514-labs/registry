@@ -30,7 +30,7 @@ function Pre(props: any) {
     : (rawChildren?.toString?.() ?? "");
 
   return (
-    <Snippet defaultValue={language}>
+    <Snippet defaultValue={language} className="not-prose">
       <SnippetHeader>
         <SnippetTabsList>
           <SnippetTabsTrigger value={language}>{language}</SnippetTabsTrigger>
