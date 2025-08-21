@@ -1,8 +1,10 @@
 #!/bin/bash
 
+cd ..
 pnpm i
 
 cd app/hubspot
+pnpm i
 pnpm run build
 cd ../..
 
