@@ -13,6 +13,12 @@ interface HubSpotDealRawIngestion {
   };
 }
 
+if (!process.env.HUBSPOT_TOKEN) {
+  console.log("❌ ERROR: a HUBSPOT_TOKEN environment variable is required - see the docs for more info");
+} else if (process.env.HUBSPOT_TOKEN === "hs_pat_xxx") {
+  console.log("❌ ERROR: a valid HUBSPOT_TOKEN environment variable is required - see the docs for more info");
+}
+
 async function syncHubSpotDeals(): Promise<void> {
   const token = process.env.HUBSPOT_TOKEN;
   if (!token) throw new Error("HUBSPOT_TOKEN environment variable is required");
