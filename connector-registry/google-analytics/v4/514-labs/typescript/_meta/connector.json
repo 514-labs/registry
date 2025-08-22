@@ -1,8 +1,0 @@
-{
-  "identifier": "google-analytics",
-  "name": "Google Analytics",
-  "author": "514-labs",
-  "version": "v4",
-  "language": "typescript",
-  "implementations": ["data-api"]
-}
