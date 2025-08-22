@@ -61,7 +61,22 @@ export async function POST(req: NextRequest) {
   // Try to search for an existing issue with same title to avoid duplicates
   try {
     const searchUrl = new URL("https://api.github.com/search/issues");
-    const q = `repo:${owner}/${repo} type:issue in:title "${title.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
+    // Helper to robustly escape the title for GitHub search query
+    function escapeGitHubSearchString(str: string): string {
+      // Escape backslashes and double quotes, and wrap in double quotes
+      // Also escape any control characters and normalize whitespace
+      return (
+        '"' +
+        str
+          .replace(/\\/g, "\\\\")
+          .replace(/"/g, '\\"')
+          .replace(/[\r\n\t]/g, " ")
+          .replace(/\s+/g, " ")
+          .trim() +
+        '"'
+      );
+    }
+    const q = `repo:${owner}/${repo} type:issue in:title ${escapeGitHubSearchString(title)}`;
     searchUrl.searchParams.set("q", q);
     const searchRes = await fetch(searchUrl.toString(), {
       headers: {
