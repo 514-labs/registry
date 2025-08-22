@@ -125,7 +125,9 @@ export function RequestConnectorForm() {
         submitWithValues(draft);
         router.replace("/request");
       }, 0);
-    } catch {}
+    } catch (err) {
+      console.error("Failed to load draft from localStorage:", err);
+    }
   }, [searchParams, router]);
 
   return (
