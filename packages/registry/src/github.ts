@@ -178,3 +178,141 @@ export async function getAuthorAvatar(
   if (asUser) return asUser;
   return getOrganizationAvatar(author, options);
 }
+
+// ----------------------------------------
+// Connector request issue helpers
+// ----------------------------------------
+
+export type ConnectorRequest = {
+  identifier: string;
+  name: string;
+  category: string;
+  tags: string[];
+  homepage: string;
+  description: string;
+  issueUrl: string;
+};
+
+function safeParseConnectorRequestFromBody(
+  body: string
+): Omit<ConnectorRequest, "issueUrl"> | null {
+  try {
+    // Expect a fenced JSON block between our markers
+    const start = body.indexOf("<!-- connector-request:start -->");
+    const end = body.indexOf("<!-- connector-request:end -->");
+    if (start === -1 || end === -1 || end <= start) return null;
+    const between = body.slice(start, end);
+    const fenceStart = between.indexOf("```json");
+    if (fenceStart === -1) return null;
+    const afterFence = between.slice(fenceStart + "```json".length);
+    const fenceEnd = afterFence.indexOf("```");
+    if (fenceEnd === -1) return null;
+    const jsonText = afterFence.slice(0, fenceEnd).trim();
+    const parsed = JSON.parse(jsonText) as any;
+    if (parsed && parsed.kind === "connector-request") {
+      const identifier = String(parsed.identifier || "").trim();
+      const name = String(parsed.name || "").trim();
+      const category = String(parsed.category || "").trim();
+      const homepage = String(parsed.homepage || "").trim();
+      const description = String(parsed.description || "").trim();
+      const tags: string[] = Array.isArray(parsed.tags)
+        ? parsed.tags
+            .map((t: unknown) => String(t || "").trim())
+            .filter(Boolean)
+        : [];
+      if (!identifier || !name || !category || !homepage) return null;
+      return { identifier, name, category, tags, homepage, description };
+    }
+  } catch {}
+  return null;
+}
+
+export async function listConnectorRequestsFromIssues(options?: {
+  owner?: string;
+  repo?: string;
+  token?: string;
+  state?: "open" | "closed" | "all";
+}): Promise<ConnectorRequest[]> {
+  const owner = (
+    options?.owner ??
+    process.env.CONNECTOR_REQUESTS_OWNER ??
+    "514-labs"
+  ).trim();
+  const repo = (
+    options?.repo ??
+    process.env.CONNECTOR_REQUESTS_REPO ??
+    "factory"
+  ).trim();
+  const token = (options?.token ?? process.env.GITHUB_PAT ?? "").trim();
+  const state = options?.state ?? "open";
+
+  // Search by a title prefix for efficiency and then fetch bodies
+  // We use pagination with a reasonable upper bound
+  const results: ConnectorRequest[] = [];
+  let page = 1;
+  const perPage = 50;
+  for (let i = 0; i < 5; i += 1) {
+    const searchUrl = new URL("https://api.github.com/search/issues");
+    const q = `repo:${owner}/${repo} type:issue in:title "Connector request:" state:${state}`;
+    searchUrl.searchParams.set("q", q);
+    searchUrl.searchParams.set("per_page", String(perPage));
+    searchUrl.searchParams.set("page", String(page));
+    const searchRes = await fetch(searchUrl.toString(), {
+      headers: {
+        Accept: "application/vnd.github+json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    });
+    if (!searchRes.ok) break;
+    const data = (await searchRes.json()) as {
+      items?: Array<{
+        html_url: string;
+        number: number;
+        title: string;
+        state: string;
+      }>;
+      total_count?: number;
+    };
+    const items = data.items ?? [];
+    if (items.length === 0) break;
+
+    // Fetch each issue to get the full body
+    const pageResults = await Promise.all(
+      items.map(async (item) => {
+        const parsed = parseIssueUrl(item.html_url);
+        if (!parsed) return null;
+        const issueRes = await fetch(
+          `https://api.github.com/repos/${parsed.owner}/${parsed.repo}/issues/${parsed.issueNumber}`,
+          {
+            headers: {
+              Accept: "application/vnd.github+json",
+              ...(token ? { Authorization: `Bearer ${token}` } : {}),
+              "X-GitHub-Api-Version": "2022-11-28",
+            },
+          }
+        );
+        if (!issueRes.ok) return null;
+        const issue = (await issueRes.json()) as {
+          body?: string;
+          html_url?: string;
+          state?: string;
+        };
+        if ((issue.state ?? "").toLowerCase() !== "open") return null;
+        const parsedBody = safeParseConnectorRequestFromBody(issue.body ?? "");
+        if (!parsedBody) return null;
+        return { ...parsedBody, issueUrl: issue.html_url ?? item.html_url };
+      })
+    );
+    for (const r of pageResults) if (r) results.push(r);
+    if (items.length < perPage) break;
+    page += 1;
+  }
+
+  // Deduplicate by identifier (keep first occurrence)
+  const dedupedMap = new Map<string, ConnectorRequest>();
+  for (const r of results) {
+    if (!dedupedMap.has(r.identifier)) dedupedMap.set(r.identifier, r);
+  }
+  return Array.from(dedupedMap.values());
+}

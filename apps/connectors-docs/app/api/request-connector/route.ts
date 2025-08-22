@@ -49,6 +49,27 @@ export async function POST(req: NextRequest) {
   bodyLines.push("");
   bodyLines.push("Description:");
   bodyLines.push(description);
+  // Embed a parseable JSON block so we can programmatically list requested connectors
+  try {
+    const payloadForJson = {
+      kind: "connector-request",
+      identifier,
+      name,
+      category,
+      tags: (tags ?? "")
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean),
+      homepage,
+      description,
+    };
+    bodyLines.push("");
+    bodyLines.push("<!-- connector-request:start -->");
+    bodyLines.push("```json");
+    bodyLines.push(JSON.stringify(payloadForJson, null, 2));
+    bodyLines.push("```");
+    bodyLines.push("<!-- connector-request:end -->");
+  } catch {}
 
   if (!token) {
     // Require auth: client should invoke signIn("github")

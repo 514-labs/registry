@@ -7,4 +7,6 @@ export {
   getUserAvatar,
   getOrganizationAvatar,
   getAuthorAvatar,
+  listConnectorRequestsFromIssues,
+  type ConnectorRequest,
 } from "./github";
