@@ -4,9 +4,9 @@ import {
   TabsList,
   TabsTrigger,
 } from "@workspace/ui/components/tabs";
-import APISpecification from "@/content/docs/specifications/api-connector.mdx";
-import BlobStorageSpecification from "@/content/docs/specifications/blob-storage.mdx";
-import DatabaseSpecification from "@/content/docs/specifications/databases.mdx";
+import APISpecification from "@/content/docs/specifications/api.mdx";
+import BlobStorageSpecification from "@/content/docs/specifications/blob.mdx";
+import DatabaseSpecification from "@/content/docs/specifications/database.mdx";
 import SaaSSpecification from "@/content/docs/specifications/saas.mdx";
 import AnalyticalConnectorsSpecification from "@/content/docs/specifications/common.mdx";
 // Lineage is a general docs page, not a spec tab
