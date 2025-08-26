@@ -1,7 +1,0 @@
-{
-  "name": "google-analytics",
-  "author": "tg339",
-  "version": "v4",
-  "language": "typescript",
-  "implementations": ["data-api"]
-}

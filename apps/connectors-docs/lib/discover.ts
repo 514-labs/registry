@@ -2,6 +2,7 @@ import { listConnectors } from "@workspace/registry/connectors";
 import {
   getIssuePositiveReactionsCountFromMeta,
   getIssuePositiveReactionsCountFromUrl,
+  listConnectorRequestsFromIssues,
 } from "@workspace/registry";
 import type { ConnectorRootMeta } from "@workspace/registry/types";
 
@@ -59,9 +60,7 @@ export async function buildDiscoverConnectors(): Promise<DiscoverConnector[]> {
   const connectors = await Promise.all(
     registry.map(async (conn) => {
       const meta = (conn.root.meta ?? {}) as ConnectorRootMeta;
-      const displayName = (meta.title ??
-        meta.name ??
-        conn.connectorId) as string;
+      const displayName = (meta.name ?? conn.connectorId) as string;
       const description = (meta.description ?? "") as string;
       const rawTags = ((meta.tags ?? []) as string[]).filter(Boolean);
       const category = ((meta.category ?? "") as string).toLowerCase();
@@ -191,5 +190,36 @@ export async function buildDiscoverConnectors(): Promise<DiscoverConnector[]> {
     })
   );
 
-  return connectors;
+  // Merge in requested connectors from GitHub issues (that don't exist in the registry yet)
+  const existingIds = new Set(registry.map((c) => c.connectorId));
+  try {
+    const requests = await listConnectorRequestsFromIssues({ state: "open" });
+    const requestedConnectors: DiscoverConnector[] = await Promise.all(
+      requests
+        .filter((r) => !existingIds.has(r.identifier))
+        .map(async (r) => {
+          const reactions = await getIssuePositiveReactionsCountFromUrl(
+            r.issueUrl
+          );
+          return {
+            name: r.name,
+            description: r.description,
+            tags: (r.tags || []).map(formatLabel),
+            icon: `connector-logos/${r.identifier}.png`,
+            href: r.issueUrl,
+            sourceType: r.category ? formatLabel(r.category) : undefined,
+            extraction: "batch",
+            domains: [],
+            languages: [],
+            comingSoon: true,
+            implementationCount: 0,
+            reactions,
+          } satisfies DiscoverConnector;
+        })
+    );
+    return [...connectors, ...requestedConnectors];
+  } catch {
+    // If listing requests fails, fall back to registry-only
+    return connectors;
+  }
 }

@@ -862,9 +862,9 @@ export function SchemaDiagram({
       <Tabs
         value={active}
         onValueChange={(v) => setActive(v as any)}
-        className="w-full"
+        className="w-full gap-0"
       >
-        <div className="flex items-center justify-between px-4">
+        <div className="flex items-center justify-between px-4 mb-2">
           <TabsList>
             {hasDatabase && (
               <TabsTrigger value="database">Database</TabsTrigger>

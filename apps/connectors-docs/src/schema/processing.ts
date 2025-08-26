@@ -143,12 +143,7 @@ function loadRelationalTables(
       const path = join(schemasDir, ds.path);
       const prevCount: number = tables.length;
       addFromPath(path);
-      if (tables.length === prevCount) {
-        // likely invalid or duplicate
-        const data = readJsonSafe<any>(path, errors);
-        if (!data)
-          errors?.push(`Missing or invalid relational tables file: ${path}`);
-      }
+      // If no tables were added from this path, silently ignore to keep relational schemas optional
     }
   }
 
@@ -162,11 +157,7 @@ function loadRelationalTables(
       const path = join(schemasDir, relPath);
       const prevCount: number = tables.length;
       addFromPath(path);
-      if (tables.length === prevCount) {
-        const data = readJsonSafe<any>(path, errors);
-        if (!data)
-          errors?.push(`Missing or invalid relational tables file: ${path}`);
-      }
+      // If no tables were added from this path, silently ignore to keep relational schemas optional
     }
   }
 
@@ -178,11 +169,7 @@ function loadRelationalTables(
     for (const fp of candidates) {
       const prevCount: number = tables.length;
       addFromPath(fp);
-      if (tables.length === prevCount) {
-        const data = readJsonSafe<any>(fp, errors);
-        if (!data)
-          errors?.push(`Missing or invalid relational tables file: ${fp}`);
-      }
+      // If no tables were added from this path, silently ignore to keep relational schemas optional
     }
   }
 

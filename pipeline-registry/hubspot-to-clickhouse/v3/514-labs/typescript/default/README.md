@@ -39,11 +39,9 @@ vi .env
 pnpm dev
 ```
 
-5) Generate lineage assets (provider `_meta/assets/`)
-```bash
-pnpm run lineage
-pnpm run lineage:svg
-```
+5) Lineage
+
+Maintain lineage in `moose/lineage.manifest.json` and optionally `lineage/schemas/` for outputs.
 
 See `app/` for models, transforms, APIs, and workflow. See `schemas/index.json` for dataset definitions.
 

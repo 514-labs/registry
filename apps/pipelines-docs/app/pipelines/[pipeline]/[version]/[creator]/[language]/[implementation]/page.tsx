@@ -4,10 +4,14 @@ import Link from "next/link";
 import { GitBranch, Code2, Wrench } from "lucide-react";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 import ComboBox from "@/components/combobox";
+import PipelineImplSidebar from "@/components/pipeline-impl-sidebar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@ui/components/tabs";
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
-import { marked } from "marked";
+// Render docs with markdown so we can enhance code blocks with our Snippet UI
+
+import { MarkdownContent } from "@ui/components/markdown-content";
+
 import { PagefindMeta } from "@/components/pagefind-meta";
 
 import {
@@ -16,6 +20,7 @@ import {
 } from "@/src/schema/processing";
 import { listPipelineIds, readPipeline } from "@workspace/registry/pipelines";
 import PipelineLineageDiagram from "@/components/pipeline-lineage-diagram";
+import { readConnector } from "@workspace/registry/connectors";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -76,7 +81,7 @@ export default async function PipelineImplementationPage({
   if (!implEntry) return null;
 
   const meta = reg.root.meta;
-  const displayName = meta?.title ?? meta?.name ?? reg.pipelineId;
+  const displayName = meta?.name ?? reg.pipelineId;
   const description = meta?.description ?? "";
   const tags = meta?.tags ?? [];
 
@@ -116,7 +121,7 @@ export default async function PipelineImplementationPage({
         .sort()
     : ([] as string[]);
 
-  type DocPage = { slug: string; title: string; html: string };
+  type DocPage = { slug: string; title: string; content: string };
   const preferredOrder = [
     "getting-started",
     "installation",
@@ -135,8 +140,8 @@ export default async function PipelineImplementationPage({
       const title =
         firstHeadingMatch?.[1]?.trim() || file.replace(/\.(md|mdx)$/i, "");
       const slug = file.replace(/\.(md|mdx)$/i, "");
-      const html = marked.parse(raw) as string;
-      return { slug, title, html } as DocPage;
+      const content = raw;
+      return { slug, title, content } as DocPage;
     })
     .sort((a, b) => {
       const ia = preferredOrder.indexOf(a.slug);
@@ -195,104 +200,92 @@ export default async function PipelineImplementationPage({
   const fromLogo = `/pipeline-logos/${reg.pipelineId}-from.png`;
   const toLogo = `/pipeline-logos/${reg.pipelineId}-to.png`;
 
+  // Build Source connector deep link (to connectors details page) when possible
+  const sourceMeta = (provider.meta as any)?.source as
+    | {
+        type?: string;
+        connector?: { name?: string; version?: string; author?: string };
+      }
+    | undefined;
+
+  let sourceLink: string | null = null;
+  let sourceLinkName: string | null = null;
+  let sourceLinkLogo: string | null = null;
+
+  if (
+    sourceMeta?.connector?.name &&
+    sourceMeta?.connector?.version &&
+    sourceMeta?.connector?.author
+  ) {
+    const srcName = sourceMeta.connector.name;
+    const srcVersion = sourceMeta.connector.version;
+    const srcAuthor = sourceMeta.connector.author;
+    const srcReg = readConnector(srcName);
+    if (srcReg) {
+      const srcProvider =
+        srcReg.providers.find((p) => {
+          const pVersion = p.path.split("/").slice(-2)[0];
+          return p.authorId === srcAuthor && pVersion === srcVersion;
+        }) ??
+        srcReg.providers.find(
+          (p) => p.path.split("/").slice(-2)[0] === srcVersion
+        );
+
+      const firstImpl = srcProvider?.implementations?.[0];
+      if (srcProvider && firstImpl) {
+        sourceLink = `/connectors/${srcName}/${srcVersion}/${srcProvider.authorId}/${firstImpl.language}/${firstImpl.implementation ?? "default"}`;
+        sourceLinkName =
+          (srcReg.root.meta?.name as string | undefined) ?? srcName;
+        sourceLinkLogo = `/connector-logos/${srcName}.png`;
+      }
+    }
+  }
+
   return (
     <div className="container mx-auto py-16 ">
       <PagefindMeta type="pipeline" />
       <div className="grid grid-cols-12 gap-16">
         <div className="col-span-3">
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2">
-              <Image
-                src={fromLogo}
-                alt={`from logo`}
-                width={32}
-                height={32}
-                className="h-8 w-8 rounded-sm object-contain "
-              />
-              <span className="text-muted-foreground">→</span>
-              <Image
-                src={toLogo}
-                alt={`to logo`}
-                width={32}
-                height={32}
-                className="h-8 w-8 rounded-sm object-contain "
-              />
-            </div>
-            <h1 className="text-2xl ">{displayName}</h1>
-            <div className="flex flex-wrap gap-2 items-center">
-              {tags.map((tag: string) => (
-                <Badge key={tag} variant="secondary">
-                  {tag}
-                </Badge>
-              ))}
-
-              <Badge variant="secondary">
-                <Link href={registryUrl} className="flex items-center gap-1">
-                  <SiGithub className="size-3" />
-                  <span>Source</span>
-                </Link>
-              </Badge>
-            </div>
-            <p className="text-muted-foreground">{description}</p>
-
-            <div className="grid grid-cols-1 gap-2 ">
-              <ComboBox
-                withAvatars
-                size="lg"
-                value={creator}
-                items={creatorsForVersion.map((c) => ({
-                  value: c,
-                  label: c,
-                  href: pathFor(version, c),
-                  avatarUrl: creatorAvatars[c] ?? undefined,
-                }))}
-                placeholder="Select author"
-                disabled={creatorsForVersion.length <= 1}
-              />
-
-              <ComboBox
-                withIcons
-                size="lg"
-                value={version}
-                items={versions.map((v) => ({
-                  value: v,
-                  label: v,
-                  href: pathFor(v, creator),
-                  icon: <GitBranch />,
-                }))}
-                placeholder="Select version"
-                disabled={versions.length <= 1}
-              />
-
-              <ComboBox
-                withIcons
-                size="lg"
-                value={language}
-                items={languages.map((l) => ({
-                  value: l,
-                  label: l,
-                  href: pathFor(version, creator, l),
-                  icon: <Code2 />,
-                }))}
-                placeholder="Select language"
-                disabled={languages.length <= 1}
-              />
-
-              <ComboBox
-                withIcons
-                size="lg"
-                value={implEntry.implementation}
-                items={implementationsForLanguage.map((im) => ({
-                  value: im,
-                  label: im,
-                  href: pathFor(version, creator, language, im),
-                  icon: <Wrench />,
-                }))}
-                placeholder="Select implementation"
-                disabled={implementationsForLanguage.length <= 1}
-              />
-            </div>
-          </div>
+          <PipelineImplSidebar
+            fromLogoSrc={fromLogo}
+            toLogoSrc={toLogo}
+            title={displayName}
+            description={description}
+            tags={tags}
+            sourceHref={sourceLink}
+            sourceName={sourceLinkName}
+            destinationName={
+              ((provider.meta as any)?.destination?.system as
+                | string
+                | undefined) ||
+              reg.pipelineId.split("-to-")[1] ||
+              "Destination"
+            }
+            creators={creatorsForVersion.map((c) => ({
+              value: c,
+              label: c,
+              href: pathFor(version, c),
+            }))}
+            versions={versions.map((v) => ({
+              value: v,
+              label: v,
+              href: pathFor(v, creator),
+            }))}
+            languages={languages.map((l) => ({
+              value: l,
+              label: l,
+              href: pathFor(version, creator, l),
+            }))}
+            implementations={implementationsForLanguage.map((im) => ({
+              value: im,
+              label: im,
+              href: pathFor(version, creator, language, im),
+            }))}
+            selectedCreator={creator}
+            selectedVersion={version}
+            selectedLanguage={language}
+            selectedImplementation={implEntry.implementation}
+          />
         </div>
 
         <div className="col-span-9 space-y-8">
@@ -371,10 +364,7 @@ export default async function PipelineImplementationPage({
               </TabsList>
               {docs.map((d) => (
                 <TabsContent key={d.slug} value={d.slug}>
-                  <div
-                    className="prose dark:prose-invert max-w-none"
-                    dangerouslySetInnerHTML={{ __html: d.html }}
-                  />
+                  <MarkdownContent content={d.content} />
                 </TabsContent>
               ))}
             </Tabs>

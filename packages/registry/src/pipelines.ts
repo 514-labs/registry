@@ -68,8 +68,10 @@ export function getPipelinesRegistryPath(): string {
 
 export type PipelineRootMeta = {
   $schema?: string;
-  name: string;
-  title?: string;
+  // Identifier used as the stable ID (e.g., folder name)
+  identifier?: string;
+  // Human-friendly display name
+  name?: string;
   tags?: string[];
   description?: string;
   homepage?: string;
@@ -78,7 +80,9 @@ export type PipelineRootMeta = {
 
 export type PipelineProviderMeta = {
   $schema?: string;
-  name: string;
+  // Optional identifier and display name at provider level
+  identifier?: string;
+  name?: string;
   author: string;
   authorType?: "user" | "organization";
   avatarUrlOverride?: string;

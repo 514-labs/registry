@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -8,6 +10,8 @@ import {
 import { Badge } from "@ui/components/badge";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { Activity, Box, Cloud, Code2, Database, HardDrive } from "lucide-react";
 
 // Utility function to escape HTML entities
 function escapeHtml(str: string): string {
@@ -17,6 +21,16 @@ function escapeHtml(str: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+function getDefaultIconForType(sourceType?: string) {
+  const key = (sourceType ?? "").toLowerCase();
+  if (key === "api") return Code2;
+  if (key === "saas") return Cloud;
+  if (key === "database") return Database;
+  if (key === "observability") return Activity;
+  if (key === "blob storage") return HardDrive;
+  return Box;
 }
 
 interface ConnectorCardProps {
@@ -52,6 +66,7 @@ function ConnectorCard({
   creatorAvatarUrl,
   creatorAvatarUrls,
 }: ConnectorCardProps) {
+  const [imageError, setImageError] = useState(false);
   const base = icon.startsWith("/") ? icon : `/${icon}`;
   const candidates = [
     base,
@@ -62,6 +77,7 @@ function ConnectorCard({
   ];
   // Use first candidate; browser will 404 fallbacks are not automatic, but primary will exist after sync
   const imageSrc = candidates[0];
+  const DefaultIcon = getDefaultIconForType(sourceType);
   return (
     <Link
       href={href}
@@ -70,13 +86,20 @@ function ConnectorCard({
     >
       <Card className="h-full group cursor-pointer transition-colors hover:bg-muted/40">
         <CardHeader className="flex flex-row items-start justify-between">
-          <Image
-            src={imageSrc}
-            alt={`${name} logo`}
-            width={48}
-            height={48}
-            className="h-12 w-12 rounded-sm object-contain 0"
-          />
+          {imageError ? (
+            <div className="h-12 w-12 rounded-sm bg-muted text-muted-foreground ring-1 ring-border flex items-center justify-center">
+              <DefaultIcon size={24} />
+            </div>
+          ) : (
+            <Image
+              src={imageSrc}
+              alt={`${name} logo`}
+              width={48}
+              height={48}
+              className="h-12 w-12 rounded-sm object-contain 0"
+              onError={() => setImageError(true)}
+            />
+          )}
           <div className="flex items-center gap-2">
             {typeof implementationCount === "number" &&
             implementationCount > 0 ? (
