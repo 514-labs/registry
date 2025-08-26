@@ -81,6 +81,13 @@ export function PipelineLineageDiagram({
 }) {
   type AnyNode = Node<any>;
 
+  const miniMapMaskColor = "var(--rf-minimap-mask)";
+  const miniMapStyle = {
+    backgroundColor: "var(--muted)",
+  } as React.CSSProperties;
+  const miniMapNodeColor = "var(--card)";
+  const miniMapNodeStrokeColor = "var(--border)";
+
   const elk = useMemo(() => new ELK(), []);
 
   function estimateNodeSize(n: AnyNode): { width: number; height: number } {
@@ -253,7 +260,7 @@ export function PipelineLineageDiagram({
     return edges;
   }, [transformations.length, mooseGraph]);
 
-  const [layoutNodes, setLayoutNodes] = useState<AnyNode[]>(rawNodes);
+  const [layoutNodes, setLayoutNodes] = useState<AnyNode[]>([]);
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -426,16 +433,45 @@ export function PipelineLineageDiagram({
   // Auto-center once after nodes have been laid out and the flow is ready
   useEffect(() => {
     if (!flowReady || hasAutoCentered) return;
-    const nodes = currentNodes;
-    if (!nodes || nodes.length === 0) return;
-    try {
-      const instance = flowRef.current;
-      if (instance) {
-        instance.fitView({ padding: 0.2, duration: 400 } as any);
-        setHasAutoCentered(true);
+    if (!layoutNodes || layoutNodes.length === 0) return;
+
+    const instance = flowRef.current;
+    if (!instance) return;
+
+    let cancelled = false;
+    const attempt = (tries = 0) => {
+      if (cancelled) return;
+      const nodes = instance.getNodes();
+      if (!nodes || nodes.length === 0) {
+        if (tries < 10) setTimeout(() => attempt(tries + 1), 50);
+        return;
       }
-    } catch {}
-  }, [flowReady, hasAutoCentered, currentNodes]);
+      const measured = nodes.every(
+        (n: any) =>
+          typeof n.width === "number" &&
+          n.width > 0 &&
+          typeof n.height === "number" &&
+          n.height > 0
+      );
+      if (!measured) {
+        if (tries < 10) setTimeout(() => attempt(tries + 1), 50);
+        return;
+      }
+      try {
+        instance.fitView({
+          nodes: nodes as any,
+          padding: 0.3,
+          duration: 500,
+          includeHiddenNodes: true,
+        } as any);
+        setHasAutoCentered(true);
+      } catch {}
+    };
+    attempt();
+    return () => {
+      cancelled = true;
+    };
+  }, [flowReady, hasAutoCentered, layoutNodes]);
 
   return (
     <Card className="w-full overflow-hidden py-0">
@@ -444,7 +480,9 @@ export function PipelineLineageDiagram({
           nodes={(layoutNodes.length ? layoutNodes : rawNodes) as Node[]}
           edges={rawEdges}
           nodeTypes={nodeTypes as any}
-          fitView
+          minZoom={0.2}
+          maxZoom={2}
+          defaultViewport={{ x: 0, y: 0, zoom: 0.7 }}
           proOptions={{ hideAttribution: true }}
           onInit={(instance) => {
             flowRef.current = instance as ReactFlowInstance;
@@ -452,7 +490,14 @@ export function PipelineLineageDiagram({
           }}
         >
           <Background />
-          <MiniMap pannable zoomable />
+          <MiniMap
+            pannable
+            zoomable
+            style={miniMapStyle}
+            maskColor={miniMapMaskColor}
+            nodeColor={miniMapNodeColor}
+            nodeStrokeColor={miniMapNodeStrokeColor}
+          />
           <Controls position="bottom-right" />
           <Panel position="top-right" className="space-y-2">
             <div className="w-[320px] relative" ref={searchRef}>

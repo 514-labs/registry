@@ -37,7 +37,7 @@
             {
               "type": "file",
               "name": "pipeline.json",
-              "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/pipeline-root.schema.json\",\n  \"name\": \"{pipeline}\",\n  \"title\": \"{pipeline}\",\n  \"tags\": [],\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"registryUrl\": \"https://github.com/514-labs/factory/tree/main/pipeline-registry/{pipeline}\"\n}\n"
+              "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/pipeline-root.schema.json\",\n  \"identifier\": \"{pipeline}\",\n  \"name\": \"{pipeline}\",\n  \"tags\": [],\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"registryUrl\": \"https://github.com/514-labs/factory/tree/main/pipeline-registry/{pipeline}\"\n}\n"
             },
             {
               "type": "dir",
@@ -112,7 +112,7 @@
                     {
                       "type": "file",
                       "name": "pipeline.json",
-                      "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/pipeline.schema.json\",\n  \"name\": \"{pipeline}\",\n  \"author\": \"{author}\",\n  \"authorType\": \"organization\",\n  \"version\": \"{version}\",\n  \"description\": \"\",\n  \"tags\": [],\n  \"schedule\": { \"cron\": \"0 * * * *\", \"timezone\": \"UTC\" },\n  \"source\": { \"type\": \"connector\", \"connector\": { \"name\": \"\", \"version\": \"\", \"author\": \"\" }, \"stream\": \"\" },\n  \"systems\": [],\n  \"transformations\": [],\n  \"destination\": { \"system\": \"clickhouse\", \"database\": \"\", \"table\": \"\" },\n  \"lineage\": { \"nodes\": [], \"edges\": [] },\n  \"maintainers\": []\n}\n"
+                      "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/pipeline.schema.json\",\n  \"identifier\": \"{pipeline}\",\n  \"name\": \"{pipeline}\",\n  \"author\": \"{author}\",\n  \"authorType\": \"organization\",\n  \"version\": \"{version}\",\n  \"description\": \"\",\n  \"tags\": [],\n  \"schedule\": { \"cron\": \"0 * * * *\", \"timezone\": \"UTC\" },\n  \"source\": { \"type\": \"connector\", \"connector\": { \"name\": \"\", \"version\": \"\", \"author\": \"\" }, \"stream\": \"\" },\n  \"systems\": [],\n  \"transformations\": [],\n  \"destination\": { \"system\": \"clickhouse\", \"database\": \"\", \"table\": \"\" },\n  \"lineage\": { \"nodes\": [], \"edges\": [] },\n  \"maintainers\": []\n}\n"
                     },
                     { "type": "dir", "name": "assets" }
                   ]

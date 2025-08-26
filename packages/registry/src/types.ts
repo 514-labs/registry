@@ -1,7 +1,9 @@
 export type ConnectorRootMeta = {
   $schema?: string;
-  name: string;
-  title?: string;
+  // Identifier used as the stable ID (e.g., folder name)
+  identifier?: string;
+  // Human-friendly display name
+  name?: string;
   version?: string;
   category?: string;
   tags?: string[];
@@ -12,6 +14,9 @@ export type ConnectorRootMeta = {
 
 export type ProviderMeta = {
   $schema?: string;
+  // Optional identifier for the connector (kebab-case ID)
+  identifier?: string;
+  // Connector identifier or name (legacy)
   name: string;
   author: string;
   // The type of the author/creator. Determines how avatars are fetched.

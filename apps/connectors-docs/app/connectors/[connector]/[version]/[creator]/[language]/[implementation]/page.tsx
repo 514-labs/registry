@@ -16,8 +16,11 @@ import ComboBox from "@/components/combobox";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@ui/components/tabs";
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
-import { marked } from "marked";
+// Render docs with markdown so we can enhance code blocks with our Snippet UI
+
+import { MarkdownContent } from "@ui/components/markdown-content";
 import SchemaDiagram from "@/components/schema-diagram";
+import ConnectorImplSidebar from "@/components/connector-impl-sidebar";
 import { getSchemaDiagramInputs } from "@/src/schema/processing";
 
 export const dynamic = "force-static";
@@ -81,7 +84,7 @@ export default async function ConnectorImplementationPage({
   if (!implEntry) return null;
 
   const meta = conn.root.meta;
-  const displayName = meta?.title ?? meta?.name ?? conn.connectorId;
+  const displayName = meta?.name ?? conn.connectorId;
   const description = meta?.description ?? "";
   const tags = meta?.tags ?? [];
 
@@ -137,7 +140,7 @@ export default async function ConnectorImplementationPage({
         .sort()
     : ([] as string[]);
 
-  type DocPage = { slug: string; title: string; html: string };
+  type DocPage = { slug: string; title: string; content: string };
   const preferredOrder = [
     "getting-started",
     "installation",
@@ -156,8 +159,8 @@ export default async function ConnectorImplementationPage({
       const title =
         firstHeadingMatch?.[1]?.trim() || file.replace(/\.(md|mdx)$/i, "");
       const slug = file.replace(/\.(md|mdx)$/i, "");
-      const html = marked.parse(raw) as string;
-      return { slug, title, html } as DocPage;
+      const content = raw;
+      return { slug, title, content } as DocPage;
     })
     .sort((a, b) => {
       const ia = preferredOrder.indexOf(a.slug);
@@ -217,96 +220,39 @@ export default async function ConnectorImplementationPage({
       <PagefindMeta type="connector" />
       <div className="grid grid-cols-12 gap-16">
         <div className="col-span-3">
-          <div className="flex flex-col gap-4">
-            <Image
-              src={`/connector-logos/${conn.connectorId}.png`}
-              alt={`${displayName} logo`}
-              width={48}
-              height={48}
-              className="h-12 w-12 rounded-sm object-contain "
-            />
-            <h1 className="text-2xl ">{displayName}</h1>
-            <div className="flex flex-wrap gap-2 items-center">
-              {tags.map((tag: string) => (
-                <Badge key={tag} variant="secondary">
-                  {tag}
-                </Badge>
-              ))}
-
-              <Badge variant="secondary">
-                <Link href={registryUrl} className="flex items-center gap-1">
-                  <SiGithub className="size-3" />
-                  <span>Source</span>
-                </Link>
-              </Badge>
-              <Badge variant="secondary">
-                <Link href={issueUrl} className="flex items-center gap-1">
-                  <span>👍</span>
-                  <span className="-ml-1">❤️</span>
-                  <span>{reactions}</span>
-                </Link>
-              </Badge>
-            </div>
-            <p className="text-muted-foreground">{description}</p>
-
-            <div className="grid grid-cols-1 gap-2 ">
-              <ComboBox
-                withAvatars
-                size="lg"
-                value={creator}
-                items={creatorsForVersion.map((c) => ({
-                  value: c,
-                  label: c,
-                  href: pathFor(version, c),
-                  avatarUrl: creatorAvatars[c] ?? undefined,
-                }))}
-                placeholder="Select author"
-                disabled={creatorsForVersion.length <= 1}
-              />
-
-              <ComboBox
-                withIcons
-                size="lg"
-                value={version}
-                items={versions.map((v) => ({
-                  value: v,
-                  label: v,
-                  href: pathFor(v, creator),
-                  icon: <GitBranch />,
-                }))}
-                placeholder="Select version"
-                disabled={versions.length <= 1}
-              />
-
-              <ComboBox
-                withIcons
-                size="lg"
-                value={language}
-                items={languages.map((l) => ({
-                  value: l,
-                  label: l,
-                  href: pathFor(version, creator, l),
-                  icon: <Code2 />,
-                }))}
-                placeholder="Select language"
-                disabled={languages.length <= 1}
-              />
-
-              <ComboBox
-                withIcons
-                size="lg"
-                value={implEntry.implementation}
-                items={implementationsForLanguage.map((im) => ({
-                  value: im,
-                  label: im,
-                  href: pathFor(version, creator, language, im),
-                  icon: <Wrench />,
-                }))}
-                placeholder="Select implementation"
-                disabled={implementationsForLanguage.length <= 1}
-              />
-            </div>
-          </div>
+          <ConnectorImplSidebar
+            logoSrc={`/connector-logos/${conn.connectorId}.png`}
+            title={displayName}
+            description={description}
+            tags={tags}
+            sourceHref={registryUrl}
+            reactionsHref={issueUrl}
+            reactionsCount={reactions}
+            creators={creatorsForVersion.map((c) => ({
+              value: c,
+              label: c,
+              href: pathFor(version, c),
+            }))}
+            versions={versions.map((v) => ({
+              value: v,
+              label: v,
+              href: pathFor(v, creator),
+            }))}
+            languages={languages.map((l) => ({
+              value: l,
+              label: l,
+              href: pathFor(version, creator, l),
+            }))}
+            implementations={implementationsForLanguage.map((im) => ({
+              value: im,
+              label: im,
+              href: pathFor(version, creator, language, im),
+            }))}
+            selectedCreator={creator}
+            selectedVersion={version}
+            selectedLanguage={language}
+            selectedImplementation={implEntry.implementation}
+          />
         </div>
         <div className="col-span-9 space-y-8">
           {(() => {
@@ -346,10 +292,7 @@ export default async function ConnectorImplementationPage({
               </TabsList>
               {docs.map((d) => (
                 <TabsContent key={d.slug} value={d.slug}>
-                  <div
-                    className="prose dark:prose-invert max-w-none"
-                    dangerouslySetInnerHTML={{ __html: d.html }}
-                  />
+                  <MarkdownContent content={d.content} />
                 </TabsContent>
               ))}
             </Tabs>

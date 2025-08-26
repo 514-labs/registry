@@ -7,6 +7,13 @@ This TypeScript implementation ingests HubSpot deals via the HubSpot connector (
 - pnpm 9+
 - Docker (for local Moose infrastructure)
 
+## Install the pipeline
+Run the installer:
+
+```bash
+bash -i <(curl https://pipelines.514.ai/install.sh) hubspot-to-clickhouse v3 514-labs typescript
+```
+
 ## Install dependencies (monorepo)
 From the repository root:
 

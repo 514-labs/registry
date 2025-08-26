@@ -88,9 +88,7 @@ export function buildDiscoverPipelines(): DiscoverPipeline[] {
   const registry = listPipelines();
   const pipelines = registry.map((p) => {
     const rootMeta = (p.root.meta ?? {}) as PipelineRootMeta;
-    const displayName = (rootMeta.title ??
-      rootMeta.name ??
-      p.pipelineId) as string;
+    const displayName = (rootMeta.name ?? p.pipelineId) as string;
     const description = (rootMeta.description ?? "") as string;
     const rawTags = ((rootMeta.tags ?? []) as string[]).filter(Boolean);
 

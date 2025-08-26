@@ -14,9 +14,13 @@ interface HubSpotDealRawIngestion {
 }
 
 if (!process.env.HUBSPOT_TOKEN) {
-  console.log("❌ ERROR: a HUBSPOT_TOKEN environment variable is required - see the docs for more info");
+  console.log(
+    "❌ ERROR: a HUBSPOT_TOKEN environment variable is required - see the docs for more info"
+  );
 } else if (process.env.HUBSPOT_TOKEN === "hs_pat_xxx") {
-  console.log("❌ ERROR: a valid HUBSPOT_TOKEN environment variable is required - see the docs for more info");
+  console.log(
+    "❌ ERROR: a valid HUBSPOT_TOKEN environment variable is required - see the docs for more info"
+  );
 }
 
 async function syncHubSpotDeals(): Promise<void> {
@@ -34,21 +38,40 @@ async function syncHubSpotDeals(): Promise<void> {
   await connector.connect();
 
   const dealProperties = [
-    "dealname", "amount", "dealstage", "pipeline", "dealtype",
-    "closedate", "createdate", "hs_lastmodifieddate", "hubspot_owner_id",
-    "deal_currency_code", "dealstage_label", "pipeline_label",
-    "hs_deal_stage_probability", "hs_forecast_amount", "hs_projected_amount",
-    "num_associated_contacts", "num_contacted_notes", "days_to_close"
+    "dealname",
+    "amount",
+    "dealstage",
+    "pipeline",
+    "dealtype",
+    "closedate",
+    "createdate",
+    "hs_lastmodifieddate",
+    "hubspot_owner_id",
+    "deal_currency_code",
+    "dealstage_label",
+    "pipeline_label",
+    "hs_deal_stage_probability",
+    "hs_forecast_amount",
+    "hs_projected_amount",
+    "num_associated_contacts",
+    "num_contacted_notes",
+    "days_to_close",
   ];
 
-  let dealCount = 0, successCount = 0, errorCount = 0;
+  let dealCount = 0,
+    successCount = 0,
+    errorCount = 0;
 
-  for await (const deal of connector.streamDeals({ properties: dealProperties, pageSize: 100 })) {
+  for await (const deal of connector.streamDeals({
+    properties: dealProperties,
+    pageSize: 100,
+  })) {
     dealCount++;
     try {
       const cleanProperties: Record<string, string> = {};
       for (const [key, value] of Object.entries(deal.properties || {})) {
-        if (value !== null && value !== undefined && value !== "") cleanProperties[key] = String(value);
+        if (value !== null && value !== undefined && value !== "")
+          cleanProperties[key] = String(value);
       }
 
       const dealData: HubSpotDealRawIngestion = {
@@ -60,14 +83,23 @@ async function syncHubSpotDeals(): Promise<void> {
         associations: { contacts: [], companies: [] },
       };
 
-      const response = await fetch("http://localhost:4000/ingest/HubSpotDealRaw", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dealData),
-      });
-      if (!response.ok) throw new Error(`Moose ingestion error ${response.status}: ${await response.text()}`);
+      const response = await fetch(
+        "http://localhost:4000/ingest/HubSpotDealRaw",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dealData),
+        }
+      );
+      if (!response.ok)
+        throw new Error(
+          `Moose ingestion error ${response.status}: ${await response.text()}`
+        );
       successCount++;
-      if (dealCount % 50 === 0) console.log(`📊 Processed ${dealCount} total (${successCount} ok, ${errorCount} errs)`);
+      if (dealCount % 50 === 0)
+        console.log(
+          `📊 Processed ${dealCount} total (${successCount} ok, ${errorCount} errs)`
+        );
     } catch (err) {
       errorCount++;
       console.error(`❌ Error ingesting deal ${dealCount}:`, err);
@@ -75,7 +107,11 @@ async function syncHubSpotDeals(): Promise<void> {
   }
 
   await connector.disconnect();
-  console.log("✅ HubSpot sync completed!", { dealCount, successCount, errorCount });
+  console.log("✅ HubSpot sync completed!", {
+    dealCount,
+    successCount,
+    errorCount,
+  });
 }
 
 export const syncHubSpotDealsTask = new Task<null, void>("syncHubSpotDeals", {

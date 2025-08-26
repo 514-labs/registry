@@ -8,9 +8,7 @@
     "build": "cd app/hubspot; pnpm run build; cd ../..",
     "test": "vitest run",
     "dev": "moose-cli dev",
-    "moose": "moose-cli",
-    "lineage": "node scripts/lineage.mjs",
-    "lineage:svg": "node scripts/lineage.mjs --svg"
+    "moose": "moose-cli"
   },
   "engines": {
     "node": ">=20"
@@ -22,7 +20,6 @@
   },
   "devDependencies": {
     "@514labs/moose-cli": "latest",
-    "@mermaid-js/mermaid-cli": "^10.9.0",
     "tsup": "^8.0.0",
     "typescript": "^5.4.0",
     "vitest": "^3.2.4"

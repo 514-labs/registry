@@ -6,6 +6,7 @@ import { getConnectorsRegistryPath } from "@workspace/registry/connectors";
 export const dynamic = "force-static";
 
 type LanguageLevelMeta = {
+  identifier?: string;
   name: string;
   author: string;
   version: string;
@@ -14,6 +15,7 @@ type LanguageLevelMeta = {
 };
 
 type RegistryItem = {
+  identifier?: string;
   name: string;
   author: string;
   version: string;
@@ -79,6 +81,7 @@ export async function GET() {
 
           for (const implementation of languageMeta.implementations) {
             result.push({
+              identifier: languageMeta.identifier,
               name: languageMeta.name,
               author: languageMeta.author,
               version: languageMeta.version,
