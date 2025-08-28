@@ -237,13 +237,13 @@ list_connectors() {
     (. // [])
     | .[]
     | select(
-        want(.name; $f_name) and
+        want(.id; $f_name) and
         want(.version; $f_version) and
         want(.author; $f_author) and
         want(.language; $f_language) and
         want(.implementation; $f_implementation)
       )
-    | "\(.name) \(.version) \(.author) \(.language) \(.implementation)"
+    | "\(.id) \(.version) \(.author) \(.language) \(.implementation)"
   ')
 
   if [ -z "$perms" ]; then
@@ -280,7 +280,7 @@ resolve_from_registry() {
   local match
   match=$(printf '%s' "$body" | jq -r \
     --arg name "$CONNECTOR_NAME" '
-      map(select(.name == $name))
+      map(select(.id == $name))
       | unique_by(.version + "|" + .author + "|" + .language + "|" + .implementation)
       | if length == 1 then .[0] else empty end
     ')
@@ -324,7 +324,7 @@ preflight_validate_tuple() {
     --arg a "$CONNECTOR_AUTHOR" \
     --arg l "$CONNECTOR_LANGUAGE" \
     --arg i "$CONNECTOR_IMPLEMENTATION" '
-      map(select(.name==$n and .version==$v and .author==$a and .language==$l and .implementation==$i))
+      map(select(.id==$n and .version==$v and .author==$a and .language==$l and .implementation==$i))
       | length == 1
     ' 2>/dev/null || true)
 

@@ -1,32 +1,49 @@
 import { NextResponse } from "next/server";
+import { basename, dirname } from "path";
 import { listPipelines } from "@workspace/registry/pipelines";
 
 export const dynamic = "force-static";
 
 export async function GET() {
-  // Flatten to a list of pipeline permutations suitable for the installer
-  // Shape: [{ name, version, author, language, implementation }]
   const pipelines = listPipelines();
 
-  // Re-derive properties accurately since we have all components in paths
-  const accurate = pipelines.flatMap((p) =>
+  const items = pipelines.flatMap((p) =>
     p.providers.flatMap((provider) =>
       provider.implementations.map((impl) => {
-        // provider.path: pipeline-registry/<id>/<version>/<author>
-        const parts = provider.path.split("/");
-        const len = parts.length;
-        const version = parts[len - 2];
-        const author = parts[len - 1];
+        const version = basename(dirname(provider.path));
+        const author = provider.authorId;
+        const tags = provider.meta?.tags ?? p.root.meta?.tags ?? [];
+        const description =
+          provider.meta?.description ?? p.root.meta?.description ?? "";
+        const homepage = provider.meta?.homepage ?? p.root.meta?.homepage;
+
+        const providerBaseUrl =
+          provider.meta?.registryUrl ??
+          p.root.meta?.registryUrl ??
+          `https://github.com/514-labs/factory/tree/main/pipeline-registry/${p.pipelineId}/${version}/${author}`;
+
+        const githubUrl =
+          impl.implementation === "default"
+            ? `${providerBaseUrl}/${impl.language}`
+            : `${providerBaseUrl}/${impl.language}/${impl.implementation}`;
+
         return {
-          name: p.pipelineId,
+          type: "pipeline",
+          id: p.pipelineId,
+          name: p.root.meta?.name ?? p.pipelineId,
           version,
           author,
           language: impl.language,
           implementation: impl.implementation,
+          tags,
+          description,
+          homepage,
+          githubUrl,
+          providerGithubUrl: providerBaseUrl,
         };
       })
     )
   );
 
-  return NextResponse.json(accurate);
+  return NextResponse.json(items);
 }
