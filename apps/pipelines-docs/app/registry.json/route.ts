@@ -15,10 +15,9 @@ export async function GET() {
         const tags = provider.meta?.tags ?? p.root.meta?.tags ?? [];
         const description =
           provider.meta?.description ?? p.root.meta?.description ?? "";
-        const homepage = provider.meta?.homepage ?? p.root.meta?.homepage;
+        const homepage = p.root.meta?.homepage;
 
         const providerBaseUrl =
-          provider.meta?.registryUrl ??
           p.root.meta?.registryUrl ??
           `https://github.com/514-labs/factory/tree/main/pipeline-registry/${p.pipelineId}/${version}/${author}`;
 
