@@ -239,13 +239,13 @@ list_pipelines() {
     (. // [])
     | .[]
     | select(
-        want(.name; $f_name) and
+        want(.id; $f_name) and
         want(.version; $f_version) and
         want(.author; $f_author) and
         want(.language; $f_language) and
         want(.implementation; $f_impl)
       )
-    | "\(.name) \(.version) \(.author) \(.language) \(.implementation)"
+    | "\(.id) \(.version) \(.author) \(.language) \(.implementation)"
   ')
 
   if [ -z "$perms" ]; then
