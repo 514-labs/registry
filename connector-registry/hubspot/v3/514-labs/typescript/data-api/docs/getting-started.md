@@ -23,8 +23,26 @@ async function main() {
   });
   await hubspot.connect();
 
-  for await (const contact of hubspot.streamContacts({ pageSize: 100 })) {
-    console.log(contact.id);
+  // Fetch a page of contacts
+  const { data: contactsPage } = await hubspot.listContacts({
+    limit: 5,
+    properties: ["firstname", "lastname"],
+  });
+  for (const contact of contactsPage.results) {
+    console.log(`${contact.id}: ${contact.properties.firstname}`);
+  }
+
+  // Look up a single contact by id
+  const { data: contactDetail } = await hubspot.getContact({
+    id: contactsPage.results[0].id,
+    properties: ["email"],
+  });
+  console.log("Email:", contactDetail.properties.email);
+
+  // Stream deals lazily
+  for await (const deal of hubspot.streamDeals({ pageSize: 100 })) {
+    console.log("Deal", deal.id);
+    break; // remove break to process all deals
   }
 }
 
@@ -33,5 +51,21 @@ main().catch((err) => {
   process.exit(1);
 });
 ```
+
+## Available APIs
+
+The connector wraps several HubSpot CRM endpoints and exposes typed helpers for
+common objects:
+
+- **Contacts** – `listContacts`, `getContact`, `streamContacts`, `getContacts`
+- **Companies** – `listCompanies`, `getCompany`, `streamCompanies`,
+  `getCompanies`
+- **Deals** – `listDeals`, `getDeal`, `streamDeals`, `getDeals`
+- **Tickets** – `listTickets`, `getTicket`, `streamTickets`, `getTickets`
+- **Engagements** (`notes`, `calls`, `emails`, `meetings`, `tasks`) –
+  `listEngagements`, `getEngagement`, `streamEngagements`, `getEngagements`
+
+Each method maps directly to the corresponding [HubSpot CRM API](https://developers.hubspot.com/docs/reference/api) endpoint so
+you can quickly work with data in your workspace.
 
 See `docs/configuration.md` for all configuration options.
