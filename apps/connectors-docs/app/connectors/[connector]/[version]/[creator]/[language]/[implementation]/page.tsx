@@ -223,6 +223,7 @@ export default async function ConnectorImplementationPage({
           <ConnectorImplSidebar
             logoSrc={`/connector-logos/${conn.connectorId}.png`}
             title={displayName}
+            identifier={conn.connectorId}
             description={description}
             tags={tags}
             sourceHref={registryUrl}
