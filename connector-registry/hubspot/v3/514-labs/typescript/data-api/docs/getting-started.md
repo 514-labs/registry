@@ -4,11 +4,34 @@ This package provides a HubSpot CRM v3 connector. It exposes a simple lifecycle 
 
 ## Install
 
-- Navigate to your project, specifically where you want to install the connector
-- Run `bash -i <(curl https://connectors.514.ai/install.sh) hubspot v3 514-labs typescript`
-- In the hubspot directory, run `npm install && npm run build`
-- Update your project's `package.json` to understand the new connector folder. LLM is great for this!
-- Run `npm install` from your project root to update your `node_modules` with the new connector
+### 1. Navigate to your project
+
+Choose the directory in your project where you want to install the connector.
+
+### 2. Run the installer
+
+```bash
+bash -i <(curl https://connectors.514.ai/install.sh) hubspot v3 514-labs typescript
+```
+
+### 3. Build the connector
+
+From the generated `hubspot` directory, install dependencies and build:
+
+```bash
+npm install
+npm run build
+```
+
+### 4. Update project configuration
+
+Update your project's `package.json` to include the new connector folder. LLM is great for this!
+
+### 5. Install dependencies in the project root
+
+```bash
+npm install
+```
 
 ## Quick start
 
