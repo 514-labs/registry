@@ -35,6 +35,12 @@ export function ConnectorDetailsSidebar({
       {typeof thumbsUpCount === "number" && (
         <div className="text-sm text-muted-foreground">👍 {thumbsUpCount}</div>
       )}
+      <div className="space-y-2">
+        <div className="text-xs font-medium text-muted-foreground">
+          Identifier
+        </div>
+        <code className="text-sm font-mono">{connectorId}</code>
+      </div>
       {description ? (
         <p className="text-muted-foreground">{description}</p>
       ) : null}

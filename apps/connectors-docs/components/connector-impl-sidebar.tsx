@@ -21,6 +21,7 @@ type SidebarSectionItem = {
 export type ConnectorImplSidebarProps = {
   logoSrc: string;
   title: string;
+  identifier: string;
   description?: string;
   tags?: string[];
   sourceHref?: string;
@@ -42,6 +43,7 @@ export default function ConnectorImplSidebar(props: ConnectorImplSidebarProps) {
   const {
     logoSrc,
     title,
+    identifier,
     description,
     tags = [],
     sourceHref,
@@ -161,6 +163,13 @@ export default function ConnectorImplSidebar(props: ConnectorImplSidebarProps) {
       {description ? (
         <p className="text-muted-foreground">{description}</p>
       ) : null}
+
+      <div className="space-y-2">
+        <div className="text-xs text-muted-foreground font-medium">
+          Identifier
+        </div>
+        <code className="text-sm font-mono">{identifier}</code>
+      </div>
 
       <div className="space-y-6">
         {renderSection(
