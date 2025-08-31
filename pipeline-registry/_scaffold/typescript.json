@@ -29,6 +29,12 @@
       "description": "npm package name for the pipeline helpers (use @workspace/ prefix if publishing in this monorepo).",
       "example": "@workspace/pipeline-ga-to-clickhouse",
       "pattern": "^(@[a-z0-9-~][a-z0-9-._~]*)?/[a-z0-9-~][a-z0-9-._~]*$|^[a-z0-9-~][a-z0-9-._~]*$"
+    },
+    "resource": {
+      "description": "Default REST resource path segment (kebab-case).",
+      "example": "contacts",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "default": "resource"
     }
   },
   "structure": [
@@ -195,34 +201,43 @@
                             },
                             {
                               "type": "dir",
-                              "name": "extract",
+                              "name": "lib",
                               "children": [
                                 {
                                   "type": "file",
-                                  "name": "baseExtractor.ts",
-                                  "template": "export abstract class BaseExtractor { abstract run(): Promise<void> }\n"
+                                  "name": "paginate.ts",
+                                  "template": "export type HttpResponseEnvelope<T> = { data: T }\n\nexport type SendFn = <T = any>(args: {\n  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';\n  path: string;\n  query?: Record<string, any>;\n  headers?: Record<string, string>;\n  body?: unknown;\n  operation?: string;\n}) => Promise<HttpResponseEnvelope<T>>\n\nexport async function* paginateCursor<T = any>(params: {\n  send: SendFn;\n  path: string;\n  query?: Record<string, any>;\n  pageSize?: number;\n  extractItems?: (res: any) => T[];\n  extractNextCursor?: (res: any) => string | undefined;\n}) {\n  const extractItems = params.extractItems ?? ((res: any) => (res?.results ?? []) as T[])\n  const extractNext = params.extractNextCursor ?? ((res: any) => res?.paging?.next?.after as string | undefined)\n  let after: string | undefined = params.query?.after as string | undefined\n  const limit = params.pageSize ?? (params.query?.limit as number | undefined) ?? 100\n  // eslint-disable-next-line no-constant-condition\n  while (true) {\n    const res = await params.send<any>({ method: 'GET', path: params.path, query: { ...(params.query ?? {}), limit, after }, operation: 'paginate' })\n    const items = extractItems(res.data)\n    yield items\n    const next = extractNext(res.data)\n    if (!next) break\n    after = next\n  }\n}\n"
+                                },
+                                {
+                                  "type": "file",
+                                  "name": "make-resource.ts",
+                                  "template": "import { paginateCursor, type SendFn } from './paginate'\n\n/**\n * makeCrudResource\n * Creates a CRUD surface for a REST resource at `objectPath`.\n */\nexport function makeCrudResource<TItem, TListResponse, TSingleResponse>(objectPath: string, send: SendFn) {\n  const api = {\n    list: (params?: { properties?: string[]; limit?: number; after?: string }) => {\n      const query: Record<string, any> = {}\n      if (params?.properties?.length) query.properties = params.properties.join(',')\n      if (params?.limit) query.limit = params.limit\n      if (params?.after) query.after = params.after\n      return send<TListResponse>({ method: 'GET', path: objectPath, query })\n    },\n    get: (params: { id: string; properties?: string[] }) => {\n      const query: Record<string, any> = {}\n      if (params?.properties?.length) query.properties = params.properties.join(',')\n      return send<TSingleResponse>({ method: 'GET', path: `${objectPath}/${params.id}`, query })\n    },\n    streamAll: async function* (params?: { properties?: string[]; pageSize?: number }) {\n      const query: Record<string, any> = {}\n      if (params?.properties?.length) query.properties = params.properties.join(',')\n      for await (const items of paginateCursor<TItem>({ send, path: objectPath, query, pageSize: params?.pageSize })) {\n        for (const item of items) yield item\n      }\n    },\n    getAll: async (params?: { properties?: string[]; pageSize?: number; maxItems?: number }) => {\n      const results: TItem[] = []\n      for await (const item of api.streamAll({ properties: params?.properties, pageSize: params?.pageSize })) {\n        results.push(item)\n        if (params?.maxItems && results.length >= params.maxItems) break\n      }\n      return results\n    },\n  }\n  return api\n}\n"
+                                },
+                                {
+                                  "type": "file",
+                                  "name": "hooks.ts",
+                                  "template": "export type RequestOptions = {\n  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'\n  path: string\n  query?: Record<string, any>\n  headers?: Record<string, string>\n  body?: unknown\n  timeoutMs?: number\n  operation?: string\n}\n\nexport type ResponseMeta = {\n  timestamp: number\n  durationMs: number\n  retryCount: number\n  requestId?: string\n}\n\nexport type ResponseEnvelope<T> = {\n  data: T\n  status?: number\n  headers?: Record<string, string>\n  meta?: ResponseMeta\n}\n\nexport type HookContext = {\n  type: 'beforeRequest' | 'afterResponse' | 'onError' | 'onRetry'\n  request?: RequestOptions\n  response?: ResponseEnvelope<any>\n  error?: unknown\n  metadata?: Record<string, any>\n  attempt?: number\n}\n\nexport type Hook = (ctx: HookContext) => void | Promise<void>\n\nexport type Hooks = {\n  beforeRequest?: Hook[]\n  afterResponse?: Hook[]\n  onError?: Hook[]\n  onRetry?: Hook[]\n}\n\nexport async function runHooks(hooks: Hook[] | undefined, ctx: HookContext): Promise<void> {\n  for (const hook of hooks ?? []) {\n    // eslint-disable-next-line no-await-in-loop\n    await hook(ctx)\n  }\n}\n"
+                                },
+                                {
+                                  "type": "file",
+                                  "name": "send.ts",
+                                  "template": "import type { Hooks, RequestOptions, ResponseEnvelope } from './hooks'\nimport { runHooks } from './hooks'\n\nexport type DoRequest = <T = any>(req: RequestOptions) => Promise<ResponseEnvelope<T>>\n\nexport type RetryConfig = {\n  maxAttempts?: number\n  initialDelayMs?: number\n  maxDelayMs?: number\n  backoffMultiplier?: number\n  retryableStatusCodes?: number[]\n  respectRetryAfter?: boolean\n}\n\nfunction sleep(ms: number): Promise<void> {\n  return new Promise((resolve) => setTimeout(resolve, ms))\n}\n\nfunction calcDelay(attempt: number, cfg: Required<Pick<RetryConfig, 'initialDelayMs' | 'maxDelayMs' | 'backoffMultiplier'>>): number {\n  const exp = cfg.initialDelayMs * Math.pow(cfg.backoffMultiplier, attempt - 1)\n  const bounded = Math.min(exp, cfg.maxDelayMs)\n  const jitter = bounded * (0.5 + Math.random() * 0.5)\n  return Math.floor(jitter)\n}\n\nexport function createSend({ doRequest, hooks, retry }: { doRequest: DoRequest; hooks?: Hooks; retry?: RetryConfig }) {\n  const retryCfg: Required<RetryConfig> = {\n    maxAttempts: retry?.maxAttempts ?? 3,\n    initialDelayMs: retry?.initialDelayMs ?? 1000,\n    maxDelayMs: retry?.maxDelayMs ?? 30000,\n    backoffMultiplier: retry?.backoffMultiplier ?? 2,\n    retryableStatusCodes: retry?.retryableStatusCodes ?? [408, 425, 429, 500, 502, 503, 504],\n    respectRetryAfter: retry?.respectRetryAfter ?? true,\n  } as Required<RetryConfig>\n\n  async function send<T = any>(req: RequestOptions): Promise<ResponseEnvelope<T>> {\n    const startedAt = Date.now()\n    let lastError: unknown\n    for (let attempt = 1; attempt <= retryCfg.maxAttempts; attempt++) {\n      try {\n        await runHooks(hooks?.beforeRequest, { type: 'beforeRequest', request: req, attempt })\n        const res = await doRequest<T>(req)\n        await runHooks(hooks?.afterResponse, { type: 'afterResponse', request: req, response: res, attempt })\n        const status = res.status ?? 200\n        if (!retryCfg.retryableStatusCodes.includes(status)) {\n          res.meta = { ...(res.meta ?? {}), timestamp: Date.now(), durationMs: Date.now() - startedAt, retryCount: attempt - 1 }\n          return res\n        }\n        lastError = new Error(`Retryable status: ${status}`)\n      } catch (err) {\n        lastError = err\n        await runHooks(hooks?.onError, { type: 'onError', request: req, error: err, attempt })\n      }\n      if (attempt < retryCfg.maxAttempts) {\n        await runHooks(hooks?.onRetry, { type: 'onRetry', request: req, error: lastError, attempt })\n        const delay = calcDelay(attempt, { initialDelayMs: retryCfg.initialDelayMs, maxDelayMs: retryCfg.maxDelayMs, backoffMultiplier: retryCfg.backoffMultiplier })\n        await sleep(delay)\n        continue\n      }\n      break\n    }\n    throw lastError ?? new Error('Request failed')\n  }\n\n  return send\n}\n"
                                 }
                               ]
                             },
                             {
                               "type": "dir",
-                              "name": "transform",
+                              "name": "{resource}",
                               "children": [
                                 {
                                   "type": "file",
-                                  "name": "baseTransformer.ts",
-                                  "template": "export class BaseTransformer<T = unknown> { transform(record: T): T { return record } }\n"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "dir",
-                              "name": "load",
-                              "children": [
+                                  "name": "index.ts",
+                                  "template": "import { makeCrudResource } from '../lib/make-resource'\nimport type { SendFn } from '../lib/paginate'\nimport type { Model } from './model'\n\nexport const createResource = (send: SendFn) => makeCrudResource<Model, any, any>('/{resource}', send)\n"
+                                },
                                 {
                                   "type": "file",
-                                  "name": "baseLoader.ts",
-                                  "template": "export class BaseLoader<T = unknown> { async load(records: T[]): Promise<void> {} }\n"
+                                  "name": "model.ts",
+                                  "template": "export interface Model {\n  // Define your resource model fields\n  [key: string]: unknown\n}\n"
                                 }
                               ]
                             }

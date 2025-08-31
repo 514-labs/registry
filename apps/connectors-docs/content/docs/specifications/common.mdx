@@ -1,37 +1,43 @@
 ## Analytical Connectors Common Specification
 
-Purpose-built integrations that extract data from source systems and load it into analytical stores (data warehouses or lakes) for reporting, modeling, and BI. They prioritize correctness, incremental delivery, and schema stability.
+Purpose-built integrations that extract data from a source system and allow you to programatically interact with it for further processing. They prioritize correctness, incremental delivery, and schema stability.
 
 ### Data Model
-- Favor a normalized schema: entities (e.g., users, accounts), events (e.g., pageview, charge), and reference tables
-- Required columns per table: primary key, `updated_at` (source clock), `ingested_at` (connector clock UTC)
-- Prefer scalar columns; keep nested payloads in a `_raw` JSON column when needed
+- Leverage analytical data modeling best practices
+  - Extract raw data models with types and relationships
+  - Extract events with a timestamp and a primary key
+- Don't over process the data, just extract
 
 ### Sync Semantics
 - Support both initial full sync and ongoing incremental syncs
 - Use a deterministic cursor (e.g., `updated_at`, `event_timestamp`, or CDC offset); CDC is preferred when available
-- Perform idempotent loads via MERGE/UPSERT on primary key (and cursor where relevant)
 - Chunk and paginate reads; stream writes to avoid unbounded memory
 
 ### Schema Evolution
-- Backwards-compatible, additive by default; avoid breaking renames/drops
+- Versions should always have a deterministic schema that doesn't change. If you change the schema, you should create a new version.
 - Use stable, documented naming conventions (snake_case; UTC timestamps)
 - Emit clear migration notes when columns are added or semantics change
 
 ### Data Quality and Deletes
-- Deduplicate by primary key and the latest `updated_at`/version
-- Represent soft deletes with `is_deleted` and `deleted_at`; propagate hard deletes when the source exposes them
-- Validate basic types and required fields; route malformed rows to a dead-letter path/table
+- Deduplicate data data when the source doesn't guarantee uniqueness
+- Validate basic types and required fields; surface warnings and errors to the user
 
 ### Performance and Limits
 - Respect source rate limits; use concurrency controls and adaptive backoff with jitter
 - Use incremental checkpoints after each page/batch so jobs can resume safely
 - Prefer server-side filtering and projection to minimize transfer size
 
+### Structure and Modules
+- Prefer resource-oriented modules over ETL-phase folders.
+  - Organize code by API resource (e.g., /contacts, /companies), not extract/transform/load.
+  - Each resource exposes thin CRUD-like operations and streaming helpers: list, get, streamAll, getAll.
+  - Define a clear model per resource to capture fields and semantics.
+  - Share cross-cutting utilities (pagination, request helpers) in a common lib module.
+
 ### Observability
 - Logs: structured, with job/run IDs and page/batch numbers; never log secrets
 - Metrics: `rows_read`, `rows_written`, `lag_seconds`, `duplicate_rows`, `retries`, and `duration_seconds`
-- Optional tracing spans around source fetch, transform, and load
+- Optional tracing spans around request execution, pagination, and resource processing
 
 ### Security
 - TLS by default; least-privilege access to sources and targets
@@ -40,3 +46,10 @@ Purpose-built integrations that extract data from source systems and load it int
 ### Documentation
 - List covered entities and their cursors, limitations/quotas, and expected sync cadences
 - Provide example schemas, sample queries, and recovery steps for common failures
+- Documentation should have at least:
+  - A getting started page (/getting-started)
+  - A configuration page (/configuration)
+  - A schema overview page (/schema-overview)
+  - A Limits page (/limits | if no limits are known, clearly state that)
+  - A changelog page (/changelog)
+  - An FAQ page (/faq)
