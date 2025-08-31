@@ -29,6 +29,12 @@
       "description": "Python package name (snake_case).",
       "example": "pipeline_ga_to_clickhouse",
       "pattern": "^[a-z_][a-z0-9_]*$"
+    },
+    "resource": {
+      "description": "Default REST resource path segment (kebab-case).",
+      "example": "contacts",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "default": "resource"
     }
   },
   "structure": [
@@ -190,37 +196,43 @@
                                 },
                                 {
                                   "type": "dir",
-                                  "name": "extract",
+                                  "name": "lib",
                                   "children": [
-                                    { "type": "file", "name": "__init__.py" },
                                     {
                                       "type": "file",
-                                      "name": "base_extractor.py",
-                                      "template": "class BaseExtractor:\n    def run(self):\n        raise NotImplementedError\n"
+                                      "name": "paginate.py",
+                                      "template": "from typing import Any, Callable, Dict, Generator, Optional, TypedDict\n\nclass HttpResponseEnvelope(TypedDict):\n    data: Any\n\nSendFn = Callable[[Dict[str, Any]], HttpResponseEnvelope]\n\ndef paginate_cursor(\n    *,\n    send: Callable[[Dict[str, Any]], HttpResponseEnvelope],\n    path: str,\n    query: Optional[Dict[str, Any]] = None,\n    page_size: Optional[int] = None,\n    extract_items = None,\n    extract_next_cursor = None,\n) -> Generator[list[Any], None, None]:\n    if extract_items is None:\n        extract_items = lambda res: res.get('results', [])\n    if extract_next_cursor is None:\n        extract_next_cursor = lambda res: (res.get('paging', {}).get('next', {}) or {}).get('after')\n\n    after = (query or {}).get('after') if query else None\n    limit = page_size or (query or {}).get('limit') or 100\n    while True:\n        res = send({ 'method': 'GET', 'path': path, 'query': { **(query or {}), 'limit': limit, 'after': after }, 'operation': 'paginate' })\n        items = extract_items(res['data'])\n        yield items\n        next_cur = extract_next_cursor(res['data'])\n        if not next_cur:\n            break\n        after = next_cur\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "make_resource.py",
+                                      "template": "from .paginate import paginate_cursor\nfrom typing import Any, Dict, Optional\n\n# Create a CRUD surface for a REST resource at `object_path`.\n\ndef make_crud_resource(object_path: str, send):\n    def list_(properties: Optional[list[str]] = None, limit: Optional[int] = None, after: Optional[str] = None):\n        query: Dict[str, Any] = {}\n        if properties:\n            query['properties'] = ','.join(properties)\n        if limit is not None:\n            query['limit'] = limit\n        if after is not None:\n            query['after'] = after\n        return send({ 'method': 'GET', 'path': object_path, 'query': query })\n\n    def get(id: str, properties: Optional[list[str]] = None):\n        query: Dict[str, Any] = {}\n        if properties:\n            query['properties'] = ','.join(properties)\n        return send({ 'method': 'GET', 'path': f\"{object_path}/{id}\", 'query': query })\n\n    def stream_all(properties: Optional[list[str]] = None, page_size: Optional[int] = None):\n        query: Dict[str, Any] = {}\n        if properties:\n            query['properties'] = ','.join(properties)\n        for items in paginate_cursor(send=send, path=object_path, query=query, page_size=page_size):\n            for item in items:\n                yield item\n\n    def get_all(properties: Optional[list[str]] = None, page_size: Optional[int] = None, max_items: Optional[int] = None):\n        results: list[Any] = []\n        for item in stream_all(properties=properties, page_size=page_size):\n            results.append(item)\n            if max_items is not None and len(results) >= max_items:\n                break\n        return results\n\n    return { 'list': list_, 'get': get, 'stream_all': stream_all, 'get_all': get_all }\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "hooks.py",
+                                      "template": "from typing import Any, Callable, Dict, List, Optional, TypedDict\n\nclass RequestOptions(TypedDict, total=False):\n    method: str\n    path: str\n    query: Dict[str, Any]\n    headers: Dict[str, str]\n    body: Any\n    timeout_ms: int\n    operation: str\n\nclass ResponseMeta(TypedDict, total=False):\n    timestamp: int\n    duration_ms: int\n    retry_count: int\n    request_id: str\n\nclass ResponseEnvelope(TypedDict, total=False):\n    data: Any\n    status: int\n    headers: Dict[str, str]\n    meta: ResponseMeta\n\nclass HookContext(TypedDict, total=False):\n    type: str\n    request: RequestOptions\n    response: ResponseEnvelope\n    error: Any\n    metadata: Dict[str, Any]\n    attempt: int\n\nHook = Callable[[HookContext], None]\n\nclass Hooks(TypedDict, total=False):\n    beforeRequest: List[Hook]\n    afterResponse: List[Hook]\n    onError: List[Hook]\n    onRetry: List[Hook]\n\nasync def run_hooks(hooks: Optional[List[Hook]], ctx: HookContext) -> None:\n    if not hooks:\n        return\n    for hook in hooks:\n        res = hook(ctx)\n        if hasattr(res, '__await__'):\n            await res  # type: ignore\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "send.py",
+                                      "template": "import asyncio\nimport random\nimport time\nfrom typing import Any, Callable, Dict, Optional\n\nfrom .hooks import Hooks, RequestOptions, ResponseEnvelope, run_hooks\n\nDoRequest = Callable[[RequestOptions], ResponseEnvelope]\n\nclass RetryConfig:\n    def __init__(self, max_attempts: int = 3, initial_delay_ms: int = 1000, max_delay_ms: int = 30000, backoff_multiplier: float = 2.0, retryable_status_codes: Optional[list[int]] = None, respect_retry_after: bool = True):\n        self.max_attempts = max_attempts\n        self.initial_delay_ms = initial_delay_ms\n        self.max_delay_ms = max_delay_ms\n        self.backoff_multiplier = backoff_multiplier\n        self.retryable_status_codes = retryable_status_codes or [408, 425, 429, 500, 502, 503, 504]\n        self.respect_retry_after = respect_retry_after\n\n    def calc_delay(self, attempt: int) -> int:\n        exp = self.initial_delay_ms * (self.backoff_multiplier ** (attempt - 1))\n        bounded = min(exp, self.max_delay_ms)\n        jitter = bounded * (0.5 + random.random() * 0.5)\n        return int(jitter)\n\nasync def create_send(do_request: DoRequest, hooks: Optional[Hooks] = None, retry: Optional[RetryConfig] = None):\n    retry_cfg = retry or RetryConfig()\n\n    async def send(req: RequestOptions) -> ResponseEnvelope:\n        started_at = int(time.time() * 1000)\n        last_error: Any = None\n        for attempt in range(1, retry_cfg.max_attempts + 1):\n            try:\n                await run_hooks((hooks or {}).get('beforeRequest'), { 'type': 'beforeRequest', 'request': req, 'attempt': attempt })\n                res = do_request(req)\n                await run_hooks((hooks or {}).get('afterResponse'), { 'type': 'afterResponse', 'request': req, 'response': res, 'attempt': attempt })\n                status = res.get('status', 200)\n                if status not in retry_cfg.retryable_status_codes:\n                    meta = res.get('meta', {})\n                    meta.update({ 'timestamp': int(time.time() * 1000), 'duration_ms': int(time.time() * 1000) - started_at, 'retry_count': attempt - 1 })\n                    res['meta'] = meta\n                    return res\n                last_error = Exception(f'Retryable status: {status}')\n            except Exception as err:\n                last_error = err\n                await run_hooks((hooks or {}).get('onError'), { 'type': 'onError', 'request': req, 'error': err, 'attempt': attempt })\n            if attempt < retry_cfg.max_attempts:\n                await run_hooks((hooks or {}).get('onRetry'), { 'type': 'onRetry', 'request': req, 'error': last_error, 'attempt': attempt })\n                await asyncio.sleep(retry_cfg.calc_delay(attempt) / 1000.0)\n                continue\n            break\n        raise last_error or Exception('Request failed')\n\n    return send\n"
                                     }
                                   ]
                                 },
                                 {
                                   "type": "dir",
-                                  "name": "transform",
+                                  "name": "{resource}",
                                   "children": [
-                                    { "type": "file", "name": "__init__.py" },
                                     {
                                       "type": "file",
-                                      "name": "base_transformer.py",
-                                      "template": "class BaseTransformer:\n    def transform(self, record):\n        return record\n"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "dir",
-                                  "name": "load",
-                                  "children": [
-                                    { "type": "file", "name": "__init__.py" },
+                                      "name": "__init__.py",
+                                      "template": "from ..lib.make_resource import make_crud_resource\n\n__all__ = ['create_resource']\n\n\ndef create_resource(send):\n    return make_crud_resource('/{resource}', send)\n"
+                                    },
                                     {
                                       "type": "file",
-                                      "name": "base_loader.py",
-                                      "template": "class BaseLoader:\n    def load(self, records):\n        pass\n"
+                                      "name": "model.py",
+                                      "template": "from typing import Any, TypedDict\n\nclass Model(TypedDict, total=False):\n    # Define your resource model fields\n    any_field: Any\n"
                                     }
                                   ]
                                 }
