@@ -17,9 +17,20 @@ The connector must be language‑agnostic. Any illustrative snippets must be tre
 - **Resilient**: Backoff with jitter, circuit breaking, idempotency, and graceful degradation built in.
 - **Extensible**: Hooks/middleware enable customization without forking core.
 
-### Core Methods
+### Core Modules and Methods
 
-Every API connector must implement the following core functionality:
+Every API connector must implement the following core functionality and structure:
+#### Resource Abstraction
+
+- Organize code by API resources rather than ETL stages.
+- Each resource module lives under `src/{resource}` and must expose:
+  - `createResource(send)` factory that binds a base path (e.g., `/{resource}`) and returns a CRUD surface
+  - Operations: `list(params)`, `get({ id, ... })`, `streamAll(params)`, `getAll(params)`
+  - `model` definition describing the item shape for the resource
+- Cross-cutting helpers should live under `src/lib`:
+  - `paginate` iterator supporting cursor pagination (and extensible for other strategies)
+  - `make-resource` (or equivalent) to build the CRUD surface with pagination
+
 
 #### Initialization and Lifecycle
 
@@ -62,15 +73,12 @@ Every API connector must implement the following core functionality:
   Executes multiple requests in a single operation where supported by the API. Should handle partial failures gracefully.
 
 - **paginate(options)**  
-  Returns an iterator that automatically handles pagination, fetching subsequent pages as needed. Should support different pagination strategies.
+  Returns an iterator that automatically handles pagination, fetching subsequent pages as needed. Should support different pagination strategies. Resource modules should consume this via the shared lib.
 
 #### Optional Operations (if applicable)
 
 - **stream(options)**  
   Reads streaming responses (e.g., chunked, SSE) with backpressure and cancellation.
-
-- **upload(options)** / **download(options)**  
-  Handles large payload transfers, with multi‑part or resumable strategies when supported.
 
 ### Configuration Structure
 
