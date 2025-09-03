@@ -55,3 +55,28 @@ type ConnectorConfig = {
 ```
 
 Defaults come from `withDerivedDefaults` (see `src/config/defaults.ts`). OAuth2 fields are part of the public types, but the current transport applies only Bearer tokens.
+
+## Validation
+
+Configuration is validated during `initialize` and before any API calls. If invalid, a descriptive error is thrown.
+
+- Required fields depend on `auth.type`:
+  - If `auth.type` is `bearer`, you must provide `auth.bearer.token`.
+  - If `auth.type` is `oauth2`, you must provide `auth.oauth2.clientId`, `auth.oauth2.clientSecret`, and `auth.oauth2.refreshToken`.
+- Optional numeric fields are range-checked (e.g., `timeoutMs > 0`, `retry.maxDelayMs >= retry.initialDelayMs`).
+- URLs must be valid when provided (e.g., `baseUrl`, `auth.oauth2.tokenUrl`).
+
+Example errors:
+
+```text
+Invalid configuration: bearer.token: Missing required field auth.bearer.token
+Invalid configuration: retry.maxDelayMs: retry.maxDelayMs must be >= retry.initialDelayMs
+```
+
+Programmatic validation is available via:
+
+```ts
+import { validateConfig } from "connector-hubspot/config";
+
+const resolved = validateConfig(userConfig);
+```
