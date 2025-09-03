@@ -1,5 +1,30 @@
 import type { Hook, HookType } from "./hooks";
 
+export type LogLevel = "debug" | "info" | "warn" | "error";
+
+export interface LoggingOptions {
+  enabled?: boolean;
+  level?: LogLevel;
+  includeQueryParams?: boolean;
+  includeHeaders?: boolean;
+  includeBody?: boolean;
+  logger?: (level: LogLevel, event: Record<string, unknown>) => void;
+}
+
+export interface MetricsLabels {
+  [key: string]: string | number | boolean | undefined;
+}
+
+export interface MetricsSink {
+  incrementCounter: (name: string, value?: number, labels?: MetricsLabels) => void;
+  observe: (name: string, value: number, labels?: MetricsLabels) => void;
+}
+
+export interface MetricsOptions {
+  enabled?: boolean;
+  sink?: MetricsSink;
+}
+
 export interface ConnectorAuthConfig {
   type: "bearer" | "oauth2";
   bearer?: { token: string };
@@ -47,6 +72,9 @@ export interface ConnectorConfig {
   circuitBreaker?: CircuitBreakerConfig;
   rateLimit?: RateLimitConfig;
   hooks?: Partial<Record<HookType, Hook[]>>;
+  // Observability (built-in hooks)
+  enableLogging?: boolean | LoggingOptions;
+  enableMetrics?: boolean | MetricsOptions;
 }
 
 
