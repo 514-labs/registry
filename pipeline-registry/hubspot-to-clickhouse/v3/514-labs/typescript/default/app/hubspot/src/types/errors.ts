@@ -6,8 +6,20 @@ export type ConnectorErrorSource =
   | "userHook"
   | "unknown";
 
+export type ConnectorErrorCode =
+  | "NETWORK_ERROR"
+  | "TIMEOUT"
+  | "AUTH_FAILED"
+  | "RATE_LIMIT"
+  | "INVALID_REQUEST"
+  | "SERVER_ERROR"
+  | "PARSING_ERROR"
+  | "VALIDATION_ERROR"
+  | "CANCELLED"
+  | "UNSUPPORTED";
+
 export class ConnectorError extends Error {
-  code: string;
+  code: ConnectorErrorCode;
   statusCode?: number;
   retryable?: boolean;
   details?: unknown;
@@ -16,7 +28,7 @@ export class ConnectorError extends Error {
 
   constructor(params: {
     message: string;
-    code: string;
+    code: ConnectorErrorCode;
     statusCode?: number;
     retryable?: boolean;
     details?: unknown;
