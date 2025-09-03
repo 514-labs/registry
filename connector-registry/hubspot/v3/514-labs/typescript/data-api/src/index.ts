@@ -42,6 +42,12 @@ export class HubSpotApiConnector implements HubSpotConnector {
           headers["Authorization"] = `Bearer ${token}`;
         }
       },
+      onRateLimitSignal: (info) => {
+        // Only adapt when flag enabled
+        if (this.config?.rateLimit?.adaptiveFromHeaders && this.limiter) {
+          this.limiter.updateFromResponse(info);
+        }
+      },
     });
     const rps = this.config.rateLimit?.requestsPerSecond ?? 0;
     const capacity = this.config.rateLimit?.burstCapacity ?? rps;

@@ -41,7 +41,7 @@ type ConnectorConfig = {
     requestsPerSecond?: number;             // default: 15
     concurrentRequests?: number;            // default: 10
     burstCapacity?: number;                 // default: 30
-    adaptiveFromHeaders?: boolean;          // default: true (reserved; not adaptive yet)
+    adaptiveFromHeaders?: boolean;          // default: true (when true, auto‑adapts using rate‑limit headers)
   };
 
   // Hooks

@@ -18,6 +18,7 @@ export interface HttpRequestOptions {
 
 export interface HttpClientOptions {
   applyAuth?: (req: { headers: Record<string, string> }) => void;
+  onRateLimitSignal?: (info: { limit?: number; remaining?: number; reset?: number; retryAfterSeconds?: number }) => void;
 }
 
 export class HttpClient {
@@ -127,6 +128,10 @@ export class HttpClient {
           reset: Number(hdrs["x-hubspot-ratelimit-reset"]),
           retryAfterSeconds: Number.isFinite(retryAfter) ? retryAfter : undefined,
         };
+
+        try {
+          this.options.onRateLimitSignal?.(rateLimit);
+        } catch {}
 
         const envelope: HttpResponseEnvelope<T> = {
           data: data as T,

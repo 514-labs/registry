@@ -275,10 +275,6 @@ importers:
         specifier: ^5
         version: 5.8.3
 
-  connector-registry/google-analytics/v4/514-labs/typescript/data-api: {}
-
-  connector-registry/google-analytics/v4/tg339/typescript/data-api: {}
-
   connector-registry/hubspot/v3/514-labs/typescript/data-api:
     dependencies:
       zod:
