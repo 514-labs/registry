@@ -1,6 +1,7 @@
 import type { ConnectorConfig } from "../types/config";
 import type { HttpResponseEnvelope } from "../types/envelopes";
 import { ConnectorError } from "../types/errors";
+import type { ConnectorErrorCode } from "../types/errors";
 import { applyHookPipeline } from "./middleware/hook-middleware";
 import http from "node:http";
 import https from "node:https";
@@ -104,8 +105,12 @@ export class HttpClient {
     const retryBudget = this.config.retry?.retryBudgetMs ?? 60000;
     const budgetDeadline = start + retryBudget;
 
-    while (true) {
+    const maxAttempts = this.config.retry?.maxAttempts ?? 3;
+    for (;;) {
       attempt += 1;
+      if (attempt > maxAttempts) {
+        throw new ConnectorError({ message: "Maximum retry attempts exceeded", code: "TIMEOUT", source: "transport", retryable: true, details: { method: req.method, path, url: req.url, attemptNumber: attempt - 1, durationMs: Date.now() - start } });
+      }
       try {
         const { status, headers: resHeaders, text } = await this.nodeHttpRequest(req.url, {
           method: req.method,
@@ -167,7 +172,7 @@ export class HttpClient {
           }
 
           // Map non-2xx responses to standardized error codes
-          let code: string = "SERVER_ERROR";
+          let code: ConnectorErrorCode = "SERVER_ERROR";
           let source: "transport" | "auth" | "rateLimit" | "deserialize" | "userHook" | "unknown" = "unknown";
           let retryable = false;
           let message = `Request failed (received ${status})`;
