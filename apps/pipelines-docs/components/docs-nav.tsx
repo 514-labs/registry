@@ -19,6 +19,7 @@ export default function DocsNav() {
   const items = [
     { title: "Introduction", href: "/docs" },
     { title: "Installation", href: "/docs/installation" },
+    { title: "Quickstart", href: "/docs/quickstart" },
     { title: "Scaffold", href: "/docs/scaffold" },
     { title: "Lineage", href: "/docs/lineage" },
     {
