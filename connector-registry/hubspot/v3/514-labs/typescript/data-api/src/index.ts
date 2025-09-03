@@ -138,5 +138,5 @@ export type * from "./models";
 
 
 // Observability exports
-export { createLoggingHooks } from "./logging-hooks";
-export { createMetricsHooks, InMemoryMetricsSink, createInMemoryMetricsSink } from "./metrics-hooks";
+export { createLoggingHooks } from "./observability";
+export { createMetricsHooks, InMemoryMetricsSink, createInMemoryMetricsSink } from "./observability";
