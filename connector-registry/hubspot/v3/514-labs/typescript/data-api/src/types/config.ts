@@ -23,6 +23,12 @@ export interface RetryConfig {
   respectRetryAfter?: boolean;
 }
 
+export interface CircuitBreakerConfig {
+  enabled?: boolean;
+  threshold?: number;
+  coolDownMs?: number;
+}
+
 export interface RateLimitConfig {
   requestsPerSecond?: number;
   concurrentRequests?: number;
@@ -38,6 +44,7 @@ export interface ConnectorConfig {
   defaultQueryParams?: Record<string, string | number | boolean>;
   auth: ConnectorAuthConfig;
   retry?: RetryConfig;
+  circuitBreaker?: CircuitBreakerConfig;
   rateLimit?: RateLimitConfig;
   hooks?: Partial<Record<HookType, Hook[]>>;
 }
