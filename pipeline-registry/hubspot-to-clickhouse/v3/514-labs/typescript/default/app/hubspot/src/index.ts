@@ -16,7 +16,7 @@
 import type { HubSpotConnector } from "./types/connector";
 import type { ConnectorConfig } from "./types/config";
 import type { HttpResponseEnvelope } from "./types/envelopes";
-import { withDerivedDefaults } from "./config/defaults";
+import { validateConfig } from "./config/validation";
 import { HttpClient } from "./client/http-client";
 import { TokenBucketLimiter } from "./rate-limit/token-bucket";
 import { paginateCursor, type SendFn } from "./core/paginate";
@@ -33,7 +33,7 @@ export class HubSpotApiConnector implements HubSpotConnector {
   private limiter?: TokenBucketLimiter;
 
   initialize(userConfig: ConnectorConfig) {
-    this.config = withDerivedDefaults(userConfig);
+    this.config = validateConfig(userConfig);
     this.http = new HttpClient(this.config, {
       applyAuth: ({ headers }) => {
         if (this.config?.auth.type === "bearer") {
