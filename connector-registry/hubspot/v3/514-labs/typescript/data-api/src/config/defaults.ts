@@ -1,4 +1,7 @@
 import type { ConnectorConfig } from "../types/config";
+import type { Hook, HookType } from "../types/hooks";
+import { createLoggingHooks } from "../observability/logging-hooks";
+import { createMetricsHooks } from "../observability/metrics-hooks";
 
 export function withDerivedDefaults(user: ConnectorConfig): ConnectorConfig {
   const base: ConnectorConfig = {
@@ -28,7 +31,8 @@ export function withDerivedDefaults(user: ConnectorConfig): ConnectorConfig {
     },
     hooks: {},
   };
-  return {
+
+  const merged: ConnectorConfig = {
     ...base,
     ...user,
     retry: { ...base.retry, ...user.retry },
@@ -36,6 +40,30 @@ export function withDerivedDefaults(user: ConnectorConfig): ConnectorConfig {
     defaultHeaders: { ...base.defaultHeaders, ...user.defaultHeaders },
     defaultQueryParams: { ...base.defaultQueryParams, ...user.defaultQueryParams },
   };
+
+  // Append built-in hooks based on enable flags
+  const hooks: Partial<Record<HookType, Hook[]>> = { ...(merged.hooks ?? {}) };
+
+  if (merged.enableLogging) {
+    const loggingOptions = typeof merged.enableLogging === "object" ? merged.enableLogging : { enabled: true };
+    const logging = createLoggingHooks(loggingOptions);
+    for (const phase of ["beforeRequest", "afterResponse", "onError", "onRetry"] as HookType[]) {
+      const toAdd = (logging as any)[phase] as Hook[] | undefined;
+      if (toAdd?.length) hooks[phase] = [ ...(hooks[phase] ?? []), ...toAdd ];
+    }
+  }
+
+  if (merged.enableMetrics) {
+    const metricsOptions = typeof merged.enableMetrics === "object" ? merged.enableMetrics : { enabled: true };
+    const { hooks: metrics } = createMetricsHooks(metricsOptions as any);
+    for (const phase of ["beforeRequest", "afterResponse", "onError", "onRetry"] as HookType[]) {
+      const toAdd = (metrics as any)[phase] as Hook[] | undefined;
+      if (toAdd?.length) hooks[phase] = [ ...(hooks[phase] ?? []), ...toAdd ];
+    }
+  }
+
+  merged.hooks = hooks;
+  return merged;
 }
 
 

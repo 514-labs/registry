@@ -133,4 +133,7 @@ export type { HttpResponseEnvelope } from "./types/envelopes";
 // Export all model types for external use
 export type * from "./models";
 
+// Observability utilities for manual composition
+export { createLoggingHooks, createMetricsHooks, InMemoryMetricsSink } from "./observability";
+
 
