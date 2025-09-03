@@ -51,6 +51,10 @@ type ConnectorConfig = {
     onRetry?: Function[];
     onError?: Function[];
   };
+
+  // Observability (built-in hooks)
+  enableLogging?: boolean | { level?: "debug" | "info" | "warn" | "error"; includeQueryParams?: boolean; includeHeaders?: boolean; includeBody?: boolean };
+  enableMetrics?: boolean;
 }
 ```
 
@@ -79,4 +83,42 @@ Programmatic validation is available via:
 import { validateConfig } from "@workspace/connector-hubspot/config";
 
 const resolved = validateConfig(userConfig);
+```
+
+## Observability
+
+Built-in logging and metrics hooks can be enabled without writing any custom code:
+
+```ts
+import { createHubSpotConnector } from "@connector-factory/hubspot";
+
+const connector = createHubSpotConnector();
+connector.initialize({
+  auth: { type: "bearer", bearer: { token: process.env.HUBSPOT_TOKEN! } },
+  enableLogging: { level: "info" },   // or true for defaults
+  enableMetrics: true,                 // in-memory counters/timings
+});
+```
+
+- With logging enabled, each request logs a one-line JSON like: `{ "event": "http_response", "method": "GET", "url": "https://api.hubapi.com/crm/v3/objects/contacts", "status": 200, "durationMs": 120, "retryCount": 0 }`.
+- With metrics enabled, the connector records counters and timings in an in-memory sink. You can access a sink by composing manually (see below).
+
+### Manual composition
+If you prefer manual control, you can import and attach the hooks yourself:
+
+```ts
+import { createLoggingHooks, createMetricsHooks, InMemoryMetricsSink } from "@connector-factory/hubspot";
+
+const logging = createLoggingHooks({ level: "info" });
+const { hooks: metricsHooks, sink } = createMetricsHooks({ sink: new InMemoryMetricsSink() }, { service: "hubspot" });
+
+connector.initialize({
+  auth: { type: "bearer", bearer: { token } },
+  hooks: {
+    ...logging,
+    ...metricsHooks,
+  },
+});
+
+// later: sink.getSnapshot() for simple inspection in tests/dev
 ```

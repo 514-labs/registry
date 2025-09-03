@@ -137,3 +137,6 @@ export type { HttpResponseEnvelope } from "./types/envelopes";
 export type * from "./models";
 
 
+// Observability exports
+export { createLoggingHooks } from "./observability";
+export { createMetricsHooks, InMemoryMetricsSink, createInMemoryMetricsSink } from "./observability";
