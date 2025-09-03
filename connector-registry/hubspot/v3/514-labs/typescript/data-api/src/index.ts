@@ -25,6 +25,7 @@ import { buildCompaniesDomain } from "./domains/companies";
 import { buildDealsDomain } from "./domains/deals";
 import { buildTicketsDomain } from "./domains/tickets";
 import { buildEngagementsDomain } from "./domains/engagements";
+import { buildValidationHook } from "./config/default-hooks";
 
 export class HubSpotApiConnector implements HubSpotConnector {
   private config?: ConnectorConfig;
@@ -34,6 +35,14 @@ export class HubSpotApiConnector implements HubSpotConnector {
 
   initialize(userConfig: ConnectorConfig) {
     this.config = withDerivedDefaults(userConfig);
+    // Wire validation hook if enabled
+    const validationHook = buildValidationHook(this.config);
+    if (validationHook) {
+      this.config.hooks = {
+        ...(this.config.hooks ?? {}),
+        afterResponse: [...(this.config.hooks?.afterResponse ?? []), validationHook],
+      };
+    }
     this.http = new HttpClient(this.config, {
       applyAuth: ({ headers }) => {
         if (this.config?.auth.type === "bearer") {
@@ -76,7 +85,7 @@ export class HubSpotApiConnector implements HubSpotConnector {
 
   // Generic paginator (advanced)
   async *paginate<T = any>(options: { path: string; query?: Record<string, any>; pageSize?: number; extractItems?: (res: any) => T[]; extractNextCursor?: (res: any) => string | undefined }) {
-    const sendLite: SendFn = async (args) => this.send<any>(args);
+    const sendLite: SendFn = async (args) => this.send<any>({ ...args, operation: args.operation ?? "paginate" });
     yield* paginateCursor<T>({ send: sendLite, path: options.path, query: options.query, pageSize: options.pageSize, extractItems: options.extractItems, extractNextCursor: options.extractNextCursor });
   }
 
@@ -84,11 +93,11 @@ export class HubSpotApiConnector implements HubSpotConnector {
   private get domain() {
     const sendLite: SendFn = async (args) => this.send<any>(args);
     return {
-      ...buildContactsDomain(sendLite),
-      ...buildCompaniesDomain(sendLite),
-      ...buildDealsDomain(sendLite),
-      ...buildTicketsDomain(sendLite),
-      ...buildEngagementsDomain(sendLite),
+      ...buildContactsDomain((args) => sendLite({ ...args, operation: args.operation ?? "contacts" })),
+      ...buildCompaniesDomain((args) => sendLite({ ...args, operation: args.operation ?? "companies" })),
+      ...buildDealsDomain((args) => sendLite({ ...args, operation: args.operation ?? "deals" })),
+      ...buildTicketsDomain((args) => sendLite({ ...args, operation: args.operation ?? "tickets" })),
+      ...buildEngagementsDomain((args) => sendLite({ ...args, operation: args.operation ?? `engagements:${(args.query?.objectType as string) || "generic"}` })),
     };
   }
 

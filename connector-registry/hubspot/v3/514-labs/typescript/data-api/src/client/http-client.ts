@@ -80,6 +80,7 @@ export class HttpClient {
       type,
       operation: opts.operation,
       request: req,
+      modifyRequest: (updates) => Object.assign(req, updates),
       abort: (reason?: string) => {
         aborted = true;
         abortReason = reason ?? "Aborted by hook";
