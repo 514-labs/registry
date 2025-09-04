@@ -9,8 +9,8 @@ program
   .description('514 Labs Registry CLI')
   .version(pkg.version)
 
-// Ensure parsing/validation errors cause non-zero exit codes when awaited
-program.exitOverride()
+// Show help after errors
+program.showHelpAfterError()
 
 program
   .command('scaffold')
@@ -30,12 +30,23 @@ program
   })
 
 async function main() {
-  await program.parseAsync(process.argv)
+  try {
+    await program.parseAsync(process.argv)
+  } catch (error: any) {
+    // Handle Commander.js help display (not actually an error)
+    if (error?.code === 'commander.helpDisplayed') {
+      process.exit(error.exitCode || 0)
+    }
+    
+    // Handle parsing errors gracefully
+    if (error?.message) {
+      console.error(error.message)
+    } else {
+      console.error(error)
+    }
+    process.exit(1)
+  }
 }
 
-main().catch((error: any) => {
-  console.error(error)
-  const code = typeof error?.exitCode === 'number' ? error.exitCode : 1
-  process.exit(code)
-})
+main()
 
