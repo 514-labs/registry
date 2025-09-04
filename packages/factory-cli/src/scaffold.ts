@@ -52,6 +52,8 @@ type ScaffoldFile = {
   structure: StructureNode[]
 }
 
+type PromptObject = { [key: string]: any }
+
 async function readJson(file: string): Promise<any> {
   const buf = await fs.readFile(file, 'utf8')
   return JSON.parse(buf)
@@ -81,7 +83,7 @@ async function applyStructure(targetRoot: string, nodes: StructureNode[], vars: 
     if (node.type === 'dir') {
       log.push(kleur.cyan(`mkdir ${relPath}/`))
       if (!dryRun) await ensureDir(currentPath)
-      if (node.children?.length) await applyStructure(targetRoot, node.children, vars, dryRun, log, relPath)
+      if (node.children?.length) await applyStructure(currentPath, node.children, vars, dryRun, log, relPath)
     } else if (node.type === 'file') {
       const content = replaceTemplatePlaceholders(node.template ?? '', vars)
       log.push(kleur.green(`write ${relPath}`))
@@ -102,7 +104,7 @@ export async function runScaffold({ kind, language, options }: { kind: Kind; lan
 
   const varsSpec = scaffold.variables
   const ask = async () => {
-    const questions: prompts.PromptObject[] = []
+    const questions: PromptObject[] = []
     const pushQ = (name: string, message: string, initial?: string) => {
       questions.push({ type: 'text', name, message, initial })
     }
