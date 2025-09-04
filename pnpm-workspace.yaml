@@ -3,4 +3,5 @@ packages:
   - "connector-registry/**"
   - "packages/*"
   - "pipeline-registry/**"
+  - "examples/*"
   - "packages/cli"

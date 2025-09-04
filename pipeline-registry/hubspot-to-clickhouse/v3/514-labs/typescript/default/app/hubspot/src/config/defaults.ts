@@ -19,6 +19,11 @@ export function withDerivedDefaults(user: ConnectorConfig): ConnectorConfig {
       retryBudgetMs: 60000,
       respectRetryAfter: true,
     },
+    circuitBreaker: {
+      enabled: true,
+      threshold: 5,
+      coolDownMs: 60000,
+    },
     rateLimit: {
       // HubSpot documented burst limit baseline (varies by plan); start conservative
       requestsPerSecond: 15,
@@ -32,6 +37,7 @@ export function withDerivedDefaults(user: ConnectorConfig): ConnectorConfig {
     ...base,
     ...user,
     retry: { ...base.retry, ...user.retry },
+    circuitBreaker: { ...base.circuitBreaker, ...user.circuitBreaker },
     rateLimit: { ...base.rateLimit, ...user.rateLimit },
     defaultHeaders: { ...base.defaultHeaders, ...user.defaultHeaders },
     defaultQueryParams: { ...base.defaultQueryParams, ...user.defaultQueryParams },
