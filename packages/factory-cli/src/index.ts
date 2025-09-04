@@ -26,5 +26,10 @@ program
     await runScaffold({ kind, language, options: opts })
   })
 
-program.parseAsync(process.argv)
+try {
+  await program.parseAsync(process.argv)
+} catch (error) {
+  console.error(error)
+  process.exit(1)
+}
 
