@@ -35,6 +35,46 @@ export class TokenBucketLimiter {
   }
 
   /**
+   * Calculate delay until reset time with robust timestamp detection.
+   * Uses reasonable epoch bounds instead of naive comparison to avoid misinterpretation.
+   */
+  private calculateResetDelay(resetVal: number, nowSec: number): number {
+    // Input validation
+    if (!Number.isFinite(resetVal) || resetVal < 0) {
+      return 0;
+    }
+
+    // Reasonable epoch bounds (2020-01-01 to 2030-01-01)
+    const EPOCH_MIN = 1577836800; // 2020-01-01 00:00:00 UTC
+    const EPOCH_MAX = 1893456000; // 2030-01-01 00:00:00 UTC
+    
+    // Maximum reasonable relative duration (24 hours)
+    const MAX_RELATIVE_SECONDS = 86400;
+
+    // Determine if resetVal is likely an epoch timestamp or relative duration
+    const isLikelyEpoch = resetVal >= EPOCH_MIN && resetVal <= EPOCH_MAX;
+    const isLikelyRelative = resetVal > 0 && resetVal <= MAX_RELATIVE_SECONDS;
+
+    if (isLikelyEpoch) {
+      // Treat as epoch timestamp
+      const delaySeconds = Math.max(0, resetVal - nowSec);
+      // Cap at reasonable maximum to prevent extremely long cooldowns
+      return Math.min(delaySeconds * 1000, MAX_RELATIVE_SECONDS * 1000);
+    } else if (isLikelyRelative) {
+      // Treat as relative duration
+      return Math.max(0, resetVal * 1000);
+    } else {
+      // Ambiguous or invalid value - use conservative fallback
+      // If it's a very large number, likely a malformed epoch, cap it
+      if (resetVal > MAX_RELATIVE_SECONDS) {
+        return MAX_RELATIVE_SECONDS * 1000; // Default to max reasonable duration
+      }
+      // Otherwise treat as relative but cap it
+      return Math.min(Math.max(0, resetVal * 1000), MAX_RELATIVE_SECONDS * 1000);
+    }
+  }
+
+  /**
    * Update limiter based on response headers/meta.
    * Accepts HubSpot-style hints: limit, remaining, reset (sec or epoch-sec), retryAfterSeconds.
    */
@@ -59,8 +99,9 @@ export class TokenBucketLimiter {
       if (remaining <= 0 && info.reset !== undefined && Number.isFinite(info.reset as number)) {
         const resetVal = info.reset as number;
         const nowSec = Math.floor(Date.now() / 1000);
-        // Heuristic: treat values larger than nowSec as epoch seconds, otherwise seconds-from-now
-        const msUntil = resetVal > nowSec ? Math.max(0, (resetVal - nowSec) * 1000) : Math.max(0, resetVal * 1000);
+        
+        // Robust timestamp detection: use reasonable epoch bounds instead of naive comparison
+        const msUntil = this.calculateResetDelay(resetVal, nowSec);
         if (msUntil > 0) {
           this.setCooldownFor(msUntil);
           // eslint-disable-next-line no-console
@@ -98,6 +139,7 @@ export class TokenBucketLimiter {
   }
 
   async waitForSlot(): Promise<void> {
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       const now = Date.now();
       if (this.cooldownUntilMs && now < this.cooldownUntilMs) {
