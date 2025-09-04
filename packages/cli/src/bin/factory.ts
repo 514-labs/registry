@@ -30,37 +30,48 @@ program
   .option("--output <file>", "write JSONL output to a file instead of stdout")
   .option("--no-logs", "disable verbose request/response logs")
   .action(async (connectorName: string, opts: any) => {
-    const { implementation, operation, config: configPath, params: paramsJson, limit, output, logs } = opts;
+    try {
+      const { implementation, operation, config: configPath, params: paramsJson, limit, output, logs } = opts;
 
-    const implParts = implementation.split("/");
-    if (!implParts[0]) throw new Error("--implementation must be like 'typescript/data-api' or 'typescript'");
-    const language = implParts[0];
+      const implParts = implementation.split("/");
+      if (!implParts[0]) {
+        console.error("Error: --implementation must be like 'typescript/data-api' or 'typescript'");
+        process.exit(1);
+      }
+      const language = implParts[0];
 
-    const params = paramsJson ? JSON.parse(paramsJson) : undefined;
+      const params = paramsJson ? JSON.parse(paramsJson) : undefined;
 
-    const harnessConfig: HarnessConfig = await loadConfigFromFileOrEnv(configPath ?? null, {
-      connector: connectorName,
-      language,
-      implementation,
-      enableLogs: logs !== false,
-    });
+      const harnessConfig: HarnessConfig = await loadConfigFromFileOrEnv(configPath ?? null, {
+        connector: connectorName,
+        language,
+        implementation,
+        enableLogs: logs !== false,
+      });
 
-    const outputStream = output ? fs.createWriteStream(path.resolve(process.cwd(), output), { flags: "w" }) : process.stdout;
+      const outputStream = output ? fs.createWriteStream(path.resolve(process.cwd(), output), { flags: "w" }) : process.stdout;
 
-    const resultCode = await runConnectorOperation({
-      connectorName,
-      language,
-      implementation,
-      operationName: operation,
-      params,
-      limit: typeof limit === "number" ? limit : undefined,
-      config: harnessConfig.connectorConfig,
-      output: outputStream,
-      enableLogs: harnessConfig.enableLogs,
-    });
-    if (output && outputStream !== process.stdout) outputStream.end();
-    process.exit(resultCode);
+      const resultCode = await runConnectorOperation({
+        connectorName,
+        language,
+        implementation,
+        operationName: operation,
+        params,
+        limit: typeof limit === "number" ? limit : undefined,
+        config: harnessConfig.connectorConfig,
+        output: outputStream,
+        enableLogs: harnessConfig.enableLogs,
+      });
+      if (output && outputStream !== process.stdout) outputStream.end();
+      process.exit(resultCode);
+    } catch (error) {
+      console.error(`Error: ${error instanceof Error ? error.message : String(error)}`);
+      process.exit(1);
+    }
   });
 
-program.parseAsync(process.argv);
+program.parseAsync(process.argv).catch((error) => {
+  console.error(`Error: ${error instanceof Error ? error.message : String(error)}`);
+  process.exit(1);
+});
 
