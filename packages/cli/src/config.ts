@@ -25,6 +25,15 @@ export type HarnessConfig = {
   connectorConfig: ConnectorConfig;
 };
 
+function parseEnvNumber(envVar: string | undefined, name: string): number | undefined {
+  if (!envVar) return undefined;
+  const parsed = Number(envVar);
+  if (Number.isNaN(parsed)) {
+    throw new Error(`Invalid ${name}: "${envVar}" is not a valid number`);
+  }
+  return parsed;
+}
+
 const FileConfigSchema = z.object({
   baseUrl: z.string().optional(),
   timeoutMs: z.number().optional(),
@@ -83,12 +92,13 @@ export async function loadConfigFromFileOrEnv(filePath: string | null, opts: { c
     // Map common env vars to a minimal ConnectorConfig
     const token = process.env.HUBSPOT_TOKEN ?? process.env.API_TOKEN ?? process.env.TOKEN;
     if (!token) {
-      throw new Error("No config file provided and no token found in environment (expected HUBSPOT_TOKEN or API_TOKEN)");
+      throw new Error("No config file provided and no token found in environment (expected HUBSPOT_TOKEN, API_TOKEN, or TOKEN)");
     }
+    const requestsPerSecond = parseEnvNumber(process.env.REQUESTS_PER_SECOND, "REQUESTS_PER_SECOND");
     connectorConfig = {
       auth: { type: "bearer", bearer: { token } },
-      timeoutMs: process.env.TIMEOUT_MS ? Number(process.env.TIMEOUT_MS) : undefined,
-      rateLimit: process.env.REQUESTS_PER_SECOND ? { requestsPerSecond: Number(process.env.REQUESTS_PER_SECOND) } : undefined,
+      timeoutMs: parseEnvNumber(process.env.TIMEOUT_MS, "TIMEOUT_MS"),
+      rateLimit: requestsPerSecond ? { requestsPerSecond } : undefined,
     };
   }
 
