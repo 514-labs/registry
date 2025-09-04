@@ -1,0 +1,35 @@
+{
+  "name": "@workspace/factory-cli",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local Connector Testing Harness CLI for running connectors in isolation",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "factory": "dist/bin/factory.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "example.config.json"
+  ],
+  "scripts": {
+    "build": "tsup src/bin/factory.ts src/index.ts --format esm --external @workspace/connector-hubspot",
+    "dev": "node --enable-source-maps dist/bin/factory.js"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
+    "zod": "^3.25.8",
+    "@workspace/connector-hubspot": "workspace:*"
+  },
+  "devDependencies": {
+    "tsup": "^8.2.4",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

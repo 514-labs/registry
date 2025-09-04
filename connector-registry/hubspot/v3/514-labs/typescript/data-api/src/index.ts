@@ -19,6 +19,7 @@ import type { HttpResponseEnvelope } from "./types/envelopes";
 import { withDerivedDefaults } from "./config/defaults";
 import { ApiConnectorBase } from "@connector-factory/core";
 import type { SendFn } from "@connector-factory/core";
+import { ConnectorError } from "./types/errors";
 import { buildContactsDomain } from "./domains/contacts";
 import { buildCompaniesDomain } from "./domains/companies";
 import { buildDealsDomain } from "./domains/deals";
@@ -30,9 +31,16 @@ export class HubSpotApiConnector extends ApiConnectorBase implements HubSpotConn
     super.initialize(userConfig, withDerivedDefaults, ({ headers }) => {
       if (this.config?.auth.type === "bearer") {
         const token = this.config?.auth.bearer?.token;
-        if (!token) throw new Error("Missing bearer token");
+        if (!token) throw new ConnectorError({ message: "Authentication failed – missing bearer token", code: "AUTH_FAILED", source: "auth", retryable: false });
         headers["Authorization"] = `Bearer ${token}`;
       }
+    }, {
+      onRateLimitSignal: (info) => {
+        // Only adapt when flag enabled
+        if (this.config?.rateLimit?.adaptiveFromHeaders && this.limiter) {
+          this.limiter.updateFromResponse(info);
+        }
+      },
     });
   }
   // Build domain delegates
@@ -89,3 +97,6 @@ export type { HttpResponseEnvelope } from "./types/envelopes";
 export type * from "./models";
 
 
+// Observability exports
+export { createLoggingHooks } from "./observability";
+export { createMetricsHooks, InMemoryMetricsSink, createInMemoryMetricsSink } from "./observability";

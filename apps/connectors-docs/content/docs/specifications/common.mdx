@@ -53,3 +53,10 @@ Purpose-built integrations that extract data from a source system and allow you 
   - A Limits page (/limits | if no limits are known, clearly state that)
   - A changelog page (/changelog)
   - An FAQ page (/faq)
+
+### Developer Experience and Local Testing
+- Provide convenient local scripts/CLI to exercise core operations without additional setup beyond environment variables.
+  - Include an `.env.example` listing all required variables; do not hard-code secrets.
+  - Offer npm scripts or pythons for: auth check, `list`, `get`, `streamAll`/`getAll`, initial and incremental sync, and (if applicable) webhook signature verification with sample payloads.
+  - Support JSON output for easy piping into tools (`jq`) and deterministic exit codes (0 success, non-zero on failure).
+  - Accept configuration via env vars and flags; default to non-interactive execution suitable for CI.
