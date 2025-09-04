@@ -33,7 +33,7 @@ program
     const { implementation, operation, config: configPath, params: paramsJson, limit, output, logs } = opts;
 
     const implParts = implementation.split("/");
-    if (implParts.length < 1) throw new Error("--implementation must be like 'typescript/data-api' or 'typescript'");
+    if (!implParts[0]) throw new Error("--implementation must be like 'typescript/data-api' or 'typescript'");
     const language = implParts[0];
 
     const params = paramsJson ? JSON.parse(paramsJson) : undefined;
