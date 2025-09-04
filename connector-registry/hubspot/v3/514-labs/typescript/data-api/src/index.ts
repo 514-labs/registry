@@ -17,6 +17,7 @@ import type { HubSpotConnector } from "./types/connector";
 import type { ConnectorConfig } from "./types/config";
 import type { HttpResponseEnvelope } from "./types/envelopes";
 import { withDerivedDefaults } from "./config/defaults";
+import { ConnectorError } from "./types/errors";
 import { HttpClient } from "./client/http-client";
 import { TokenBucketLimiter } from "./rate-limit/token-bucket";
 import { paginateCursor, type SendFn } from "./core/paginate";
@@ -38,7 +39,7 @@ export class HubSpotApiConnector implements HubSpotConnector {
       applyAuth: ({ headers }) => {
         if (this.config?.auth.type === "bearer") {
           const token = this.config?.auth.bearer?.token;
-          if (!token) throw new Error("Missing bearer token");
+          if (!token) throw new ConnectorError({ message: "Authentication failed – missing bearer token", code: "AUTH_FAILED", source: "auth", retryable: false });
           headers["Authorization"] = `Bearer ${token}`;
         }
       },
@@ -61,7 +62,9 @@ export class HubSpotApiConnector implements HubSpotConnector {
   }
 
   private requireClient(): HttpClient {
-    if (!this.http) throw new Error("Connector not initialized");
+    if (!this.http) {
+      throw new ConnectorError({ message: "Connector not initialized – call initialize() first", code: "INVALID_REQUEST", source: "unknown", retryable: false });
+    }
     return this.http;
   }
 
@@ -134,3 +137,6 @@ export type { HttpResponseEnvelope } from "./types/envelopes";
 export type * from "./models";
 
 
+// Observability exports
+export { createLoggingHooks } from "./observability";
+export { createMetricsHooks, InMemoryMetricsSink, createInMemoryMetricsSink } from "./observability";

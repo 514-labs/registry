@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/pipeline.schema.json",
+  "name": "quickstart-example",
+  "author": "514-labs",
+  "authorType": "organization",
+  "version": "v1",
+  "description": "Extract sample posts from JSONPlaceholder and load to a local file.",
+  "tags": ["example", "quickstart"],
+  "schedule": { "cron": "@once", "timezone": "UTC" },
+  "source": {
+    "type": "connector",
+    "connector": { "name": "jsonplaceholder", "version": "v1", "author": "514-labs" },
+    "stream": "posts"
+  },
+  "systems": [
+    { "id": "local_fs", "type": "filesystem", "path": "./data/raw" }
+  ],
+  "transformations": [
+    { "id": "select_columns", "type": "typescript", "inputs": ["local_fs"], "outputs": ["./data/processed/posts.ndjson"] }
+  ],
+  "destination": { "system": "filesystem", "path": "./data/processed" },
+  "lineage": {
+    "nodes": [
+      { "id": "source", "kind": "source", "label": "JSONPlaceholder" },
+      { "id": "local_fs", "kind": "system", "label": "Local FS" },
+      { "id": "select_columns", "kind": "transform", "label": "Project Fields" },
+      { "id": "dest", "kind": "destination", "label": "./data/processed" }
+    ],
+    "edges": [
+      { "from": "source", "to": "local_fs", "label": "extract" },
+      { "from": "local_fs", "to": "select_columns" },
+      { "from": "select_columns", "to": "dest", "label": "load" }
+    ]
+  },
+  "maintainers": []
+}
