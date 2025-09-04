@@ -5,8 +5,8 @@ import { runScaffold } from './scaffold'
 
 const program = new Command()
 program
-  .name('factory')
-  .description('Connector & Pipeline Factory CLI')
+  .name('registry')
+  .description('514 Labs Registry CLI')
   .version(pkg.version)
 
 // Ensure parsing/validation errors cause non-zero exit codes when awaited
