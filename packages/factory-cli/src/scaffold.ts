@@ -158,8 +158,8 @@ export async function runScaffold({ kind, language, options }: { kind: Kind; lan
   }
 
   const vars: Record<string, string> = {
-    connector: id,
-    pipeline: id,
+    connector: kind === 'connector' ? id : '',
+    pipeline: kind === 'pipeline' ? id : '',
     version: answers.version,
     author: answers.author,
     implementation: answers.implementation ?? '',
@@ -169,7 +169,7 @@ export async function runScaffold({ kind, language, options }: { kind: Kind; lan
 
   const targetRoot = path.join(repoRoot, kind === 'connector' ? 'connector-registry' : 'pipeline-registry')
   const ops: string[] = []
-  await applyStructure(targetRoot, scaffold.structure, vars, Boolean(options.dryRun), ops, kind === 'connector' ? '{connector}' : '{pipeline}')
+  await applyStructure(targetRoot, scaffold.structure, vars, Boolean(options.dryRun), ops)
 
   const headline = options.dryRun ? kleur.yellow('Dry run: no files written') : kleur.green('Scaffold created')
   console.log(headline)

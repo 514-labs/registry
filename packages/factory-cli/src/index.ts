@@ -9,6 +9,9 @@ program
   .description('Connector & Pipeline Factory CLI')
   .version(pkg.version)
 
+// Ensure parsing/validation errors cause non-zero exit codes when awaited
+program.exitOverride()
+
 program
   .command('scaffold')
   .description('Generate a new connector or pipeline from scaffold templates')
@@ -26,10 +29,13 @@ program
     await runScaffold({ kind, language, options: opts })
   })
 
-try {
+async function main() {
   await program.parseAsync(process.argv)
-} catch (error) {
-  console.error(error)
-  process.exit(1)
 }
+
+main().catch((error: any) => {
+  console.error(error)
+  const code = typeof error?.exitCode === 'number' ? error.exitCode : 1
+  process.exit(code)
+})
 
