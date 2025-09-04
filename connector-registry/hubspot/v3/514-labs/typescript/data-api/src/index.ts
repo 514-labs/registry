@@ -17,7 +17,7 @@ import type { HubSpotConnector } from "./types/connector";
 import type { ConnectorConfig } from "./types/config";
 import type { HttpResponseEnvelope } from "./types/envelopes";
 import { withDerivedDefaults } from "./config/defaults";
-import { ApiConnectorBase } from "@connector-factory/core";
+import { ApiConnectorBase, type RateLimitOptions } from "@connector-factory/core";
 import type { SendFn } from "@connector-factory/core";
 import { ConnectorError } from "./types/errors";
 import { buildContactsDomain } from "./domains/contacts";
@@ -28,20 +28,27 @@ import { buildEngagementsDomain } from "./domains/engagements";
 
 export class HubSpotApiConnector extends ApiConnectorBase implements HubSpotConnector {
   initialize(userConfig: ConnectorConfig) {
-    super.initialize(userConfig, withDerivedDefaults, ({ headers }) => {
-      if (this.config?.auth.type === "bearer") {
-        const token = this.config?.auth.bearer?.token;
-        if (!token) throw new ConnectorError({ message: "Authentication failed – missing bearer token", code: "AUTH_FAILED", source: "auth", retryable: false });
-        headers["Authorization"] = `Bearer ${token}`;
-      }
-    }, {
+    const rateLimitOptions: RateLimitOptions = {
       onRateLimitSignal: (info) => {
         // Only adapt when flag enabled
         if (this.config?.rateLimit?.adaptiveFromHeaders && this.limiter) {
           this.limiter.updateFromResponse(info);
         }
       },
-    });
+    };
+
+    super.initialize(
+      userConfig, 
+      withDerivedDefaults, 
+      ({ headers }: { headers: Record<string, string> }) => {
+        if (this.config?.auth.type === "bearer") {
+          const token = this.config?.auth.bearer?.token;
+          if (!token) throw new ConnectorError({ message: "Authentication failed – missing bearer token", code: "AUTH_FAILED", source: "auth", retryable: false });
+          headers["Authorization"] = `Bearer ${token}`;
+        }
+      }, 
+      rateLimitOptions
+    );
   }
   // Build domain delegates
   private get domain() {

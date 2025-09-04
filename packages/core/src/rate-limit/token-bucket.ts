@@ -26,13 +26,19 @@ export class TokenBucketLimiter {
   }
 
   async waitForSlot(): Promise<void> {
-    while (true) {
-      this.refillTokens();
-      if (this.tokens >= 1) {
-        this.tokens -= 1;
-        return;
-      }
+    this.refillTokens();
+    while (this.tokens < 1) {
       await new Promise((r) => setTimeout(r, 50));
+      this.refillTokens();
+    }
+    this.tokens -= 1;
+  }
+
+  updateFromResponse(rateLimit: { retryAfterSeconds?: number }): void {
+    if (rateLimit.retryAfterSeconds && rateLimit.retryAfterSeconds > 0) {
+      // When we hit a rate limit, drain all tokens and adjust refill timing
+      this.tokens = 0;
+      this.lastRefill = Date.now() + (rateLimit.retryAfterSeconds * 1000);
     }
   }
 }

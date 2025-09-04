@@ -31,6 +31,7 @@
     "test:integration": "jest --config jest.integration.cjs"
   },
   "dependencies": {
+    "@connector-factory/core": "workspace:*",
     "zod": "^3.25.8"
   },
   "devDependencies": {

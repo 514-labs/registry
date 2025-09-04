@@ -79,7 +79,7 @@ export class HttpClient {
     const retryBudget = this.config.retry?.retryBudgetMs ?? 60000;
     const budgetDeadline = start + retryBudget;
 
-    while (true) {
+    while (attempt < 1000) {
       attempt += 1;
       try {
         const { status, headers: resHeaders, text } = await this.nodeHttpRequest(req.url, {
@@ -102,9 +102,9 @@ export class HttpClient {
         }
 
         const retryAfter = Number(hdrs["retry-after"]);
-        const rateLimit = {
+        const rateLimit: NonNullable<HttpResponseEnvelope["meta"]>["rateLimit"] = {
           retryAfterSeconds: Number.isFinite(retryAfter) ? retryAfter : undefined,
-        } as HttpResponseEnvelope["meta"]["rateLimit"];
+        };
 
         const envelope: HttpResponseEnvelope<T> = {
           data: data as T,
@@ -154,6 +154,9 @@ export class HttpClient {
         throw new ConnectorError({ message: String(err?.message ?? err), code: "NETWORK_ERROR", source: "transport", retryable: true });
       }
     }
+    
+    // This should never be reached due to retry limits and budget constraints
+    throw new ConnectorError({ message: "Maximum retry attempts exceeded", code: "RETRY_LIMIT_EXCEEDED", source: "transport", retryable: false });
   }
 
   private nodeHttpRequest(
