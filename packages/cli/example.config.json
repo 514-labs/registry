@@ -1,0 +1,8 @@
+{
+  "auth": {
+    "type": "bearer",
+    "bearer": { "token": "hs_pat_xxx" }
+  },
+  "timeoutMs": 30000,
+  "rateLimit": { "requestsPerSecond": 5 }
+}

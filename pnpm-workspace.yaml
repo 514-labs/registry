@@ -4,3 +4,4 @@ packages:
   - "packages/*"
   - "pipeline-registry/**"
   - "examples/*"
+  - "packages/cli"
