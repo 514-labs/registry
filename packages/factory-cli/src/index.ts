@@ -9,6 +9,9 @@ program
   .description('514 Labs Registry CLI')
   .version(pkg.version)
 
+// Override Commander.js default process.exit behavior to allow try-catch handling
+program.exitOverride()
+
 // Show help after errors
 program.showHelpAfterError()
 
@@ -33,12 +36,20 @@ async function main() {
   try {
     await program.parseAsync(process.argv)
   } catch (error: any) {
-    // Handle Commander.js help display (not actually an error)
-    if (error?.code === 'commander.helpDisplayed') {
+    // Handle Commander.js specific errors that should exit with code 0
+    if (error?.code === 'commander.helpDisplayed' || error?.code === 'commander.version') {
       process.exit(error.exitCode || 0)
     }
     
-    // Handle parsing errors gracefully
+    // Handle Commander.js parsing errors (invalid arguments, unknown options, etc.)
+    if (error?.code && error.code.startsWith('commander.')) {
+      if (error?.message) {
+        console.error(error.message)
+      }
+      process.exit(error.exitCode || 1)
+    }
+    
+    // Handle other unexpected errors
     if (error?.message) {
       console.error(error.message)
     } else {
