@@ -1,8 +1,24 @@
-# Factory CLI
+# Factory / Registry CLI
 
 A Node.js CLI to scaffold new connectors and pipelines from the repository's JSON scaffold templates.
 
-## Install (in this monorepo)
+## Install
+
+### From npm (recommended)
+
+Install globally:
+
+```bash
+npm install -g @514labs/registry
+```
+
+Or use with npx (no installation required):
+
+```bash
+npx @514labs/registry --help
+```
+
+### Local development (in this monorepo)
 
 ```bash
 pnpm -C packages/factory-cli install
@@ -17,16 +33,18 @@ pnpm -C packages/factory-cli link --global
 
 ## Usage
 
+### Using the installed CLI
+
 - Show help:
 
 ```bash
-node packages/factory-cli/dist/index.js --help
+registry --help
 ```
 
 - Scaffold connector/pipeline metadata only:
 
 ```bash
-node packages/factory-cli/dist/index.js scaffold connector meta \
+registry scaffold connector meta \
   --name hubspot \
   --scaffold-version v3 \
   --author 514-labs \
@@ -36,7 +54,7 @@ node packages/factory-cli/dist/index.js scaffold connector meta \
 - Scaffold TypeScript implementation (connector example):
 
 ```bash
-node packages/factory-cli/dist/index.js scaffold connector typescript \
+registry scaffold connector typescript \
   --name hubspot \
   --scaffold-version v3 \
   --author 514-labs \
@@ -49,12 +67,29 @@ node packages/factory-cli/dist/index.js scaffold connector typescript \
 - Dry run without writing files:
 
 ```bash
-node packages/factory-cli/dist/index.js scaffold pipeline typescript \
+registry scaffold pipeline typescript \
   --name google-analytics-to-clickhouse \
   --scaffold-version v1 \
   --author 514-labs \
   --dry-run \
   --yes
+```
+
+### Using npx (no installation)
+
+Replace `registry` with `npx @514labs/registry` in any of the above commands:
+
+```bash
+npx @514labs/registry --help
+npx @514labs/registry scaffold connector meta --name example --yes
+```
+
+### Local development
+
+For local development in this monorepo, use the direct path:
+
+```bash
+node packages/factory-cli/dist/index.js --help
 ```
 
 ## Notes
