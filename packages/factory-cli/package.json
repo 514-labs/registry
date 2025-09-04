@@ -1,16 +1,23 @@
 {
-  "name": "@workspace/factory-cli",
+  "name": "@514-labs/registry",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "type": "module",
   "bin": {
-    "factory": "dist/index.js"
+    "registry": "dist/index.js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
-    "dev": "tsup src/index.ts --watch --format esm,cjs --dts"
+    "dev": "tsup src/index.ts --watch --format esm,cjs --dts",
+    "prepublishOnly": "pnpm build"
   },
   "dependencies": {
     "commander": "^12.1.0",
