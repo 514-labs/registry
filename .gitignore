@@ -12,3 +12,10 @@ yarn-error.log*
 
 # Generated types
 /generated-types
+
+scratch*
+.turbo
+.env
+*.pf_fragment
+*.pf_index
+*.pf_meta
