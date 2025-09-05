@@ -25,6 +25,7 @@ import { buildCompaniesDomain } from "./domains/companies";
 import { buildDealsDomain } from "./domains/deals";
 import { buildTicketsDomain } from "./domains/tickets";
 import { buildEngagementsDomain } from "./domains/engagements";
+import { TokenBucketLimiter } from "./rate-limit/token-bucket";
 
 export class HubSpotApiConnector extends ApiConnectorBase implements HubSpotConnector {
   initialize(userConfig: ConnectorConfig) {
@@ -32,7 +33,8 @@ export class HubSpotApiConnector extends ApiConnectorBase implements HubSpotConn
       onRateLimitSignal: (info) => {
         // Only adapt when flag enabled
         if (this.config?.rateLimit?.adaptiveFromHeaders && this.limiter) {
-          this.limiter.updateFromResponse(info);
+          // Cast to the local type since both implement the same waitForSlot() interface
+          (this.limiter as any).updateFromResponse(info);
         }
       },
     };
@@ -49,6 +51,14 @@ export class HubSpotApiConnector extends ApiConnectorBase implements HubSpotConn
       }, 
       rateLimitOptions
     );
+
+    // Override the core limiter with HubSpot's adaptive version
+    const rps = this.config?.rateLimit?.requestsPerSecond ?? 0;
+    const capacity = this.config?.rateLimit?.burstCapacity ?? rps;
+    if (rps > 0) {
+      // Use type assertion to assign the HubSpot limiter to the base class property
+      this.limiter = new TokenBucketLimiter({ capacity, refillPerSec: rps }) as any;
+    }
   }
   // Build domain delegates
   private get domain() {
