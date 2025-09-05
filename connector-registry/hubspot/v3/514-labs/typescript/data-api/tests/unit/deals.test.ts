@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+/* eslint-env jest */ /* global jest, describe, it, expect, afterEach */
 import nock from "nock";
 import { createHubSpotConnector } from "../../src";
 

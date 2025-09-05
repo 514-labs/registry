@@ -5,6 +5,10 @@ HubSpot enforces rate limits (vary by plan, object, and endpoint). This connecto
 - Token‑bucket rate limiting wraps all requests:
   - Configure with `rateLimit.requestsPerSecond`, `burstCapacity`, and `concurrentRequests`.
   - When configured (`requestsPerSecond > 0`), a `TokenBucketLimiter` waits for a slot before each request.
+  - When `rateLimit.adaptiveFromHeaders=true` (default), the limiter adapts to API feedback:
+    - Honors `Retry-After` by pausing issuance for the hinted duration
+    - If `remaining=0` and `reset` is present, pauses until reset time
+    - Gradually throttles when remaining/limit is low; returns to baseline otherwise
 
 - Retries with exponential backoff + jitter:
   - Defaults: `maxAttempts=3`, `initialDelayMs=1000`, `maxDelayMs=30000`, `backoffMultiplier=2`, `retryBudgetMs=60000`.

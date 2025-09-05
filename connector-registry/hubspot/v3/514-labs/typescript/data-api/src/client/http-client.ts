@@ -1,6 +1,7 @@
 import type { ConnectorConfig } from "../types/config";
 import type { HttpResponseEnvelope } from "../types/envelopes";
 import { ConnectorError } from "../types/errors";
+import type { ConnectorErrorCode } from "../types/errors";
 import { applyHookPipeline } from "./middleware/hook-middleware";
 import http from "node:http";
 import https from "node:https";
@@ -18,6 +19,7 @@ export interface HttpRequestOptions {
 
 export interface HttpClientOptions {
   applyAuth?: (req: { headers: Record<string, string> }) => void;
+  onRateLimitSignal?: (info: { limit?: number; remaining?: number; reset?: number; retryAfterSeconds?: number }) => void;
 }
 
 export class HttpClient {
@@ -89,7 +91,13 @@ export class HttpClient {
 
     await hooks.beforeRequest();
     if (aborted) {
-      throw new ConnectorError({ message: abortReason || "Aborted", code: "CANCELLED", source: "userHook" });
+      throw new ConnectorError({
+        message: abortReason || "Request cancelled by hook",
+        code: "CANCELLED",
+        source: "userHook",
+        retryable: false,
+        details: { method: req.method, path, url: req.url },
+      });
     }
 
     const timeoutMs = opts.timeoutMs ?? this.config.timeoutMs ?? 30000;
@@ -99,8 +107,12 @@ export class HttpClient {
     const retryBudget = this.config.retry?.retryBudgetMs ?? 60000;
     const budgetDeadline = start + retryBudget;
 
-    while (true) {
+    const maxAttempts = this.config.retry?.maxAttempts ?? 3;
+    for (;;) {
       attempt += 1;
+      if (attempt > maxAttempts) {
+        throw new ConnectorError({ message: "Maximum retry attempts exceeded", code: "TIMEOUT", source: "transport", retryable: true, details: { method: req.method, path, url: req.url, attemptNumber: attempt - 1, durationMs: Date.now() - start } });
+      }
       try {
         const { status, headers: resHeaders, text } = await this.nodeHttpRequest(req.url, {
           method: req.method,
@@ -118,7 +130,13 @@ export class HttpClient {
         try {
           data = text ? JSON.parse(text) : undefined;
         } catch (e) {
-          throw new ConnectorError({ message: "Failed to parse JSON", code: "PARSING_ERROR", source: "deserialize" });
+          throw new ConnectorError({
+            message: "Failed to parse JSON",
+            code: "PARSING_ERROR",
+            source: "deserialize",
+            retryable: false,
+            details: { method: req.method, path, url: req.url, textSample: text?.slice(0, 512), textLength: text?.length },
+          });
         }
 
         const retryAfter = Number(hdrs["retry-after"]);
@@ -128,6 +146,11 @@ export class HttpClient {
           reset: Number(hdrs["x-hubspot-ratelimit-reset"]),
           retryAfterSeconds: Number.isFinite(retryAfter) ? retryAfter : undefined,
         };
+
+        // Emit rate limit hints to adaptive limiter if provided
+        try {
+          this.options.onRateLimitSignal?.(rateLimit);
+        } catch {}
 
         const envelope: HttpResponseEnvelope<T> = {
           data: data as T,
@@ -141,17 +164,75 @@ export class HttpClient {
             rateLimit,
           },
         };
-
-        if (!(status >= 200 && status < 300) && this.shouldRetry(status, attempt)) {
-          await hooks.onRetry(attempt);
-          const delayMs = this.config.retry?.respectRetryAfter && rateLimit.retryAfterSeconds
-            ? rateLimit.retryAfterSeconds * 1000
-            : this.calculateDelay(attempt);
-          if (Date.now() + delayMs > budgetDeadline) {
-            throw new ConnectorError({ message: "Retry budget exceeded", code: "TIMEOUT" });
+        const isOk = status >= 200 && status < 300;
+        if (!isOk) {
+          if (this.shouldRetry(status, attempt)) {
+            await hooks.onRetry(attempt);
+            const delayMs = this.config.retry?.respectRetryAfter && rateLimit.retryAfterSeconds
+              ? rateLimit.retryAfterSeconds * 1000
+              : this.calculateDelay(attempt);
+            if (Date.now() + delayMs > budgetDeadline) {
+              throw new ConnectorError({ message: "Retry budget exceeded", code: "TIMEOUT", source: "transport", retryable: true, details: { method: req.method, path, url: req.url, attemptNumber: attempt, durationMs: Date.now() - start } });
+            }
+            await this.sleep(delayMs);
+            continue;
           }
-          await this.sleep(delayMs);
-          continue;
+
+          // Map non-2xx responses to standardized error codes
+          let code: ConnectorErrorCode = "SERVER_ERROR";
+          let source: "transport" | "auth" | "rateLimit" | "deserialize" | "userHook" | "unknown" = "unknown";
+          let retryable = false;
+          let message = `Request failed (received ${status})`;
+          if (status === 401 || status === 403) {
+            code = "AUTH_FAILED";
+            source = "auth";
+            retryable = false;
+            message = `Authentication failed – check API credentials (received ${status})`;
+          } else if (status === 429) {
+            code = "RATE_LIMIT";
+            source = "rateLimit";
+            retryable = true;
+            message = "Rate limit exceeded – retry later (received 429)";
+          } else if (status === 408 || status === 425) {
+            code = "TIMEOUT";
+            source = "transport";
+            retryable = true;
+            message = `Request timed out – try again (received ${status})`;
+          } else if (status >= 500 && status <= 599) {
+            code = "SERVER_ERROR";
+            source = "unknown";
+            retryable = true;
+            message = `Server error from provider – try again (received ${status})`;
+          } else if (status >= 400 && status <= 499) {
+            code = "INVALID_REQUEST";
+            source = "unknown";
+            retryable = false;
+            message = `Invalid request – check parameters (received ${status})`;
+          }
+
+          const requestId = envelope.meta?.requestId;
+          const errorDetails = {
+            method: req.method,
+            path,
+            url: req.url,
+            attemptNumber: attempt,
+            durationMs: Date.now() - start,
+            response: {
+              status,
+              headers: hdrs,
+              body: data,
+            },
+          };
+
+          throw new ConnectorError({
+            message,
+            code,
+            statusCode: status,
+            retryable,
+            details: errorDetails,
+            requestId,
+            source,
+          });
         }
 
         await hooks.afterResponse(envelope);
@@ -160,7 +241,7 @@ export class HttpClient {
         lastError = err;
         await hooks.onError(err);
         if (err?.code === "ETIMEDOUT" || err?.message === "Request timed out") {
-          throw new ConnectorError({ message: "Request timed out", code: "TIMEOUT", source: "transport", retryable: true });
+          throw new ConnectorError({ message: "Request timed out", code: "TIMEOUT", source: "transport", retryable: true, details: { method: req.method, path, url: req.url, attemptNumber: attempt, durationMs: Date.now() - start } });
         }
         if (err instanceof ConnectorError) {
           if (this.shouldRetry(err.statusCode ?? 0, attempt) && Date.now() < budgetDeadline) {
@@ -176,7 +257,7 @@ export class HttpClient {
           await this.sleep(this.calculateDelay(attempt));
           continue;
         }
-        throw new ConnectorError({ message: String(err?.message ?? err), code: "NETWORK_ERROR", source: "transport", retryable: true });
+        throw new ConnectorError({ message: String(err?.message ?? err), code: "NETWORK_ERROR", source: "transport", retryable: true, details: { method: req.method, path, url: req.url, attemptNumber: attempt, durationMs: Date.now() - start } });
       }
     }
   }
