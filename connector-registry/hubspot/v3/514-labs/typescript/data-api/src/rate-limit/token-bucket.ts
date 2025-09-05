@@ -107,9 +107,9 @@ export class TokenBucketLimiter {
           // eslint-disable-next-line no-console
           console.info(`[rate-limit] Remaining=0, reset in ~${Math.ceil(msUntil / 1000)}s → pausing new requests`);
         } else {
-          // Reset is in the past - clear any existing cooldown and reset tokens
+          // Reset is in the past - clear any existing cooldown and restore full capacity
           this.cooldownUntilMs = undefined;
-          this.tokens = Math.min(this.capacity, this.tokens + 1); // Give back some tokens since window has reset
+          this.tokens = this.capacity; // Restore full capacity since rate limit window has expired
         }
       }
 
