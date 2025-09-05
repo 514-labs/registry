@@ -30,7 +30,6 @@ import { TokenBucketLimiter } from "./rate-limit/token-bucket";
 
 export class HubSpotApiConnector extends ApiConnectorBase implements HubSpotConnector {
   initialize(userConfig: ConnectorConfig) {
-<<<<<<< HEAD
     const rateLimitOptions: RateLimitOptions = {
       onRateLimitSignal: (info) => {
         // Only adapt when flag enabled
@@ -55,12 +54,14 @@ export class HubSpotApiConnector extends ApiConnectorBase implements HubSpotConn
     );
 
     // Wire validation hook if enabled
-    const validationHook = buildValidationHook(this.config);
-    if (validationHook) {
-      this.config.hooks = {
-        ...(this.config.hooks ?? {}),
-        afterResponse: [...(this.config.hooks?.afterResponse ?? []), validationHook],
-      };
+    if (this.config) {
+      const validationHook = buildValidationHook(this.config);
+      if (validationHook) {
+        this.config.hooks = {
+          ...(this.config.hooks ?? {}),
+          afterResponse: [...(this.config.hooks?.afterResponse ?? []), validationHook],
+        };
+      }
     }
 
     // Override the core limiter with HubSpot's adaptive version
@@ -71,7 +72,6 @@ export class HubSpotApiConnector extends ApiConnectorBase implements HubSpotConn
       this.limiter = new TokenBucketLimiter({ capacity, refillPerSec: rps }) as any;
     }
   }
-<<<<<<< HEAD
 
   // Build domain delegates
   private get domain() {

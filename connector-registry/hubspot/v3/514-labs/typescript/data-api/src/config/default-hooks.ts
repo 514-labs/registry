@@ -11,13 +11,14 @@ addFormats(ajv);
 async function loadSchemaForOperation(op?: string): Promise<any | undefined> {
   if (!op) return undefined;
   const entity = op.split(":")[0];
-  const schemaFile = {
+  const schemaFiles: Record<string, string> = {
     contacts: "raw/endpoints/contacts.schema.json",
     companies: "raw/endpoints/companies.schema.json",
     deals: "raw/endpoints/deals.schema.json",
     tickets: "raw/endpoints/tickets.schema.json",
     engagements: "raw/endpoints/engagements.schema.json",
-  }[entity as keyof any];
+  };
+  const schemaFile = schemaFiles[entity];
   if (!schemaFile) return undefined;
   // Resolve relative to the connector implementation root
   const base = join(process.cwd(), "schemas");

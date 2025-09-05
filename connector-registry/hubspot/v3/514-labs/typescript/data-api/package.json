@@ -32,6 +32,8 @@
   },
   "dependencies": {
     "@connector-factory/core": "workspace:*",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "zod": "^3.25.8"
   },
   "devDependencies": {
