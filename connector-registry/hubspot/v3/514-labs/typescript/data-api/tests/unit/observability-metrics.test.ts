@@ -1,4 +1,6 @@
-/* eslint-env jest */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+/* eslint-env jest */ /* global jest, describe, it, expect */
 import { createMetricsHooks, InMemoryMetricsSink, createInMemoryMetricsSink } from "../../src/observability/metrics-hooks";
 import type { HookContext, HookType } from "../../src/types/hooks";
 import type { HttpResponseEnvelope } from "../../src/types/envelopes";

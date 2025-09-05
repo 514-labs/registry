@@ -17,78 +17,49 @@ import type { HubSpotConnector } from "./types/connector";
 import type { ConnectorConfig } from "./types/config";
 import type { HttpResponseEnvelope } from "./types/envelopes";
 import { withDerivedDefaults } from "./config/defaults";
+import { ApiConnectorBase, type RateLimitOptions } from "@connector-factory/core";
+import type { SendFn } from "@connector-factory/core";
 import { ConnectorError } from "./types/errors";
-import { HttpClient } from "./client/http-client";
-import { TokenBucketLimiter } from "./rate-limit/token-bucket";
-import { paginateCursor, type SendFn } from "./core/paginate";
 import { buildContactsDomain } from "./domains/contacts";
 import { buildCompaniesDomain } from "./domains/companies";
 import { buildDealsDomain } from "./domains/deals";
 import { buildTicketsDomain } from "./domains/tickets";
 import { buildEngagementsDomain } from "./domains/engagements";
+import { TokenBucketLimiter } from "./rate-limit/token-bucket";
 
-export class HubSpotApiConnector implements HubSpotConnector {
-  private config?: ConnectorConfig;
-  private connected = false;
-  private http?: HttpClient;
-  private limiter?: TokenBucketLimiter;
-
+export class HubSpotApiConnector extends ApiConnectorBase implements HubSpotConnector {
   initialize(userConfig: ConnectorConfig) {
-    this.config = withDerivedDefaults(userConfig);
-    this.http = new HttpClient(this.config, {
-      applyAuth: ({ headers }) => {
+    const rateLimitOptions: RateLimitOptions = {
+      onRateLimitSignal: (info) => {
+        // Only adapt when flag enabled
+        if (this.config?.rateLimit?.adaptiveFromHeaders && this.limiter) {
+          // Cast to the local type since both implement the same waitForSlot() interface
+          (this.limiter as any).updateFromResponse(info);
+        }
+      },
+    };
+
+    super.initialize(
+      userConfig, 
+      withDerivedDefaults, 
+      ({ headers }: { headers: Record<string, string> }) => {
         if (this.config?.auth.type === "bearer") {
           const token = this.config?.auth.bearer?.token;
           if (!token) throw new ConnectorError({ message: "Authentication failed – missing bearer token", code: "AUTH_FAILED", source: "auth", retryable: false });
           headers["Authorization"] = `Bearer ${token}`;
         }
-      },
-      onRateLimitSignal: (info) => {
-        // Only adapt when flag enabled
-        if (this.config?.rateLimit?.adaptiveFromHeaders && this.limiter) {
-          this.limiter.updateFromResponse(info);
-        }
-      },
-    });
-    const rps = this.config.rateLimit?.requestsPerSecond ?? 0;
-    const capacity = this.config.rateLimit?.burstCapacity ?? rps;
-    if (rps > 0) this.limiter = new TokenBucketLimiter({ capacity, refillPerSec: rps });
-  }
+      }, 
+      rateLimitOptions
+    );
 
-  async connect() {
-    this.connected = true;
-  }
-
-  async disconnect() {
-    this.connected = false;
-  }
-
-  isConnected() {
-    return this.connected;
-  }
-
-  private requireClient(): HttpClient {
-    if (!this.http) {
-      throw new ConnectorError({ message: "Connector not initialized – call initialize() first", code: "INVALID_REQUEST", source: "unknown", retryable: false });
+    // Override the core limiter with HubSpot's adaptive version
+    const rps = this.config?.rateLimit?.requestsPerSecond ?? 0;
+    const capacity = this.config?.rateLimit?.burstCapacity ?? rps;
+    if (rps > 0) {
+      // Use type assertion to assign the HubSpot limiter to the base class property
+      this.limiter = new TokenBucketLimiter({ capacity, refillPerSec: rps }) as any;
     }
-    return this.http;
   }
-
-  private async send<T>(opts: Parameters<HttpClient["request"]>[0]): Promise<HttpResponseEnvelope<T>> {
-    if (this.limiter) await this.limiter.waitForSlot();
-    return this.requireClient().request<T>(opts);
-  }
-
-  request(opts: Parameters<HttpClient["request"]>[0]) {
-    return this.send(opts);
-  }
-
-  // Generic paginator (advanced)
-  async *paginate<T = any>(options: { path: string; query?: Record<string, any>; pageSize?: number; extractItems?: (res: any) => T[]; extractNextCursor?: (res: any) => string | undefined }) {
-    const sendLite: SendFn = async (args) => this.send<any>(args);
-    yield* paginateCursor<T>({ send: sendLite, path: options.path, query: options.query, pageSize: options.pageSize, extractItems: options.extractItems, extractNextCursor: options.extractNextCursor });
-  }
-
   // Build domain delegates
   private get domain() {
     const sendLite: SendFn = async (args) => this.send<any>(args);
