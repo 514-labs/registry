@@ -273,6 +273,57 @@
                         },
                         {
                           "type": "dir",
+                          "name": "scripts",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "_shared.py",
+                              "template": "import json\nimport os\nimport sys\nfrom typing import Any, Dict\nfrom ..src.lib.send import create_send\n\nclass HttpError(Exception):\n    pass\n\ntry:\n    import urllib.request as urllib_request\n    import urllib.parse as urllib_parse\nexcept Exception:  # pragma: no cover\n    urllib_request = None  # type: ignore\n    urllib_parse = None  # type: ignore\n\n\ndef get_env(key: str, fallback: str | None = None) -> str:\n    val = os.getenv(key)\n    if val is None or val == '':\n        if fallback is not None:\n            return fallback\n        raise RuntimeError('Missing required env var: ' + key)\n    return val\n\n\ndef make_do_request(base_url: str, default_headers: Dict[str,str] | None = None):\n    default_headers = default_headers or {}\n\n    def do_request(req: Dict[str, Any]):\n        method = req.get('method', 'GET')\n        path = req.get('path', '')\n        query = req.get('query') or {}\n        url = path if path.startswith('http') else f'{base_url}{path}'\n        if query:\n            qs = urllib_parse.urlencode({ k: v for k, v in query.items() if v is not None })\n            if qs:\n                url = f'{url}?{qs}'\n        headers = { 'content-type': 'application/json', **default_headers, **(req.get('headers') or {}) }\n        data = None\n        if req.get('body') is not None:\n            data = json.dumps(req['body']).encode('utf-8')\n        request = urllib_request.Request(url=url, data=data, method=method, headers=headers)\n        with urllib_request.urlopen(request) as resp:  # nosec B310\n            status = resp.status\n            body = resp.read()\n            try:\n                payload = json.loads(body.decode('utf-8'))\n            except Exception:\n                payload = {}\n            return { 'data': payload, 'status': status, 'headers': dict(resp.headers) }\n\n    return do_request\n\n\ndef create_resource_and_send():\n    base_url = get_env('BASE_URL', 'https://api.example.com')\n    api_key = os.getenv('API_KEY')\n    headers: Dict[str,str] = {}\n    if api_key:\n        headers['Authorization'] = f'Bearer {api_key}'\n    do_request = make_do_request(base_url, headers)\n    send = (awaitable_send := create_send(do_request))  # type: ignore\n    # create_send returns a coroutine in our template; resolve synchronously for scripts\n    import asyncio\n    if hasattr(awaitable_send, '__await__'):\n        send = asyncio.get_event_loop().run_until_complete(awaitable_send)  # type: ignore\n    from ..src.{resource} import create_resource as create_resource_impl\n    resource = create_resource_impl(send)\n    return send, resource\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "auth_check.py",
+                              "template": "import json\nfrom ._shared import create_resource_and_send\n\ndef main():\n    _, resource = create_resource_and_send()\n    try:\n        res = resource['list'](limit=1)\n        print(json.dumps({ 'ok': True, 'sampleCount': len((res.get('data', {}) or {}).get('results', []) ) }))\n    except Exception as err:\n        print(json.dumps({ 'ok': False, 'error': str(err) }))\n        raise SystemExit(1)\n\nif __name__ == '__main__':\n    main()\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "list.py",
+                              "template": "import argparse, json\nfrom ._shared import create_resource_and_send\n\nparser = argparse.ArgumentParser()\nparser.add_argument('--limit', type=int)\nparser.add_argument('--after')\nparser.add_argument('--properties')\n\nargs = parser.parse_args()\n\n_, resource = create_resource_and_send()\nparams = {}\nif args.limit is not None: params['limit'] = args.limit\nif args.after is not None: params['after'] = args.after\nif args.properties: params['properties'] = args.properties.split(',')\nres = resource['list'](**params)\nprint(json.dumps(res.get('data', {})))\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "get.py",
+                              "template": "import argparse, json, sys\nfrom ._shared import create_resource_and_send\n\nparser = argparse.ArgumentParser()\nparser.add_argument('id')\nparser.add_argument('--properties')\nargs = parser.parse_args()\n\n_, resource = create_resource_and_send()\nparams = { 'id': args.id }\nif args.properties: params['properties'] = args.properties.split(',')\nres = resource['get'](**params)\nprint(json.dumps(res.get('data', {})))\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "stream_all.py",
+                              "template": "import argparse, json, sys\nfrom ._shared import create_resource_and_send\n\nparser = argparse.ArgumentParser()\nparser.add_argument('--page-size', type=int, dest='page_size')\nparser.add_argument('--properties')\nargs = parser.parse_args()\n\n_, resource = create_resource_and_send()\nparams = {}\nif args.page_size is not None: params['page_size'] = args.page_size\nif args.properties: params['properties'] = args.properties.split(',')\ncount = 0\nfor item in resource['stream_all'](**params):\n    print(json.dumps(item))\n    count += 1\nprint(json.dumps({ 'rows_read': count }))\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "get_all.py",
+                              "template": "import argparse, json\nfrom ._shared import create_resource_and_send\n\nparser = argparse.ArgumentParser()\nparser.add_argument('--page-size', type=int, dest='page_size')\nparser.add_argument('--properties')\nparser.add_argument('--max-items', type=int, dest='max_items')\nargs = parser.parse_args()\n\n_, resource = create_resource_and_send()\nparams = {}\nif args.page_size is not None: params['page_size'] = args.page_size\nif args.properties: params['properties'] = args.properties.split(',')\nif args.max_items is not None: params['max_items'] = args.max_items\nitems = resource['get_all'](**params)\nprint(json.dumps(items))\nprint(json.dumps({ 'rows_read': len(items) }))\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "sync_initial.py",
+                              "template": "import argparse, json, time\nfrom ._shared import create_resource_and_send\n\nparser = argparse.ArgumentParser()\nparser.add_argument('--page-size', type=int, dest='page_size')\nparser.add_argument('--properties')\nargs = parser.parse_args()\n\nstart = time.time()\n_, resource = create_resource_and_send()\nparams = {}\nif args.page_size is not None: params['page_size'] = args.page_size\nif args.properties: params['properties'] = args.properties.split(',')\ncount = 0\nfor item in resource['stream_all'](**params):\n    print(json.dumps(item))\n    count += 1\nprint(json.dumps({ 'rows_read': count, 'duration_seconds': time.time() - start }))\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "sync_incremental.py",
+                              "template": "import argparse, json, time\nfrom datetime import datetime\nfrom ._shared import create_resource_and_send\n\nparser = argparse.ArgumentParser()\nparser.add_argument('--cursor', required=True)\nparser.add_argument('--cursor-field', default='updated_at')\nparser.add_argument('--page-size', type=int, dest='page_size')\nparser.add_argument('--properties')\nargs = parser.parse_args()\n\nstart = time.time()\n_, resource = create_resource_and_send()\n\ncur = args.cursor\nfield = args.cursor_field\ncount = 0\n\n# str comparison fallback if not parseable as datetime\n\ndef is_gt(a: str, b: str) -> bool:\n    try:\n        return datetime.fromisoformat(a.replace('Z','+00:00')) > datetime.fromisoformat(b.replace('Z','+00:00'))\n    except Exception:\n        return a > b\n\nparams = {}\nif args.page_size is not None: params['page_size'] = args.page_size\nif args.properties: params['properties'] = args.properties.split(',')\nfor item in resource['stream_all'](**params):\n    val = item.get(field) if isinstance(item, dict) else None\n    if val is not None and is_gt(str(val), cur):\n        print(json.dumps(item))\n        count += 1\nprint(json.dumps({ 'rows_read': count, 'duration_seconds': time.time() - start }))\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "verify_webhook.py",
+                              "template": "import argparse, hashlib, hmac, json, sys\n\nparser = argparse.ArgumentParser()\nparser.add_argument('--secret', required=True)\nparser.add_argument('--signature', required=True)\nparser.add_argument('--payload-file')\nparser.add_argument('--algo', default='sha256')\nargs = parser.parse_args()\n\nif args.payload_file:\n    with open(args.payload_file, 'rb') as f:\n        payload = f.read()\nelse:\n    payload = sys.stdin.buffer.read()\n\ndigest = hmac.new(args.secret.encode('utf-8'), payload, getattr(hashlib, args.algo)).hexdigest()\nok = digest == args.signature or f'sha256={digest}' == args.signature\nprint(json.dumps({ 'ok': ok }))\nif not ok:\n    raise SystemExit(1)\n"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "dir",
                           "name": "tests",
                           "children": [
                             {
