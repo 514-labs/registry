@@ -1,38 +1,21 @@
-.DS_Store
+# Node
 node_modules
-.turbo
-*.log
-dist
-dist-ssr
-*.local
-.env
-.cache
-./logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Ignore scratch files - used for testing and development in Data Warehouse
+# Builds
+**/dist
+
+# Editor
+.vscode
+
+# Generated types
+/generated-types
+
 scratch*
-
-.cursor/
-
-# Temporary migration files and directories
-temp_migration/
-temp_migration_*/
-temp_*.sh
-temp_*.json
-elasticsearch_migration.log
-
-# Development logs
-dev-*.log
-nohup.out
-
-# Moose temporary directories
-.moose/
-
-# Service-specific temp files
-services/*/temp_migration/
-services/*/dev-*.log
-services/*/.moose/
-
-# Search index artifacts (Pagefind)
-apps/connectors-docs/public/pagefind/
-apps/pipelines-docs/public/pagefind/
+.turbo
+.env
+*.pf_fragment
+*.pf_index
+*.pf_meta

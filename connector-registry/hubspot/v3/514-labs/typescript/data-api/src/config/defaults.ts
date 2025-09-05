@@ -5,11 +5,11 @@ import { createMetricsHooks } from "../observability/metrics-hooks";
 
 export function withDerivedDefaults(user: ConnectorConfig): ConnectorConfig {
   const base: ConnectorConfig = {
-    baseUrl: "https://api.hubapi.com",
+    baseUrl: 'https://api.hubapi.com',
     timeoutMs: 30000,
-    userAgent: "connector-factory-hubspot/0.1.0",
+    userAgent: 'connector-factory-hubspot/0.1.0',
     defaultHeaders: {
-      Accept: "application/json",
+      Accept: 'application/json',
     },
     defaultQueryParams: {},
     auth: user.auth,
@@ -37,6 +37,8 @@ export function withDerivedDefaults(user: ConnectorConfig): ConnectorConfig {
     hooks: {},
   };
 
+  const validationEnabled = user.validation?.enabled ?? (process.env.CONNECTOR_VALIDATE === '1');
+
   const merged: ConnectorConfig = {
     ...base,
     ...user,
@@ -45,6 +47,10 @@ export function withDerivedDefaults(user: ConnectorConfig): ConnectorConfig {
     rateLimit: { ...base.rateLimit, ...user.rateLimit },
     defaultHeaders: { ...base.defaultHeaders, ...user.defaultHeaders },
     defaultQueryParams: { ...base.defaultQueryParams, ...user.defaultQueryParams },
+    validation: {
+      enabled: validationEnabled,
+      strict: user.validation?.strict ?? false,
+    },
   };
 
   // Append built-in hooks based on enable flags

@@ -153,3 +153,17 @@ Connectors can be copied into a target codebase similarly to shadcn components:
 - For Python, use `pyproject.toml` to build and publish to your internal index if desired.
 
 If you need additional language scaffolds (e.g., Go or Java), follow the patterns used in `python.json` and `typescript.json` and add a new scaffold in `connector-registry/scaffold/`.
+
+## Schema-driven types and validation
+
+- Generate TypeScript types from JSON Schemas:
+
+```bash
+pnpm run generate:types
+```
+
+- Output goes to `generated-types/` mirroring the `schemas/` tree. Treat these as generated files.
+
+- Optional runtime validation (development/debug): set `CONNECTOR_VALIDATE=1` or pass `validation: { enabled: true, strict: false }` in the connector config. In strict mode, validation errors throw; otherwise, they log warnings.
+
+- The validator maps the operation name to a schema under `schemas/raw/endpoints/*.schema.json` for the HubSpot connector (`contacts`, `companies`, `deals`, `tickets`, `engagements`).

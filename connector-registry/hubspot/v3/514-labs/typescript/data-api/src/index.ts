@@ -25,6 +25,7 @@ import { buildCompaniesDomain } from "./domains/companies";
 import { buildDealsDomain } from "./domains/deals";
 import { buildTicketsDomain } from "./domains/tickets";
 import { buildEngagementsDomain } from "./domains/engagements";
+import { buildValidationHook } from "./config/default-hooks";
 import { TokenBucketLimiter } from "./rate-limit/token-bucket";
 
 export class HubSpotApiConnector extends ApiConnectorBase implements HubSpotConnector {
@@ -40,17 +41,28 @@ export class HubSpotApiConnector extends ApiConnectorBase implements HubSpotConn
     };
 
     super.initialize(
-      userConfig, 
-      withDerivedDefaults, 
+      userConfig,
+      withDerivedDefaults,
       ({ headers }: { headers: Record<string, string> }) => {
         if (this.config?.auth.type === "bearer") {
           const token = this.config?.auth.bearer?.token;
           if (!token) throw new ConnectorError({ message: "Authentication failed – missing bearer token", code: "AUTH_FAILED", source: "auth", retryable: false });
           headers["Authorization"] = `Bearer ${token}`;
         }
-      }, 
+      },
       rateLimitOptions
     );
+
+    // Wire validation hook if enabled
+    if (this.config) {
+      const validationHook = buildValidationHook(this.config);
+      if (validationHook) {
+        this.config.hooks = {
+          ...(this.config.hooks ?? {}),
+          afterResponse: [...(this.config.hooks?.afterResponse ?? []), validationHook],
+        };
+      }
+    }
 
     // Override the core limiter with HubSpot's adaptive version
     const rps = this.config?.rateLimit?.requestsPerSecond ?? 0;
@@ -60,15 +72,16 @@ export class HubSpotApiConnector extends ApiConnectorBase implements HubSpotConn
       this.limiter = new TokenBucketLimiter({ capacity, refillPerSec: rps }) as any;
     }
   }
+
   // Build domain delegates
   private get domain() {
     const sendLite: SendFn = async (args) => this.send<any>(args);
     return {
-      ...buildContactsDomain(sendLite),
-      ...buildCompaniesDomain(sendLite),
-      ...buildDealsDomain(sendLite),
-      ...buildTicketsDomain(sendLite),
-      ...buildEngagementsDomain(sendLite),
+      ...buildContactsDomain((args) => sendLite({ ...args, operation: args.operation ?? "contacts" })),
+      ...buildCompaniesDomain((args) => sendLite({ ...args, operation: args.operation ?? "companies" })),
+      ...buildDealsDomain((args) => sendLite({ ...args, operation: args.operation ?? "deals" })),
+      ...buildTicketsDomain((args) => sendLite({ ...args, operation: args.operation ?? "tickets" })),
+      ...buildEngagementsDomain((args) => sendLite({ ...args, operation: args.operation ?? `engagements:${(args.query?.objectType as string) || "generic"}` })),
     };
   }
 
