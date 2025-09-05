@@ -2,8 +2,8 @@ import type { ConnectorConfig } from "../types/config";
 import type { HttpResponseEnvelope } from "../types/envelopes";
 import { ConnectorError } from "../types/errors";
 import { applyHookPipeline } from "./middleware";
-import http from "node:http";
-import https from "node:https";
+import * as http from "node:http";
+import * as https from "node:https";
 import { URL } from "node:url";
 import type { HttpClientOptions, HttpRequestOptions } from "./types";
 
