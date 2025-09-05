@@ -37,7 +37,7 @@ async function main() {
     await program.parseAsync(process.argv)
   } catch (error: any) {
     // Handle Commander.js specific errors that should exit with code 0
-    if (error?.code === 'commander.helpDisplayed' || error?.code === 'commander.version') {
+    if (error?.code === 'commander.helpDisplayed' || error?.code === 'commander.help' || error?.code === 'commander.version') {
       process.exit(error.exitCode || 0)
     }
     

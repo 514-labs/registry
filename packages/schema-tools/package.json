@@ -1,0 +1,35 @@
+{
+  "name": "@workspace/schema-tools",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "schema-codegen": "./dist/bin/codegen.js"
+  },
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/bin/codegen.ts"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "glob": "^10.4.5",
+    "json-schema-to-typescript": "^15.0.3"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

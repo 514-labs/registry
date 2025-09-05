@@ -61,6 +61,11 @@ export interface RateLimitConfig {
   adaptiveFromHeaders?: boolean;
 }
 
+export interface ValidationConfig {
+  enabled?: boolean; // enable runtime validation
+  strict?: boolean; // throw on validation error (default false logs)
+}
+
 export interface ConnectorConfig {
   baseUrl?: string;
   timeoutMs?: number;
@@ -72,6 +77,7 @@ export interface ConnectorConfig {
   circuitBreaker?: CircuitBreakerConfig;
   rateLimit?: RateLimitConfig;
   hooks?: Partial<Record<HookType, Hook[]>>;
+  validation?: ValidationConfig;
   // Observability (built-in hooks)
   enableLogging?: boolean | LoggingOptions;
   enableMetrics?: boolean | MetricsOptions;
