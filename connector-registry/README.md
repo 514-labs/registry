@@ -52,9 +52,8 @@ For Python use an analogous structure under `{connector}/{author}/python/src/{pa
 
 The `connector-registry/scaffold/` directory contains JSON files that describe how to generate connector folders/files.
 
-- `meta.json`: root and provider `_meta` scaffold (assets only)
-- `python.json`: Python implementation scaffold
-- `typescript.json`: TypeScript implementation scaffold (includes `docs/`)
+- `python.json`: Python implementation scaffold (includes `_meta` folder)
+- `typescript.json`: TypeScript implementation scaffold (includes `_meta` folder and `docs/`)
 
 Each scaffold uses variables:
 
@@ -69,10 +68,9 @@ A generator can interpret the `structure` array and create files/directories wit
 ## Adding a new connector
 
 1. Choose connector and author names (kebab-case). The author must be a GitHub organization or user handle.
-2. Create connector root `_meta/` with `connector.json` and assets only.
-3. Generate the provider `_meta` scaffold using `connector-registry/scaffold/meta.json` with your variables.
-4. Add language-specific implementations using `connector-registry/scaffold/python.json` and/or `connector-registry/scaffold/typescript.json`.
-5. Put documentation into the language-specific implementations (not `_meta`).
+2. Generate language-specific implementations using `connector-registry/scaffold/python.json` and/or `connector-registry/scaffold/typescript.json`.
+3. Each implementation includes its own `_meta` folder with connector metadata and assets.
+4. Put documentation into the language-specific implementations' `docs/` folder.
 6. Add language-specific `schemas/` trees with raw and extracted schema definitions, an `index.json`, and Markdown explainers.
 7. Implement `client` and related modules in the chosen language(s). Add tests and examples.
 

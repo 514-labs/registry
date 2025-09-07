@@ -1,8 +1,8 @@
 {
   "$schema": "https://schemas.connector-factory.dev/scaffold.schema.json",
   "scaffold": "typescript",
-  "version": "1.0.0",
-  "description": "TypeScript implementation scaffold for a pipeline.",
+  "version": "1.1.0",
+  "description": "TypeScript implementation scaffold for a pipeline with _meta folder at implementation level.",
   "variables": {
     "pipeline": {
       "description": "Pipeline name (kebab-case).",
@@ -58,6 +58,56 @@
                       "type": "dir",
                       "name": "{implementation}",
                       "children": [
+                        {
+                          "type": "dir",
+                          "name": "_meta",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "pipeline.json",
+                              "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/pipeline.schema.json\",\n  \"identifier\": \"{pipeline}\",\n  \"name\": \"{pipeline}\",\n  \"author\": \"{author}\",\n  \"authorType\": \"organization\",\n  \"version\": \"{version}\",\n  \"language\": \"typescript\",\n  \"implementation\": \"{implementation}\",\n  \"description\": \"\",\n  \"tags\": [],\n  \"schedule\": { \"cron\": \"0 * * * *\", \"timezone\": \"UTC\" },\n  \"source\": { \"type\": \"connector\", \"connector\": { \"name\": \"\", \"version\": \"\", \"author\": \"\" }, \"stream\": \"\" },\n  \"systems\": [],\n  \"transformations\": [],\n  \"destination\": { \"system\": \"clickhouse\", \"database\": \"\", \"table\": \"\" },\n  \"lineage\": { \"nodes\": [], \"edges\": [] },\n  \"maintainers\": [],\n  \"registryUrl\": \"https://github.com/514-labs/factory/tree/main/pipeline-registry/{pipeline}/{version}/{author}/typescript/{implementation}\"\n}\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "README.md",
+                              "template": "# {pipeline}\n\n> Maintained by {author}\n\nPipeline metadata and assets for the TypeScript {implementation} implementation.\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "CHANGELOG.md",
+                              "template": "# Changelog\n\nAll notable changes to `{pipeline}` TypeScript {implementation} implementation by `{author}`.\n\n## [0.1.0] - Initial Release\n\n- Initial pipeline implementation\n"
+                            },
+                            { "type": "file", "name": "LICENSE", "template": "MIT\n" },
+                            { 
+                              "type": "dir", 
+                              "name": "assets",
+                              "children": [
+                                {
+                                  "type": "dir",
+                                  "name": "from",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "README.md",
+                                      "template": "Place the source system logo here as 'logo.png' (or .svg/.jpg/.jpeg/.webp).\n"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "to",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "README.md",
+                                      "template": "Place the destination system logo here as 'logo.png' (or .svg/.jpg/.jpeg/.webp).\n"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
                         {
                           "type": "file",
                           "name": ".gitignore",

@@ -1,0 +1,120 @@
+import Link from "next/link";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/components/tabs";
+
+# Create your own
+
+Follow these steps to create your own connector or pipeline:
+
+## 1. Clone the repository
+
+Clone the factory repository to your local machine:
+
+```bash
+git clone https://github.com/514-labs/factory.git
+cd factory
+```
+
+<Tabs defaultValue="connector" className="mt-6">
+<TabsList>
+  <TabsTrigger value="connector">Connector</TabsTrigger>
+  <TabsTrigger value="pipeline">Pipeline</TabsTrigger>
+</TabsList>
+
+<TabsContent value="connector">
+
+## 2. Generate a connector scaffold
+
+From the factory directory, run the install script to generate a new connector with the appropriate structure:
+
+```bash
+bash -i <(curl https://connectors.514.ai/install.sh) [connector-name] [version] [author] [language]
+```
+
+**Example:**
+```bash
+bash -i <(curl https://connectors.514.ai/install.sh) ads-b-dot-lol v2 fiveonefour typescript
+```
+
+This creates a new directory with your connector scaffold in the chosen language.
+
+## 3. Determine your connector type
+
+Identify which type of connector you're building:
+
+- **API Connector**: For general REST/GraphQL APIs
+- **SaaS Connector**: For third-party SaaS platforms and services
+- **Database Connector**: For SQL databases (PostgreSQL, MySQL, etc.)
+- **Blob Storage Connector**: For cloud storage (S3, GCS, Azure Blob)
+
+## 4. Follow the specifications
+
+Feed your LLM the relevant specifications and documentation:
+
+1. **Target API documentation**: Share the official API docs of the service you're connecting to (e.g., [Stripe API docs](https://stripe.com/docs/api), [Shopify API docs](https://shopify.dev/docs/api))
+2. **Type-specific specs**: Include the appropriate specification:
+   - [API Connector Spec](/docs/connectors/specifications) for general REST/GraphQL APIs
+   - [SaaS Connector Spec](/docs/connectors/specifications) for third-party SaaS platforms
+   - [Database Connector Spec](/docs/connectors/specifications) for SQL databases  
+   - [Blob Storage Connector Spec](/docs/connectors/specifications) for cloud storage
+3. **Example connectors**: Reference existing connectors in the registry for patterns
+   - API Connectors: ADS-B.lol, OpenWeather
+   - SaaS Connectors: [Google Analytics](/connector-registry/google-analytics/v4/fiveonefour/typescript/README.md), [Shopify](/connector-registry/shopify/v2025-01/fiveonefour/typescript/README.md)
+   - [coming soon] Database Connectors: PostgreSQL
+   - [coming soon] Blob Storage Connectors: S3
+
+Your LLM can then help generate the connector implementation following the established patterns and specifications.
+
+## 5. Share your connector
+
+Open a pull request to the [factory repository](https://github.com/514-labs/factory) to share your connector with the community. Mention the connector [Issue](https://github.com/514-labs/factory/issues) in the PR description.
+
+If you built your connector outside the factory monorepo, you'll need to add it to the monorepo's registry directory with all required metadata (defined in `connector-registry/_scaffold`).
+
+</TabsContent>
+
+<TabsContent value="pipeline">
+
+## 2. Generate a pipeline scaffold
+
+From the factory directory, run the install script to generate a new pipeline with the appropriate structure:
+
+```bash
+bash -i <(curl https://pipelines.514.ai/install.sh) [pipeline-name] [version] [author] [language]
+```
+
+**Example:**
+```bash
+bash -i <(curl https://pipelines.514.ai/install.sh) google-analytics-to-clickhouse v1 fiveonefour typescript
+```
+
+This creates a new directory with your pipeline scaffold in the chosen language.
+
+## 3. Define your pipeline
+
+A pipeline consists of:
+
+- **Source connector**: Where data is extracted from
+- **Destination connector**: Where data is loaded to
+- **Transformation logic**: How data is processed between source and destination
+- **Schedule**: When and how often the pipeline runs
+
+## 4. Follow the specifications
+
+Feed your LLM the relevant specifications and documentation:
+
+1. **Source and destination documentation**: Share the docs for both systems
+2. **Pipeline specifications**: Include the pipeline specification
+3. **Example pipelines**: Reference existing pipelines in the registry for patterns
+   - [Google Analytics to ClickHouse](/pipeline-registry/google-analytics-to-clickhouse/v1/fiveonefour/typescript/README.md)
+   - [HubSpot to ClickHouse](/pipeline-registry/hubspot-to-clickhouse/v3/fiveonefour/typescript/README.md)
+
+Your LLM can then help generate the pipeline implementation following the established patterns and specifications.
+
+## 5. Share your pipeline
+
+Open a pull request to the [factory repository](https://github.com/514-labs/factory) to share your pipeline with the community.
+
+If you built your pipeline outside the factory monorepo, you'll need to add it to the monorepo's registry directory with all required metadata (defined in `pipeline-registry/_scaffold`).
+
+</TabsContent>
+</Tabs>
