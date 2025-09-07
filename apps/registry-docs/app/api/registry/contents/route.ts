@@ -1,20 +1,14 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { basename, dirname } from "path";
 import { listConnectors } from "@workspace/registry/connectors";
 import { listPipelines } from "@workspace/registry/pipelines";
 
 export const dynamic = "force-static";
 
-export async function GET(request: NextRequest) {
-  // Get query parameters for filtering
-  const searchParams = request.nextUrl.searchParams;
-  const type = searchParams.get("type"); // "connector" | "pipeline" | null for all
-  const language = searchParams.get("language");
-  const author = searchParams.get("author");
-  const tags = searchParams.get("tags")?.split(",");
-
-  const connectors = type === "pipeline" ? [] : listConnectors();
-  const pipelines = type === "connector" ? [] : listPipelines();
+export async function GET() {
+  // Get all connectors and pipelines
+  const connectors = listConnectors();
+  const pipelines = listPipelines();
 
   const connectorItems = connectors.flatMap((c) =>
     c.providers.flatMap((provider) =>
@@ -43,17 +37,6 @@ export async function GET(request: NextRequest) {
             impl.implementation === "default"
               ? `${providerBaseUrl}/${impl.language}`
               : `${providerBaseUrl}/${impl.language}/${impl.implementation}`;
-
-          // Apply filters
-          if (language && impl.language !== language) return null;
-          if (author && itemAuthor !== author && provider.authorId !== author)
-            return null;
-          if (
-            tags &&
-            tags.length > 0 &&
-            !tags.some((tag) => itemTags.includes(tag))
-          )
-            return null;
 
           return {
             type: "connector" as const,
@@ -108,17 +91,6 @@ export async function GET(request: NextRequest) {
               ? `${providerBaseUrl}/${impl.language}`
               : `${providerBaseUrl}/${impl.language}/${impl.implementation}`;
 
-          // Apply filters
-          if (language && impl.language !== language) return null;
-          if (author && itemAuthor !== author && provider.authorId !== author)
-            return null;
-          if (
-            tags &&
-            tags.length > 0 &&
-            !tags.some((tag) => itemTags.includes(tag))
-          )
-            return null;
-
           return {
             type: "pipeline" as const,
             id: p.pipelineId,
@@ -159,12 +131,6 @@ export async function GET(request: NextRequest) {
     total: items.length,
     connectors: connectorItems.length,
     pipelines: pipelineItems.length,
-    filters: {
-      type: type || "all",
-      language: language || null,
-      author: author || null,
-      tags: tags || null,
-    },
     items,
   };
 

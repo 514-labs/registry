@@ -17,6 +17,7 @@
       "outputs": ["dist/**"]
     },
     "lint": {},
+    "typecheck": {},
     "clean": {
       "cache": false
     }

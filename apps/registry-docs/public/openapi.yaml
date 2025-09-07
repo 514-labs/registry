@@ -31,38 +31,11 @@ paths:
     get:
       tags:
         - Registry
-      summary: Get registry contents
+      summary: Get registry contents metadata
       description: |
-        Returns the current contents of the registry, similar to registry.json but with additional filtering capabilities.
-        This endpoint provides a comprehensive view of all connectors and pipelines in the registry.
+        Returns metadata about all connectors and pipelines in the registry, including their descriptions, authors, tags, and GitHub URLs.
+        This endpoint provides a complete catalog of what's available in the registry, not the actual implementation files.
       operationId: getRegistryContents
-      parameters:
-        - name: type
-          in: query
-          description: Filter by item type
-          schema:
-            type: string
-            enum: [connector, pipeline]
-          example: connector
-        - name: language
-          in: query
-          description: Filter by implementation language
-          schema:
-            type: string
-            enum: [typescript, python]
-          example: typescript
-        - name: author
-          in: query
-          description: Filter by author/organization
-          schema:
-            type: string
-          example: 514-labs
-        - name: tags
-          in: query
-          description: Filter by tags (comma-separated)
-          schema:
-            type: string
-          example: analytics,etl
       responses:
         "200":
           description: Registry contents retrieved successfully
@@ -74,11 +47,6 @@ paths:
                 total: 2
                 connectors: 1
                 pipelines: 1
-                filters:
-                  type: all
-                  language: null
-                  author: null
-                  tags: null
                 items:
                   - type: connector
                     id: hubspot
@@ -103,7 +71,7 @@ paths:
       summary: Get connector scaffold template
       description: |
         Returns the scaffold template for creating new connectors in the specified language.
-        This template defines the file structure and boilerplate code for new connector implementations.
+        This template defines the file structure and boilerplate code for new connector implementations starting from the implementation directory level.
       operationId: getConnectorScaffold
       parameters:
         - name: language
@@ -113,7 +81,7 @@ paths:
           schema:
             type: string
             enum: [typescript, python]
-          example: typescript
+            example: typescript
       responses:
         "200":
           description: Connector scaffold retrieved successfully
@@ -137,11 +105,13 @@ paths:
                     pattern: "^[A-Za-z0-9][A-Za-z0-9._-]*$"
                 structure:
                   - type: "dir"
-                    name: "{connector}"
-                    children:
-                      - type: "file"
-                        name: "README.md"
-                        template: "# {connector}\n\nConnector implementation..."
+                    name: "_meta"
+                  - type: "file"
+                    name: ".gitignore"
+                    template: "node_modules/\ndist/\n.env\n"
+                  - type: "file"
+                    name: "README.md"
+                    template: "# {connector} (TypeScript)\n\nTypeScript implementation..."
         "400":
           description: Invalid language specified
           content:
@@ -162,7 +132,7 @@ paths:
       summary: Get pipeline scaffold template
       description: |
         Returns the scaffold template for creating new pipelines in the specified language.
-        This template defines the file structure and boilerplate code for new pipeline implementations.
+        This template defines the file structure and boilerplate code for new pipeline implementations starting from the implementation directory level.
       operationId: getPipelineScaffold
       parameters:
         - name: language
@@ -172,7 +142,7 @@ paths:
           schema:
             type: string
             enum: [typescript, python]
-          example: typescript
+            example: typescript
       responses:
         "200":
           description: Pipeline scaffold retrieved successfully
@@ -226,7 +196,6 @@ components:
         - total
         - connectors
         - pipelines
-        - filters
         - items
       properties:
         total:
@@ -238,19 +207,6 @@ components:
         pipelines:
           type: integer
           description: Number of pipeline items
-        filters:
-          type: object
-          properties:
-            type:
-              type: [string, "null"]
-            language:
-              type: [string, "null"]
-            author:
-              type: [string, "null"]
-            tags:
-              type: [array, "null"]
-              items:
-                type: string
         items:
           type: array
           items:

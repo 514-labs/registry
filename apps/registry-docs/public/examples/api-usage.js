@@ -17,19 +17,22 @@ async function getAllRegistryContents() {
   return data;
 }
 
-// Example 2: Get TypeScript connectors only
+// Example 2: Filter TypeScript connectors from the results
 async function getTypeScriptConnectors() {
-  const response = await fetch(
-    `${BASE_URL}/registry/contents?type=connector&language=typescript`
-  );
+  const response = await fetch(`${BASE_URL}/registry/contents`);
   const data = await response.json();
 
+  // Filter TypeScript connectors client-side
+  const tsConnectors = data.items.filter(
+    (item) => item.type === "connector" && item.language === "typescript"
+  );
+
   console.log("TypeScript Connectors:");
-  data.items.forEach((item) => {
+  tsConnectors.forEach((item) => {
     console.log(`- ${item.name} (${item.id}) by ${item.author}`);
   });
 
-  return data;
+  return tsConnectors;
 }
 
 // Example 3: Get connector scaffold template
@@ -87,7 +90,7 @@ async function main() {
 
     console.log("\n---\n");
 
-    // Get TypeScript connectors
+    // Filter TypeScript connectors from the results
     await getTypeScriptConnectors();
 
     console.log("\n---\n");

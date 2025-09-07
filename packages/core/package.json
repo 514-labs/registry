@@ -12,6 +12,13 @@
     "./rate-limit": "./src/rate-limit/index.ts",
     "./domains": "./src/domains/index.ts"
   },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "dev": "tsc --noEmit --watch",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "jest"
+  },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",

@@ -23,7 +23,7 @@ The full OpenAPI specification is available at:
 
 ### Registry Contents
 
-Get the current contents of the registry with filtering capabilities.
+Get metadata about all connectors and pipelines in the registry. This endpoint returns information about what's available in the registry, not the actual implementation files.
 
 <Codeblock>
 ```bash
@@ -31,16 +31,12 @@ GET /api/registry/contents
 ```
 </Codeblock>
 
-Query parameters:
-- `type` - Filter by type: `connector` or `pipeline`
-- `language` - Filter by language: `typescript` or `python`
-- `author` - Filter by author/organization
-- `tags` - Filter by tags (comma-separated)
+Returns a complete list of all connectors and pipelines with their metadata including names, descriptions, authors, versions, tags, and GitHub URLs.
 
 Example:
 <Codeblock>
 ```bash
-curl "https://registry.docs.moose.dev/api/registry/contents?type=connector&language=typescript"
+curl "https://registry.docs.moose.dev/api/registry/contents"
 ```
 </Codeblock>
 

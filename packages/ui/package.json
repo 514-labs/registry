@@ -14,7 +14,8 @@
   },
   "scripts": {
     "ui": "pnpm dlx shadcn@latest",
-    "lint": "eslint . --max-warnings 0"
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

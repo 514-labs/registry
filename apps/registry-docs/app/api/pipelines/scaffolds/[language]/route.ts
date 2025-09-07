@@ -3,6 +3,46 @@ import { existsSync, readFileSync } from "fs";
 import { join } from "path";
 import { getPipelinesRegistryPath } from "@workspace/registry/pipelines";
 
+// Helper function to extract the structure from the {implementation} node level down
+function extractImplementationStructure(
+  structure: any[],
+  language: string
+): any[] | null {
+  // Navigate through the structure to find the {implementation} node
+  // Structure: {pipeline} -> {version} -> {author} -> {language} -> {implementation}
+
+  for (const pipelineNode of structure) {
+    if (pipelineNode.type === "dir" && pipelineNode.name === "{pipeline}") {
+      for (const versionNode of pipelineNode.children || []) {
+        if (versionNode.type === "dir" && versionNode.name === "{version}") {
+          for (const authorNode of versionNode.children || []) {
+            if (authorNode.type === "dir" && authorNode.name === "{author}") {
+              for (const languageNode of authorNode.children || []) {
+                if (
+                  languageNode.type === "dir" &&
+                  languageNode.name === language
+                ) {
+                  for (const implementationNode of languageNode.children ||
+                    []) {
+                    if (
+                      implementationNode.type === "dir" &&
+                      implementationNode.name === "{implementation}"
+                    ) {
+                      return implementationNode.children || [];
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
 export const dynamic = "force-static";
 
 export async function GET(
@@ -37,7 +77,28 @@ export async function GET(
     const scaffoldContent = readFileSync(scaffoldPath, "utf-8");
     const scaffold = JSON.parse(scaffoldContent);
 
-    return NextResponse.json(scaffold);
+    // Extract the structure from the {implementation} node level down
+    const implementationStructure = extractImplementationStructure(
+      scaffold.structure,
+      language
+    );
+
+    if (!implementationStructure) {
+      return NextResponse.json(
+        {
+          error: `Implementation structure not found for language '${language}'`,
+        },
+        { status: 500 }
+      );
+    }
+
+    // Return scaffold with the implementation-level structure
+    const response = {
+      ...scaffold,
+      structure: implementationStructure,
+    };
+
+    return NextResponse.json(response);
   } catch (error) {
     console.error(`Error reading scaffold for ${language}:`, error);
     return NextResponse.json(
