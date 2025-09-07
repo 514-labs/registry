@@ -8,7 +8,12 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*", "connector-registry/**"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*",
+        "connector-registry/**",
+        "pipeline-registry/**"
+      ],
       "outputs": ["dist/**"]
     },
     "lint": {},

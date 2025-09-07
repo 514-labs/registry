@@ -1,0 +1,179 @@
+## SaaS Connectors
+
+Connectors for Software-as-a-Service platforms and third-party services.
+
+### Goals
+
+- Normalized auth (API key, OAuth2, custom token schemes)
+- Consistent pagination, rate limiting, and retry behavior
+- Standardized error taxonomy (auth, validation, rate-limit, server)
+
+### Core Capabilities
+
+1. Authentication helpers and token refresh (where applicable)
+2. Resource listing with cursor/page-based pagination
+3. Webhook subscription/verification (if supported)
+4. Idempotent write operations with conflict handling
+
+### Rate Limiting & Retries
+
+- Respect provider headers (X-RateLimit-*)
+- Exponential backoff with jitter for 429/5xx
+
+### Observability
+
+- Request/response logging with PII scrubbing
+- Metrics: request counts, latency, rate-limit hits
+
+### Scope and Principles
+
+- Language-agnostic behavior (aligns with API Connector Specification)
+- Resource-oriented design (avoid ETL-phase folders)
+- Deterministic, observable, secure-by-default
+- Extensible via hooks/middleware, without forking core
+
+### Structure and Architecture
+
+- Organize code by API resources under `src/{resource}`
+  - Each resource module exports a `createResource(send)` factory that binds a base path (e.g., `/{resource}`)
+  - CRUD surface per resource: `list(params)`, `get({ id, ... })`, `streamAll(params)`, `getAll(params)`
+  - A `model` definition documenting the resource item shape
+- Share cross-cutting utilities in `src/lib`
+  - `paginate`: iterators for cursor/page/offset/link-header strategies
+  - `make-resource`: helper to build standardized CRUD wrappers around `send`
+
+```text
+Recommended layout (example):
+src/
+  lib/
+    paginate.*           # pagination iterator(s)
+    make-resource.*      # CRUD wrapper factory
+  contacts/
+    index.*              # createResource(send) → list/get/streamAll/getAll
+    model.*              # shape of a Contact
+  companies/
+    index.*
+    model.*
+  index.*                # exports client/config and any resource factories
+```
+
+### Authentication
+
+- Support multiple strategies: API key, bearer, basic, OAuth2, custom
+- Best practices:
+  - Least privilege: request minimal scopes; document required scopes clearly
+  - Token refresh: refresh before expiry (for OAuth2); cache tokens securely
+  - Tenant scoping: include account/tenant identifiers when required by the API
+  - Secret handling: never log credentials; scrub from logs/metrics/errors
+
+### Pagination
+
+- Prefer cursor-based pagination when available; fall back to page/offset/link-header
+- Provide a unified iterator API from `lib/paginate`
+- Resource modules should consume the iterator rather than reimplementing pagination
+- Allow custom extraction functions for items and cursors when providers differ
+
+```text
+Paginate flow (pseudocode):
+1. after = startCursor | undefined; limit = pageSize | default
+2. LOOP:
+   a. res = send(GET path, { limit, after, ...params })
+   b. items = extractItems(res.data)
+   c. yield items
+   d. after = extractNextCursor(res.data)
+   e. if !after → break
+```
+
+### Rate Limiting and Retries
+
+- Adaptive limits from headers; respect Retry-After hints
+- Exponential backoff with jitter; retry budget per operation
+- Circuit breaking on repeated failures; idempotency keys for unsafe writes
+- Distinguish retryable vs non-retryable errors; surface actionable messages
+
+### Errors and Taxonomy
+
+- Use standardized codes (AUTH_FAILED, RATE_LIMIT, TIMEOUT, SERVER_ERROR, etc.)
+- Preserve provider `requestId` when available; include method/path/attempt/duration
+- Map provider-specific errors to the common taxonomy; keep original details
+- Validate responses and fail early with clear `VALIDATION_ERROR` when malformed
+
+### Configuration
+
+- Base: `baseUrl`, `timeout`, `userAgent`, `proxy`, `tls`, `pooling`
+- Auth: `type`, `credentials`, `scopes` (document minimal scopes)
+- Retry: attempts, initial/max delays, backoff multiplier, retryable codes, respect Retry-After, retry budget
+- Rate limit: RPS/RPM/RPH, concurrency, burst capacity, adaptive from headers
+- Defaults: headers/query params; Hooks: beforeRequest/afterResponse/onError/onRetry
+
+### Observability (expanded)
+
+- Logs: structured, correlation `requestId`, redaction by default
+- Metrics: counters (requests, errors, retries), distributions (latency, payload), gauges (in-flight, rate-limit)
+- Traces: spans around request execution, pagination loops, and resource processing
+
+### Webhooks and Async Jobs
+
+- Verify signatures and timestamps; reject stale deliveries
+- De-duplicate by delivery ID/replay ID; maintain idempotent handlers
+- For async jobs: create → poll with backoff → fetch result; honor provider guidance
+
+```text
+Async job flow (pseudocode):
+1. jobId = POST /jobs
+2. REPEAT until done:
+   a. status = GET /jobs/{jobId}
+   b. if status == done → break
+   c. sleep(backoff)
+3. result = GET /jobs/{jobId}/result
+```
+
+### Idempotency
+
+- For unsafe methods, support idempotency keys where API allows
+- Generate stable keys per logical operation; document collision behavior
+
+### Versioning and Compatibility
+
+- Organize by upstream version identifiers (e.g., v4, dates, API revisions)
+- Prefer backward-compatible changes; document breaking changes clearly
+- Feature flags or capability detection for optional features
+
+### Security and Compliance
+
+- TLS by default; support custom CA bundles; consider mTLS if required
+- Validate inputs and outputs; reject malformed data early
+- PII handling: configurable redaction/masking; ensure no secrets in logs/metrics
+- Respect data residency and minimization; avoid storing payloads by default
+
+### Concurrency and Cancellation
+
+- Enforce max concurrency independent of rate limits; bounded queues
+- Per-call timeout at transport; cancellation tokens for all operations
+- Graceful shutdown: drain in-flight requests
+
+### Data Modeling and Schema Docs
+
+- Provide a `model` per resource with field semantics and types
+- Document cursor fields, unique identifiers, and delete semantics (soft/hard)
+- Keep transformations minimal; prefer raw-with-projection over heavy reshaping
+
+### Testing
+
+- Unit tests for resource CRUD wrappers and helpers
+- Integration tests with mock servers (auth flows, pagination, rate limits, retries)
+- Error handling tests with provider-like responses
+- Performance regression budgets for hot paths
+
+### Conformance Checklist
+
+- Resource-oriented structure with `src/{resource}` and shared `src/lib`
+- `createResource(send)` factory per resource; `list/get/streamAll/getAll` provided
+- Pagination via shared iterator; configurable extractors
+- Auth strategies with refresh and secret redaction
+- Retry with backoff+jitter; respects Retry-After and retry budget
+- Structured errors with taxonomy and correlation IDs
+- Observability: logs/metrics/traces with redaction
+- Security controls: TLS, validation, data minimization
+
+

@@ -1,0 +1,95 @@
+import { Card, CardDescription, CardHeader, CardTitle } from "@ui/components/card";
+import Link from "next/link";
+import { Badge } from "@ui/components/badge";
+
+# Introduction
+
+We created this project because we believe that analytical connectors should be
+open source, free and easy to integrate, debug and maintain.
+
+## Our thesis
+
+Connectors are the building blocks to all data-intensive applications.
+Everyone hates creating them and the only thing worst than creating
+them is maintaining them.
+
+Connector providers have taken advantage of this by creating opaque,
+expensive connectors that you pay for but never actually own.
+
+It's time to change that.
+
+## What are analytical connectors?
+
+Analytical connectors are a way to scalabily extract data from source systems
+and load it into a central data platform like a data warehouse, data lake, or
+lakehouse.
+
+Analytical connectors differ from transactional connectors in that they are
+designed to operate at scale over large volumes of data. This menas that they
+generally have a batch or stream extraction pattern, and are designed to be
+resilient and fault tolerant as opposed to prioritizing speed and low latency
+on single transactions.
+
+### What this project is
+
+- rock solid set of absractions and analytical connector implementation patterns
+- prompts and tools to build & test connectors that you own
+- tools to distribute those connectors, integrate them directly in
+  your applications and share them with your friends
+
+### What this project is not
+
+- A way to swindle you into paying for commodity software
+- A set of connectors that you can opaquely integrate into your
+  applications
+- A way to build connectors that you can't understand
+- A way for any one company to own the connector market
+
+## Who we think will use this
+
+- Developers building data-intensive applications that need resilience, observability and control
+- Data warehousing providers who need to create connectors to pull data into their warehouse
+- Data platform providers who need to create connectors to pull data into their platform
+
+## If you like what you see
+
+- Consider contributing to the project
+- Join [our community](https://join.slack.com/t/moose-community/shared_invite/zt-3bfuso6k7-RldHL6eTpArG3uq4Rz2krQ)
+- Leave us a star [on the repo](https://github.com/514-labs/factory)
+- Check out our [blog](https://connectorfactory.dev/blog)
+- Follow us on [X](https://x.com/connectorfactory), [LinkedIn](https://www.linkedin.com/company/connector-factory), or [YouTube](https://www.youtube.com/@connectorfactory)
+
+
+## Check out our other projects:
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+<Link href="https://docs.fiveonefour.com/moose" className='no-underline'>
+  <Card>
+    <CardHeader className='gap-4'>
+      <CardTitle className='flex flex-row justify-between items-center text-xl'>Moose Stack <Badge variant="outline">Open Source</Badge></CardTitle>
+      <CardDescription>Tools for building analytical backends on top of ClickHouse and Redpanda </CardDescription>
+    </CardHeader>
+  </Card>
+</Link>
+<Link href="https://fiveonefour.com/sloan" className='no-underline'>
+  <Card>
+    <CardHeader className='gap-4'>
+      <CardTitle className='flex flex-row justify-between items-center text-xl'>Sloan <Badge variant="outline">Commercial</Badge></CardTitle>
+      <CardDescription>A co-pilot extension to help you do data engineering in your favorite AI enabled IDE </CardDescription>
+    </CardHeader>
+  </Card>
+</Link>
+<Link href="https://fiveonefour.com/boreal" className='no-underline col-span-2'>
+  <Card >
+    <CardHeader className='gap-4'>
+      <CardTitle className='flex flex-row justify-between items-center text-xl'>Boreal <Badge variant="outline">Commercial</Badge></CardTitle>
+      <CardDescription>A hosting platform for analytical backends, including connectors </CardDescription>
+    </CardHeader>
+  </Card>
+</Link>
+</div>
+
+
+## If you have any questions
+- Join us [on slack](https://join.slack.com/t/moose-community/shared_invite/zt-3bfuso6k7-RldHL6eTpArG3uq4Rz2krQ)
+- Send us an [email](hello@fiveonefour.com)
