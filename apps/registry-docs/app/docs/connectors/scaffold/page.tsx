@@ -13,37 +13,24 @@ export default function ConnectorScaffoldPage() {
 
       <h2>What the folders mean</h2>
 
-      <h3>{`{connector}/_meta`}</h3>
+      <h3>{`{connector}/{version}/{author}/{language}/{implementation}/_meta`}</h3>
       <ul>
-        <li>Holds connector-level metadata that is provider-agnostic.</li>
+        <li>Holds all connector metadata at the implementation level.</li>
         <li>
-          <strong>Files</strong>: `connector.json`, `README.md`, and `assets/`
-          for shared logos/images.
+          <strong>Files</strong>: `connector.json` (identifier, name, author,
+          version, capabilities, etc.), `README.md`, `CHANGELOG.md`, `LICENSE`,
+          and `assets/` for logos/images.
         </li>
         <li>
-          Do not place documentation here; documentation belongs with the
-          language implementation directories.
+          Each implementation has its own `_meta` folder, allowing different
+          implementations to have different metadata, maintainers, and assets.
         </li>
       </ul>
 
-      <h3>{`{connector}/{version}/_meta`}</h3>
-      <ul>
-        <li>Version-level metadata for the connector.</li>
-        <li>
-          <strong>Files</strong>: `version.json`, `README.md`, and `assets/`.
-        </li>
-      </ul>
-
-      <h3>{`{connector}/{version}/{author}/_meta`}</h3>
-      <ul>
-        <li>Provider/author-specific metadata and assets.</li>
-        <li>
-          <strong>Files</strong>: `connector.json` (capabilities, languages),
-          `CHANGELOG.md`, `LICENSE`, `assets/`.
-        </li>
-      </ul>
-
-      <h3>Language implementations under {`{connector}/{version}/{author}`}</h3>
+      <h3>
+        Language implementations under{" "}
+        {`{connector}/{version}/{author}/{language}/{implementation}`}
+      </h3>
       <ul>
         <li>
           `typescript/{`{implementation}`}/` (and optionally `python/` if
@@ -73,12 +60,16 @@ export default function ConnectorScaffoldPage() {
       <h2>Notes</h2>
       <ul>
         <li>
-          `_meta` folders should not include docs; keep docs with the
-          language-specific implementation.
+          The `_meta` folder is now at the implementation level, containing all
+          metadata for that specific implementation.
+        </li>
+        <li>
+          Documentation goes in the `docs/` folder within each implementation,
+          not in the `_meta` folder.
         </li>
         <li>
           Schemas should live at the top level of each language implementation
-          (not under `src`).
+          in the `schemas/` folder (not under `src`).
         </li>
       </ul>
     </div>

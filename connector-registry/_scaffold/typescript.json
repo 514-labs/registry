@@ -1,8 +1,8 @@
 {
   "$schema": "https://schemas.connector-factory.dev/scaffold.schema.json",
   "scaffold": "typescript",
-  "version": "0.5.0",
-  "description": "TypeScript implementation scaffold with support for an implementation layer under the language directory.",
+  "version": "0.6.0",
+  "description": "TypeScript implementation scaffold with _meta folder at implementation level.",
   "variables": {
     "connector": {
       "description": "Connector name (kebab-case).",
@@ -58,6 +58,29 @@
                       "type": "dir",
                       "name": "{implementation}",
                       "children": [
+                        {
+                          "type": "dir",
+                          "name": "_meta",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "connector.json",
+                              "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector.schema.json\",\n  \"identifier\": \"{connector}\",\n  \"name\": \"{connector}\",\n  \"author\": \"{author}\",\n  \"authorType\": \"organization\",\n  \"avatarUrlOverride\": \"\",\n  \"version\": \"{version}\",\n  \"language\": \"typescript\",\n  \"implementation\": \"{implementation}\",\n  \"tags\": [],\n  \"category\": \"api\",\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"license\": \"MIT\",\n  \"source\": {\"type\":\"api\",\"spec\":\"\"},\n  \"capabilities\": {\"extract\": true, \"transform\": true, \"load\": true},\n  \"maintainers\": [],\n  \"issues\": \"\",\n  \"registryUrl\": \"https://github.com/514-labs/factory/tree/main/connector-registry/{connector}/{version}/{author}/typescript/{implementation}\"\n}\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "README.md",
+                              "template": "# {connector}\n\n> Maintained by {author}\n\nConnector metadata and assets for the TypeScript {implementation} implementation.\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "CHANGELOG.md",
+                              "template": "# Changelog\n\nAll notable changes to `{connector}` TypeScript {implementation} implementation by `{author}`.\n\n## [0.1.0] - Initial Release\n\n- Initial connector implementation\n"
+                            },
+                            { "type": "file", "name": "LICENSE", "template": "MIT\n" },
+                            { "type": "dir", "name": "assets" }
+                          ]
+                        },
                         {
                           "type": "file",
                           "name": ".gitignore",

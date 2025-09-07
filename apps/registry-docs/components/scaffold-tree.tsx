@@ -52,9 +52,6 @@ function readScaffold(relativePathFromApp: string): ScaffNode[] {
 }
 
 export async function ConnectorScaffoldTrees() {
-  const metaStructure = readScaffold(
-    "../../connector-registry/_scaffold/meta.json"
-  );
   const pythonStructure = readScaffold(
     "../../connector-registry/_scaffold/python.json"
   );
@@ -67,12 +64,6 @@ export async function ConnectorScaffoldTrees() {
 
   return (
     <div className="space-y-8">
-      <section>
-        <h3 className="mt-0">Meta scaffold</h3>
-        <div className="rounded-md border bg-card p-3">
-          <ScaffoldTreeView nodes={metaStructure} />
-        </div>
-      </section>
       <section>
         <h3 className="mt-0">Python implementation scaffold</h3>
         <div className="rounded-md border bg-card p-3">
@@ -96,9 +87,6 @@ export async function ConnectorScaffoldTrees() {
 }
 
 export async function PipelineScaffoldTrees() {
-  const metaStructure = readScaffold(
-    "../../pipeline-registry/_scaffold/meta.json"
-  );
   const pythonStructure = readScaffold(
     "../../pipeline-registry/_scaffold/python.json"
   );
@@ -111,12 +99,6 @@ export async function PipelineScaffoldTrees() {
 
   return (
     <div className="space-y-8">
-      <section>
-        <h3 className="mt-0">Meta scaffold</h3>
-        <div className="rounded-md border bg-card p-3">
-          <ScaffoldTreeView nodes={metaStructure} />
-        </div>
-      </section>
       <section>
         <h3 className="mt-0">Python implementation scaffold</h3>
         <div className="rounded-md border bg-card p-3">

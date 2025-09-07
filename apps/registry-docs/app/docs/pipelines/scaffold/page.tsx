@@ -13,38 +13,33 @@ export default function PipelineScaffoldPage() {
 
       <h2>What the folders mean</h2>
 
-      <h3>{`{pipeline}/_meta`}</h3>
+      <h3>{`{pipeline}/{version}/{author}/{language}/{implementation}/_meta`}</h3>
       <ul>
-        <li>Holds pipeline-level metadata that is provider-agnostic.</li>
+        <li>Holds all pipeline metadata at the implementation level.</li>
         <li>
-          <strong>Files</strong>: `pipeline.json`, `README.md`, and `assets/`
-          for images and lineage diagrams.
+          <strong>Files</strong>: `pipeline.json` (identifier, name, author,
+          version, source/destination config, schedule, etc.), `README.md`,
+          `CHANGELOG.md`, `LICENSE`, and `assets/` for logos and lineage
+          diagrams.
         </li>
         <li>
-          Avoid placing detailed implementation docs here; keep docs near the
-          language implementation.
+          The `assets/` folder contains:
+          <ul>
+            <li>`from/` subdirectory for source system logos</li>
+            <li>`to/` subdirectory for destination system logos</li>
+            <li>Lineage diagrams (e.g., `lineage.mmd`, `lineage.svg`)</li>
+          </ul>
+        </li>
+        <li>
+          Each implementation has its own `_meta` folder, allowing different
+          implementations to have different configurations and schedules.
         </li>
       </ul>
 
-      <h3>{`{pipeline}/{version}/_meta`}</h3>
-      <ul>
-        <li>Version-level metadata for the pipeline.</li>
-        <li>
-          <strong>Files</strong>: `version.json`, `README.md`, and `assets/`.
-        </li>
-      </ul>
-
-      <h3>{`{pipeline}/{version}/{author}/_meta`}</h3>
-      <ul>
-        <li>Provider/author-specific metadata and lineage assets.</li>
-        <li>
-          <strong>Files</strong>: `pipeline.json` (executable spec),
-          `CHANGELOG.md`, `LICENSE`, `assets/` (e.g., `lineage.mmd`,
-          `lineage.svg`).
-        </li>
-      </ul>
-
-      <h3>Language implementations under {`{pipeline}/{version}/{author}`}</h3>
+      <h3>
+        Language implementations under{" "}
+        {`{pipeline}/{version}/{author}/{language}/{implementation}`}
+      </h3>
       <ul>
         <li>
           `python/{`{implementation}`}/` and `typescript/{`{implementation}`}/`
@@ -94,16 +89,26 @@ export default function PipelineScaffoldPage() {
       <h2>Notes</h2>
       <ul>
         <li>
-          `_meta` folders are for metadata and assets. Keep implementation docs
-          inside the language directories.
+          The `_meta` folder is now at the implementation level, containing all
+          metadata for that specific pipeline implementation.
         </li>
         <li>
-          Place schemas at the top level of each language implementation (not
-          under `src`).
+          Documentation goes in the `docs/` folder within each implementation,
+          not in the `_meta` folder.
         </li>
         <li>
-          Lineage diagrams should be generated and stored in the provider
-          `_meta/assets/` folder.
+          Place schemas at the top level of each language implementation in the
+          `schemas/` folder (not under `src`).
+        </li>
+        <li>
+          Lineage diagrams and definitions are stored within the implementation:
+          <ul>
+            <li>`lineage/` folder for lineage schemas and manifests</li>
+            <li>`moose/` folder for Moose-specific lineage manifests</li>
+            <li>
+              `_meta/assets/` for generated lineage diagrams and system logos
+            </li>
+          </ul>
         </li>
       </ul>
     </div>
