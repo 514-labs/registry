@@ -1,0 +1,124 @@
+---
+title: Registry API
+description: Open API for accessing connector and pipeline registry information
+---
+
+# Registry API
+
+The Connector Factory provides open APIs for accessing registry information. These APIs allow developers to programmatically access connector and pipeline metadata, scaffolds, and registry contents.
+
+## Base URL
+
+```
+https://registry.docs.moose.dev/api
+```
+
+## OpenAPI Specification
+
+The full OpenAPI specification is available at:
+- [/api/openapi](/api/openapi) - YAML format
+- [View in Swagger UI](https://petstore.swagger.io/?url=https://registry.docs.moose.dev/api/openapi)
+
+## Available Endpoints
+
+### Registry Contents
+
+Get the current contents of the registry with filtering capabilities.
+
+<Codeblock>
+```bash
+GET /api/registry/contents
+```
+</Codeblock>
+
+Query parameters:
+- `type` - Filter by type: `connector` or `pipeline`
+- `language` - Filter by language: `typescript` or `python`
+- `author` - Filter by author/organization
+- `tags` - Filter by tags (comma-separated)
+
+Example:
+<Codeblock>
+```bash
+curl "https://registry.docs.moose.dev/api/registry/contents?type=connector&language=typescript"
+```
+</Codeblock>
+
+### Connector Scaffold Template
+
+Get the scaffold template for creating new connectors in a specific language.
+
+<Codeblock>
+```bash
+GET /api/connectors/scaffolds/{language}
+```
+</Codeblock>
+
+Supported languages: `typescript`, `python`
+
+Example:
+<Codeblock>
+```bash
+curl "https://registry.docs.moose.dev/api/connectors/scaffolds/typescript"
+```
+</Codeblock>
+
+### Pipeline Scaffold Template
+
+Get the scaffold template for creating new pipelines in a specific language.
+
+<Codeblock>
+```bash
+GET /api/pipelines/scaffolds/{language}
+```
+</Codeblock>
+
+Supported languages: `typescript`, `python`
+
+Example:
+<Codeblock>
+```bash
+curl "https://registry.docs.moose.dev/api/pipelines/scaffolds/typescript"
+```
+</Codeblock>
+
+## Response Formats
+
+All API responses are in JSON format. The scaffold endpoints return template structures with variables and file/directory definitions:
+
+```json
+{
+  "$schema": "https://schemas.connector-factory.dev/scaffold.schema.json",
+  "scaffold": "typescript",
+  "version": "0.6.0",
+  "description": "TypeScript implementation scaffold",
+  "variables": {
+    "connector": {
+      "description": "Connector name (kebab-case)",
+      "example": "stripe",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    }
+  },
+  "structure": [
+    {
+      "type": "dir",
+      "name": "{connector}",
+      "children": [
+        {
+          "type": "file",
+          "name": "README.md",
+          "template": "# {connector}\n\nConnector implementation..."
+        }
+      ]
+    }
+  ]
+}
+```
+
+## Rate Limiting
+
+These APIs are served as static endpoints and are heavily cached. There are no strict rate limits, but please be respectful of the service.
+
+## Support
+
+For issues or questions about the API, please open an issue on the [GitHub repository](https://github.com/514-labs/factory).

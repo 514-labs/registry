@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Package, Workflow } from "lucide-react";
+import { Package, Workflow, Code2 } from "lucide-react";
 
 import {
   SidebarContent,
@@ -37,6 +37,8 @@ export default function DocsNav() {
     { title: "Specifications", href: "/docs/pipelines/specifications" },
     { title: "Lineage", href: "/docs/pipelines/lineage" },
   ];
+
+  const apiItems = [{ title: "Registry API", href: "/docs/api" }];
 
   const isActivePath = (href: string) => {
     if (href === "/docs") return pathname === "/docs";
@@ -100,6 +102,31 @@ export default function DocsNav() {
         <SidebarGroupContent>
           <SidebarMenu>
             {pipelineItems.map((item) => (
+              <SidebarMenuItem key={item.href}>
+                <SidebarMenuButton asChild isActive={isActivePath(item.href)}>
+                  <Link
+                    href={item.href}
+                    aria-current={isActivePath(item.href) ? "page" : undefined}
+                  >
+                    {item.title}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+
+      <SidebarSeparator />
+
+      <SidebarGroup>
+        <SidebarGroupLabel className="flex items-center gap-2">
+          <Code2 className="h-4 w-4" />
+          API
+        </SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            {apiItems.map((item) => (
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton asChild isActive={isActivePath(item.href)}>
                   <Link
