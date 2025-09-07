@@ -14,7 +14,9 @@
     "node": ">=20"
   },
   "scripts": {
-    "sync:issues": "tsx scripts/sync-issues.ts"
+    "sync:issues": "tsx scripts/sync-issues.ts",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "dotenv": "^16.6.1"

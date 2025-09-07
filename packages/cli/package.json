@@ -17,7 +17,9 @@
   ],
   "scripts": {
     "build": "tsup src/bin/factory.ts src/index.ts --format esm --external @workspace/connector-hubspot",
-    "dev": "node --enable-source-maps dist/bin/factory.js"
+    "dev": "tsup src/bin/factory.ts src/index.ts --format esm --external @workspace/connector-hubspot --watch",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "commander": "^12.1.0",
