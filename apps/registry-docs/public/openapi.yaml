@@ -1,0 +1,424 @@
+openapi: 3.1.0
+info:
+  title: Connector Factory Registry API
+  description: |
+    Open API for accessing connector and pipeline registry information.
+    These APIs provide access to registry scaffolds, contents, and metadata for building on top of the Connector Factory ecosystem.
+  version: 1.0.0
+  contact:
+    name: 514 Labs
+    url: https://github.com/514-labs/factory
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://registry.docs.moose.dev/api
+    description: Production API server
+  - url: http://localhost:3000/api
+    description: Local development server
+
+tags:
+  - name: Registry
+    description: Registry-wide operations
+  - name: Connectors
+    description: Connector-specific operations
+  - name: Pipelines
+    description: Pipeline-specific operations
+
+paths:
+  /registry/contents:
+    get:
+      tags:
+        - Registry
+      summary: Get registry contents metadata
+      description: |
+        Returns metadata about all connectors and pipelines in the registry, including their descriptions, authors, tags, and GitHub URLs.
+        This endpoint provides a complete catalog of what's available in the registry, not the actual implementation files.
+      operationId: getRegistryContents
+      responses:
+        "200":
+          description: Registry contents retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegistryContents"
+              example:
+                total: 2
+                connectors: 1
+                pipelines: 1
+                items:
+                  - type: connector
+                    id: hubspot
+                    name: HubSpot
+                    version: v3
+                    author: 514 Labs
+                    authorId: 514-labs
+                    language: typescript
+                    implementation: data-api
+                    category: CRM
+                    tags: ["crm", "marketing", "sales"]
+                    description: "Official HubSpot connector for data extraction"
+                    homepage: "https://hubspot.com"
+                    license: MIT
+                    apiPaths:
+                      scaffold: "/api/connectors/scaffolds/typescript"
+
+  /connectors/scaffolds/{language}:
+    get:
+      tags:
+        - Connectors
+      summary: Get connector scaffold template
+      description: |
+        Returns the scaffold template for creating new connectors in the specified language.
+        This template defines the file structure and boilerplate code for new connector implementations starting from the implementation directory level.
+      operationId: getConnectorScaffold
+      parameters:
+        - name: language
+          in: path
+          required: true
+          description: The implementation language
+          schema:
+            type: string
+            enum: [typescript, python]
+            example: typescript
+      responses:
+        "200":
+          description: Connector scaffold retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScaffoldTemplate"
+              example:
+                $schema: "https://schemas.connector-factory.dev/scaffold.schema.json"
+                scaffold: "typescript"
+                version: "0.6.0"
+                description: "TypeScript implementation scaffold with _meta folder at implementation level."
+                variables:
+                  connector:
+                    description: "Connector name (kebab-case)."
+                    example: "stripe"
+                    pattern: "^[a-z0-9][a-z0-9-]*$"
+                  version:
+                    description: "Source version identifier"
+                    example: "v4"
+                    pattern: "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+                structure:
+                  - type: "dir"
+                    name: "_meta"
+                  - type: "file"
+                    name: ".gitignore"
+                    template: "node_modules/\ndist/\n.env\n"
+                  - type: "file"
+                    name: "README.md"
+                    template: "# {connector} (TypeScript)\n\nTypeScript implementation..."
+        "400":
+          description: Invalid language specified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Scaffold not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /pipelines/scaffolds/{language}:
+    get:
+      tags:
+        - Pipelines
+      summary: Get pipeline scaffold template
+      description: |
+        Returns the scaffold template for creating new pipelines in the specified language.
+        This template defines the file structure and boilerplate code for new pipeline implementations starting from the implementation directory level.
+      operationId: getPipelineScaffold
+      parameters:
+        - name: language
+          in: path
+          required: true
+          description: The implementation language
+          schema:
+            type: string
+            enum: [typescript, python]
+            example: typescript
+      responses:
+        "200":
+          description: Pipeline scaffold retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScaffoldTemplate"
+        "400":
+          description: Invalid language specified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Scaffold not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    FileNode:
+      type: object
+      required:
+        - name
+        - path
+        - type
+      properties:
+        name:
+          type: string
+          description: The file or directory name
+          example: "index.ts"
+        path:
+          type: string
+          description: The relative path from the root
+          example: "src/index.ts"
+        type:
+          type: string
+          enum: [file, directory]
+          description: Whether this is a file or directory
+        children:
+          type: array
+          items:
+            $ref: "#/components/schemas/FileNode"
+          description: Child nodes (only present for directories)
+
+    RegistryContents:
+      type: object
+      required:
+        - total
+        - connectors
+        - pipelines
+        - items
+      properties:
+        total:
+          type: integer
+          description: Total number of items
+        connectors:
+          type: integer
+          description: Number of connector items
+        pipelines:
+          type: integer
+          description: Number of pipeline items
+        items:
+          type: array
+          items:
+            oneOf:
+              - $ref: "#/components/schemas/ConnectorItem"
+              - $ref: "#/components/schemas/PipelineItem"
+
+    ConnectorItem:
+      type: object
+      required:
+        - type
+        - id
+        - name
+        - version
+        - author
+        - authorId
+        - language
+        - implementation
+        - apiPaths
+      properties:
+        type:
+          type: string
+          const: connector
+        id:
+          type: string
+        name:
+          type: string
+        version:
+          type: string
+        author:
+          type: string
+        authorId:
+          type: string
+        language:
+          type: string
+        implementation:
+          type: string
+        category:
+          type: [string, "null"]
+        tags:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        homepage:
+          type: [string, "null"]
+        license:
+          type: [string, "null"]
+        languages:
+          type: [array, "null"]
+          items:
+            type: string
+        capabilities:
+          type: [object, "null"]
+        maintainers:
+          type: array
+          items:
+            type: object
+        authorType:
+          type: [string, "null"]
+          enum: [user, organization, null]
+        issues:
+          type: [object, "null"]
+        githubUrl:
+          type: string
+        providerGithubUrl:
+          type: string
+        apiPaths:
+          type: object
+          properties:
+            scaffold:
+              type: string
+
+    PipelineItem:
+      type: object
+      required:
+        - type
+        - id
+        - name
+        - version
+        - author
+        - authorId
+        - language
+        - implementation
+        - apiPaths
+      properties:
+        type:
+          type: string
+          const: pipeline
+        id:
+          type: string
+        name:
+          type: string
+        version:
+          type: string
+        author:
+          type: string
+        authorId:
+          type: string
+        language:
+          type: string
+        implementation:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        homepage:
+          type: [string, "null"]
+        maintainers:
+          type: array
+          items:
+            type: object
+        authorType:
+          type: [string, "null"]
+          enum: [user, organization, null]
+        githubUrl:
+          type: string
+        providerGithubUrl:
+          type: string
+        schedule:
+          type: [object, "null"]
+        source:
+          type: [object, "null"]
+        destination:
+          type: [object, "null"]
+        systems:
+          type: [array, "null"]
+          items:
+            type: object
+        transformations:
+          type: [array, "null"]
+          items:
+            type: object
+        lineage:
+          type: [object, "null"]
+        apiPaths:
+          type: object
+          properties:
+            scaffold:
+              type: string
+
+    ScaffoldTemplate:
+      type: object
+      required:
+        - $schema
+        - scaffold
+        - version
+        - structure
+      properties:
+        $schema:
+          type: string
+          description: Schema URL for the scaffold format
+        scaffold:
+          type: string
+          description: The scaffold type (e.g., "typescript", "python")
+        version:
+          type: string
+          description: Version of the scaffold template
+        description:
+          type: string
+          description: Description of the scaffold
+        variables:
+          type: object
+          description: Variables that can be interpolated in the scaffold
+          additionalProperties:
+            type: object
+            properties:
+              description:
+                type: string
+              example:
+                type: string
+              pattern:
+                type: string
+              default:
+                type: string
+        structure:
+          type: array
+          description: The file and directory structure template
+          items:
+            $ref: "#/components/schemas/ScaffoldNode"
+
+    ScaffoldNode:
+      type: object
+      required:
+        - type
+        - name
+      properties:
+        type:
+          type: string
+          enum: [file, dir]
+          description: Whether this is a file or directory
+        name:
+          type: string
+          description: The name of the file or directory (may include variable placeholders)
+        template:
+          type: string
+          description: For files, the content template
+        children:
+          type: array
+          description: For directories, the child nodes
+          items:
+            $ref: "#/components/schemas/ScaffoldNode"
+
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error message
