@@ -99,9 +99,8 @@ We no longer scaffold or ship per-implementation lineage generator scripts. Inst
 
 The `_scaffold/` directory contains JSON files that describe how to generate pipeline folders/files.
 
-- `meta.json`: root, version, and provider `_meta` scaffolds (assets only; no docs). Creates `pipeline.json` descriptors
-- `python.json`: Python implementation scaffold focused on pipeline transforms/utilities
-- `typescript.json`: TypeScript implementation scaffold (includes docs and lineage placeholders; no lineage scripts)
+- `python.json`: Python implementation scaffold (includes `_meta` folder, docs, and lineage placeholders)
+- `typescript.json`: TypeScript implementation scaffold (includes `_meta` folder, docs, and lineage placeholders)
 
 Each scaffold uses variables:
 
@@ -117,12 +116,10 @@ A generator can interpret the `structure` array and create files/directories wit
 ## Adding a new pipeline
 
 1. Choose pipeline, version, and author names (kebab-case). The author must be a GitHub organization or user handle.
-2. Generate root `_meta/` with `pipeline.json` and `assets/` using `_scaffold/meta.json`.
-3. Generate version-level `_meta/` for the selected `{version}`.
-4. Generate provider-level `_meta/` with the runnable `pipeline.json`.
-5. Add language-specific implementations using `_scaffold/python.json` and/or `_scaffold/typescript.json`.
-6. Put documentation into the language-specific implementations (not `_meta`).
-7. Optionally define output schemas in each implementation under `schemas/`.
-8. Generate lineage into `{version}/{author}/_meta/assets/`.
+2. Generate language-specific implementations using `_scaffold/python.json` and/or `_scaffold/typescript.json`.
+3. Each implementation includes its own `_meta` folder with pipeline metadata and assets (including from/to logos).
+4. Put documentation into the language-specific implementations' `docs/` folder.
+5. Optionally define output schemas in each implementation under `schemas/`.
+6. Create lineage definitions in `lineage/` and `moose/` folders within the implementation.
 
 > Note: Always use pnpm in this monorepo. For TypeScript, ensure Node 20. Do not commit real `.env` files.
