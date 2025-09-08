@@ -163,6 +163,48 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /specifications/{type}:
+    get:
+      tags:
+        - Registry
+      summary: Get specification document
+      description: |
+        Returns the raw markdown content of a specification document.
+        These specifications define standards and best practices for different types of connectors.
+      operationId: getSpecification
+      parameters:
+        - name: type
+          in: path
+          required: true
+          description: The specification type
+          schema:
+            type: string
+            enum: [common, saas, api, blob, database]
+          example: saas
+      responses:
+        "200":
+          description: Specification retrieved successfully
+          content:
+            text/markdown:
+              schema:
+                type: string
+              example: |
+                ## SaaS Connectors
+
+                Connectors for Software-as-a-Service platforms and third-party services.
+
+                ### Goals
+
+                - Normalized auth (API key, OAuth2, custom token schemes)
+                - Consistent pagination, rate limiting, and retry behavior
+                ...
+        "404":
+          description: Specification not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 components:
   schemas:
     FileNode:

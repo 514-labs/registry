@@ -78,6 +78,30 @@ curl "https://registry.docs.moose.dev/api/pipelines/scaffolds/typescript"
 ```
 </Codeblock>
 
+### Specification Documents
+
+Get raw markdown specification documents that define standards and best practices for different types of connectors.
+
+<Codeblock>
+```bash
+GET /api/specifications/{type}
+```
+</Codeblock>
+
+Available specification types:
+- `common` - Common specification for analytical connectors
+- `saas` - Specification for SaaS platform connectors
+- `api` - Specification for API connectors
+- `blob` - Specification for blob storage connectors
+- `database` - Specification for database connectors
+
+Example:
+<Codeblock>
+```bash
+curl "https://registry.docs.moose.dev/api/specifications/saas"
+```
+</Codeblock>
+
 ## Response Formats
 
 All API responses are in JSON format. The scaffold endpoints return template structures with variables and file/directory definitions:
