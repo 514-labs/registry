@@ -1,0 +1,355 @@
+# Pipeline Specifications
+
+Technical specifications and requirements for building production-ready data pipelines using modern frameworks like Moose.
+
+## Pipeline Architecture Patterns
+
+### ETL with Real-time Ingestion
+
+- Data is extracted from source APIs
+- Ingested through HTTP endpoints
+- Transformed using typed models
+- Loaded into analytical databases
+- Best for: SaaS integrations, real-time analytics
+
+### Workflow-based Synchronization
+
+- Scheduled or triggered workflows
+- Batch processing with streaming capabilities
+- Built-in retry and error handling
+- Best for: Regular data syncs, complex orchestration
+
+### API-driven Data Access
+
+- Consumption APIs for processed data
+- Real-time query capabilities
+- Multiple access patterns (lookup, analytics, etc.)
+- Best for: Building data products, operational dashboards
+
+## Required Components
+
+### 1. Pipeline Metadata
+
+```json
+{
+  "$schema": "https://schemas.connector-factory.dev/pipeline.schema.json",
+  "identifier": "hubspot-to-clickhouse",
+  "name": "HubSpot to ClickHouse",
+  "author": "514-labs",
+  "authorType": "organization",
+  "version": "v3",
+  "description": "Ingest HubSpot objects and load into ClickHouse",
+  "tags": ["hubspot", "clickhouse", "etl"],
+  "schedule": { 
+    "cron": "0 * * * *", 
+    "timezone": "UTC" 
+  },
+  "source": {
+    "type": "connector",
+    "connector": { 
+      "name": "hubspot", 
+      "version": "v3", 
+      "author": "514-labs" 
+    },
+    "stream": "objects"
+  },
+  "destination": {
+    "system": "clickhouse",
+    "database": "analytics",
+    "table": "hubspot_objects"
+  }
+}
+```
+
+### 2. Data Models (Moose Framework)
+
+```typescript
+// Raw ingestion model
+export interface HubSpotDealRaw {
+  id: Key<string>;
+  properties: Record<string, string | null>;
+  createdAt: string;
+  updatedAt: string;
+  archived: boolean;
+  associations: {
+    contacts: string[];
+    companies: string[];
+  };
+}
+
+// Transformed model with business logic
+export interface HubSpotDeal {
+  id: Key<string>;
+  dealName: string;
+  amount: number;
+  currency: string;
+  stage: string;
+  stageLabel: string;
+  pipeline: string;
+  pipelineLabel: string;
+  closeDate?: Date;
+  isWon: boolean;
+  isClosed: boolean;
+  // Calculated fields
+  daysToClose?: number;
+  forecastAmount: number;
+  stageProbability: number;
+}
+```
+
+### 3. Transformation Implementation
+
+```typescript
+export const transformRawDeal = (
+  raw: HubSpotDealRaw
+): HubSpotDeal => {
+  const props = raw.properties;
+  const amount = parseFloat(props.amount || "0");
+  const probability = parseFloat(
+    props.hs_deal_stage_probability || "0"
+  ) / 100;
+  
+  return {
+    id: raw.id,
+    dealName: props.dealname || "Untitled Deal",
+    amount,
+    currency: props.deal_currency_code || "USD",
+    stage: props.dealstage || "",
+    stageLabel: props.dealstage_label || "",
+    pipeline: props.pipeline || "",
+    pipelineLabel: props.pipeline_label || "",
+    closeDate: props.closedate 
+      ? new Date(props.closedate) 
+      : undefined,
+    isWon: props.dealstage === "closedwon",
+    isClosed: ["closedwon", "closedlost"]
+      .includes(props.dealstage || ""),
+    forecastAmount: amount * probability,
+    stageProbability: probability,
+    daysToClose: calculateDaysToClose(
+      props.createdate, 
+      props.closedate
+    )
+  };
+};
+```
+
+### 4. Workflow Definition
+
+```typescript
+export const syncHubSpotDealsTask = new Task<null, void>(
+  "syncHubSpotDeals", 
+  {
+    run: async () => {
+      const connector = createHubSpotConnector();
+      connector.initialize({
+        auth: { 
+          type: "bearer", 
+          bearer: { token: process.env.HUBSPOT_TOKEN } 
+        },
+        rateLimit: { 
+          requestsPerSecond: 10, 
+          burstCapacity: 10 
+        },
+      });
+
+      await connector.connect();
+
+      for await (const deal of connector.streamDeals({
+        properties: dealProperties,
+        pageSize: 100,
+      })) {
+        const transformedDeal = transformRawDeal(deal);
+        await fetch("http://localhost:4000/ingest/HubSpotDealRaw", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(transformedDeal),
+        });
+      }
+
+      await connector.disconnect();
+    },
+    retries: 3,
+    timeout: "5m",
+  }
+);
+
+export const hubspotDataSyncWorkflow = new Workflow(
+  "hubspotDataSync", 
+  {
+    startingTask: syncHubSpotDealsTask,
+    retries: 2,
+    timeout: "10m",
+    schedule: "@every 1h",
+  }
+);
+```
+
+### 5. Consumption APIs
+
+```typescript
+// Analytics API with flexible grouping
+export const HubSpotDealsAnalyticsApi = new ConsumptionApi<
+  { groupBy?: "stage" | "pipeline" | "month"; limit?: number },
+  AnalyticsData[]
+>("hubspot-deals-analytics", async (params, { client, sql }) => {
+  const query = sql`
+    SELECT 
+      ${params.groupBy} as groupField,
+      count(*) as dealCount,
+      sum(amount) as totalAmount,
+      avg(amount) as avgAmount,
+      sum(case when isWon then amount else 0 end) as wonAmount,
+      round(count(case when isWon then 1 end) * 100.0 / count(*), 2) as winRate
+    FROM HubSpotDeal
+    GROUP BY ${params.groupBy}
+    ORDER BY totalAmount DESC
+    LIMIT ${params.limit || 10}
+  `;
+  
+  return await client.query.execute(query);
+});
+
+// Deal lookup API
+export const HubSpotDealLookupApi = new ConsumptionApi<
+  { dealId?: string; dealName?: string; ownerId?: string },
+  DealData[]
+>("hubspot-deal-lookup", async (params, { client, sql }) => {
+  // Dynamic query building based on parameters
+  const conditions = [];
+  if (params.dealId) conditions.push(sql`id = ${params.dealId}`);
+  if (params.dealName) conditions.push(sql`dealName ILIKE ${params.dealName}`);
+  if (params.ownerId) conditions.push(sql`ownerId = ${params.ownerId}`);
+  
+  const query = sql`
+    SELECT * FROM HubSpotDeal 
+    WHERE ${conditions.join(' AND ')}
+    ORDER BY lastModifiedAt DESC
+    LIMIT 20
+  `;
+  
+  return await client.query.execute(query);
+});
+```
+
+### 6. Environment Configuration
+
+```bash
+# Required environment variables
+HUBSPOT_TOKEN=hs_pat_xxx  # HubSpot private app token
+ANONYMIZE_DATA=false      # Set to true for testing with fake data
+
+# Optional configuration
+CLICKHOUSE_HOST=localhost
+CLICKHOUSE_PORT=8123
+CLICKHOUSE_DATABASE=analytics
+SYNC_BATCH_SIZE=100
+SYNC_INTERVAL_HOURS=1
+```
+
+### 7. Schema & Lineage
+
+```json
+{
+  "version": "1.0",
+  "namespace": "moose",
+  "nodes": [
+    {
+      "id": "hubspot.deals",
+      "type": "source",
+      "name": "HubSpot Deals API",
+      "attrs": {
+        "connector": {
+          "name": "hubspot",
+          "version": "v3",
+          "author": "514-labs"
+        },
+        "endpoint": "/crm/v3/objects/deals",
+        "schema_path": "schemas/raw/deals.schema.json"
+      }
+    },
+    {
+      "id": "transform.normalize",
+      "type": "transformation",
+      "name": "Normalize Deal Data"
+    },
+    {
+      "id": "clickhouse.deals",
+      "type": "destination",
+      "name": "ClickHouse Deals Table",
+      "attrs": {
+        "database": "analytics",
+        "table": "hubspot_deals",
+        "engine": "ReplacingMergeTree()"
+      }
+    }
+  ],
+  "edges": [
+    { "from": "hubspot.deals", "to": "transform.normalize" },
+    { "from": "transform.normalize", "to": "clickhouse.deals" }
+  ]
+}
+```
+
+## Framework Integration
+
+### Moose Framework Features
+
+- **Type Safety**: Fully typed models and transformations
+- **Built-in APIs**: Automatic REST endpoints for ingestion and consumption
+- **Workflow Engine**: Task orchestration with retries and scheduling
+- **Dead Letter Tables**: Automatic error handling for failed records
+- **Development Tools**: Hot reload, local testing, migration support
+
+### Project Structure
+
+```
+hubspot-to-clickhouse/
+├── app/
+│   ├── ingest/          # Data models and transformations
+│   ├── apis/            # Consumption API definitions
+│   ├── workflows/       # Scheduled tasks and orchestration
+│   └── hubspot/         # Connector implementation
+├── schemas/             # JSON schema definitions
+├── lineage/             # Data lineage manifests
+├── docs/                # API documentation
+└── tests/               # Unit and integration tests
+```
+
+## Best Practices
+
+### Data Quality
+
+- Validate data at ingestion using typed models
+- Handle null values and missing fields gracefully
+- Implement data quality checks in transformations
+- Monitor data freshness and completeness
+
+### Performance Optimization
+
+- Use streaming for large datasets
+- Implement proper pagination
+- Batch inserts for better throughput
+- Configure appropriate ClickHouse table engines
+
+### Error Handling
+
+- Implement exponential backoff for API calls
+- Use dead letter tables for failed records
+- Log errors with context for debugging
+- Set up alerts for pipeline failures
+
+### Security
+
+- Store credentials in environment variables
+- Use secure token storage (never commit tokens)
+- Implement data anonymization for testing
+- Follow principle of least privilege for API scopes
+
+## Testing Strategy
+
+- **Unit Tests**: Test transformations with mock data
+- **Integration Tests**: Test connector with sandbox APIs
+- **End-to-End Tests**: Validate full pipeline flow
+- **Performance Tests**: Benchmark with production-scale data
+- **Data Quality Tests**: Validate output against expectations

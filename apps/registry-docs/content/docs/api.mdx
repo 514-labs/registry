@@ -1,8 +1,3 @@
----
-title: Registry API
-description: Open API for accessing connector and pipeline registry information
----
-
 # Registry API
 
 The Connector Factory provides open APIs for accessing registry information. These APIs allow developers to programmatically access connector and pipeline metadata, scaffolds, and registry contents.
@@ -25,68 +20,54 @@ The full OpenAPI specification is available at:
 
 Get metadata about all connectors and pipelines in the registry. This endpoint returns information about what's available in the registry, not the actual implementation files.
 
-<Codeblock>
 ```bash
 GET /api/registry/contents
 ```
-</Codeblock>
 
 Returns a complete list of all connectors and pipelines with their metadata including names, descriptions, authors, versions, tags, and GitHub URLs.
 
 Example:
-<Codeblock>
 ```bash
 curl "https://registry.docs.moose.dev/api/registry/contents"
 ```
-</Codeblock>
 
 ### Connector Scaffold Template
 
 Get the scaffold template for creating new connectors in a specific language.
 
-<Codeblock>
 ```bash
 GET /api/connectors/scaffolds/{language}
 ```
-</Codeblock>
 
 Supported languages: `typescript`, `python`
 
 Example:
-<Codeblock>
 ```bash
 curl "https://registry.docs.moose.dev/api/connectors/scaffolds/typescript"
 ```
-</Codeblock>
 
 ### Pipeline Scaffold Template
 
 Get the scaffold template for creating new pipelines in a specific language.
 
-<Codeblock>
 ```bash
 GET /api/pipelines/scaffolds/{language}
 ```
-</Codeblock>
 
 Supported languages: `typescript`, `python`
 
 Example:
-<Codeblock>
 ```bash
 curl "https://registry.docs.moose.dev/api/pipelines/scaffolds/typescript"
 ```
-</Codeblock>
 
 ### Specification Documents
 
 Get raw markdown specification documents that define standards and best practices for different types of connectors.
 
-<Codeblock>
 ```bash
 GET /api/specifications/{type}
 ```
-</Codeblock>
 
 Available specification types:
 - `common` - Common specification for analytical connectors
@@ -96,11 +77,9 @@ Available specification types:
 - `database` - Specification for database connectors
 
 Example:
-<Codeblock>
 ```bash
 curl "https://registry.docs.moose.dev/api/specifications/saas"
 ```
-</Codeblock>
 
 ## Response Formats
 

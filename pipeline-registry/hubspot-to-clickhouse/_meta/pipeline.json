@@ -1,10 +1,98 @@
 {
   "$schema": "https://schemas.connector-factory.dev/pipeline-root.schema.json",
   "name": "hubspot-to-clickhouse",
-  "title": "hubspot-to-clickhouse",
-  "tags": ["hubspot", "clickhouse"],
-  "description": "Ingest HubSpot data into ClickHouse.",
-  "homepage": "",
-  "registryUrl": "https://github.com/514-labs/factory/tree/main/pipeline-registry/hubspot-to-clickhouse"
+  "title": "HubSpot to ClickHouse Pipeline",
+  "tags": ["hubspot", "clickhouse", "etl", "deals", "analytics", "moose"],
+  "description": "A Moose-based pipeline that syncs HubSpot deals data to ClickHouse with real-time ingestion, data transformations, and consumption APIs for analytics, deal lookup, and pipeline performance tracking.",
+  "homepage": "https://github.com/514-labs/factory/tree/main/pipeline-registry/hubspot-to-clickhouse",
+  "registryUrl": "https://github.com/514-labs/factory/tree/main/pipeline-registry/hubspot-to-clickhouse",
+  "features": [
+    "Real-time HubSpot deals synchronization",
+    "Automated data transformation and normalization",
+    "Analytics API with grouping by stage, pipeline, or month",
+    "Deal lookup API with multiple search parameters",
+    "Pipeline performance tracking API",
+    "Scheduled workflow for continuous sync",
+    "Support for custom HubSpot properties",
+    "Data anonymization option for testing"
+  ],
+  "requirements": {
+    "node": ">=20.19",
+    "auth": "HubSpot private app token with read access to deals object",
+    "environment": [
+      {
+        "name": "HUBSPOT_TOKEN",
+        "description": "HubSpot private app token (format: hs_pat_xxx)",
+        "required": true
+      },
+      {
+        "name": "ANONYMIZE_DATA",
+        "description": "Set to true to anonymize real HubSpot data for testing",
+        "required": false,
+        "default": "false"
+      }
+    ]
+  },
+  "apis": [
+    {
+      "path": "/ingest/HubSpotDealRaw",
+      "method": "POST",
+      "description": "Ingest raw HubSpot deal data"
+    },
+    {
+      "path": "/consumption/hubspot-deals-analytics",
+      "method": "GET",
+      "description": "Analytics API with grouping by stage, pipeline, or month"
+    },
+    {
+      "path": "/consumption/hubspot-deal-lookup",
+      "method": "GET",
+      "description": "Search and retrieve specific deals by various parameters"
+    },
+    {
+      "path": "/consumption/hubspot-deal-pipeline",
+      "method": "GET",
+      "description": "Pipeline performance metrics and conversion rates"
+    },
+    {
+      "path": "/consumption/hubspot-workflow-trigger",
+      "method": "GET",
+      "description": "Trigger the HubSpot sync workflow manually"
+    }
+  ],
+  "dataFlow": {
+    "source": {
+      "type": "hubspot",
+      "objects": ["deals"],
+      "properties": [
+        "dealname",
+        "amount",
+        "dealstage",
+        "pipeline",
+        "dealtype",
+        "closedate",
+        "createdate",
+        "hs_lastmodifieddate",
+        "hubspot_owner_id",
+        "deal_currency_code",
+        "hs_deal_stage_probability",
+        "hs_forecast_amount",
+        "hs_projected_amount",
+        "num_associated_contacts",
+        "days_to_close"
+      ]
+    },
+    "transformations": [
+      "Raw deal data normalization",
+      "Currency standardization",
+      "Date/time processing",
+      "Deal stage and pipeline enrichment",
+      "Win/loss classification",
+      "Performance metrics calculation"
+    ],
+    "destination": {
+      "type": "clickhouse",
+      "tables": ["HubSpotDealRaw", "HubSpotDeal"]
+    }
+  }
 }
-
