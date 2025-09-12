@@ -1,0 +1,63 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/schema-index.schema.json",
+  "version": "0.1.0",
+  "datasets": [
+    {
+      "name": "sap-hana-cdc-events",
+      "stage": "extracted",
+      "kind": "stream",
+      "description": "Real-time change data capture events from SAP HANA database",
+      "format": "json",
+      "transport": "kafka",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "event_id": {"type": "string"},
+          "event_timestamp": {"type": "string", "format": "date-time"},
+          "change_type": {"type": "string", "enum": ["INSERT", "UPDATE", "DELETE"]},
+          "schema_name": {"type": "string"},
+          "table_name": {"type": "string"},
+          "full_table_name": {"type": "string"},
+          "old_values": {"type": ["object", "null"]},
+          "new_values": {"type": ["object", "null"]},
+          "transaction_id": {"type": ["string", "null"]},
+          "sequence_number": {"type": ["integer", "null"]},
+          "source_timestamp": {"type": ["string", "null"], "format": "date-time"},
+          "pipeline_id": {"type": "string"},
+          "version": {"type": "string"}
+        },
+        "required": ["event_id", "event_timestamp", "change_type", "schema_name", "table_name", "full_table_name", "pipeline_id", "version"]
+      }
+    },
+    {
+      "name": "sap-hana-cdc-batch-metadata",
+      "stage": "extracted", 
+      "kind": "stream",
+      "description": "Batch processing metadata for CDC events",
+      "format": "json",
+      "transport": "kafka",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "batch_id": {"type": "string"},
+          "batch_timestamp": {"type": "string", "format": "date-time"},
+          "total_changes": {"type": "integer"},
+          "table_changes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "schema_name": {"type": "string"},
+                "table_name": {"type": "string"},
+                "change_count": {"type": "integer"},
+                "change_types": {"type": "array", "items": {"type": "string"}}
+              }
+            }
+          },
+          "message_type": {"type": "string", "const": "batch_metadata"}
+        },
+        "required": ["batch_id", "batch_timestamp", "total_changes", "table_changes", "message_type"]
+      }
+    }
+  ]
+}

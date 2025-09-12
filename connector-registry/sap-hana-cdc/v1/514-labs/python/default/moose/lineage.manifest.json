@@ -1,0 +1,72 @@
+{
+  "version": "1.0",
+  "namespace": "moose",
+  "nodes": [
+    {
+      "id": "conn.sap-hana",
+      "type": "connector",
+      "name": "SAP HANA CDC Connector",
+      "namespace": "sap-hana-cdc",
+      "version": "1",
+      "attrs": {
+        "mode": "cdc",
+        "schema_hash": "sha256:abc123def456",
+        "connector": { 
+          "name": "sap-hana-cdc", 
+          "version": "v1", 
+          "author": "514-labs", 
+          "language": "python", 
+          "implementation": "default" 
+        },
+        "identifier": "sap-hana-cdc-v1-514-labs-python-default",
+        "schema_path": "schemas/index.json"
+      }
+    },
+    {
+      "id": "source.sap-hana-db",
+      "type": "source",
+      "name": "SAP HANA Database",
+      "namespace": "sap-hana-cdc",
+      "version": "1",
+      "attrs": {
+        "system": "sap-hana",
+        "database": "HDB",
+        "schema": "SYSTEM",
+        "tables": ["*"]
+      }
+    },
+    {
+      "id": "stream.kafka-cdc",
+      "type": "stream",
+      "name": "Kafka CDC Stream",
+      "namespace": "sap-hana-cdc",
+      "version": "1",
+      "attrs": {
+        "system": "kafka",
+        "topic": "sap-hana-cdc",
+        "format": "json",
+        "transport": "kafka"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "source.sap-hana-db",
+      "to": "conn.sap-hana",
+      "attrs": {
+        "type": "cdc",
+        "poll_interval_ms": 5000,
+        "batch_size": 1000
+      }
+    },
+    {
+      "from": "conn.sap-hana",
+      "to": "stream.kafka-cdc",
+      "attrs": {
+        "type": "streaming",
+        "format": "json",
+        "partitioning": "table-based"
+      }
+    }
+  ]
+}
