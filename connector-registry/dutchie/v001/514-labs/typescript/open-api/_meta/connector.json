@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector.schema.json",
+  "identifier": "dutchie",
+  "name": "dutchie",
+  "author": "514-labs",
+  "authorType": "organization",
+  "avatarUrlOverride": "",
+  "version": "v001",
+  "language": "typescript",
+  "implementation": "open-api",
+  "tags": [],
+  "category": "api",
+  "description": "",
+  "homepage": "",
+  "license": "MIT",
+  "source": {"type":"api","spec":"https://api.pos.dutchie.com/swagger/v001/swagger.json"},
+  "capabilities": {"extract": true, "transform": true, "load": true},
+  "maintainers": [],
+  "issues": "",
+  "registryUrl": "https://github.com/514-labs/factory/tree/main/connector-registry/dutchie/v001/514-labs/typescript/open-api"
+}

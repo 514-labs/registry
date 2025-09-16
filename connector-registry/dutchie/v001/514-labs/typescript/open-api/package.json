@@ -1,0 +1,25 @@
+{
+  "name": "@workspace/connector-dutchie",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --dts --format esm,cjs",
+    "test": "vitest run",
+    "generate:types": "openapi-typescript ./schemas/dutchie-openapi.json -o src/generated/dutchie.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.12",
+    "ajv": "^8.17.1",
+    "nock": "^13.5.4",
+    "openapi-typescript": "^7.4.2",
+    "tsup": "^8.0.0",
+    "typescript": "^5.6.3",
+    "vitest": "^1.6.0"
+  }
+}
