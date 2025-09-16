@@ -1,6 +1,8 @@
-import { describe, it, expect, afterEach } from 'vitest'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+/* eslint-env jest */ /* global jest, describe, it, expect, afterEach */
 import nock from 'nock'
-import Ajv from 'ajv'
+import { makeAjv } from './utils/ajv'
 import { Client } from '../src/client'
 import spec from '../schemas/dutchie-openapi.json'
 
@@ -28,12 +30,12 @@ describe('products resource', () => {
 
   it('list: matches OpenAPI schema', async () => {
     const schema = derefDeep(findResponseSchema('/products')) || { type: 'array' }
-    const ajv = new Ajv({ strict: false })
+    const ajv = makeAjv()
     const validate = ajv.compile(schema)
     const apiKey = 'test-key'
     const basic = Buffer.from(`${apiKey}:`).toString('base64')
     const payload = [{ productId: 1, productName: 'Gummies' }]
-    const scope = nock(BASE).get('/products').matchHeader('authorization', `Basic ${basic}`).reply(200, payload)
+    const scope = nock(BASE).get('/products').query(true).matchHeader('authorization', `Basic ${basic}`).reply(200, payload)
     const client = new Client({ apiKey })
     const res = await client.products.list({ isActive: true })
     expect(validate(res.data)).toBe(true)

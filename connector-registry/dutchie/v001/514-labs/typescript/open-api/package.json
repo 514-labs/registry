@@ -2,24 +2,40 @@
   "name": "@workspace/connector-dutchie",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "default": "./dist/config.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "default": "./dist/client.js"
+    }
+  },
   "scripts": {
-    "build": "tsup src/index.ts --dts --format esm,cjs",
-    "test": "vitest run",
+    "build": "tsc -p tsconfig.json",
+    "test": "jest --passWithNoTests",
+    "test:watch": "jest --watch",
     "generate:types": "openapi-typescript ./schemas/dutchie-openapi.json -o src/generated/dutchie.ts"
   },
   "engines": {
     "node": ">=20"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.14",
     "@types/node": "^20.14.12",
     "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "jest": "^29.7.0",
     "nock": "^13.5.4",
     "openapi-typescript": "^7.4.2",
-    "tsup": "^8.0.0",
-    "typescript": "^5.6.3",
-    "vitest": "^1.6.0"
+    "ts-jest": "29.1.2",
+    "typescript": "^5.6.3"
   }
 }

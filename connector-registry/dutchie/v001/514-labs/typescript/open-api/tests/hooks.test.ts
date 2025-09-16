@@ -1,4 +1,6 @@
-import { describe, it, expect, afterEach } from 'vitest'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+/* eslint-env jest */ /* global jest, describe, it, expect, afterEach */
 import nock from 'nock'
 import { Client } from '../src/client'
 import type { Hooks } from '../src/lib/hooks'
