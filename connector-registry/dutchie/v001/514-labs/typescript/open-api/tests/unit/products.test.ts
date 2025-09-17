@@ -2,9 +2,9 @@
 // @ts-nocheck
 /* eslint-env jest */ /* global jest, describe, it, expect, afterEach */
 import nock from 'nock'
-import { makeAjv } from './utils/ajv'
-import { createDutchieConnector } from '../src'
-import spec from '../schemas/dutchie-openapi.json'
+import { makeAjv } from '../utils/ajv'
+import { createDutchieConnector } from '../../src'
+import spec from '../../schemas/dutchie-openapi.json'
 
 const BASE = 'https://api.pos.dutchie.com'
 

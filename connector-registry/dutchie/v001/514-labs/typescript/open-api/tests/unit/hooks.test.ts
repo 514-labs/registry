@@ -2,8 +2,8 @@
 // @ts-nocheck
 /* eslint-env jest */ /* global jest, describe, it, expect, afterEach */
 import nock from 'nock'
-import { createDutchieConnector } from '../src'
-import type { Hooks } from '../src/lib/hooks'
+import { createDutchieConnector } from '../../src'
+import type { Hooks } from '../../src/lib/hooks'
 
 const BASE = 'https://api.pos.dutchie.com'
 

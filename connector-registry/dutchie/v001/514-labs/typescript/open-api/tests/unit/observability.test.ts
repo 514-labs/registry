@@ -1,8 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 /* eslint-env jest */ /* global describe, it, expect */
-import { createLoggingHooks } from '../src/observability/logging-hooks'
-import { createMetricsHooks, InMemoryMetricsSink } from '../src/observability/metrics-hooks'
+import { createLoggingHooks } from '../../src/observability/logging-hooks'
+import { createMetricsHooks, InMemoryMetricsSink } from '../../src/observability/metrics-hooks'
 
 describe('observability hooks', () => {
   it('logging: creates hooks and logs filtered by level; includes optional fields', () => {

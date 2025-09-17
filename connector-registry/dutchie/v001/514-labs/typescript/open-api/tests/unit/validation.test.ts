@@ -1,8 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 /* eslint-env jest */ /* global describe, it, expect, afterEach */
-import { createOpenApiValidationHook } from '../src/validation/openapi'
-import openapi from '../schemas/dutchie-openapi.json'
+import { createOpenApiValidationHook } from '../../src/validation/openapi'
+import openapi from '../../schemas/dutchie-openapi.json'
 
 describe('validation hook', () => {
   it('strict=true throws on schema mismatch', async () => {
