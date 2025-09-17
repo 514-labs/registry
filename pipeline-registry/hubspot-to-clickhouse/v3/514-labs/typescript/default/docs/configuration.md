@@ -7,7 +7,7 @@
 ## Connector (v3)
 Install with:
 ```bash
-bash -i <(curl https://connectors.514.ai/install.sh) hubspot v3 514-labs typescript data-api
+bash -i <(curl https://registry.514.ai/install.sh) hubspot v3 514-labs typescript data-api
 ```
 
 ## Moose runtime

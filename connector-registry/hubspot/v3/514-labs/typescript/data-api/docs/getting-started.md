@@ -11,7 +11,7 @@ Choose the directory in your project where you want to install the connector.
 ### 2. Run the installer
 
 ```bash
-bash -i <(curl https://connectors.514.ai/install.sh) hubspot v3 514-labs typescript data-api
+bash -i <(curl https://registry.514.ai/install.sh) hubspot v3 514-labs typescript data-api
 ```
 
 ### 3. Build the connector

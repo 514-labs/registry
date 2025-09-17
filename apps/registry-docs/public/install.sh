@@ -12,7 +12,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-SCRIPT_NAME="bash -i <(curl https://connectors.514.ai/install.sh)"
+SCRIPT_NAME="bash -i <(curl https://registry.514.ai/install.sh)"
 
 # ===== Constants =====
 REPO_OWNER="514-labs"

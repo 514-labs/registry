@@ -30,13 +30,13 @@ Follow the workspace rule: prefix internal packages and services with `@workspac
 List available connectors:
 
 ```bash
-bash -i <(curl https://connectors.514.ai/install.sh) --list
+bash -i <(curl https://registry.514.ai/install.sh) --list
 ```
 
 Install a connector: (arguments: connector, version, author, language)
 
 ```bash
-bash -i <(curl https://connectors.514.ai/install.sh) google-analytics v4 fiveonefour typescript data-api
+bash -i <(curl https://registry.514.ai/install.sh) google-analytics v4 fiveonefour typescript data-api
 ```
 
 ## Contributors
