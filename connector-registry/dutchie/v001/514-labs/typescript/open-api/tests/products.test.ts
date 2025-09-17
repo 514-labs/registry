@@ -3,7 +3,7 @@
 /* eslint-env jest */ /* global jest, describe, it, expect, afterEach */
 import nock from 'nock'
 import { makeAjv } from './utils/ajv'
-import { Client } from '../src/client'
+import { createDutchieConnector } from '../src'
 import spec from '../schemas/dutchie-openapi.json'
 
 const BASE = 'https://api.pos.dutchie.com'
@@ -36,8 +36,9 @@ describe('products resource', () => {
     const basic = Buffer.from(`${apiKey}:`).toString('base64')
     const payload = [{ productId: 1, productName: 'Gummies' }]
     const scope = nock(BASE).get('/products').query(true).matchHeader('authorization', `Basic ${basic}`).reply(200, payload)
-    const client = new Client({ apiKey })
-    const res = await client.products.list({ isActive: true })
+    const conn = createDutchieConnector()
+    conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } } })
+    const res = await conn.products.list({ isActive: true })
     expect(validate(res.data)).toBe(true)
     scope.done()
   })

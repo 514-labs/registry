@@ -24,8 +24,8 @@ export type ResponseMeta = {
 
 export type ResponseEnvelope<T> = {
   data: T
-  status?: number
-  headers?: Record<string, string>
+  status: number
+  headers: Record<string, string>
   meta?: ResponseMeta
 }
 

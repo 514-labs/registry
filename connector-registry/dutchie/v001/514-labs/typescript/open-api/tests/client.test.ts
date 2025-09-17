@@ -2,7 +2,7 @@
 // @ts-nocheck
 /* eslint-env jest */ /* global jest, describe, it, expect, afterEach */
 import nock from 'nock'
-import { Client } from '../src/client'
+import { createDutchieConnector } from '../src'
 
 const BASE = 'https://api.pos.dutchie.com'
 
@@ -17,8 +17,9 @@ describe('client', () => {
       .matchHeader('authorization', `Basic ${basic}`)
       .reply(200, [])
 
-    const client = new Client({ apiKey })
-    const res = await client.brand.list()
+    const conn = createDutchieConnector()
+    conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } } })
+    const res = await conn.brand.list()
     expect(Array.isArray(res.data)).toBe(true)
     scope.done()
   })

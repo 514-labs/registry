@@ -3,7 +3,7 @@
 /* eslint-env jest */ /* global jest, describe, it, expect, afterEach */
 import nock from 'nock'
 import { makeAjv } from './utils/ajv'
-import { Client } from '../src/client'
+import { createDutchieConnector } from '../src'
 import spec from '../schemas/dutchie-openapi.json'
 
 const BASE = 'https://api.pos.dutchie.com'
@@ -36,8 +36,9 @@ describe('brand resource', () => {
     const basic = Buffer.from(`${apiKey}:`).toString('base64')
     const payload = [{ brandId: 1, brandName: 'Example' }]
     const scope = nock(BASE).get('/brand').matchHeader('authorization', `Basic ${basic}`).reply(200, payload)
-    const client = new Client({ apiKey })
-    const res = await client.brand.list()
+    const conn = createDutchieConnector()
+    conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } } })
+    const res = await conn.brand.list()
     expect(validate(res.data)).toBe(true)
     scope.done()
   })
@@ -47,9 +48,10 @@ describe('brand resource', () => {
     const basic = Buffer.from(`${apiKey}:`).toString('base64')
     nock(BASE).get('/brand').query((q)=>q.limit==='1' && (!('offset' in q) || q.offset==='0')).matchHeader('authorization', `Basic ${basic}`).reply(200, [{ brandId: 1 }])
     nock(BASE).get('/brand').query((q)=>q.limit==='1' && q.offset==='1').matchHeader('authorization', `Basic ${basic}`).reply(200, [{ brandId: 2 }])
-    const client = new Client({ apiKey })
+    const conn = createDutchieConnector()
+    conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } } })
     const seen: number[] = []
-    for await (const b of client.brand.streamAll({ pageSize: 1 })) {
+    for await (const b of conn.brand.streamAll({ pageSize: 1 })) {
       seen.push((b as any).brandId)
       if (seen.length >= 2) break
     }

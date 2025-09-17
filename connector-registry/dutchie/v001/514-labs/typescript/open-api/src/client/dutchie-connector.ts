@@ -1,3 +1,9 @@
+// Why this adapter exists:
+// - Extends from core ApiConnectorBase
+// - Central place to wire validation/logging hooks and rate-limit/retry config
+// - Uses core HttpClient (retries, budgets, limiter) instead of bespoke transport
+// - Circuit breaker intentionally omitted; rely on retries + budgets + server hints
+// - Keeps resources simple (bind paths + types) and strongly typed
 import { ApiConnectorBase } from '@connector-factory/core'
 import type { ConnectorConfig as CoreConfig } from '@connector-factory/core'
 import { createBrandResource } from '../resources/brand'
@@ -56,5 +62,3 @@ export class DutchieApiConnector extends ApiConnectorBase {
 }
 
 export function createDutchieConnector(): DutchieApiConnector { return new DutchieApiConnector() }
-
-

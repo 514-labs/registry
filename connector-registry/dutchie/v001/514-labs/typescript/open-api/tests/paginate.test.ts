@@ -2,7 +2,7 @@
 // @ts-nocheck
 /* eslint-env jest */ /* global jest, describe, it, expect, afterEach */
 import nock from 'nock'
-import { Client } from '../src/client'
+import { createDutchieConnector } from '../src'
 
 const BASE = 'https://api.pos.dutchie.com'
 
@@ -25,9 +25,10 @@ describe('pagination (offset fallback)', () => {
       .matchHeader('authorization', `Basic ${basic}`)
       .reply(200, [{ brandId: 2 }])
 
-    const client = new Client({ apiKey })
+    const conn = createDutchieConnector()
+    conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } } })
     const seen: number[] = []
-    for await (const b of client.brand.streamAll({ pageSize: 1 })) {
+    for await (const b of conn.brand.streamAll({ pageSize: 1 })) {
       seen.push((b as any).brandId)
       if (seen.length >= 2) break
     }

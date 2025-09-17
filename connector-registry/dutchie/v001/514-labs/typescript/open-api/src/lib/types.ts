@@ -12,15 +12,9 @@ export type RetryConfig = {
   respectRetryAfter?: boolean
 }
 
-export type CircuitOptions = {
-  failureThreshold: number
-  coolDownMs: number
-}
-
 export type SendRuntimeOptions = {
   retryBudgetMs?: number
   adaptiveRateLimit?: boolean
-  circuit?: CircuitOptions
 }
 
 export type CreateSendOptions = {
