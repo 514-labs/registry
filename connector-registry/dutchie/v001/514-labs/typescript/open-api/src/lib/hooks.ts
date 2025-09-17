@@ -13,6 +13,13 @@ export type ResponseMeta = {
   durationMs: number
   retryCount: number
   requestId?: string
+  rateLimit?: {
+    limit?: number
+    remaining?: number
+    reset?: number
+    retryAfterMs?: number
+    inFlight?: number
+  }
 }
 
 export type ResponseEnvelope<T> = {
@@ -29,6 +36,9 @@ export type HookContext = {
   error?: unknown
   metadata?: Record<string, any>
   attempt?: number
+  modifyRequest?: (updates: Partial<RequestOptions>) => void
+  modifyResponse?: (updates: Partial<ResponseEnvelope<any>>) => void
+  operation?: string
 }
 
 export type Hook = (ctx: HookContext) => void | Promise<void>

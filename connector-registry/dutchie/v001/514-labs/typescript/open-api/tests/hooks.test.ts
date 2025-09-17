@@ -31,6 +31,31 @@ describe('hooks', () => {
     expect(events).toEqual(['before', 'after'])
     scope.done()
   })
+
+  it('afterResponse can modify the response payload', async () => {
+    const apiKey = 'test-key'
+    const basic = Buffer.from(`${apiKey}:`).toString('base64')
+
+    const scope = nock(BASE)
+      .get('/brand')
+      .matchHeader('authorization', `Basic ${basic}`)
+      .reply(200, [{ id: '1', name: 'Acme' }])
+
+    const hooks: Hooks = {
+      afterResponse: [({ type, response, modifyResponse }) => {
+        if (type !== 'afterResponse' || !response || !modifyResponse) return
+        const data = Array.isArray(response.data) ? response.data : []
+        const mapped = data.map((b: any) => ({ ...b, upperName: String(b.name ?? '').toUpperCase() }))
+        modifyResponse({ data: mapped as any })
+      }],
+    }
+
+    const client = new Client({ apiKey, hooks })
+    const res = await client.brand.list()
+    expect(Array.isArray(res.data)).toBe(true)
+    expect((res.data as any)[0].upperName).toBe('ACME')
+    scope.done()
+  })
 })
 
 

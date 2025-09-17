@@ -1,16 +1,7 @@
 import type { Hooks, RequestOptions, ResponseEnvelope } from './hooks'
 import { runHooks } from './hooks'
-
-export type DoRequest = <T = any>(req: RequestOptions) => Promise<ResponseEnvelope<T>>
-
-export type RetryConfig = {
-  maxAttempts?: number
-  initialDelayMs?: number
-  maxDelayMs?: number
-  backoffMultiplier?: number
-  retryableStatusCodes?: number[]
-  respectRetryAfter?: boolean
-}
+import type { CreateSendOptions, DoRequest, RetryConfig } from './types'
+import { ConnectorError, mapError } from './errors'
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
@@ -23,7 +14,7 @@ function calcDelay(attempt: number, cfg: Required<Pick<RetryConfig, 'initialDela
   return Math.floor(jitter)
 }
 
-export function createSend({ doRequest, hooks, retry }: { doRequest: DoRequest; hooks?: Hooks; retry?: RetryConfig }) {
+export function createSend({ doRequest, hooks, retry, rateLimiter, options }: CreateSendOptions) {
   const retryCfg: Required<RetryConfig> = {
     maxAttempts: retry?.maxAttempts ?? 3,
     initialDelayMs: retry?.initialDelayMs ?? 1000,
@@ -33,21 +24,64 @@ export function createSend({ doRequest, hooks, retry }: { doRequest: DoRequest; 
     respectRetryAfter: retry?.respectRetryAfter ?? true,
   } as Required<RetryConfig>
 
+  let consecutiveFailures = 0
+  let openedAt: number | undefined
   async function send<T = any>(req: RequestOptions): Promise<ResponseEnvelope<T>> {
     const startedAt = Date.now()
     let lastError: unknown
     let retryAfterMs: number | undefined
+    if (openedAt && options?.circuit) {
+      const elapsed = Date.now() - openedAt
+      if (elapsed < options.circuit.coolDownMs) {
+        throw new Error('Circuit breaker open')
+      } else {
+        openedAt = undefined
+        consecutiveFailures = 0
+      }
+    }
+    let hadRetryableStatus = false
     for (let attempt = 1; attempt <= retryCfg.maxAttempts; attempt++) {
+      if (options?.retryBudgetMs && Date.now() - startedAt > options.retryBudgetMs) {
+        break
+      }
       try {
-        await runHooks(hooks?.beforeRequest, { type: 'beforeRequest', request: req, attempt })
+        if (rateLimiter) await rateLimiter.waitForSlot()
+        await runHooks(hooks?.beforeRequest, {
+          type: 'beforeRequest',
+          request: req,
+          attempt,
+          modifyRequest: (updates) => {
+            Object.assign(req, updates)
+          },
+        })
         const res = await doRequest<T>(req)
-        await runHooks(hooks?.afterResponse, { type: 'afterResponse', request: req, response: res, attempt })
+        if (rateLimiter && options?.adaptiveRateLimit !== false) rateLimiter.updateFromResponse(res.headers)
+        await runHooks(hooks?.afterResponse, {
+          type: 'afterResponse',
+          request: req,
+          response: res,
+          attempt,
+          modifyResponse: (updates) => {
+            Object.assign(res, updates)
+          },
+        })
         const status = res.status ?? 200
         if (!retryCfg.retryableStatusCodes.includes(status)) {
-          res.meta = { ...(res.meta ?? {}), timestamp: Date.now(), durationMs: Date.now() - startedAt, retryCount: attempt - 1 }
+          const requestId = res.headers?.['x-request-id'] || res.headers?.['request-id']
+          const rl = rateLimiter?.getStatus()
+          res.meta = {
+            ...(res.meta ?? {}),
+            timestamp: Date.now(),
+            durationMs: Date.now() - startedAt,
+            retryCount: attempt - 1,
+            requestId: requestId,
+            rateLimit: rl ? { ...rl } : undefined,
+          }
+          consecutiveFailures = 0
           return res
         }
-        lastError = new Error(`Retryable status: ${status}`)
+        lastError = new ConnectorError({ message: `Retryable status: ${status}`, code: status === 429 ? 'RATE_LIMIT' : status >= 500 ? 'SERVER_ERROR' : 'INVALID_REQUEST', statusCode: status, retryable: true })
+        hadRetryableStatus = true
         // Parse Retry-After if present
         if (retryCfg.respectRetryAfter) {
           const ra = res.headers?.['retry-after'] || res.headers?.['Retry-After']
@@ -64,8 +98,16 @@ export function createSend({ doRequest, hooks, retry }: { doRequest: DoRequest; 
           }
         }
       } catch (err) {
-        lastError = err
+        const status = (err as any)?.statusCode as number | undefined
+        const reqId = (err as any)?.requestId || (typeof (err as any)?.headers?.['x-request-id'] === 'string' ? (err as any).headers['x-request-id'] : undefined)
+        lastError = mapError(err, status, reqId)
         await runHooks(hooks?.onError, { type: 'onError', request: req, error: err, attempt })
+        consecutiveFailures += 1
+        if (options?.circuit && consecutiveFailures >= options.circuit.failureThreshold) {
+          openedAt = Date.now()
+        }
+      } finally {
+        if (rateLimiter) rateLimiter.release()
       }
       if (attempt < retryCfg.maxAttempts) {
         await runHooks(hooks?.onRetry, { type: 'onRetry', request: req, error: lastError, attempt })
@@ -76,6 +118,12 @@ export function createSend({ doRequest, hooks, retry }: { doRequest: DoRequest; 
         continue
       }
       break
+    }
+    if (hadRetryableStatus) {
+      consecutiveFailures += 1
+      if (options?.circuit && consecutiveFailures >= options.circuit.failureThreshold) {
+        openedAt = Date.now()
+      }
     }
     throw lastError ?? new Error('Request failed')
   }
