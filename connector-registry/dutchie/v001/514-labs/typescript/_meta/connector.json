@@ -1,0 +1,10 @@
+{
+  "identifier": "dutchie",
+  "name": "Dutchie",
+  "author": "514-labs",
+  "version": "v001",
+  "language": "typescript",
+  "implementations": ["open-api"]
+}
+
+

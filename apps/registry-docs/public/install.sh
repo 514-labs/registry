@@ -20,7 +20,11 @@ REPO_NAME="registry"
 DEFAULT_REPO_BRANCH="main"
 # Allow override via environment
 REPO_BRANCH="${REPO_BRANCH:-$DEFAULT_REPO_BRANCH}"
+<<<<<<< HEAD
 REGISTRY_JSON_URL="${REGISTRY_JSON_URL:-}"
+=======
+REGISTRY_JSON_URL="${REGISTRY_JSON_URL:-https://registry.514.ai/registry.json}"
+>>>>>>> 53d1d89 (update meta files)
 
 # Positional args (required)
 CONNECTOR_NAME=""
@@ -116,9 +120,15 @@ FLAGS:
   -h, --help    Show this help
 
 ENVIRONMENT:
+<<<<<<< HEAD
   REGISTRY_JSON_URL URL to fetch registry JSON from.
                     Default: https://registry.514.ai/registry.json
                     Example: REGISTRY_JSON_URL=https://custom.domain/registry.json $SCRIPT_NAME --list
+=======
+  REGISTRY_JSON_URL URL to fetch connector registry JSON from.
+                    Default: $REGISTRY_JSON_URL
+                    Example: REGISTRY_JSON_URL=https://registry.514.ai/registry.json $SCRIPT_NAME --list
+>>>>>>> 53d1d89 (update meta files)
   REPO_BRANCH       Git branch to install from.
                     Default: $DEFAULT_REPO_BRANCH
                     Example: REPO_BRANCH=my-branch $SCRIPT_NAME google-analytics v4 fiveonefour typescript data-api
