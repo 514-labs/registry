@@ -55,15 +55,13 @@ trap cleanup EXIT INT TERM
 
 # Set registry URL based on resource type
 set_registry_url() {
-  if [ -n "${REGISTRY_JSON_URL}" ]; then
-    # User has overridden the URL
-    return
-  fi
-  
-  if [ "$RESOURCE_TYPE" = "pipeline" ]; then
-    REGISTRY_JSON_URL="https://pipelines.514.ai/registry.json"
-  else
-    REGISTRY_JSON_URL="https://connectors.514.ai/registry.json"
+  # Only set if not explicitly provided via environment variable at script start
+  if [ -z "${REGISTRY_JSON_URL}" ]; then
+    if [ "$RESOURCE_TYPE" = "pipeline" ]; then
+      REGISTRY_JSON_URL="https://pipelines.514.ai/registry.json"
+    else
+      REGISTRY_JSON_URL="https://connectors.514.ai/registry.json"
+    fi
   fi
 }
 
@@ -252,7 +250,7 @@ list_connectors() {
 
   if ! command -v jq >/dev/null 2>&1; then
     echo "❌ --list requires 'jq' for readable permutations." >&2
-    echo "Install jq or browse: https://github.com/$REPO_OWNER/$REPO_NAME/tree/$REPO_BRANCH/connector-registry" >&2
+    echo "Install jq or browse: https://github.com/$REPO_OWNER/$REPO_NAME/tree/$REPO_BRANCH/${RESOURCE_TYPE}-registry" >&2
     exit 1
   fi
 
@@ -265,7 +263,7 @@ list_connectors() {
   if [ "$http_status" != "200" ]; then
     echo "❌ Unable to fetch $REGISTRY_JSON_URL" >&2
     echo "   HTTP status: ${http_status:-unknown}" >&2
-    echo "   You can also browse: https://github.com/$REPO_OWNER/$REPO_NAME/tree/$REPO_BRANCH/connector-registry" >&2
+    echo "   You can also browse: https://github.com/$REPO_OWNER/$REPO_NAME/tree/$REPO_BRANCH/${RESOURCE_TYPE}-registry" >&2
     return
   fi
 
@@ -409,6 +407,10 @@ parse_args() {
     case "$1" in
       --type)
         RESOURCE_TYPE="${2:-}"; 
+        if [ -z "$RESOURCE_TYPE" ] || [[ "$RESOURCE_TYPE" =~ ^-- ]]; then
+          echo "❌ --type requires a value. Must be 'connector' or 'pipeline'." >&2
+          print_usage; exit 1
+        fi
         if [ "$RESOURCE_TYPE" != "connector" ] && [ "$RESOURCE_TYPE" != "pipeline" ]; then
           echo "❌ Invalid type: $RESOURCE_TYPE. Must be 'connector' or 'pipeline'." >&2
           print_usage; exit 1
