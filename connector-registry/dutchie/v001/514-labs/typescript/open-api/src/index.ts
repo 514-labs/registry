@@ -1,3 +1,5 @@
 export * from './client'
 export * from './config'
 export { createOpenApiValidationHook } from './validation/openapi'
+export { createLoggingHooks } from './observability/logging-hooks'
+export { createDutchieConnector, DutchieApiConnector } from './compat/dutchie-connector'

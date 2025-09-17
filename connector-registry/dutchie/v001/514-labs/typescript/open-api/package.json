@@ -27,6 +27,9 @@
   "engines": {
     "node": ">=20"
   },
+  "dependencies": {
+    "@connector-factory/core": "workspace:*"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "@types/node": "^20.14.12",
