@@ -3,10 +3,16 @@ import type { SendFn } from '../lib/paginate'
 import type { Product as Model } from '../models/product'
 
 export const createProductsResource = (send: SendFn) => {
-  const base = makeCrudResource<Model, Model[], Model>('/products', send)
-  const list = (params?: { isActive?: boolean; fromLastModifiedDateUTC?: string }) =>
-    send<Model[]>({ method: 'GET', path: '/products', query: params as any })
-  return { ...base, list }
+  return makeCrudResource<Model, Model[], Model, { isActive?: boolean; fromLastModifiedDateUTC?: string }>(
+    '/products',
+    send,
+    {
+      buildListQuery: (params) => ({
+        ...(params?.isActive !== undefined ? { isActive: params.isActive } : {}),
+        ...(params?.fromLastModifiedDateUTC ? { fromLastModifiedDateUTC: params.fromLastModifiedDateUTC } : {}),
+      }),
+    }
+  )
 }
 
 

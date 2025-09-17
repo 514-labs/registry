@@ -4,13 +4,17 @@ import { paginateOffset } from '../lib/paginate'
 import type { Brand as Model } from '../models/brand'
 
 export const createBrandResource = (send: SendFn) => {
-  const base = makeCrudResource<Model, Model[], Model>('/brand', send)
-  const streamAll = async function* (params?: { pageSize?: number }) {
-    for await (const items of paginateOffset<Model>({ send, path: '/brand', pageSize: params?.pageSize })) {
-      for (const item of items) yield item
+  return makeCrudResource<Model, Model[], Model, { pageSize?: number }>(
+    '/brand',
+    send,
+    {
+      paginate: async function* ({ send, path, pageSize }) {
+        for await (const items of paginateOffset<Model>({ send, path, pageSize })) {
+          yield items
+        }
+      },
     }
-  }
-  return { ...base, streamAll }
+  )
 }
 
 
