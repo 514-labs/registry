@@ -20,7 +20,7 @@ REPO_NAME="factory"
 DEFAULT_REPO_BRANCH="main"
 # Allow override via environment
 REPO_BRANCH="${REPO_BRANCH:-$DEFAULT_REPO_BRANCH}"
-REGISTRY_JSON_URL="${REGISTRY_JSON_URL:-https://connectors.514.ai/registry.json}"
+REGISTRY_JSON_URL="${REGISTRY_JSON_URL:-}"
 
 # Positional args (required)
 CONNECTOR_NAME=""
@@ -28,6 +28,9 @@ CONNECTOR_VERSION=""
 CONNECTOR_AUTHOR=""
 CONNECTOR_LANGUAGE=""
 CONNECTOR_IMPLEMENTATION=""
+
+# Type of resource to install (connector or pipeline)
+RESOURCE_TYPE="connector"
 
 # ===== Internal =====
 TMP_DIR=""
@@ -50,38 +53,64 @@ trap cleanup EXIT INT TERM
 
 # ===== Utilities =====
 
+# Set registry URL based on resource type
+set_registry_url() {
+  if [ -n "${REGISTRY_JSON_URL}" ]; then
+    # User has overridden the URL
+    return
+  fi
+  
+  if [ "$RESOURCE_TYPE" = "pipeline" ]; then
+    REGISTRY_JSON_URL="https://pipelines.514.ai/registry.json"
+  else
+    REGISTRY_JSON_URL="https://connectors.514.ai/registry.json"
+  fi
+}
+
 # Print help and usage information
 print_usage() {
   cat <<EOF
-Install a connector from $REPO_OWNER/$REPO_NAME into a new subdirectory in your current directory.
+Install a connector or pipeline from $REPO_OWNER/$REPO_NAME into a new subdirectory in your current directory.
 
 USAGE:
-  $SCRIPT_NAME <name>
-  $SCRIPT_NAME <name> <version> <author> <language> <implementation> [--dest <dir>]
-  $SCRIPT_NAME --list [--name <n1,n2>] [--version <v1,v2>] [--author <a1,a2>] [--language <l1,l2>] [--implementation <i1,i2>]
+  $SCRIPT_NAME [--type <connector|pipeline>] <name>
+  $SCRIPT_NAME [--type <connector|pipeline>] <name> <version> <author> <language> <implementation> [--dest <dir>]
+  $SCRIPT_NAME --list [--type <connector|pipeline>] [--name <n1,n2>] [--version <v1,v2>] [--author <a1,a2>] [--language <l1,l2>] [--implementation <i1,i2>]
   $SCRIPT_NAME --help
 
 EXAMPLES:
-  # Auto-resolve version/author/language/implementation if unique
+  # Auto-resolve connector version/author/language/implementation if unique
   $SCRIPT_NAME google-analytics
+  
+  # Install a pipeline (auto-resolve if unique)
+  $SCRIPT_NAME --type pipeline hubspot-to-clickhouse
 
-  # Install Google Analytics v4 by author fiveonefour in TypeScript into the current directory
+  # Install Google Analytics v4 connector by author fiveonefour in TypeScript
   $SCRIPT_NAME google-analytics v4 fiveonefour typescript data-api
+  
+  # Install HubSpot to ClickHouse pipeline
+  $SCRIPT_NAME --type pipeline hubspot-to-clickhouse v3 514-labs typescript default
 
   # List available connectors to install
   $SCRIPT_NAME --list
+  
+  # List available pipelines to install
+  $SCRIPT_NAME --list --type pipeline
 
 POSITIONAL ARGUMENTS:
-  name            Connector name (e.g., google-analytics, s3)
-  version         Data source version (e.g., v3, v4)
-  author          Author/vendor (e.g., fiveonefour)
+  name            Resource name (e.g., google-analytics, hubspot-to-clickhouse)
+  version         Version (e.g., v3, v4)
+  author          Author/vendor (e.g., fiveonefour, 514-labs)
   language        Language (e.g., typescript, python)
-  implementation  Implementation (e.g., rest, sdk)
+  implementation  Implementation (e.g., data-api, default)
 
 FLAGS:
-  --list        List available connectors to install
+  --type <type> Type of resource to install (connector or pipeline)
+                Default: connector
+                
+  --list        List available resources to install
                 Optional filters (comma-separated, case-insensitive substrings):
-                  --name <n1,n2>            Filter by connector name(s)
+                  --name <n1,n2>            Filter by resource name(s)
                   --version <v1,v2>         Filter by version(s)
                   --author <a1,a2>          Filter by author(s)
                   --language <l1,l2>        Filter by language(s)
@@ -93,9 +122,10 @@ FLAGS:
   -h, --help    Show this help
 
 ENVIRONMENT:
-  REGISTRY_JSON_URL URL to fetch connector registry JSON from.
-                    Default: $REGISTRY_JSON_URL
-                    Example: REGISTRY_JSON_URL=https://connectors.514.ai/registry.json $SCRIPT_NAME --list
+  REGISTRY_JSON_URL URL to fetch registry JSON from.
+                    Default: https://connectors.514.ai/registry.json (for connectors)
+                            https://pipelines.514.ai/registry.json (for pipelines)
+                    Example: REGISTRY_JSON_URL=https://custom.domain/registry.json $SCRIPT_NAME --list
   REPO_BRANCH       Git branch to install from.
                     Default: $DEFAULT_REPO_BRANCH
                     Example: REPO_BRANCH=my-branch $SCRIPT_NAME google-analytics v4 fiveonefour typescript data-api
@@ -167,10 +197,16 @@ validate_connector_exists() {
   local full_path="$root_dir/$rel_path"
 
   if [ ! -d "$full_path" ]; then
-    echo "❌ Connector path not found: $rel_path" >&2
+    local resource_label="Connector"
+    local resource_label_plural="connectors"
+    if [ "$RESOURCE_TYPE" = "pipeline" ]; then
+      resource_label="Pipeline"
+      resource_label_plural="pipelines"
+    fi
+    echo "❌ $resource_label path not found: $rel_path" >&2
     echo "❌ Searched: $full_path" >&2
     echo ""
-    echo "🔍 Run $SCRIPT_NAME --list to see available connectors."
+    echo "🔍 Run $SCRIPT_NAME --list --type $RESOURCE_TYPE to see available $resource_label_plural."
     exit 1
   fi
 }
@@ -199,12 +235,20 @@ copy_connector_into_subdir() {
   echo "✅ Installed into $dest_dir"
 }
 
-# List connectors in a copy-pasteable format
+# List connectors/pipelines in a copy-pasteable format
 list_connectors() {
+  local resource_label="connector"
+  if [ "$RESOURCE_TYPE" = "pipeline" ]; then
+    resource_label="pipeline"
+  fi
+  
   echo ""
-  echo "🚀 Install a connector with this command:"
-  echo "$SCRIPT_NAME <name> <version> <author> <language> <implementation>"
+  echo "🚀 Install a $resource_label with this command:"
+  echo "$SCRIPT_NAME --type $RESOURCE_TYPE <name> <version> <author> <language> <implementation>"
   echo ""
+  
+  # Set registry URL for this resource type
+  set_registry_url
 
   if ! command -v jq >/dev/null 2>&1; then
     echo "❌ --list requires 'jq' for readable permutations." >&2
@@ -247,14 +291,22 @@ list_connectors() {
   ')
 
   if [ -z "$perms" ]; then
-    echo "No connectors matched your filters."
+    local resource_label="connectors"
+    if [ "$RESOURCE_TYPE" = "pipeline" ]; then
+      resource_label="pipelines"
+    fi
+    echo "No $resource_label matched your filters."
     echo ""
     echo "❤️  We would love your contributions: https://github.com/$REPO_OWNER/$REPO_NAME"
     echo ""
     return
   fi
 
-  echo "🔍 Available connectors:"
+  local resource_label="connectors"
+  if [ "$RESOURCE_TYPE" = "pipeline" ]; then
+    resource_label="pipelines"
+  fi
+  echo "🔍 Available $resource_label:"
   echo "$perms"
   echo ""
 }
@@ -263,6 +315,9 @@ list_connectors() {
 resolve_from_registry() {
   require_cmd curl
   require_cmd jq
+  
+  # Set registry URL for this resource type
+  set_registry_url
 
   local resp http_status body
   resp=$(curl -sS -w "HTTPSTATUS:%{http_code}" "$REGISTRY_JSON_URL" || true)
@@ -273,7 +328,7 @@ resolve_from_registry() {
     echo ""
     echo "❌ Unable to fetch $REGISTRY_JSON_URL to resolve '$CONNECTOR_NAME'" >&2
     echo "   HTTP status: ${http_status:-unknown}" >&2
-    echo "   You can also browse: https://github.com/$REPO_OWNER/$REPO_NAME/tree/$REPO_BRANCH/registry" >&2
+    echo "   You can also browse: https://github.com/$REPO_OWNER/$REPO_NAME/tree/$REPO_BRANCH/${RESOURCE_TYPE}-registry" >&2
     exit 1
   fi
 
@@ -287,8 +342,12 @@ resolve_from_registry() {
 
   if [ -z "$match" ]; then
     echo ""
-    echo "❌ Could not uniquely resolve '$CONNECTOR_NAME' to exactly one connector implementation." >&2
-    echo "🔍 Run $SCRIPT_NAME --list to see available connectors." >&2
+    local resource_label="connector"
+    if [ "$RESOURCE_TYPE" = "pipeline" ]; then
+      resource_label="pipeline"
+    fi
+    echo "❌ Could not uniquely resolve '$CONNECTOR_NAME' to exactly one $resource_label implementation." >&2
+    echo "🔍 Run $SCRIPT_NAME --list --type $RESOURCE_TYPE to see available ${resource_label}s." >&2
     exit 1
   fi
 
@@ -301,6 +360,9 @@ resolve_from_registry() {
 # Best-effort validation that the provided 5-arg tuple exists in the registry
 preflight_validate_tuple() {
   require_cmd curl
+  
+  # Set registry URL for this resource type
+  set_registry_url
 
   local resp http_status body
   resp=$(curl -sS -w "HTTPSTATUS:%{http_code}" "$REGISTRY_JSON_URL" || true)
@@ -329,9 +391,13 @@ preflight_validate_tuple() {
     ' 2>/dev/null || true)
 
   if [ "$ok" != "true" ]; then
-    echo "❌ The specified connector tuple was not found in the registry:" >&2
+    local resource_label="connector"
+    if [ "$RESOURCE_TYPE" = "pipeline" ]; then
+      resource_label="pipeline"
+    fi
+    echo "❌ The specified $resource_label tuple was not found in the registry:" >&2
     echo "   $CONNECTOR_NAME $CONNECTOR_VERSION $CONNECTOR_AUTHOR $CONNECTOR_LANGUAGE $CONNECTOR_IMPLEMENTATION" >&2
-    echo "🔍 Run $SCRIPT_NAME --list --name $CONNECTOR_NAME to view available options." >&2
+    echo "🔍 Run $SCRIPT_NAME --list --type $RESOURCE_TYPE --name $CONNECTOR_NAME to view available options." >&2
     exit 1
   fi
 }
@@ -341,6 +407,13 @@ parse_args() {
   POSITIONALS=()
   while (( "$#" )); do
     case "$1" in
+      --type)
+        RESOURCE_TYPE="${2:-}"; 
+        if [ "$RESOURCE_TYPE" != "connector" ] && [ "$RESOURCE_TYPE" != "pipeline" ]; then
+          echo "❌ Invalid type: $RESOURCE_TYPE. Must be 'connector' or 'pipeline'." >&2
+          print_usage; exit 1
+        fi
+        shift 2;;
       --list)
         MODE="list"; shift;;
       --name)
@@ -391,6 +464,9 @@ show_next_steps() {
 
 main() {
   parse_args "$@"
+  
+  # Set registry URL based on resource type
+  set_registry_url
 
   if [ "$MODE" = "list" ]; then
     list_connectors
@@ -407,9 +483,13 @@ main() {
     preflight_validate_tuple || true
   fi
 
-  local rel_path="connector-registry/$CONNECTOR_NAME/$CONNECTOR_VERSION/$CONNECTOR_AUTHOR/$CONNECTOR_LANGUAGE/$CONNECTOR_IMPLEMENTATION"
+  local rel_path="${RESOURCE_TYPE}-registry/$CONNECTOR_NAME/$CONNECTOR_VERSION/$CONNECTOR_AUTHOR/$CONNECTOR_LANGUAGE/$CONNECTOR_IMPLEMENTATION"
   echo ""
-  echo "Connector: $rel_path"
+  local resource_label="Connector"
+  if [ "$RESOURCE_TYPE" = "pipeline" ]; then
+    resource_label="Pipeline"
+  fi
+  echo "$resource_label: $rel_path"
   echo "Source:    $REPO_OWNER/$REPO_NAME@$REPO_BRANCH"
   echo ""
 

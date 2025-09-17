@@ -23,14 +23,14 @@ cd factory`}</code>
         connector with the appropriate structure:
       </p>
       <pre>
-        <code>{`bash -i <(curl https://registry.514.ai/install.sh) [connector-name] [version] [author] [language]`}</code>
+        <code>{`bash -i <(curl https://registry.514.ai/install.sh) --type connector [connector-name] [version] [author] [language]`}</code>
       </pre>
 
       <p>
         <strong>Example:</strong>
       </p>
       <pre>
-        <code>{`bash -i <(curl https://registry.514.ai/install.sh) ads-b-dot-lol v2 fiveonefour typescript`}</code>
+        <code>{`bash -i <(curl https://registry.514.ai/install.sh) --type connector ads-b-dot-lol v2 fiveonefour typescript`}</code>
       </pre>
 
       <p>

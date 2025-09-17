@@ -16,12 +16,12 @@ cd factory
 From the connector factory directory, run the install script to generate a new connector with the appropriate structure:
 
 ```bash
-bash -i <(curl https://registry.514.ai/install.sh) [connector-name] [version] [author] [language]
+bash -i <(curl https://registry.514.ai/install.sh) --type connector [connector-name] [version] [author] [language]
 ```
 
 **Example:**
 ```bash
-bash -i <(curl https://registry.514.ai/install.sh) ads-b-dot-lol v2 fiveonefour typescript
+bash -i <(curl https://registry.514.ai/install.sh) --type connector ads-b-dot-lol v2 fiveonefour typescript
 ```
 
 This creates a new directory with your connector scaffold in the chosen language.

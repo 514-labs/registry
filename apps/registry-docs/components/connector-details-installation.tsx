@@ -34,7 +34,7 @@ export default function ConnectorDetailsInstallation({
     (v) => !v || v.trim() === ""
   );
 
-  const command = `bash -i <(curl https://registry.514.ai/install.sh) ${connectorId} ${versionId} ${authorId} ${language}`;
+  const command = `bash -i <(curl https://registry.514.ai/install.sh) --type connector ${connectorId} ${versionId} ${authorId} ${language}`;
   const langLabel =
     LANGUAGE_LABELS[language.toLowerCase()] ??
     language.slice(0, 3).toUpperCase();
