@@ -11,7 +11,7 @@ This TypeScript implementation ingests HubSpot deals via the HubSpot connector (
 Run the installer:
 
 ```bash
-bash -i <(curl https://registry.514.ai/install.sh) --type pipeline hubspot-to-clickhouse v3 514-labs typescript
+bash -i <(curl https://registry.514.ai/install.sh) --type pipeline hubspot-to-clickhouse v3 514-labs typescript default
 ```
 
 ## Install dependencies (monorepo)

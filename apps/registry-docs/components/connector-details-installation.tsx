@@ -17,6 +17,7 @@ type ConnectorDetailsInstallationProps = {
   versionId: string;
   authorId: string;
   language: string;
+  implementation: string;
 };
 
 const LANGUAGE_LABELS: Record<string, string> = {
@@ -29,12 +30,13 @@ export default function ConnectorDetailsInstallation({
   versionId,
   authorId,
   language,
+  implementation,
 }: ConnectorDetailsInstallationProps) {
-  const isIncomplete = [connectorId, versionId, authorId, language].some(
+  const isIncomplete = [connectorId, versionId, authorId, language, implementation].some(
     (v) => !v || v.trim() === ""
   );
 
-  const command = `bash -i <(curl https://registry.514.ai/install.sh) --type connector ${connectorId} ${versionId} ${authorId} ${language}`;
+  const command = `bash -i <(curl https://registry.514.ai/install.sh) --type connector ${connectorId} ${versionId} ${authorId} ${language} ${implementation}`;
   const langLabel =
     LANGUAGE_LABELS[language.toLowerCase()] ??
     language.slice(0, 3).toUpperCase();

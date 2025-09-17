@@ -30,7 +30,7 @@ cd factory`}</code>
         <strong>Example:</strong>
       </p>
       <pre>
-        <code>{`bash -i <(curl https://registry.514.ai/install.sh) --type connector ads-b-dot-lol v2 fiveonefour typescript`}</code>
+        <code>{`bash -i <(curl https://registry.514.ai/install.sh) --type connector ads-b-dot-lol v2 fiveonefour typescript data-api`}</code>
       </pre>
 
       <p>
