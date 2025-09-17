@@ -4,7 +4,7 @@
 import nock from 'nock'
 import { makeAjv } from '../utils/ajv'
 import { createDutchieConnector } from '../../src'
-import spec from '../../schemas/dutchie-openapi.json'
+import spec from '../../schemas/files/dutchie-openapi.json'
 
 const BASE = 'https://api.pos.dutchie.com'
 

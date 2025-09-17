@@ -2,7 +2,7 @@
 // @ts-nocheck
 /* eslint-env jest */ /* global describe, it, expect, afterEach */
 import { createOpenApiValidationHook } from '../../src/validation/openapi'
-import openapi from '../../schemas/dutchie-openapi.json'
+import openapi from '../../schemas/files/dutchie-openapi.json'
 
 describe('validation hook', () => {
   it('strict=true throws on schema mismatch', async () => {

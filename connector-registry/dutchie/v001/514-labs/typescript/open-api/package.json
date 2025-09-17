@@ -27,7 +27,7 @@
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "test:integration": "jest --config jest.integration.cjs",
-    "generate:types": "openapi-typescript ./schemas/dutchie-openapi.json -o src/generated/dutchie.ts"
+    "generate:types": "openapi-typescript ./schemas/files/dutchie-openapi.json -o src/generated/dutchie.ts"
   },
   "engines": {
     "node": ">=20"

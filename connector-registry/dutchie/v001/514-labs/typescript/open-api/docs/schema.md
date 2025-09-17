@@ -1,22 +1,21 @@
-# Schema
+# Schema overview
 
-Refer to `schemas/index.json` and related files.
+Schemas document and validate the data contracts at two stages:
 
-## Organization
+- `raw/`: Close to source API responses (staging).
+- `extracted/`: Cleaned/normalized shapes for analytics/ELT.
 
-Schemas support nested folder structures for better organization:
+Each stage includes two modalities:
 
-- **raw/** - Raw API schemas
-  - `endpoints/` - API endpoint request/response schemas
-  - `types/` - Shared type definitions for endpoints (not shown as Files)
-  - `events/` - Event payloads
-- **extracted/** - Normalized schemas
-  - `entities/` - Business entities
-  - `metrics/` - Aggregated data
-- **files/** - File-based schemas (CSV/JSON/Parquet/Avro/NDJSON). Only items under `schemas/files` appear in the Files tab.
+- `json/`: JSON Schema (draft-07+) for payload structure/validation.
+- `relational/`: `tables.json` (programmatic tables/columns/types/PK/FK) + optional `tables.sql` (DDL).
 
-## Adding Schemas
+Inventory and layout:
 
-1. Create schema files in appropriate nested folders
-2. Update `schemas/index.json` with correct paths for endpoints and tables
-3. Place file schemas under `schemas/files` (no index entries needed)
+- `schemas/index.json` — enumerates entities and points to raw schemas
+- `schemas/raw/json/` — raw JSON schemas mirroring TS models (`properties` values as `string|null`)
+- `schemas/raw/relational/` — staging tables (`tables.json`) + DDL (`tables.sql`)
+- `schemas/extracted/` — reserved for transformed shapes
+- `schemas/files/` — file-based schemas for ingest (CSV/JSON/NDJSON/Parquet/Avro)
+
+Start with `events` then expand to `products`, `inventory`, and `brand` as needed. Keep schema and model changes in lockstep.

@@ -11,7 +11,7 @@ import { createProductsResource } from '../resources/products'
 import { createInventoryResource } from '../resources/inventory'
 import { createOpenApiValidationHook } from '../validation/openapi'
 import { createLoggingHooks } from '../observability/logging-hooks'
-import openapi from '../../schemas/dutchie-openapi.json'
+import openapi from '../../schemas/files/dutchie-openapi.json'
 
 export type DutchieConfig = CoreConfig & {
   validation?: { enabled?: boolean; strict?: boolean }
