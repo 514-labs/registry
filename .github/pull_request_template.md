@@ -2,14 +2,6 @@
 
 Brief description of changes
 
-## Type of Change
-
-- [ ] Bug fix
-- [ ] New connector
-- [ ] New feature
-- [ ] Breaking change
-- [ ] Documentation update
-
 ## Testing Checklist
 
 - [ ] Unit tests for all public methods
