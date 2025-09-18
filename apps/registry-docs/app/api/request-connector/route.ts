@@ -29,8 +29,9 @@ export async function POST(req: NextRequest) {
   const { identifier, name, category, tags, description, homepage } =
     parsed.data;
 
-  const owner = "514-labs";
-  const repo = "factory";
+  const owner =
+    (process.env.CONNECTOR_REQUESTS_OWNER ?? "514-labs").trim();
+  const repo = (process.env.CONNECTOR_REQUESTS_REPO ?? "registry").trim();
 
   const session = await auth();
   const token = (

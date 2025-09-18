@@ -71,7 +71,7 @@ function getTrailingNewline(content: string): string {
   return content.endsWith("\n") ? "\n" : "";
 }
 
-// env owner/repo are fixed to 514-labs/factory per product requirement
+// Owner/repo are configurable via env; default to 514-labs/registry
 
 async function searchExistingIssue(
   token: string,
@@ -162,7 +162,10 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  const ownerRepo = { owner: "514-labs", repo: "factory" };
+  const ownerRepo = {
+    owner: (process.env.CONNECTOR_REQUESTS_OWNER ?? "514-labs").trim(),
+    repo: (process.env.CONNECTOR_REQUESTS_REPO ?? "registry").trim(),
+  };
 
   const connectors = listDirectories(registryRoot);
   const summary: Array<{

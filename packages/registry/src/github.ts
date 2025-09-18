@@ -238,10 +238,11 @@ export async function listConnectorRequestsFromIssues(options?: {
     process.env.CONNECTOR_REQUESTS_OWNER ??
     "514-labs"
   ).trim();
+  // Default to "registry" repo (connector requests are filed there now)
   const repo = (
     options?.repo ??
     process.env.CONNECTOR_REQUESTS_REPO ??
-    "factory"
+    "registry"
   ).trim();
   const token = (options?.token ?? process.env.GITHUB_PAT ?? "").trim();
   const state = options?.state ?? "open";

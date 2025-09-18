@@ -28,7 +28,7 @@ export async function GET() {
         const providerBaseUrl =
           provider.meta?.registryUrl ??
           c.root.meta?.registryUrl ??
-          `https://github.com/514-labs/factory/tree/main/connector-registry/${c.connectorId}/${version}/${provider.authorId}`;
+          `https://github.com/514-labs/registry/tree/main/connector-registry/${c.connectorId}/${version}/${provider.authorId}`;
 
         const githubUrl =
           impl.implementation === "default"
@@ -73,7 +73,7 @@ export async function GET() {
 
         const providerBaseUrl =
           p.root.meta?.registryUrl ??
-          `https://github.com/514-labs/factory/tree/main/pipeline-registry/${p.pipelineId}/${version}/${provider.authorId}`;
+          `https://github.com/514-labs/registry/tree/main/pipeline-registry/${p.pipelineId}/${version}/${provider.authorId}`;
 
         const githubUrl =
           impl.implementation === "default"
