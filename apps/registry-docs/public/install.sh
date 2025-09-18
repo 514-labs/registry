@@ -3,7 +3,7 @@
 # Connector Factory installer
 #
 # Responsibilities:
-# - Download the 514-labs/factory repo archive (zip) to a temp dir
+# - Download the 514-labs/registry repo archive (zip) to a temp dir
 # - Extract it
 # - Copy a chosen connector (by name, version, author, language) into the current directory
 # - Provide --help and --list
@@ -16,7 +16,7 @@ SCRIPT_NAME="bash -i <(curl https://registry.514.ai/install.sh)"
 
 # ===== Constants =====
 REPO_OWNER="514-labs"
-REPO_NAME="factory"
+REPO_NAME="registry"
 DEFAULT_REPO_BRANCH="main"
 # Allow override via environment
 REPO_BRANCH="${REPO_BRANCH:-$DEFAULT_REPO_BRANCH}"
