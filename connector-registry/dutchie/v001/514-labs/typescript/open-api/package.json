@@ -23,7 +23,6 @@
     "README.md"
   ],
   "scripts": {
-    "postinstall": "pnpm run build",
     "build": "tsc -p tsconfig.json",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
