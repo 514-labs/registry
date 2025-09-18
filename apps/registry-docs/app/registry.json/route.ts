@@ -49,6 +49,10 @@ export async function GET() {
   for (const connectorId of connectorIds) {
     const connectorPath = join(connectorsRegistryDir, connectorId);
     const rootMeta = readJsonSafe(join(connectorPath, "_meta", "connector.json"));
+        const providerBaseUrl =
+          provider.meta?.registryUrl ??
+          c.root.meta?.registryUrl ??
+          `https://github.com/514-labs/registry/tree/main/connector-registry/${c.connectorId}/${version}/${provider.authorId}`;
 
     const versionDirs = readdirSync(connectorPath, { withFileTypes: true })
       .filter((entry) => entry.isDirectory() && entry.name !== "_meta")
@@ -69,6 +73,9 @@ export async function GET() {
           readdirSync(providerPath, { withFileTypes: true })
             .filter((entry) => entry.isDirectory() && !entry.name.startsWith("_"))
             .map((entry) => entry.name) : [];
+        const providerBaseUrl =
+          p.root.meta?.registryUrl ??
+          `https://github.com/514-labs/registry/tree/main/pipeline-registry/${p.pipelineId}/${version}/${provider.authorId}`;
 
         for (const language of langDirs) {
           const langPath = join(providerPath, language);
