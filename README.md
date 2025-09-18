@@ -1,8 +1,13 @@
-## Connector Factory
+# Factory and Registry
 
-Build, own, and ship production‑grade data connectors without black boxes.
+[![Made by Fiveonefour](https://img.shields.io/badge/MADE%20BY-Fiveonefour-black.svg)](https://www.fiveonefour.com)
+[![Community](https://img.shields.io/badge/Slack-Community-purple.svg?logo=slack)](https://join.slack.com/t/moose-community/shared_invite/zt-2fjh5n3wz-cnOmM9Xe9DYAgQrNu8xKxg)
+[![Docs](https://img.shields.io/badge/Quickstart-Docs-blue.svg)](https://registry.514.ai/docs)
+[![MIT license](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Inspired by the shadcn philosophy — copy what you need, keep full ownership, and adapt it to your stack — Connector Factory gives you specs, patterns, and tooling to create connectors that are reliable, testable, and truly yours.
+Build, own, and ship production‑grade data connectors and pipelines without black boxes.
+
+Inspired by the [shadcn](https://ui.shadcn.com/) philosophy: copy the code you need, keep full ownership, and adapt it to your stack. Factory gives you specs, patterns, and tooling to create connectors that are reliable, testable, and truly yours.
 
 ### Why this exists
 
@@ -15,6 +20,13 @@ Everyone needs connectors. Nobody enjoys building or maintaining them. Vendors t
 - **Open source**: Built on top of open source tools and standards.
 - **Community**: Built by the community, for the community.
 
+### What you can create with Factory:
+
+- **Connectors**: Extract data from APIs, SaaS apps, databases, and blob storage with built-in auth, retries, rate limiting, and standardized structure
+- **Pipelines**: Build data workflows that connect sources to destinations with lineage tracking, transforms, and visual debugging
+
+The Registry manages the distribution and discovery of these connectors and pipelines.
+
 ### Monorepo layout
 
 This is a TurboRepo + pnpm monorepo.
@@ -25,7 +37,7 @@ This is a TurboRepo + pnpm monorepo.
 
 Follow the workspace rule: prefix internal packages and services with `@workspace`.
 
-### Quickstart
+### Quickstart: Connectors
 
 List available connectors:
 
@@ -39,20 +51,42 @@ Install a connector: (arguments: --type, name, version, author, language, implem
 bash -i <(curl https://registry.514.ai/install.sh) --type connector google-analytics v4 fiveonefour typescript data-api
 ```
 
-## Contributors
+### Quickstart: Pipelines
+
+List available pipelines:
+
+```bash
+bash -i <(curl https://registry.514.ai/install.sh) --type pipeline --list
+```
+
+Install a pipeline: (arguments: --type, name, version, author, language, implementation)
+
+```bash
+bash -i <(curl https://registry.514.ai/install.sh) --type pipeline hubspot-to-clickhouse v3 514-labs typescript default
+```
+
+## Development
 
 ### Requirements
 
-- Node 20 (until Moose Node version issues are resolved)
+- Node 20.19+
 - pnpm (never npm)
 
-### Development setup
+### Setup
 
 Install dependencies at the workspace root:
 
 ```bash
 pnpm install
 ```
+
+### Guidelines
+
+- **Tooling**: TurboRepo + pnpm. Do not override `.env`. Prefer absolute paths in scripts.
+- **Node**: Use Node 20.19+. Example with nvm: `nvm use 20.19`.
+- **Workspace**: Internal packages use the `@workspace/*` scope.
+
+### Common commands
 
 Run the documentation app locally:
 
@@ -67,7 +101,13 @@ Build the docs app:
 pnpm docs:build
 ```
 
-TurboRepo docs: `https://turborepo.com/docs`
+Other examples:
+
+```bash
+cd apps/components-docs && pnpm dev
+```
+
+TurboRepo docs: [https://turborepo.com/docs](https://turborepo.com/docs)
 
 ### Philosophy (shadcn‑inspired)
 
@@ -79,18 +119,6 @@ We are not a hosted connector product. We’re a system you copy into your repo:
 - **Batteries included, not attached**: Patterns and tests you can own and evolve.
 
 
-## Developing in this repo
-
-- **Tooling**: TurboRepo + pnpm. Do not override `.env`. Prefer absolute paths in scripts.
-- **Node**: Use Node 20. Example with nvm: `nvm use 20`.
-- **Workspace**: Internal packages use the `@workspace/*` scope.
-
-Common commands:
-
-```bash
-pnpm install
-cd apps/components-docs && pnpm dev
-```
 
 ## Roadmap (high level)
 
@@ -102,4 +130,4 @@ cd apps/components-docs && pnpm dev
 
 ## Acknowledgements
 
-This project’s philosophy is inspired by shadcn/ui — pragmatic copy‑and‑own code over opaque dependencies.
+This project’s philosophy is inspired by [shadcn/ui](https://ui.shadcn.com/) — pragmatic copy‑and‑own code over opaque dependencies.
