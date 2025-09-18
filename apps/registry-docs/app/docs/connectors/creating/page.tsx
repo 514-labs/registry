@@ -13,13 +13,13 @@ export default function CreatingConnectorsPage() {
       <h2>1. Clone the repository</h2>
       <p>Clone the factory repository to your local machine:</p>
       <pre>
-        <code>{`git clone https://github.com/514-labs/factory.git
-cd factory`}</code>
+        <code>{`git clone https://github.com/514-labs/registry.git
+cd registry`}</code>
       </pre>
 
       <h2>2. Generate a connector scaffold</h2>
       <p>
-        From the factory directory, run the install script to generate a new
+        From the registry directory, run the install script to generate a new
         connector with the appropriate structure:
       </p>
       <pre>
@@ -180,20 +180,20 @@ pnpm validate:schemas`}</code>
       <h2>8. Share your connector</h2>
       <p>
         Open a pull request to the{" "}
-        <a href="https://github.com/514-labs/factory" target="_blank">
-          factory repository
+        <a href="https://github.com/514-labs/registry" target="_blank">
+          registry repository
         </a>{" "}
         to share your connector with the community. Mention the connector{" "}
-        <a href="https://github.com/514-labs/factory/issues" target="_blank">
+        <a href="https://github.com/514-labs/registry/issues" target="_blank">
           Issue
         </a>{" "}
         in the PR description.
       </p>
 
       <p>
-        If you built your connector outside the factory monorepo, you'll need to
-        add it to the monorepo's registry directory with all required metadata
-        (defined in `connector-registry/_scaffold`).
+        If you built your connector outside the registry monorepo, you'll need
+        to add it to the monorepo's registry directory with all required
+        metadata (defined in `connector-registry/_scaffold`).
       </p>
 
       <h2>Best practices</h2>

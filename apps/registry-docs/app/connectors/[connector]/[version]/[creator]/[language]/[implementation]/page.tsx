@@ -98,7 +98,7 @@ export default async function ConnectorImplementationPage({
   const registryUrl =
     provider.meta?.registryUrl ??
     meta?.registryUrl ??
-    `https://github.com/514-labs/factory/tree/main/connector-registry/${connector}/${version}/${creator}`;
+    `https://github.com/514-labs/registry/tree/main/connector-registry/${connector}/${version}/${creator}`;
 
   // Get issue URL for current language/implementation
   const issueValue = provider.meta?.issues?.[implEntry.language];
@@ -107,7 +107,7 @@ export default async function ConnectorImplementationPage({
       ? issueValue
       : issueValue && typeof issueValue === "object"
         ? (issueValue[implEntry.implementation] ?? issueValue["default"])
-        : `https://github.com/514-labs/factory/issues`;
+        : `https://github.com/514-labs/registry/issues`;
 
   // Build lists and navigation helpers
   const getProviderVersion = (pPath: string): string =>
