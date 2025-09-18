@@ -53,15 +53,11 @@ trap cleanup EXIT INT TERM
 
 # ===== Utilities =====
 
-# Set registry URL based on resource type
+# Set registry URL
 set_registry_url() {
   # Only set if not explicitly provided via environment variable at script start
   if [ -z "${REGISTRY_JSON_URL}" ]; then
-    if [ "$RESOURCE_TYPE" = "pipeline" ]; then
-      REGISTRY_JSON_URL="https://pipelines.514.ai/registry.json"
-    else
-      REGISTRY_JSON_URL="https://connectors.514.ai/registry.json"
-    fi
+    REGISTRY_JSON_URL="https://registry.514.ai/registry.json"
   fi
 }
 
@@ -121,8 +117,7 @@ FLAGS:
 
 ENVIRONMENT:
   REGISTRY_JSON_URL URL to fetch registry JSON from.
-                    Default: https://connectors.514.ai/registry.json (for connectors)
-                            https://pipelines.514.ai/registry.json (for pipelines)
+                    Default: https://registry.514.ai/registry.json
                     Example: REGISTRY_JSON_URL=https://custom.domain/registry.json $SCRIPT_NAME --list
   REPO_BRANCH       Git branch to install from.
                     Default: $DEFAULT_REPO_BRANCH
