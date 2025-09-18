@@ -1,6 +1,7 @@
 "use client";
 
 import ConnectorCard from "@/components/connector-card";
+import { cn } from "@/lib/utils";
 
 export type DiscoverConnector = {
   name: string;
@@ -22,11 +23,18 @@ export type DiscoverConnector = {
 
 export default function ConnectorDiscoverGrid({
   connectors,
+  className,
 }: {
   connectors: DiscoverConnector[];
+  className?: string;
 }) {
   return (
-    <div className="grid grid-cols-3 gap-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-3">
+    <div
+      className={cn(
+        "grid grid-cols-3 gap-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-3",
+        className
+      )}
+    >
       {connectors.map((connector) => (
         <ConnectorCard
           key={connector.name}
