@@ -5,7 +5,7 @@ Follow these steps to add a connector to your project.
 ## 1. Discover available connectors
 
 ```bash
-bash -i <(curl https://connectors.514.ai/install.sh) --list
+bash -i <(curl https://registry.514.ai/install.sh) --type connector --list
 ```
 
 ## 2. Install a connector
@@ -13,13 +13,13 @@ bash -i <(curl https://connectors.514.ai/install.sh) --list
 Run the installer with: `<connector> <version> <author> <language> <implementation>`.
 
 ```bash
-bash -i <(curl https://connectors.514.ai/install.sh) <connector> <version> <author> <language> <implementation>
+bash -i <(curl https://registry.514.ai/install.sh) --type connector <connector> <version> <author> <language> <implementation>
 ```
 
 Examples:
 
 ```bash
-bash -i <(curl https://connectors.514.ai/install.sh) google-analytics v4 fiveonefour typescript data-api
+bash -i <(curl https://registry.514.ai/install.sh) --type connector google-analytics v4 fiveonefour typescript data-api
 ```
 
 The installer will scaffold the connector into your current directory under the name of the connector.

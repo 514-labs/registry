@@ -35,8 +35,8 @@ cd factory`}</code>
 
       <h2>2. Generate Pipeline Scaffold</h2>
       <pre>
-        <code>{`bash -i <(curl https://pipelines.514.ai/install.sh) \\
-  google-analytics-to-clickhouse v1 myusername typescript`}</code>
+        <code>{`bash -i <(curl https://registry.514.ai/install.sh) --type pipeline \\
+  google-analytics-to-clickhouse v1 myusername typescript default`}</code>
       </pre>
 
       <h2>3. Define Your Pipeline</h2>

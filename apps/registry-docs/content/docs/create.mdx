@@ -27,12 +27,12 @@ cd factory
 From the factory directory, run the install script to generate a new connector with the appropriate structure:
 
 ```bash
-bash -i <(curl https://connectors.514.ai/install.sh) [connector-name] [version] [author] [language]
+bash -i <(curl https://registry.514.ai/install.sh) --type connector [connector-name] [version] [author] [language]
 ```
 
 **Example:**
 ```bash
-bash -i <(curl https://connectors.514.ai/install.sh) ads-b-dot-lol v2 fiveonefour typescript
+bash -i <(curl https://registry.514.ai/install.sh) --type connector ads-b-dot-lol v2 fiveonefour typescript data-api
 ```
 
 This creates a new directory with your connector scaffold in the chosen language.
@@ -79,12 +79,12 @@ If you built your connector outside the factory monorepo, you'll need to add it 
 From the factory directory, run the install script to generate a new pipeline with the appropriate structure:
 
 ```bash
-bash -i <(curl https://pipelines.514.ai/install.sh) [pipeline-name] [version] [author] [language]
+bash -i <(curl https://registry.514.ai/install.sh) --type pipeline [pipeline-name] [version] [author] [language]
 ```
 
 **Example:**
 ```bash
-bash -i <(curl https://pipelines.514.ai/install.sh) google-analytics-to-clickhouse v1 fiveonefour typescript
+bash -i <(curl https://registry.514.ai/install.sh) --type pipeline google-analytics-to-clickhouse v1 fiveonefour typescript default
 ```
 
 This creates a new directory with your pipeline scaffold in the chosen language.

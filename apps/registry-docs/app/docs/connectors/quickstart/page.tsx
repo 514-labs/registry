@@ -23,8 +23,8 @@ cd factory`}</code>
       <h2>2. Generate Your Connector</h2>
       <p>Use our scaffold script to create a new connector:</p>
       <pre>
-        <code>{`bash -i <(curl https://connectors.514.ai/install.sh) \\
-  my-api v1 myusername typescript`}</code>
+        <code>{`bash -i <(curl https://registry.514.ai/install.sh) --type connector \\
+  my-api v1 myusername typescript data-api`}</code>
       </pre>
 
       <p>This creates a new connector with:</p>
