@@ -33,7 +33,7 @@ List available connectors:
 bash -i <(curl https://registry.514.ai/install.sh) --type connector --list
 ```
 
-Install a connector: (arguments: connector, version, author, language)
+Install a connector: (arguments: --type, name, version, author, language, implementation)
 
 ```bash
 bash -i <(curl https://registry.514.ai/install.sh) --type connector google-analytics v4 fiveonefour typescript data-api
