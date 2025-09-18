@@ -264,6 +264,7 @@ list_connectors() {
 
   # Filter in jq → print
   perms=$(printf '%s' "$body" | jq -r \
+    --arg resource_type "$RESOURCE_TYPE" \
     --arg f_name "$FILTER_NAME" \
     --arg f_version "$FILTER_VERSION" \
     --arg f_author "$FILTER_AUTHOR" \
@@ -273,6 +274,7 @@ list_connectors() {
     def want(field; s): (s=="" or (field|ascii_downcase|test(mkpat(s))));
     (. // [])
     | .[]
+    | select(.type == $resource_type)
     | select(
         want(.id; $f_name) and
         want(.version; $f_version) and
@@ -327,8 +329,9 @@ resolve_from_registry() {
 
   local match
   match=$(printf '%s' "$body" | jq -r \
-    --arg name "$CONNECTOR_NAME" '
-      map(select(.id == $name))
+    --arg name "$CONNECTOR_NAME" \
+    --arg resource_type "$RESOURCE_TYPE" '
+      map(select(.id == $name and .type == $resource_type))
       | unique_by(.version + "|" + .author + "|" + .language + "|" + .implementation)
       | if length == 1 then .[0] else empty end
     ')
@@ -378,8 +381,9 @@ preflight_validate_tuple() {
     --arg v "$CONNECTOR_VERSION" \
     --arg a "$CONNECTOR_AUTHOR" \
     --arg l "$CONNECTOR_LANGUAGE" \
-    --arg i "$CONNECTOR_IMPLEMENTATION" '
-      map(select(.id==$n and .version==$v and .author==$a and .language==$l and .implementation==$i))
+    --arg i "$CONNECTOR_IMPLEMENTATION" \
+    --arg t "$RESOURCE_TYPE" '
+      map(select(.id==$n and .version==$v and .author==$a and .language==$l and .implementation==$i and .type==$t))
       | length == 1
     ' 2>/dev/null || true)
 
