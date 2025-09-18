@@ -23,6 +23,7 @@
     "README.md"
   ],
   "scripts": {
+    "postinstall": "pnpm run build",
     "build": "tsc -p tsconfig.json",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
@@ -33,7 +34,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@connector-factory/core": "workspace:*"
+    "@connector-factory/core": "^0.1.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
