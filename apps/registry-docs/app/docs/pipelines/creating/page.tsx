@@ -29,13 +29,13 @@ export default function CreatingPipelinesPage() {
 
       <h2>1. Clone the Repository</h2>
       <pre>
-        <code>{`git clone https://github.com/514-labs/factory.git
-cd factory`}</code>
+        <code>{`git clone https://github.com/514-labs/registry.git
+cd registry`}</code>
       </pre>
 
       <h2>2. Generate Pipeline Scaffold</h2>
       <pre>
-        <code>{`bash -i <(curl https://pipelines.514.ai/install.sh) \\
+        <code>{`bash -i <(curl https://pipelines.514.ai/install.sh) \
   google-analytics-to-clickhouse v1 myusername typescript`}</code>
       </pre>
 

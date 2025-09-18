@@ -16,14 +16,14 @@ export default function ConnectorQuickstartPage() {
 
       <h2>1. Clone the Repository</h2>
       <pre>
-        <code>{`git clone https://github.com/514-labs/factory.git
-cd factory`}</code>
+        <code>{`git clone https://github.com/514-labs/registry.git
+cd registry`}</code>
       </pre>
 
       <h2>2. Generate Your Connector</h2>
       <p>Use our scaffold script to create a new connector:</p>
       <pre>
-        <code>{`bash -i <(curl https://connectors.514.ai/install.sh) \\
+        <code>{`bash -i <(curl https://connectors.514.ai/install.sh) \
   my-api v1 myusername typescript`}</code>
       </pre>
 

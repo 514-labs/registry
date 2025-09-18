@@ -3,7 +3,7 @@
 # Connector Factory installer
 #
 # Responsibilities:
-# - Download the 514-labs/factory repo archive (zip) to a temp dir
+# - Download the 514-labs/registry repo archive (zip) to a temp dir
 # - Extract it
 # - Copy a chosen connector (by name, version, author, language) into the current directory
 # - Provide --help and --list

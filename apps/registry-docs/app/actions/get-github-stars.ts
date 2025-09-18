@@ -1,6 +1,6 @@
 "use server";
 
-const REPO = "514-labs/factory";
+const REPO = "514-labs/registry";
 const revalidateSeconds = 60 * 30; // 30 minutes
 
 export async function getGithubStars(): Promise<number | null> {
