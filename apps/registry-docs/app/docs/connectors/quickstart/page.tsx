@@ -24,7 +24,7 @@ cd factory`}</code>
       <p>Use our scaffold script to create a new connector:</p>
       <pre>
         <code>{`bash -i <(curl https://registry.514.ai/install.sh) --type connector \\
-  my-api v1 myusername typescript`}</code>
+  my-api v1 myusername typescript data-api`}</code>
       </pre>
 
       <p>This creates a new connector with:</p>
