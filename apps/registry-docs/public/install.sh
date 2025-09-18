@@ -79,8 +79,8 @@ EXAMPLES:
   # Install a pipeline (auto-resolve if unique)
   $SCRIPT_NAME --type pipeline hubspot-to-clickhouse
 
-  # Install Google Analytics v4 connector by author fiveonefour in TypeScript
-  $SCRIPT_NAME google-analytics v4 fiveonefour typescript data-api
+  # Install Google Analytics v4 connector by author 514-labs in TypeScript
+  $SCRIPT_NAME google-analytics v4 514-labs typescript data-api
   
   # Install HubSpot to ClickHouse pipeline
   $SCRIPT_NAME --type pipeline hubspot-to-clickhouse v3 514-labs typescript default
@@ -94,7 +94,7 @@ EXAMPLES:
 POSITIONAL ARGUMENTS:
   name            Resource name (e.g., google-analytics, hubspot-to-clickhouse)
   version         Version (e.g., v3, v4)
-  author          Author/vendor (e.g., fiveonefour, 514-labs)
+  author          Author/vendor (e.g., 514-labs)
   language        Language (e.g., typescript, python)
   implementation  Implementation (e.g., data-api, default)
 
