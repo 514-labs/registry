@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { DiscoverConnector } from "@/app/discover/connector-discover-grid";
+import type { DiscoverConnector } from "@/app/discover/connector/connector-discover-grid";
 
 export type UseConnectorDiscoveryResult = {
   filtered: DiscoverConnector[];

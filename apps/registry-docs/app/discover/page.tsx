@@ -2,10 +2,7 @@ import {
   buildDiscoverConnectors,
   buildDiscoverPipelines,
 } from "@/lib/discover";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/components/tabs";
-import { Package, Workflow } from "lucide-react";
-import ConnectorDiscoverGrid from "./connector-discover-grid";
-import PipelineDiscoverGrid from "./pipeline-discover-grid";
+import { DiscoveryGridDetailed } from "./discovery-grids";
 
 export default async function DiscoverPage() {
   const [connectors, pipelines] = await Promise.all([
@@ -22,24 +19,7 @@ export default async function DiscoverPage() {
           infrastructure
         </p>
       </div>
-      <Tabs defaultValue="connectors" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="connectors" className="flex gap-2">
-            <Package className="h-4 w-4" />
-            Connectors ({connectors.length})
-          </TabsTrigger>
-          <TabsTrigger value="pipelines" className="flex gap-2">
-            <Workflow className="h-4 w-4" />
-            Pipelines ({pipelines.length})
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="connectors" className="mt-6">
-          <ConnectorDiscoverGrid connectors={connectors} />
-        </TabsContent>
-        <TabsContent value="pipelines" className="mt-6">
-          <PipelineDiscoverGrid pipelines={pipelines} />
-        </TabsContent>
-      </Tabs>
+      <DiscoveryGridDetailed connectors={connectors} pipelines={pipelines} />
     </div>
   );
 }

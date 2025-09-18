@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { DiscoverPipeline } from "@/app/discover/pipeline-discover-grid";
+import type { DiscoverPipeline } from "@/app/discover/pipeline/pipeline-discover-grid";
 
 export type UsePipelineDiscoveryResult = {
   filtered: DiscoverPipeline[];
