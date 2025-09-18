@@ -2,10 +2,8 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/components/tabs";
 import { Package, Workflow } from "lucide-react";
-import { useEffect, useState } from "react";
-import ConnectorDiscoverGrid from "./ConnectorDiscoverGrid";
-import PipelineDiscoverGrid from "./PipelineDiscoverGrid";
-import type { DiscoverConnector, DiscoverPipeline } from "@/lib/discover";
+import ConnectorDiscoverGrid from "./connector-discover-grid";
+import PipelineDiscoverGrid from "./pipeline-discover-grid";
 
 export default function DiscoverPage() {
   const [connectors, setConnectors] = useState<DiscoverConnector[]>([]);

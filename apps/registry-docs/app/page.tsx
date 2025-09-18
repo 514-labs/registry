@@ -15,8 +15,9 @@ import {
   Workflow,
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/components/tabs";
-import ConnectorDiscoverGrid from "@/app/discover/ConnectorDiscoverGrid";
-import PipelineDiscoverGrid from "@/app/discover/PipelineDiscoverGrid";
+import ConnectorDiscoverGrid from "@/app/discover/connector-discover-grid";
+import PipelineDiscoverGrid from "@/app/discover/pipeline-discover-grid";
+import { DiscoveryGrid } from "./discover/discovery-grids";
 
 const valueProps = [
   {
@@ -96,42 +97,7 @@ export default async function Home() {
       <PagefindMeta type="docs" />
       <main className="flex flex-col items-center sm:items-start">
         <Hero />
-        <div className="mx-auto w-full max-w-6xl px-4 xl:px-0 py-6">
-          <Tabs defaultValue="connectors" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="connectors" className="flex gap-2">
-                <Package className="h-4 w-4" />
-                Connectors ({connectors.length})
-              </TabsTrigger>
-              <TabsTrigger value="pipelines" className="flex gap-2">
-                <Workflow className="h-4 w-4" />
-                Pipelines ({pipelines.length})
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="connectors" className="mt-6">
-              <div className="space-y-4">
-                <div>
-                  <h2 className="text-2xl font-bold mb-2">Connectors</h2>
-                  <p className="text-muted-foreground">
-                    Extract data and metadata from any analytical data system
-                  </p>
-                </div>
-                <ConnectorDiscoverGrid connectors={connectors} />
-              </div>
-            </TabsContent>
-            <TabsContent value="pipelines" className="mt-6">
-              <div className="space-y-4">
-                <div>
-                  <h2 className="text-2xl font-bold mb-2">Pipelines</h2>
-                  <p className="text-muted-foreground">
-                    End-to-end data pipelines from source to destination
-                  </p>
-                </div>
-                <PipelineDiscoverGrid pipelines={pipelines} />
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
+        <DiscoveryGrid connectors={connectors} pipelines={pipelines} />
       </main>
       <footer className="flex flex-wrap items-center justify-center py-20">
         <span>
