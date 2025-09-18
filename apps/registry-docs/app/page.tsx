@@ -6,22 +6,13 @@ import {
   buildDiscoverConnectors,
   buildDiscoverPipelines,
 } from "@/lib/discover";
-import {
-  Wrench,
-  BadgeCheck,
-  Activity,
-  ScrollText,
-  Package,
-  Workflow,
-} from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/components/tabs";
-import ConnectorDiscoverGrid from "@/app/discover/connector/connector-discover-grid";
-import PipelineDiscoverGrid from "@/app/discover/pipeline/pipeline-discover-grid";
+import { Wrench, BadgeCheck, Activity, ScrollText } from "lucide-react";
+
 import { DiscoveryGrid } from "./discover/discovery-grids";
 
 const valueProps = [
   {
-    text: "Easy to tweak for your use case",
+    text: "Composable and easy to tweak",
     icon: <Wrench />,
   },
   {
@@ -42,7 +33,7 @@ function Hero() {
   return (
     <div className="grid grid-cols-2 gap-5 py-16">
       <div className="flex flex-col gap-10">
-        <Badge variant="outline">
+        {/* <Badge variant="outline">
           This Project is a WIP. Join our{" "}
           <Link
             href="https://join.slack.com/t/moose-community/shared_invite/zt-2fjh5n3wz-cnOmM9Xe9DYAgQrNu8xKxg"
@@ -53,10 +44,12 @@ function Hero() {
             slack
           </Link>{" "}
           to get involved
-        </Badge>
+        </Badge> */}
         <h1 className="text-6xl mb-0">
-          Data Infrastructure{" "}
-          <span className="text-muted-foreground">as copyable code</span>
+          <span className="text-muted-foreground">
+            Embeddable components for
+          </span>{" "}
+          analytical systems
         </h1>
         <div className="flex flex-row gap-5">
           <Button asChild>
@@ -69,9 +62,10 @@ function Hero() {
       </div>
       <div className="flex flex-col gap-10">
         <h2 className="text-lg text-muted-foreground">
-          A starter kit for building, testing and sharing analytical connectors
-          and pipelines for extracting data and metadata from any analytical
-          data system. Heavily inspired by Shadcn/ui.
+          A starter kit for building, testing and sharing the components you
+          need to build out a scalable analytical system. Frontend teams have
+          used design systems and components thinking for years, we’re now
+          bringing that to analytics. Heavily inspired by Shadcn/ui.
         </h2>
         <div className="flex flex-col gap-5 text-lg">
           {valueProps.map((prop) => (
