@@ -40,7 +40,7 @@ const valueProps = [
 
 function Hero() {
   return (
-    <div className="grid grid-cols-2 container max-w-6xl mx-auto gap-5 py-16">
+    <div className="grid grid-cols-2 gap-5 py-16">
       <div className="flex flex-col gap-10">
         <Badge variant="outline">
           This Project is a WIP. Join our{" "}
@@ -95,7 +95,7 @@ export default async function Home() {
   return (
     <div className="font-sans items-center justify-items-center min-h-screen space-y-4">
       <PagefindMeta type="docs" />
-      <main className="flex flex-col items-center sm:items-start">
+      <main className="flex flex-col items-center sm:items-start container max-w-6xl mx-auto">
         <Hero />
         <DiscoveryGrid connectors={connectors} pipelines={pipelines} />
       </main>

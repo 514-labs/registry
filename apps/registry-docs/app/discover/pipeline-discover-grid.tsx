@@ -1,6 +1,5 @@
-"use client";
-
 import PipelineCard from "@/components/pipeline-card";
+import { cn } from "@/lib/utils";
 
 export type DiscoverPipeline = {
   name: string;
@@ -33,11 +32,18 @@ export type DiscoverPipeline = {
 
 export default function PipelineDiscoverGrid({
   pipelines,
+  className,
 }: {
   pipelines: DiscoverPipeline[];
+  className?: string;
 }) {
   return (
-    <div className="grid grid-cols-3 gap-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-3">
+    <div
+      className={cn(
+        "grid grid-cols-3 gap-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-3",
+        className
+      )}
+    >
       {pipelines.map((p) => (
         <PipelineCard
           key={p.name}
