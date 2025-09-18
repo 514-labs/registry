@@ -1,9 +1,8 @@
-"use client";
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/components/tabs";
-import { Package, Workflow } from "lucide-react";
-import ConnectorDiscoverGrid from "./connector-discover-grid";
-import PipelineDiscoverGrid from "./pipeline-discover-grid";
+import {
+  buildDiscoverConnectors,
+  buildDiscoverPipelines,
+} from "@/lib/discover";
+import { DiscoveryGridDetailed } from "./discovery-grids";
 
 export default function DiscoverPage() {
   const [connectors, setConnectors] = useState<DiscoverConnector[]>([]);
@@ -43,36 +42,7 @@ export default function DiscoverPage() {
           infrastructure
         </p>
       </div>
-      <Tabs defaultValue="connectors" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="connectors" className="flex gap-2">
-            <Package className="h-4 w-4" />
-            Connectors ({loading.connectors ? "..." : connectors.length})
-          </TabsTrigger>
-          <TabsTrigger value="pipelines" className="flex gap-2">
-            <Workflow className="h-4 w-4" />
-            Pipelines ({loading.pipelines ? "..." : pipelines.length})
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="connectors" className="mt-6">
-          {loading.connectors ? (
-            <div className="flex justify-center py-8">
-              <div className="text-muted-foreground">Loading connectors...</div>
-            </div>
-          ) : (
-            <ConnectorDiscoverGrid connectors={connectors} />
-          )}
-        </TabsContent>
-        <TabsContent value="pipelines" className="mt-6">
-          {loading.pipelines ? (
-            <div className="flex justify-center py-8">
-              <div className="text-muted-foreground">Loading pipelines...</div>
-            </div>
-          ) : (
-            <PipelineDiscoverGrid pipelines={pipelines} />
-          )}
-        </TabsContent>
-      </Tabs>
+      <DiscoveryGridDetailed connectors={connectors} pipelines={pipelines} />
     </div>
   );
 }

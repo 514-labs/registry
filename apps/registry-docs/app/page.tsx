@@ -15,8 +15,8 @@ import {
   Workflow,
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/components/tabs";
-import ConnectorDiscoverGrid from "@/app/discover/connector-discover-grid";
-import PipelineDiscoverGrid from "@/app/discover/pipeline-discover-grid";
+import ConnectorDiscoverGrid from "@/app/discover/connector/connector-discover-grid";
+import PipelineDiscoverGrid from "@/app/discover/pipeline/pipeline-discover-grid";
 import { DiscoveryGrid } from "./discover/discovery-grids";
 
 const valueProps = [
