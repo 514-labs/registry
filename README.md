@@ -78,19 +78,6 @@ We are not a hosted connector product. We’re a system you copy into your repo:
 - **Composable primitives**: Small, orthogonal building blocks you can swap.
 - **Batteries included, not attached**: Patterns and tests you can own and evolve.
 
----
-
-### Testing checklist
-
-- Unit tests for all public methods
-- Integration tests with mock servers
-- Retry logic (backoff, jitter, circuit breaker)
-- Rate limiting behavior
-- Auth flows and expiry/refresh
-- Error classification and propagation
-- Pagination strategies and edge cases
-
----
 
 ## Developing in this repo
 
