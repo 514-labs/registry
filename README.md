@@ -48,7 +48,7 @@ bash -i <(curl https://registry.514.ai/install.sh) --type connector --list
 Install a connector: (arguments: --type, name, version, author, language, implementation)
 
 ```bash
-bash -i <(curl https://registry.514.ai/install.sh) --type connector google-analytics v4 fiveonefour typescript data-api
+bash -i <(curl https://registry.514.ai/install.sh) --type connector google-analytics v4 514-labs typescript data-api
 ```
 
 ## Quickstart: find and use pipelines
