@@ -4,8 +4,8 @@ import {
 } from "@/lib/discover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/components/tabs";
 import { Package, Workflow } from "lucide-react";
-import ConnectorDiscoverGrid from "./ConnectorDiscoverGrid";
-import PipelineDiscoverGrid from "./PipelineDiscoverGrid";
+import ConnectorDiscoverGrid from "./connector-discover-grid";
+import PipelineDiscoverGrid from "./pipeline-discover-grid";
 
 export default async function DiscoverPage() {
   const [connectors, pipelines] = await Promise.all([
