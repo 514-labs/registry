@@ -125,6 +125,11 @@
                         },
                         {
                           "type": "file",
+                          "name": "install.config.toml",
+                          "template": "language = \"typescript\"\ndescription = \"TypeScript pipeline for {pipeline}\"\npost_install_print = \"\"\"\n🚀 Next steps to get your {pipeline} pipeline running:\n\n📂 Go to your pipeline directory:\n    $ cd {destination_dir}\n\n📦 Install dependencies:\n    $ npm install\n\n🔧 Build the pipeline:\n    $ npm run build\n\n🧪 Run tests:\n    $ npm test\n\n🗄️ Configure your pipeline:\n    • Update app/config.ts with your source connector details\n    • Configure your destination in the pipeline metadata\n    • Set up any required authentication credentials\n\n🔗 Pipeline integration:\n    • Use with Moose: Place in your Moose project's pipelines directory\n    • Standalone: Run with your preferred orchestration tool\n    • Check examples/basic-usage.ts for implementation patterns\n\n📖 Documentation:\n    • Review docs/getting-started.md for setup instructions\n    • See docs/configuration.md for detailed config options\n    • Check docs/outputs.md for data schema information\n\"\"\"\n"
+                        },
+                        {
+                          "type": "file",
                           "name": "package.json",
                           "template": "{\n  \"name\": \"{packageName}\",\n  \"version\": \"0.1.0\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\",\n  \"scripts\": {\n    \"build\": \"tsup src/index.ts --dts --format esm,cjs\",\n    \"test\": \"vitest run\"\n  },\n  \"engines\": {\"node\": \">=20\"},\n  \"dependencies\": {},\n  \"devDependencies\": {\n    \"tsup\": \"^8.0.0\",\n    \"typescript\": \"^5.4.0\",\n    \"vitest\": \"^1.6.0\"\n  }\n}\n"
                         },

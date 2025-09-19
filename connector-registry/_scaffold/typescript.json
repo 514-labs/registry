@@ -98,6 +98,11 @@
                         },
                         {
                           "type": "file",
+                          "name": "install.config.toml",
+                          "template": "language = \"typescript\"\ndescription = \"TypeScript connector for {connector}\"\npost_install_print = \"\"\"\n🚀 Next steps to get your {connector} connector running:\n\n📂 Go to your connector directory:\n    $ cd {destination_dir}\n\n📦 Install dependencies:\n    $ npm install\n\n🔧 Build the connector:\n    $ npm run build\n\n🧪 Run tests:\n    $ npm test\n\n📖 Next, check out the documentation:\n    • Review docs/getting-started.md for configuration details\n    • See examples/ for usage examples\n    • Update src/connector.ts with your API implementation\n\n🔗 Integration options:\n    • Add to your project: import { create{connector|title}Connector } from '{packageName}'\n    • Use with pipelines: Configure as a source in your pipeline setup\n    • Standalone usage: Check examples/basic-usage.ts\n\"\"\"\n"
+                        },
+                        {
+                          "type": "file",
                           "name": "package.json",
                           "template": "{\n  \"name\": \"{packageName}\",\n  \"version\": \"0.1.0\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\",\n  \"scripts\": {\n    \"build\": \"tsup src/index.ts --dts --format esm,cjs\",\n    \"test\": \"vitest run\"\n  },\n  \"engines\": {\"node\": \">=20\"},\n  \"dependencies\": {},\n  \"devDependencies\": {\n    \"tsup\": \"^8.0.0\",\n    \"typescript\": \"^5.4.0\",\n    \"vitest\": \"^1.6.0\"\n  }\n}\n"
                         },
