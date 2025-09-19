@@ -125,6 +125,11 @@
                         },
                         {
                           "type": "file",
+                          "name": "install.config.toml",
+                          "template": "language = \"python\"\ndescription = \"Python pipeline for {pipeline}\"\npost_install_print = \"\"\"\n🚀 Next steps to get your {pipeline} pipeline running:\n\n📂 Go to your pipeline directory:\n    $ cd {destination_dir}\n\n🐍 Create virtual environment (recommended):\n    $ python3 -m venv .venv\n    $ source .venv/bin/activate\n\n📦 Install dependencies:\n    $ pip install -e .\n\n🧪 Run tests:\n    $ python -m pytest\n\n🗄️ Configure your pipeline:\n    • Update app/config.py with your source connector details\n    • Configure your destination in the pipeline metadata\n    • Set up any required authentication credentials\n\n🔗 Pipeline integration:\n    • Use with Moose: Place in your Moose project's pipelines directory\n    • Standalone: Run with your preferred orchestration tool\n    • Check examples/basic_usage.py for implementation patterns\n\n📖 Documentation:\n    • Review docs/getting-started.md for setup instructions\n    • See docs/configuration.md for detailed config options\n    • Check docs/outputs.md for data schema information\n\"\"\"\n"
+                        },
+                        {
+                          "type": "file",
                           "name": "pyproject.toml",
                           "template": "[project]\nname = \"{packageName}\"\nversion = \"0.1.0\"\nreadme = \"README.md\"\nrequires-python = \">=3.10\"\nlicense = {text = \"MIT\"}\nauthors = [ { name = \"{author}\" } ]\ndependencies = [ ]\n\n[tool.ruff]\nline-length = 100\n\n[build-system]\nrequires = [\"setuptools>=68\",\"wheel\"]\nbuild-backend = \"setuptools.build_meta\"\n"
                         },

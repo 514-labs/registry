@@ -1,0 +1,17 @@
+language = "typescript"
+description = "TypeScript pipeline for HubSpot to ClickHouse"
+post_install_print = """
+🚀 Next steps for your HubSpot to ClickHouse pipeline:
+
+📂 Go to your pipeline directory:
+    $ cd {destination_dir}
+
+🔑 Set environment variables:
+    $ export HUBSPOT_ACCESS_TOKEN=your_token_here
+
+📦 Install dependencies:
+    $ npm install
+
+🚀 Start development:
+    $ npm run dev
+"""

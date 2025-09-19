@@ -456,7 +456,74 @@ parse_args() {
   fi
 }
 
+# Parse simple TOML values - just the ones we need
+parse_toml_value() {
+  local file="$1"
+  local key="$2"
+  
+  if [ -f "$file" ]; then
+    # Handle multi-line string values between triple quotes
+    if [ "$key" = "post_install_print" ]; then
+      # Extract content between post_install_print = """ and """
+      awk '/^post_install_print *= *"""/{flag=1; next} /^"""/{flag=0} flag' "$file"
+    else
+      # Handle simple key = "value" pairs
+      grep "^$key *= *" "$file" | sed 's/^[^=]*= *"\?\([^"]*\)"\?/\1/' | head -1
+    fi
+  fi
+}
+
 show_next_steps() {
+  local config_file="$dest_dir/install.config.toml"
+  
+  if [ -f "$config_file" ]; then
+    echo "=================================================="
+    echo ""
+    
+    # Extract and display post-install instructions from TOML
+    local post_install_content
+    post_install_content=$(parse_toml_value "$config_file" "post_install_print")
+    
+    if [ -n "$post_install_content" ]; then
+      # Replace placeholders in the post-install content - properly escape variables
+      local processed_content dest_basename escaped_connector escaped_workspace_package escaped_connector_title pipeline_name
+      dest_basename=$(basename "$dest_dir")
+      escaped_connector=$(printf '%s\n' "$CONNECTOR_NAME" | sed 's/[\.^$(){}*+?|\\]/\\&/g')
+      pipeline_name="$CONNECTOR_NAME"  # Use same name for pipeline placeholder
+      # Create appropriate package name based on language/context
+      if [[ "$CONNECTOR_LANGUAGE" == "python" ]]; then
+        package_name=$(echo "$CONNECTOR_NAME" | sed 's/-/_/g')
+      else
+        package_name="@workspace/$CONNECTOR_NAME"
+      fi
+      escaped_workspace_package=$(printf '%s\n' "$package_name" | sed 's/[\.^$(){}*+?|\\]/\\&/g')
+      # Create title-cased version of connector name
+      connector_title=$(echo "$CONNECTOR_NAME" | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2));}1' | sed 's/ //g')
+      escaped_connector_title=$(printf '%s\n' "$connector_title" | sed 's/[\.^$(){}*+?|\\]/\\&/g')
+      
+      processed_content=$(printf '%s\n' "$post_install_content" | \
+        sed "s#{connector|title}#$escaped_connector_title#g" | \
+        sed "s|{destination_dir}|$dest_basename|g" | \
+        sed "s|{connector}|$escaped_connector|g" | \
+        sed "s|{pipeline}|$pipeline_name|g" | \
+        sed "s|{packageName}|$escaped_workspace_package|g")
+      
+      echo "$processed_content"
+    else
+      # Fallback to generic next steps if no post_install_print found
+      show_generic_next_steps
+    fi
+    
+    echo ""
+    echo "=================================================="
+    echo ""
+  else
+    # Fallback for when no config file exists
+    show_generic_next_steps
+  fi
+}
+
+show_generic_next_steps() {
   echo "🚀 Next steps:"
   echo "  - Review $dest_dir/README.md"
   echo "  - Review $dest_dir/docs/getting-started.md"
@@ -513,7 +580,6 @@ main() {
     dest_dir="$PWD/$CONNECTOR_NAME"
   fi
   copy_connector_into_subdir "$src_dir" "$dest_dir"
-  echo ""
 
   show_next_steps
 }
