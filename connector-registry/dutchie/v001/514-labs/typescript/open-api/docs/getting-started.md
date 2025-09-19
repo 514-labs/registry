@@ -16,14 +16,14 @@ Run the installer with a destination folder where the connector code will reside
 bash -i <(curl https://registry.514.ai/install.sh) --dest app/dutchie dutchie v001 514-labs typescript open-api
 ```
 
-### 3. Set environment variable in the project's .env file
+### 3. Set environment variable in your shell
 ```
 DUTCHIE_API_KEY=<your_api_key>
 ```
 
 ### 4. Start your app
 
-From your project's root directory, install dependencies and build:
+From your project's root directory, install dependencies and run:
 
 ```bash
 pnpm install && pnpm run dev
@@ -54,8 +54,8 @@ main().catch((err) => {
 
 ## Usage with Moose projects
 
-``` TS
-import { Brand } from  `../dutchie/src/generated/dutchie`
+```ts
+import type { Brand } from '../dutchie/src';
 import {
   IngestPipeline,
   Key,
@@ -66,8 +66,8 @@ import {
 // Create a new type that extends Brand with modified brandID 
 // (if you want to create a table with Moose, 
 // if you are using other objects only, this step is not required)
-export interface BrandWithKey extends Omit<Brand, 'brandID'> {
-  brandID: Key<string>; // Now non-nullable and marked as Key
+export interface BrandWithKey extends Omit<Brand, 'brandId'> {
+  brandId: Key<string>; // Now non-nullable and marked as Key
 }
 
 export const DutchiePipeline = new IngestPipeline<BrandWithKey>("BrandWithKey",{
