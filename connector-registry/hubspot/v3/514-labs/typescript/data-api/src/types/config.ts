@@ -26,7 +26,7 @@ export interface MetricsOptions {
 }
 
 export interface ConnectorAuthConfig {
-  type: "bearer" | "oauth2";
+  type: "bearer" | "oauth2" | "basic";
   bearer?: { token: string };
   oauth2?: {
     clientId: string;

@@ -3,18 +3,47 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "main": "./src/index.ts",
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts",
-    "./client": "./src/client/index.ts",
-    "./types": "./src/types/index.ts",
-    "./core": "./src/core/index.ts",
-    "./rate-limit": "./src/rate-limit/index.ts",
-    "./domains": "./src/domains/index.ts"
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./client": {
+      "import": "./dist/client/index.js",
+      "require": "./dist/cjs/client/index.js",
+      "types": "./dist/client/index.d.ts"
+    },
+    "./types": {
+      "import": "./dist/types/index.js",
+      "require": "./dist/cjs/types/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./core": {
+      "import": "./dist/core/index.js",
+      "require": "./dist/cjs/core/index.js",
+      "types": "./dist/core/index.d.ts"
+    },
+    "./rate-limit": {
+      "import": "./dist/rate-limit/index.js",
+      "require": "./dist/cjs/rate-limit/index.js",
+      "types": "./dist/rate-limit/index.d.ts"
+    },
+    "./domains": {
+      "import": "./dist/domains/index.js",
+      "require": "./dist/cjs/domains/index.js",
+      "types": "./dist/domains/index.d.ts"
+    }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc --noEmit",
-    "dev": "tsc --noEmit --watch",
+    "build": "rm -rf dist && tsc -p tsconfig.esm.json && tsc -p tsconfig.cjs.json && node ./scripts/write-cjs-package-json.cjs",
+    "prepare": "npm run build",
+    "dev": "tsc -p tsconfig.esm.json --watch",
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "test": "jest"
