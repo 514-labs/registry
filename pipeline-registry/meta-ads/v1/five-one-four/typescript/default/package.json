@@ -7,6 +7,9 @@
   "scripts": {
     "build": "cd app/meta-ads; pnpm run build; cd ../..",
     "test": "vitest run",
+    "test:watch": "vitest watch",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
     "dev": "moose-cli dev",
     "moose": "moose-cli"
   },
@@ -20,6 +23,8 @@
   },
   "devDependencies": {
     "@514labs/moose-cli": "latest",
+    "@types/node": "^20.0.0",
+    "nock": "^13.5.0",
     "tsup": "^8.0.0",
     "typescript": "^5.4.0",
     "vitest": "^3.2.4"
