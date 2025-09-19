@@ -2,7 +2,9 @@
   "name": "dutchie",
   "author": "514-labs",
   "version": "v001",
-  "languages": ["typescript"],
+  "languages": [
+    "typescript"
+  ],
   "category": "api",
   "capabilities": {
     "extract": true,
@@ -18,9 +20,7 @@
   "maintainers": [],
   "issues": {
     "typescript": {
-      "open-api": ""
+      "open-api": "https://github.com/514-labs/registry/issues/89"
     }
   }
 }
-
-
