@@ -239,7 +239,7 @@ run_postinstall_if_present() {
     chmod +x "$postinstall_script" || true
     (
       cd "$dest_dir"
-      FACTORY_EXTRACT_ROOT="$extract_root" bash "$postinstall_script"
+      FACTORY_EXTRACT_ROOT="$extract_root" bash "./scripts/postinstall.sh"
     ) || {
       echo "⚠️ Postinstall script failed. Continuing." >&2
     }
