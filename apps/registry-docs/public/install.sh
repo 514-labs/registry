@@ -228,6 +228,24 @@ copy_connector_into_subdir() {
   echo "✅ Installed into $dest_dir"
 }
 
+# Run connector postinstall script if present
+run_postinstall_if_present() {
+  local dest_dir="$1"
+  local postinstall_script="$dest_dir/scripts/postinstall.sh"
+
+  if [ -f "$postinstall_script" ]; then
+    echo "\n🔧 Running connector postinstall script..."
+    chmod +x "$postinstall_script" || true
+    (
+      cd "$dest_dir"
+      bash "$postinstall_script"
+    ) || {
+      echo "⚠️ Postinstall script failed. Continuing." >&2
+    }
+    echo "✅ Postinstall complete\n"
+  fi
+}
+
 # List connectors/pipelines in a copy-pasteable format
 list_connectors() {
   local resource_label="connector"
@@ -514,6 +532,9 @@ main() {
   fi
   copy_connector_into_subdir "$src_dir" "$dest_dir"
   echo ""
+
+  # Run connector-provided postinstall if available
+  run_postinstall_if_present "$dest_dir"
 
   show_next_steps
 }
