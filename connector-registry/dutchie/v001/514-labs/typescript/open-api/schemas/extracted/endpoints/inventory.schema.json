@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "inventoryId": {
+      "type": "integer",
+      "description": "Unique identifier for the inventory item"
+    },
+    "productId": {
+      "type": "integer",
+      "description": "Associated product identifier"
+    },
+    "quantity": {
+      "type": "number",
+      "description": "Available quantity"
+    },
+    "location": {
+      "type": "string",
+      "description": "Inventory location"
+    }
+  },
+  "required": ["inventoryId", "productId", "quantity"]
+}

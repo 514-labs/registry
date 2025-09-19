@@ -1,41 +1,37 @@
 {
-  "$schema": "https://schemas.connector-factory.dev/schema-index.schema.json",
-  "version": "0.1.0",
-  "datasets": [
+  "entities": [
     {
-      "name": "events",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/endpoints/events.schema.json",
-      "doc": "raw/endpoints/events.md"
-    },
-    {
-      "name": "events",
-      "stage": "extracted",
-      "kind": "endpoints",
-      "path": "extracted/endpoints/events.schema.json",
-      "doc": "extracted/endpoints/events.md"
-    }
-  ],
-  "_examples": {
-    "_comment": "Below are examples of how to use nested folders. Copy and modify these patterns:",
-    "endpoint_example": {
-      "name": "users.create",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/endpoints/endpoints/users/create.schema.json",
-      "doc": "raw/endpoints/endpoints/users/create.md",
-      "metadata": {
-        "category": "endpoint",
-        "apiMethod": "POST"
+      "name": "brand",
+      "raw": {
+        "json": "raw/endpoints/brands.schema.json",
+        "relational": "raw/relational/tables.json"
+      },
+      "extracted": {
+        "json": "extracted/endpoints/brand.schema.json",
+        "relational": "extracted/relational/tables.json"
       }
     },
-    "nested_organization_example": {
-      "name": "reports.analytics",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/endpoints/endpoints/reports/analytics.schema.json",
-      "doc": "raw/endpoints/endpoints/reports/analytics.md"
+    {
+      "name": "product",
+      "raw": {
+        "json": "raw/endpoints/products.schema.json",
+        "relational": "raw/relational/tables.json"
+      },
+      "extracted": {
+        "json": "extracted/endpoints/product.schema.json",
+        "relational": "extracted/relational/tables.json"
+      }
+    },
+    {
+      "name": "inventory",
+      "raw": {
+        "json": "raw/endpoints/inventory.schema.json",
+        "relational": "raw/relational/tables.json"
+      },
+      "extracted": {
+        "json": "extracted/endpoints/inventory.schema.json",
+        "relational": "extracted/relational/tables.json"
+      }
     }
-  }
+  ]
 }

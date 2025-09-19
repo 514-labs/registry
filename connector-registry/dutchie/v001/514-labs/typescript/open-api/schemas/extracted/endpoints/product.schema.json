@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "productId": {
+      "type": "integer",
+      "description": "Unique identifier for the product"
+    },
+    "productName": {
+      "type": "string",
+      "description": "Name of the product"
+    },
+    "brandId": {
+      "type": ["integer", "null"],
+      "description": "Associated brand identifier"
+    },
+    "price": {
+      "type": "number",
+      "description": "Product price"
+    },
+    "category": {
+      "type": "string",
+      "description": "Product category"
+    }
+  },
+  "required": ["productId", "productName"]
+}
