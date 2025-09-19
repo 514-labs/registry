@@ -54,6 +54,8 @@ main().catch((err) => {
 
 ## Usage with Moose projects
 
+In `app/ingest/models.ts`:
+
 ```ts
 import type { Brand } from '../dutchie/src';
 import {
@@ -80,6 +82,51 @@ export const BrandPipeline = new IngestPipeline<BrandWithKey>("Brand",{
     ingest: true,
     deadLetterQueue: false,
 })
+```
+
+In `app/workflows/dutchie.ts`:
+
+```ts
+import { Key, Task, Workflow } from "@514labs/moose-lib";
+import { createDutchieConnector } from '../dutchie/src'
+import { BrandWithKey, BrandPipeline } from '../ingest/models'
+
+export const dutchietask = new Task<null, void>("testdutchietask", {
+  run: async () => {
+    const apiKey = process.env.DUTCHIE_API_KEY;
+    if (!apiKey) throw new Error('DUTCHIE_API_KEY is required');
+
+    const conn = createDutchieConnector();
+    conn.initialize({
+      auth: { type: 'basic', basic: { username: apiKey } },
+    });
+
+    console.log('Getting brands from Dutchie');
+    const items = await conn.brand.getAll();
+    const rows: BrandWithKey[] = items
+      .filter(b => b.brandId != null)
+      .map(b => ({ ...b, brandId: b.brandId as Key<number> }));
+
+    console.log('Rows:', rows);
+    await BrandPipeline.table!.insert(rows);
+    console.log('Brands inserted into ClickHouse');
+  },
+  retries: 1,
+  timeout: "30s",
+});
+
+export const dutchieworkflow = new Workflow("testdutchie", {
+  startingTask: dutchietask,
+  retries: 1,
+  timeout: "30s",
+});
+```
+
+In `app/index.ts`:
+
+```ts
+export * from "./ingest/models";
+export * from "./workflows/dutchie";
 ```
 
 ## Available APIs
