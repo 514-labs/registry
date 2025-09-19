@@ -88,7 +88,7 @@ export default async function PipelineImplementationPage({
   // URLs
   const registryUrl =
     meta?.registryUrl ??
-    `https://github.com/514-labs/factory/tree/main/pipeline-registry/${pipeline}/${version}/${creator}`;
+    `https://github.com/514-labs/registry/tree/main/pipeline-registry/${pipeline}/${version}/${creator}`;
 
   // Build lists and navigation helpers
   const getProviderVersion = (pPath: string): string =>

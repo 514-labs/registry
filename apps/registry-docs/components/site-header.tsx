@@ -46,7 +46,7 @@ export async function SiteHeader() {
         <ThemeToggle />
         <Button asChild variant="ghost" size="sm" className="h-7 px-2">
           <Link
-            href="https://github.com/514-labs/factory"
+            href="https://github.com/514-labs/registry"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub repository"

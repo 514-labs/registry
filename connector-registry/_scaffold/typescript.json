@@ -65,7 +65,7 @@
                             {
                               "type": "file",
                               "name": "connector.json",
-                              "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector.schema.json\",\n  \"identifier\": \"{connector}\",\n  \"name\": \"{connector}\",\n  \"author\": \"{author}\",\n  \"authorType\": \"organization\",\n  \"avatarUrlOverride\": \"\",\n  \"version\": \"{version}\",\n  \"language\": \"typescript\",\n  \"implementation\": \"{implementation}\",\n  \"tags\": [],\n  \"category\": \"api\",\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"license\": \"MIT\",\n  \"source\": {\"type\":\"api\",\"spec\":\"\"},\n  \"capabilities\": {\"extract\": true, \"transform\": true, \"load\": true},\n  \"maintainers\": [],\n  \"issues\": \"\",\n  \"registryUrl\": \"https://github.com/514-labs/factory/tree/main/connector-registry/{connector}/{version}/{author}/typescript/{implementation}\"\n}\n"
+                              "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector.schema.json\",\n  \"identifier\": \"{connector}\",\n  \"name\": \"{connector}\",\n  \"author\": \"{author}\",\n  \"authorType\": \"organization\",\n  \"avatarUrlOverride\": \"\",\n  \"version\": \"{version}\",\n  \"language\": \"typescript\",\n  \"implementation\": \"{implementation}\",\n  \"tags\": [],\n  \"category\": \"api\",\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"license\": \"MIT\",\n  \"source\": {\"type\":\"api\",\"spec\":\"\"},\n  \"capabilities\": {\"extract\": true, \"transform\": true, \"load\": true},\n  \"maintainers\": [],\n  \"issues\": \"\",\n  \"registryUrl\": \"https://github.com/514-labs/registry/tree/main/connector-registry/{connector}/{version}/{author}/typescript/{implementation}\"\n}\n"
                             },
                             {
                               "type": "file",
@@ -99,17 +99,22 @@
                         {
                           "type": "file",
                           "name": "package.json",
-                          "template": "{\n  \"name\": \"{packageName}\",\n  \"version\": \"0.1.0\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\",\n  \"scripts\": {\n    \"build\": \"tsup src/index.ts --dts --format esm,cjs\",\n    \"test\": \"vitest run\"\n  },\n  \"engines\": {\"node\": \">=20\"},\n  \"dependencies\": {},\n  \"devDependencies\": {\n    \"tsup\": \"^8.0.0\",\n    \"typescript\": \"^5.4.0\",\n    \"vitest\": \"^1.6.0\"\n  }\n}\n"
+                          "template": "{\n  \"name\": \"{packageName}\",\n  \"version\": \"0.0.0\",\n  \"private\": true,\n  \"description\": \"TypeScript {connector} connector\",\n  \"license\": \"MIT\",\n  \"main\": \"dist/src/index.js\",\n  \"types\": \"dist/src/index.d.ts\",\n  \"exports\": {\n    \".\": {\n      \"types\": \"./dist/src/index.d.ts\",\n      \"default\": \"./dist/src/index.js\"\n    }\n  },\n  \"files\": [\"dist\", \"README.md\"],\n  \"scripts\": {\n    \"build\": \"tsc -p tsconfig.json\",\n    \"test\": \"jest --passWithNoTests\",\n    \"test:watch\": \"jest --watch\",\n    \"test:integration\": \"jest --config jest.integration.cjs\"\n  },\n  \"dependencies\": {\n    \"@connector-factory/core\": \"workspace:*\",\n    \"ajv\": \"^8.17.1\",\n    \"ajv-formats\": \"^3.0.1\",\n    \"zod\": \"^3.25.8\"\n  },\n  \"devDependencies\": {\n    \"@types/jest\": \"^29.5.14\",\n    \"@types/node\": \"^20.14.12\",\n    \"jest\": \"^29.7.0\",\n    \"nock\": \"^13.5.4\",\n    \"ts-jest\": \"29.1.2\",\n    \"tsx\": \"^4.19.2\",\n    \"typescript\": \"^5.6.3\"\n  },\n  \"engines\": {\"node\": \">=20\"}\n}\n"
                         },
                         {
                           "type": "file",
                           "name": "tsconfig.json",
-                          "template": "{\n  \"compilerOptions\": {\n    \"target\": \"ES2022\",\n    \"module\": \"ESNext\",\n    \"moduleResolution\": \"Bundler\",\n    \"outDir\": \"dist\",\n    \"declaration\": true,\n    \"declarationMap\": true,\n    \"strict\": true,\n    \"skipLibCheck\": true\n  },\n  \"include\": [\"src\"]\n}\n"
+                          "template": "{\n  \"compilerOptions\": {\n    \"target\": \"ES2022\",\n    \"module\": \"CommonJS\",\n    \"moduleResolution\": \"Node\",\n    \"outDir\": \"dist\",\n    \"declaration\": true,\n    \"declarationMap\": true,\n    \"strict\": true,\n    \"skipLibCheck\": true,\n    \"esModuleInterop\": true,\n    \"allowSyntheticDefaultImports\": true,\n    \"forceConsistentCasingInFileNames\": true\n  },\n  \"include\": [\"src\", \"tests\"],\n  \"exclude\": [\"node_modules\", \"dist\"]\n}\n"
                         },
                         {
                           "type": "file",
-                          "name": "vitest.config.ts",
-                          "template": "import { defineConfig } from 'vitest/config'\nexport default defineConfig({ test: { environment: 'node' } })\n"
+                          "name": "jest.config.cjs",
+                          "template": "module.exports = {\n  preset: 'ts-jest',\n  testEnvironment: 'node',\n  roots: ['<rootDir>/src', '<rootDir>/tests'],\n  testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],\n  collectCoverageFrom: ['src/**/*.ts', '!src/**/*.d.ts'],\n  setupFilesAfterEnv: [],\n  moduleNameMapping: {},\n  testTimeout: 30000\n};\n"
+                        },
+                        {
+                          "type": "file",
+                          "name": "jest.integration.cjs",
+                          "template": "module.exports = {\n  ...require('./jest.config.cjs'),\n  testMatch: ['**/tests/integration/**/*.test.ts'],\n  testTimeout: 60000\n};\n"
                         },
                         {
                           "type": "dir",
@@ -262,78 +267,122 @@
                             {
                               "type": "file",
                               "name": "index.ts",
-                              "template": "export * from './client'\nexport * from './config'\n"
+                              "template": "export { create{connector|title}Connector } from './connector'\nexport type { {connector|title}Connector } from './types/connector'\nexport type { ConnectorConfig } from './types/config'\nexport type { HttpResponseEnvelope } from './types/envelopes'\n// Export all model types for external use\nexport type * from './models'\n// Observability exports\nexport { createLoggingHooks, createMetricsHooks, InMemoryMetricsSink, createInMemoryMetricsSink } from './observability'\n"
                             },
                             {
                               "type": "file",
-                              "name": "client.ts",
-                              "template": "export class Client {\n  constructor(public config: Record<string, unknown>) {}\n  ping(): boolean { return true }\n}\n"
+                              "name": "connector.ts",
+                              "template": "import { ApiConnectorBase, type RateLimitOptions } from '@connector-factory/core'\nimport type { {connector|title}Connector } from './types/connector'\nimport type { ConnectorConfig } from './types/config'\nimport { withDerivedDefaults } from './config/defaults'\nimport { ConnectorError } from './types/errors'\nimport { build{resource|title}Domain } from './domains/{resource}'\nimport type { SendFn } from '@connector-factory/core'\n\nexport class {connector|title}ApiConnector extends ApiConnectorBase implements {connector|title}Connector {\n  initialize(userConfig: ConnectorConfig) {\n    const rateLimitOptions: RateLimitOptions = {\n      onRateLimitSignal: (info) => {\n        // Adaptive rate limiting based on server feedback\n        if (this.config?.rateLimit?.adaptiveFromHeaders && this.limiter) {\n          (this.limiter as any).updateFromResponse(info)\n        }\n      }\n    }\n\n    super.initialize(\n      userConfig,\n      withDerivedDefaults,\n      ({ headers }: { headers: Record<string, string> }) => {\n        // Apply authentication\n        if (this.config?.auth.type === 'bearer') {\n          const token = this.config?.auth.bearer?.token\n          if (!token) throw new ConnectorError({ message: 'Authentication failed – missing bearer token', code: 'AUTH_FAILED', source: 'auth', retryable: false })\n          headers['Authorization'] = `Bearer ${token}`\n        }\n      },\n      rateLimitOptions\n    )\n  }\n\n  // Build domain delegates\n  private get domain() {\n    const sendLite: SendFn = async (args) => this.send<any>(args)\n    return {\n      ...build{resource|title}Domain((args) => sendLite({ ...args, operation: args.operation ?? '{resource}' }))\n    }\n  }\n\n  // {resource|title} methods\n  list{resource|title} = (params?: { properties?: string[]; limit?: number; after?: string }) => this.domain.list{resource|title}(params)\n  get{resource|title} = (params: { id: string; properties?: string[] }) => this.domain.get{resource|title}(params)\n  stream{resource|title} = (params?: { properties?: string[]; pageSize?: number }) => this.domain.stream{resource|title}(params)\n  get{resource|title}s = (params?: { properties?: string[]; pageSize?: number; maxItems?: number }) => this.domain.get{resource|title}s(params)\n}\n\nexport function create{connector|title}Connector(): {connector|title}Connector {\n  return new {connector|title}ApiConnector()\n}\n"
                             },
                             {
                               "type": "file",
                               "name": "config.ts",
-                              "template": "export type ConnectorConfig = { apiKey: string }\n"
+                              "template": "export type ConnectorConfig = {\n  // Base configuration\n  baseUrl?: string\n  timeoutMs?: number\n  userAgent?: string\n  defaultHeaders?: Record<string, string>\n  defaultQueryParams?: Record<string, string>\n\n  // Authentication\n  auth: {\n    type: 'bearer' | 'apiKey' | 'basic'\n    bearer?: { token: string }\n    apiKey?: { key: string; header?: string }\n    basic?: { username: string; password: string }\n  }\n\n  // Rate limiting\n  rateLimit?: {\n    requestsPerSecond?: number\n    burstCapacity?: number\n    concurrentRequests?: number\n    adaptiveFromHeaders?: boolean\n  }\n\n  // Retry configuration\n  retry?: {\n    maxAttempts?: number\n    initialDelayMs?: number\n    maxDelayMs?: number\n    backoffMultiplier?: number\n    retryableStatusCodes?: number[]\n    respectRetryAfter?: boolean\n  }\n\n  // Hooks\n  hooks?: {\n    beforeRequest?: Array<{ name: string; priority?: number; execute: (ctx: any) => Promise<void> | void }>\n    afterResponse?: Array<{ name: string; priority?: number; execute: (ctx: any) => Promise<void> | void }>\n    onError?: Array<{ name: string; priority?: number; execute: (ctx: any) => Promise<void> | void }>\n    onRetry?: Array<{ name: string; priority?: number; execute: (ctx: any) => Promise<void> | void }>\n  }\n}\n"
                             },
                             {
                               "type": "dir",
-                              "name": "auth",
+                              "name": "domains",
                               "children": [
                                 {
                                   "type": "file",
-                                  "name": "base.ts",
-                                  "template": "export interface AuthStrategy { apply(headers: Record<string,string>): Record<string,string> }\n"
-                                },
-                                {
-                                  "type": "file",
-                                  "name": "apiKey.ts",
-                                  "template": "import type { AuthStrategy } from './base'\nexport class ApiKeyAuth implements AuthStrategy {\n  constructor(private apiKey: string) {}\n  apply(headers: Record<string,string>) { return { ...headers, Authorization: `Bearer ${this.apiKey}` } }\n}\n"
-                                },
-                                {
-                                  "type": "file",
-                                  "name": "oauth2.ts",
-                                  "template": "export {}\n"
+                                  "name": "{resource}.ts",
+                                  "template": "import type { SendFn } from '@connector-factory/core'\nimport { makeCrudDomain } from '../core/make-crud-domain'\nimport type { {resource|title}, {resource|title}sResponse, {resource|title}Response } from '../models/{resource}'\n\nexport function build{resource|title}Domain(send: SendFn) {\n  const base = makeCrudDomain<{resource|title}, {resource|title}sResponse, {resource|title}Response>('/{resource}', send)\n  return {\n    list{resource|title}: base.list,\n    get{resource|title}: base.get,\n    stream{resource|title}: base.streamAll,\n    get{resource|title}s: base.getAll\n  }\n}\n"
                                 }
                               ]
                             },
                             {
                               "type": "dir",
-                              "name": "lib",
+                              "name": "core",
                               "children": [
                                 {
                                   "type": "file",
-                                  "name": "paginate.ts",
-                                  "template": "export type HttpResponseEnvelope<T> = { data: T }\n\nexport type SendFn = <T = any>(args: {\n  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';\n  path: string;\n  query?: Record<string, any>;\n  headers?: Record<string, string>;\n  body?: unknown;\n  operation?: string;\n}) => Promise<HttpResponseEnvelope<T>>\n\nexport async function* paginateCursor<T = any>(params: {\n  send: SendFn;\n  path: string;\n  query?: Record<string, any>;\n  pageSize?: number;\n  extractItems?: (res: any) => T[];\n  extractNextCursor?: (res: any) => string | undefined;\n}) {\n  const extractItems = params.extractItems ?? ((res: any) => (res?.results ?? []) as T[])\n  const extractNext = params.extractNextCursor ?? ((res: any) => res?.paging?.next?.after as string | undefined)\n  let after: string | undefined = params.query?.after as string | undefined\n  const limit = params.pageSize ?? (params.query?.limit as number | undefined) ?? 100\n  // eslint-disable-next-line no-constant-condition\n  while (true) {\n    const res = await params.send<any>({ method: 'GET', path: params.path, query: { ...(params.query ?? {}), limit, after }, operation: 'paginate' })\n    const items = extractItems(res.data)\n    yield items\n    const next = extractNext(res.data)\n    if (!next) break\n    after = next\n  }\n}\n"
-                                },
-                                {
-                                  "type": "file",
-                                  "name": "make-resource.ts",
-                                  "template": "import { paginateCursor, type SendFn } from './paginate'\n\nexport function makeCrudResource<TItem, TListResponse, TSingleResponse>(objectPath: string, send: SendFn) {\n  const api = {\n    list: (params?: { properties?: string[]; limit?: number; after?: string }) => {\n      const query: Record<string, any> = {}\n      if (params?.properties?.length) query.properties = params.properties.join(',')\n      if (params?.limit) query.limit = params.limit\n      if (params?.after) query.after = params.after\n      return send<TListResponse>({ method: 'GET', path: objectPath, query })\n    },\n    get: (params: { id: string; properties?: string[] }) => {\n      const query: Record<string, any> = {}\n      if (params?.properties?.length) query.properties = params.properties.join(',')\n      return send<TSingleResponse>({ method: 'GET', path: `${objectPath}/${params.id}`, query })\n    },\n    streamAll: async function* (params?: { properties?: string[]; pageSize?: number }) {\n      const query: Record<string, any> = {}\n      if (params?.properties?.length) query.properties = params.properties.join(',')\n      for await (const items of paginateCursor<TItem>({ send, path: objectPath, query, pageSize: params?.pageSize })) {\n        for (const item of items) yield item\n      }\n    },\n    getAll: async (params?: { properties?: string[]; pageSize?: number; maxItems?: number }) => {\n      const results: TItem[] = []\n      for await (const item of api.streamAll({ properties: params?.properties, pageSize: params?.pageSize })) {\n        results.push(item)\n        if (params?.maxItems && results.length >= params.maxItems) break\n      }\n      return results\n    },\n  }\n  return api\n}\n"
-                                },
-                                {
-                                  "type": "file",
-                                  "name": "hooks.ts",
-                                  "template": "export type RequestOptions = {\n  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'\n  path: string\n  query?: Record<string, any>\n  headers?: Record<string, string>\n  body?: unknown\n  timeoutMs?: number\n  operation?: string\n}\n\nexport type ResponseMeta = {\n  timestamp: number\n  durationMs: number\n  retryCount: number\n  requestId?: string\n}\n\nexport type ResponseEnvelope<T> = {\n  data: T\n  status?: number\n  headers?: Record<string, string>\n  meta?: ResponseMeta\n}\n\nexport type HookContext = {\n  type: 'beforeRequest' | 'afterResponse' | 'onError' | 'onRetry'\n  request?: RequestOptions\n  response?: ResponseEnvelope<any>\n  error?: unknown\n  metadata?: Record<string, any>\n  attempt?: number\n}\n\nexport type Hook = (ctx: HookContext) => void | Promise<void>\n\nexport type Hooks = {\n  beforeRequest?: Hook[]\n  afterResponse?: Hook[]\n  onError?: Hook[]\n  onRetry?: Hook[]\n}\n\nexport async function runHooks(hooks: Hook[] | undefined, ctx: HookContext): Promise<void> {\n  for (const hook of hooks ?? []) {\n    // eslint-disable-next-line no-await-in-loop\n    await hook(ctx)\n  }\n}\n"
-                                },
-                                {
-                                  "type": "file",
-                                  "name": "send.ts",
-                                  "template": "import type { Hooks, RequestOptions, ResponseEnvelope } from './hooks'\nimport { runHooks } from './hooks'\n\nexport type DoRequest = <T = any>(req: RequestOptions) => Promise<ResponseEnvelope<T>>\n\nexport type RetryConfig = {\n  maxAttempts?: number\n  initialDelayMs?: number\n  maxDelayMs?: number\n  backoffMultiplier?: number\n  retryableStatusCodes?: number[]\n  respectRetryAfter?: boolean\n}\n\nfunction sleep(ms: number): Promise<void> {\n  return new Promise((resolve) => setTimeout(resolve, ms))\n}\n\nfunction calcDelay(attempt: number, cfg: Required<Pick<RetryConfig, 'initialDelayMs' | 'maxDelayMs' | 'backoffMultiplier'>>): number {\n  const exp = cfg.initialDelayMs * Math.pow(cfg.backoffMultiplier, attempt - 1)\n  const bounded = Math.min(exp, cfg.maxDelayMs)\n  const jitter = bounded * (0.5 + Math.random() * 0.5)\n  return Math.floor(jitter)\n}\n\nexport function createSend({ doRequest, hooks, retry }: { doRequest: DoRequest; hooks?: Hooks; retry?: RetryConfig }) {\n  const retryCfg: Required<RetryConfig> = {\n    maxAttempts: retry?.maxAttempts ?? 3,\n    initialDelayMs: retry?.initialDelayMs ?? 1000,\n    maxDelayMs: retry?.maxDelayMs ?? 30000,\n    backoffMultiplier: retry?.backoffMultiplier ?? 2,\n    retryableStatusCodes: retry?.retryableStatusCodes ?? [408, 425, 429, 500, 502, 503, 504],\n    respectRetryAfter: retry?.respectRetryAfter ?? true,\n  } as Required<RetryConfig>\n\n  async function send<T = any>(req: RequestOptions): Promise<ResponseEnvelope<T>> {\n    const startedAt = Date.now()\n    let lastError: unknown\n    for (let attempt = 1; attempt <= retryCfg.maxAttempts; attempt++) {\n      try {\n        await runHooks(hooks?.beforeRequest, { type: 'beforeRequest', request: req, attempt })\n        const res = await doRequest<T>(req)\n        await runHooks(hooks?.afterResponse, { type: 'afterResponse', request: req, response: res, attempt })\n        const status = res.status ?? 200\n        if (!retryCfg.retryableStatusCodes.includes(status)) {\n          res.meta = { ...(res.meta ?? {}), timestamp: Date.now(), durationMs: Date.now() - startedAt, retryCount: attempt - 1 }\n          return res\n        }\n        lastError = new Error(`Retryable status: ${status}`)\n      } catch (err) {\n        lastError = err\n        await runHooks(hooks?.onError, { type: 'onError', request: req, error: err, attempt })\n      }\n      if (attempt < retryCfg.maxAttempts) {\n        await runHooks(hooks?.onRetry, { type: 'onRetry', request: req, error: lastError, attempt })\n        const delay = calcDelay(attempt, { initialDelayMs: retryCfg.initialDelayMs, maxDelayMs: retryCfg.maxDelayMs, backoffMultiplier: retryCfg.backoffMultiplier })\n        await sleep(delay)\n        continue\n      }\n      break\n    }\n    throw lastError ?? new Error('Request failed')\n  }\n\n  return send\n}\n"
+                                  "name": "make-crud-domain.ts",
+                                  "template": "import { paginateCursor, type SendFn } from '@connector-factory/core'\n\nexport function makeCrudDomain<TObject, TListResponse, TSingleResponse>(objectPath: string, send: SendFn) {\n  const api = {\n    list: (params?: { properties?: string[]; limit?: number; after?: string }) => {\n      const query: Record<string, any> = {}\n      if (params?.properties?.length) query.properties = params.properties.join(',')\n      if (params?.limit) query.limit = params.limit\n      if (params?.after) query.after = params.after\n      return send<TListResponse>({ method: 'GET', path: objectPath, query })\n    },\n    get: (params: { id: string; properties?: string[] }) => {\n      const query: Record<string, any> = {}\n      if (params?.properties?.length) query.properties = params.properties.join(',')\n      return send<TSingleResponse>({ method: 'GET', path: `${objectPath}/${params.id}` as const, query })\n    },\n    streamAll: async function* (params?: { properties?: string[]; pageSize?: number }) {\n      const query: Record<string, any> = {}\n      if (params?.properties?.length) query.properties = params.properties.join(',')\n      for await (const items of paginateCursor<TObject>({ send, path: objectPath, query, pageSize: params?.pageSize })) {\n        for (const item of items) yield item\n      }\n    },\n    getAll: async (params?: { properties?: string[]; pageSize?: number; maxItems?: number }) => {\n      const results: TObject[] = []\n      for await (const item of api.streamAll({ properties: params?.properties, pageSize: params?.pageSize })) {\n        results.push(item)\n        if (params?.maxItems && results.length >= params.maxItems) break\n      }\n      return results\n    }\n  }\n  return api\n}\n"
                                 }
                               ]
                             },
                             {
                               "type": "dir",
-                              "name": "{resource}",
+                              "name": "types",
+                              "children": [
+                                {
+                                  "type": "file",
+                                  "name": "connector.ts",
+                                  "template": "import type { ConnectorConfig } from './config'\nimport type { {resource|title} } from '../models/{resource}'\n\nexport interface {connector|title}Connector {\n  initialize(config: ConnectorConfig): void\n  connect(): Promise<void>\n  disconnect(): Promise<void>\n  isConnected(): boolean\n\n  // {resource|title} operations\n  list{resource|title}(params?: { properties?: string[]; limit?: number; after?: string }): Promise<any>\n  get{resource|title}(params: { id: string; properties?: string[] }): Promise<any>\n  stream{resource|title}(params?: { properties?: string[]; pageSize?: number }): AsyncGenerator<{resource|title}, void, unknown>\n  get{resource|title}s(params?: { properties?: string[]; pageSize?: number; maxItems?: number }): Promise<{resource|title}[]>\n}\n"
+                                },
+                                {
+                                  "type": "file",
+                                  "name": "envelopes.ts",
+                                  "template": "export type HttpResponseEnvelope<T = unknown> = {\n  data: T\n  status?: number\n  headers?: Record<string, string>\n  meta?: {\n    timestamp: number\n    durationMs: number\n    retryCount: number\n    requestId?: string\n    rateLimit?: {\n      limit: number\n      remaining: number\n      reset: number\n      resetDate?: string\n    }\n  }\n}\n"
+                                },
+                                {
+                                  "type": "file",
+                                  "name": "errors.ts",
+                                  "template": "export type ErrorCode = 'NETWORK_ERROR' | 'TIMEOUT' | 'AUTH_FAILED' | 'RATE_LIMITED' | 'INVALID_REQUEST' | 'SERVER_ERROR' | 'PARSING_ERROR' | 'VALIDATION_ERROR' | 'CANCELLED' | 'UNSUPPORTED' | 'NOT_INITIALIZED'\n\nexport type ErrorSource = 'transport' | 'auth' | 'rateLimit' | 'deserialize' | 'userHook' | 'application' | 'unknown'\n\nexport interface ConnectorErrorOptions {\n  message: string\n  code: ErrorCode\n  statusCode?: number\n  details?: any\n  retryable: boolean\n  requestId?: string\n  source: ErrorSource\n}\n\nexport class ConnectorError extends Error {\n  code: ErrorCode\n  statusCode?: number\n  retryable: boolean\n  requestId?: string\n  source: ErrorSource\n  details?: any\n\n  constructor(options: ConnectorErrorOptions) {\n    super(options.message)\n    this.name = 'ConnectorError'\n    this.code = options.code\n    this.statusCode = options.statusCode\n    this.retryable = options.retryable\n    this.requestId = options.requestId\n    this.source = options.source\n    this.details = options.details\n  }\n}\n"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "dir",
+                              "name": "models",
                               "children": [
                                 {
                                   "type": "file",
                                   "name": "index.ts",
-                                  "template": "import { makeCrudResource } from '../lib/make-resource'\nimport type { SendFn } from '../lib/paginate'\nimport type { Model } from './model'\n\nexport const createResource = (send: SendFn) => makeCrudResource<Model, any, any>('/{resource}', send)\n"
+                                  "template": "export * from './{resource}'\n"
+                                },
+                                {
+                                  "type": "dir",
+                                  "name": "{resource}",
+                                  "children": [
+                                    {
+                                      "type": "file",
+                                      "name": "index.ts",
+                                      "template": "export * from './{resource}'\nexport * from './{resource}-api-contracts'\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "{resource}.ts",
+                                      "template": "export interface {resource|title} {\n  id: string\n  // Add your resource-specific properties here\n  [key: string]: unknown\n}\n"
+                                    },
+                                    {
+                                      "type": "file",
+                                      "name": "{resource}-api-contracts.ts",
+                                      "template": "import type { {resource|title} } from './{resource}'\n\nexport interface {resource|title}sResponse {\n  results: {resource|title}[]\n  paging?: {\n    next?: {\n      after?: string\n    }\n  }\n}\n\nexport interface {resource|title}Response {\n  data: {resource|title}\n}\n"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "dir",
+                              "name": "config",
+                              "children": [
+                                {
+                                  "type": "file",
+                                  "name": "defaults.ts",
+                                  "template": "import type { ConnectorConfig } from '../types/config'\n\nexport function withDerivedDefaults(userConfig: ConnectorConfig): ConnectorConfig {\n  return {\n    ...userConfig,\n    baseUrl: userConfig.baseUrl ?? 'https://api.example.com',\n    timeoutMs: userConfig.timeoutMs ?? 30000,\n    userAgent: userConfig.userAgent ?? '{connector} Connector v1.0.0',\n    rateLimit: {\n      requestsPerSecond: 10,\n      burstCapacity: 20,\n      concurrentRequests: 5,\n      adaptiveFromHeaders: true,\n      ...userConfig.rateLimit\n    },\n    retry: {\n      maxAttempts: 3,\n      initialDelayMs: 1000,\n      maxDelayMs: 30000,\n      backoffMultiplier: 2,\n      retryableStatusCodes: [408, 425, 429, 500, 502, 503, 504],\n      respectRetryAfter: true,\n      ...userConfig.retry\n    }\n  }\n}\n"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "dir",
+                              "name": "observability",
+                              "children": [
+                                {
+                                  "type": "file",
+                                  "name": "index.ts",
+                                  "template": "export { createLoggingHooks } from './logging-hooks'\nexport { createMetricsHooks, InMemoryMetricsSink, createInMemoryMetricsSink } from './metrics-hooks'\n"
                                 },
                                 {
                                   "type": "file",
-                                  "name": "model.ts",
-                                  "template": "export interface Model {\n  // Define your resource model fields\n  [key: string]: unknown\n}\n"
+                                  "name": "logging-hooks.ts",
+                                  "template": "export function createLoggingHooks() {\n  return {\n    beforeRequest: [{\n      name: 'request-logger',\n      priority: 100,\n      execute: (ctx: any) => {\n        console.log(`[${ctx.type}] Making request to ${ctx.request?.path}`)\n      }\n    }],\n    afterResponse: [{\n      name: 'response-logger',\n      priority: 100,\n      execute: (ctx: any) => {\n        console.log(`[${ctx.type}] Response received with status ${ctx.response?.status}`)\n      }\n    }]\n  }\n}\n"
+                                },
+                                {
+                                  "type": "file",
+                                  "name": "metrics-hooks.ts",
+                                  "template": "export interface MetricsSink {\n  increment(name: string, tags?: Record<string, string>): void\n  gauge(name: string, value: number, tags?: Record<string, string>): void\n  histogram(name: string, value: number, tags?: Record<string, string>): void\n}\n\nexport class InMemoryMetricsSink implements MetricsSink {\n  private metrics = new Map<string, any>()\n\n  increment(name: string, tags?: Record<string, string>): void {\n    // Implementation for increment\n  }\n\n  gauge(name: string, value: number, tags?: Record<string, string>): void {\n    // Implementation for gauge\n  }\n\n  histogram(name: string, value: number, tags?: Record<string, string>): void {\n    // Implementation for histogram\n  }\n\n  getMetrics() {\n    return this.metrics\n  }\n}\n\nexport function createInMemoryMetricsSink(): InMemoryMetricsSink {\n  return new InMemoryMetricsSink()\n}\n\nexport function createMetricsHooks(sink: MetricsSink) {\n  return {\n    beforeRequest: [{\n      name: 'metrics-collector',\n      priority: 100,\n      execute: (ctx: any) => {\n        sink.increment('requests.total', { operation: ctx.operation })\n      }\n    }]\n  }\n}\n"
                                 }
                               ]
                             }
@@ -344,9 +393,31 @@
                           "name": "tests",
                           "children": [
                             {
-                              "type": "file",
-                              "name": "client.test.ts",
-                              "template": "import { describe, it, expect } from 'vitest'\nimport { Client } from '../src/client'\n\ndescribe('client', () => {\n  it('ping', () => {\n    expect(new Client({}).ping()).toBe(true)\n  })\n})\n"
+                              "type": "dir",
+                              "name": "unit",
+                              "children": [
+                                {
+                                  "type": "file",
+                                  "name": "connector.test.ts",
+                                  "template": "import { create{connector|title}Connector } from '../src/connector'\nimport type { ConnectorConfig } from '../src/types/config'\n\ndescribe('{connector|title}Connector', () => {\n  let connector: ReturnType<typeof create{connector|title}Connector>\n  let config: ConnectorConfig\n\n  beforeEach(() => {\n    connector = create{connector|title}Connector()\n    config = {\n      auth: {\n        type: 'bearer',\n        bearer: { token: 'test-token' }\n      }\n    }\n  })\n\n  it('should initialize successfully', () => {\n    expect(() => connector.initialize(config)).not.toThrow()\n  })\n\n  it('should handle connection lifecycle', async () => {\n    connector.initialize(config)\n    expect(connector.isConnected()).toBe(false)\n    await connector.connect()\n    expect(connector.isConnected()).toBe(true)\n    await connector.disconnect()\n    expect(connector.isConnected()).toBe(false)\n  })\n})\n"
+                                },
+                                {
+                                  "type": "file",
+                                  "name": "{resource}.test.ts",
+                                  "template": "import { create{connector|title}Connector } from '../src/connector'\nimport type { ConnectorConfig } from '../src/types/config'\n\ndescribe('{resource|title} operations', () => {\n  let connector: ReturnType<typeof create{connector|title}Connector>\n  let config: ConnectorConfig\n\n  beforeEach(() => {\n    connector = create{connector|title}Connector()\n    config = {\n      auth: {\n        type: 'bearer',\n        bearer: { token: 'test-token' }\n      }\n    }\n    connector.initialize(config)\n  })\n\n  it('should list {resource}', async () => {\n    // Mock test - implement actual testing logic\n    expect(connector.list{resource|title}).toBeDefined()\n  })\n\n  it('should get single {resource}', async () => {\n    // Mock test - implement actual testing logic\n    expect(connector.get{resource|title}).toBeDefined()\n  })\n})\n"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "dir",
+                              "name": "integration",
+                              "children": [
+                                {
+                                  "type": "file",
+                                  "name": "{resource}.integration.test.ts",
+                                  "template": "import { create{connector|title}Connector } from '../src/connector'\nimport type { ConnectorConfig } from '../src/types/config'\n\n// Integration tests - require real API credentials\ndescribe.skip('{resource|title} integration tests', () => {\n  let connector: ReturnType<typeof create{connector|title}Connector>\n  let config: ConnectorConfig\n\n  beforeAll(() => {\n    if (!process.env.API_TOKEN) {\n      throw new Error('API_TOKEN environment variable required for integration tests')\n    }\n\n    connector = create{connector|title}Connector()\n    config = {\n      auth: {\n        type: 'bearer',\n        bearer: { token: process.env.API_TOKEN }\n      }\n    }\n    connector.initialize(config)\n  })\n\n  it('should connect to real API', async () => {\n    await connector.connect()\n    expect(connector.isConnected()).toBe(true)\n  })\n\n  it('should list {resource} from real API', async () => {\n    await connector.connect()\n    const result = await connector.list{resource|title}({ limit: 1 })\n    expect(result).toBeDefined()\n  })\n})\n"
+                                }
+                              ]
                             }
                           ]
                         },
