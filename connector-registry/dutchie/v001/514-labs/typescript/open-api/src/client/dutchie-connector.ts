@@ -11,7 +11,8 @@ import { createProductsResource } from '../resources/products'
 import { createInventoryResource } from '../resources/inventory'
 import { createOpenApiValidationHook } from '../validation/openapi'
 import { createLoggingHooks } from '../observability/logging-hooks'
-import openapi from '../../schemas/files/dutchie-openapi.json'
+import fs from 'fs'
+import path from 'path'
 
 export type DutchieConfig = CoreConfig & {
   validation?: { enabled?: boolean; strict?: boolean }
@@ -31,11 +32,20 @@ export class DutchieApiConnector extends ApiConnectorBase {
 
     // Wire validation
     if (userConfig.validation?.enabled) {
-      const vHook = createOpenApiValidationHook(openapi)
-      const after = async (ctx: any) => {
-        try { await vHook(ctx) } catch (e: any) { if (userConfig.validation?.strict) throw e }
+      let openapiDoc: any | undefined
+      try {
+        const schemaPath = path.resolve(__dirname, '..', '..', 'schemas', 'files', 'dutchie-openapi.json')
+        openapiDoc = JSON.parse(fs.readFileSync(schemaPath, 'utf-8'))
+      } catch (_) {
+        openapiDoc = undefined
       }
-      ;(this as any).config = { ...((this as any).config ?? {}), hooks: { ...(((this as any).config?.hooks) ?? {}), afterResponse: [ ...((((this as any).config?.hooks)?.afterResponse) ?? []), after ] } }
+      if (openapiDoc) {
+        const vHook = createOpenApiValidationHook(openapiDoc)
+        const after = async (ctx: any) => {
+          try { await vHook(ctx) } catch (e: any) { if (userConfig.validation?.strict) throw e }
+        }
+        ;(this as any).config = { ...((this as any).config ?? {}), hooks: { ...(((this as any).config?.hooks) ?? {}), afterResponse: [ ...((((this as any).config?.hooks)?.afterResponse) ?? []), after ] } }
+      }
     }
 
     // Wire logging

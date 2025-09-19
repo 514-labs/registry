@@ -6,43 +6,30 @@ This package provides a Dutchie POS v001 connector. It exposes a simple lifecycl
 
 ### 1. Navigate to your project
 
-Choose the directory in your project where you want to install the connector.
+Go to the root directory of your project.
 
 ### 2. Run the installer
 
-```bash
-bash -i <(curl https://registry.514.ai/install.sh) dutchie v001 514-labs typescript open-api
-```
-
-### 3. Update project configuration
-
-From your project's root directory, update your project's `package.json` to include the new connector.
-
-```json
-{
-  "name": "my-ts-app",
-  "dependencies": {
-    "@workspace/connector-dutchie": "workspace:*",
-  },
-}
-```
-
-Create a workspace configuration (e.g. `pnpm-workspace.yaml`) so your package manager knows where it is.
-
-```yaml
-packages:
-  - "app/dutchie"
-```
-
-### 4. Build the connector
-
-From your project's root directory, install dependencies and build:
+Run the installer with a destination folder where the connector code will reside.
 
 ```bash
-pnpm install && pnpm run build
+bash -i <(curl https://registry.514.ai/install.sh) --dest app/dutchie dutchie v001 514-labs typescript open-api
 ```
 
-## Quick start
+### 3. Set environment variable in your shell
+```
+DUTCHIE_API_KEY=<your_api_key>
+```
+
+### 4. Start your app
+
+From your project's root directory, install dependencies and run:
+
+```bash
+pnpm install && pnpm run dev
+```
+
+## Usage
 
 ```ts
 import { createDutchieConnector } from "@workspace/connector-dutchie";
@@ -63,6 +50,36 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+```
+
+## Usage with Moose projects
+
+```ts
+import type { Brand } from '../dutchie/src';
+import {
+  IngestPipeline,
+  Key,
+  OlapTable,
+  DeadLetterModel,
+  ClickHouseEngines,
+} from "@514labs/moose-lib";
+
+// Create a new type that extends Brand with modified brandID 
+// (if you want to create a table with Moose, 
+// if you are using other objects only, this step is not required)
+export interface BrandWithKey extends Omit<Brand, 'brandId'> {
+  brandId: Key<string>; // Now non-nullable and marked as Key
+}
+
+export const BrandPipeline = new IngestPipeline<BrandWithKey>("Brand",{
+    table: {
+      engine: ClickHouseEngines.ReplacingMergeTree,
+      orderByFields: ["brandId"]
+    },
+    stream: true,
+    ingest: true,
+    deadLetterQueue: false,
+})
 ```
 
 ## Available APIs
