@@ -50,6 +50,16 @@ export class HttpClient {
     };
 
     if (this.options.applyAuth) this.options.applyAuth({ headers });
+    // Built-in basic/bearer support
+    if (this.config.auth?.type === 'basic' && this.config.auth.basic?.username !== undefined) {
+      const u = this.config.auth.basic.username;
+      const p = this.config.auth.basic.password ?? '';
+      const token = Buffer.from(`${u}:${p}`).toString('base64');
+      headers['Authorization'] = `Basic ${token}`;
+    }
+    if (this.config.auth?.type === 'bearer' && this.config.auth.bearer?.token) {
+      headers['Authorization'] = `Bearer ${this.config.auth.bearer.token}`;
+    }
 
     const req: { method: HttpRequestOptions["method"]; url: string; headers: Record<string, string>; body?: unknown } = {
       method: opts.method,

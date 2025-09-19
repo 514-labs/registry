@@ -1,0 +1,11 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "identifier": "dutchie",
+  "name": "Dutchie",
+  "category": "Retail",
+  "tags": ["Retail", "SaaS", "Extract"],
+  "description": "Dutchie POS data connector.",
+  "homepage": "https://api.pos.dutchie.com/swagger/index.html"
+}
+
+

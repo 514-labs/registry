@@ -26,5 +26,10 @@
   "packageManager": "pnpm@9.9.0",
   "engines": {
     "node": ">=20"
+  },
+  "pnpm": {
+    "overrides": {
+      "@connector-factory/core": "workspace:*"
+    }
   }
 }

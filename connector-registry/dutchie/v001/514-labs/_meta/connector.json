@@ -1,0 +1,26 @@
+{
+  "name": "dutchie",
+  "author": "514-labs",
+  "version": "v001",
+  "languages": ["typescript"],
+  "category": "api",
+  "capabilities": {
+    "extract": true,
+    "transform": false,
+    "load": false
+  },
+  "source": {
+    "type": "openapi",
+    "spec": "https://api.pos.dutchie.com/swagger/v001/swagger.json",
+    "homepage": "https://api.pos.dutchie.com/swagger/index.html"
+  },
+  "tags": [],
+  "maintainers": [],
+  "issues": {
+    "typescript": {
+      "open-api": ""
+    }
+  }
+}
+
+

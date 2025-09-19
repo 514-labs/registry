@@ -1,8 +1,9 @@
 import type { Hook, HookType } from './hooks';
 
 export interface ConnectorAuthConfig {
-  type: 'bearer' | 'oauth2';
+  type: 'bearer' | 'oauth2' | 'basic';
   bearer?: { token: string };
+  basic?: { username: string; password?: string };
   oauth2?: {
     clientId: string;
     clientSecret: string;
