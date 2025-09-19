@@ -231,18 +231,19 @@ copy_connector_into_subdir() {
 # Run connector postinstall script if present
 run_postinstall_if_present() {
   local dest_dir="$1"
+  local extract_root="${2:-}"
   local postinstall_script="$dest_dir/scripts/postinstall.sh"
 
   if [ -f "$postinstall_script" ]; then
-    echo "\n🔧 Running connector postinstall script..."
+    echo "🔧 Running connector postinstall script..."
     chmod +x "$postinstall_script" || true
     (
       cd "$dest_dir"
-      bash "$postinstall_script"
+      FACTORY_EXTRACT_ROOT="$extract_root" bash "$postinstall_script"
     ) || {
       echo "⚠️ Postinstall script failed. Continuing." >&2
     }
-    echo "✅ Postinstall complete\n"
+    echo "✅ Postinstall complete"
   fi
 }
 
@@ -534,7 +535,7 @@ main() {
   echo ""
 
   # Run connector-provided postinstall if available
-  run_postinstall_if_present "$dest_dir"
+  run_postinstall_if_present "$dest_dir" "$root"
 
   show_next_steps
 }
