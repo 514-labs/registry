@@ -6,40 +6,22 @@ This package provides a Dutchie POS v001 connector. It exposes a simple lifecycl
 
 ### 1. Navigate to your project
 
-Choose the directory in your project where you want to install the connector.
+Go to the root directory of your project.
 
 ### 2. Run the installer
 
+Run the installer with a destination folder where the connector code will reside.
+
 ```bash
-bash -i <(curl https://registry.514.ai/install.sh) dutchie v001 514-labs typescript open-api
+bash -i <(curl https://registry.514.ai/install.sh) --dest app/dutchie dutchie v001 514-labs typescript open-api
 ```
 
-### 3. Update project configuration
-
-From your project's root directory, update your project's `package.json` to include the new connector.
-
-```json
-{
-  "name": "my-ts-app",
-  "dependencies": {
-    "@workspace/connector-dutchie": "workspace:*",
-  },
-}
-```
-
-Create a workspace configuration (e.g. `pnpm-workspace.yaml`) so your package manager knows where it is.
-
-```yaml
-packages:
-  - "app/dutchie"
-```
-
-### 4. Build the connector
+### 3. Start your app
 
 From your project's root directory, install dependencies and build:
 
 ```bash
-pnpm install && pnpm run build
+pnpm install && pnpm run dev
 ```
 
 ## Quick start
