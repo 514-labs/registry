@@ -54,7 +54,7 @@ main().catch((err) => {
 
 ## Usage with Moose projects
 
-In `app/ingest/models.ts`:
+Merge this into your `app/ingest/models.ts`:
 
 ```ts
 import type { Brand } from '../dutchie/src';
@@ -121,11 +121,17 @@ export const dutchieworkflow = new Workflow("testdutchie", {
 });
 ```
 
-In `app/index.ts`:
+Merge this into your `app/index.ts`:
 
 ```ts
-export * from "./ingest/models";
+export * from "./ingest/models"; // may alreaxy exist
 export * from "./workflows/dutchie";
+```
+
+Run the workflow:
+
+```bash
+moose run workflow testdutchie
 ```
 
 ## Available APIs
