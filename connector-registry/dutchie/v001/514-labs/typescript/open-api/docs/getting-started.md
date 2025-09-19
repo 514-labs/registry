@@ -68,7 +68,7 @@ import {
 // (if you want to create a table with Moose, 
 // if you are using other objects only, this step is not required)
 export interface BrandWithKey extends Omit<Brand, 'brandId'> {
-  brandId: Key<string>; // Now non-nullable and marked as Key
+  brandId: Key<number>; // Now non-nullable and marked as Key
 }
 
 export const BrandPipeline = new IngestPipeline<BrandWithKey>("Brand",{
