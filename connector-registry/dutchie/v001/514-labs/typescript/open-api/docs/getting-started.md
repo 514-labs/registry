@@ -131,7 +131,7 @@ export * from "./workflows/dutchie";
 Run the workflow:
 
 ```bash
-moose run workflow testdutchie
+moose workflow run testdutchie
 ```
 
 ## Available APIs
