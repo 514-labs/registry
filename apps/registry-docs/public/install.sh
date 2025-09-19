@@ -488,7 +488,7 @@ show_next_steps() {
       # Replace placeholders in the post-install content - properly escape variables
       local processed_content dest_basename escaped_connector escaped_workspace_package escaped_connector_title pipeline_name
       dest_basename=$(basename "$dest_dir")
-      escaped_connector=$(printf '%s\n' "$CONNECTOR_NAME" | sed 's/[[\.^$(){}*+?|\\]/\\&/g')
+      escaped_connector=$(printf '%s\n' "$CONNECTOR_NAME" | sed 's/[\.^$(){}*+?|\\]/\\&/g')
       pipeline_name="$CONNECTOR_NAME"  # Use same name for pipeline placeholder
       # Create appropriate package name based on language/context
       if [[ "$CONNECTOR_LANGUAGE" == "python" ]]; then
@@ -496,15 +496,17 @@ show_next_steps() {
       else
         package_name="@workspace/$CONNECTOR_NAME"
       fi
-      escaped_workspace_package=$(printf '%s\n' "$package_name" | sed 's/[[\.^$(){}*+?|\\]/\\&/g')
-      escaped_connector_title=$(echo "$CONNECTOR_NAME" | sed 's/-//g' | sed 's/[[\.^$(){}*+?|\\]/\\&/g')
+      escaped_workspace_package=$(printf '%s\n' "$package_name" | sed 's/[\.^$(){}*+?|\\]/\\&/g')
+      # Create title-cased version of connector name
+      connector_title=$(echo "$CONNECTOR_NAME" | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2));}1' | sed 's/ //g')
+      escaped_connector_title=$(printf '%s\n' "$connector_title" | sed 's/[\.^$(){}*+?|\\]/\\&/g')
       
       processed_content=$(printf '%s\n' "$post_install_content" | \
+        sed "s#{connector|title}#$escaped_connector_title#g" | \
         sed "s|{destination_dir}|$dest_basename|g" | \
         sed "s|{connector}|$escaped_connector|g" | \
         sed "s|{pipeline}|$pipeline_name|g" | \
-        sed "s|{packageName}|$escaped_workspace_package|g" | \
-        sed "s|{connector\|title}|$escaped_connector_title|g")
+        sed "s|{packageName}|$escaped_workspace_package|g")
       
       echo "$processed_content"
     else
