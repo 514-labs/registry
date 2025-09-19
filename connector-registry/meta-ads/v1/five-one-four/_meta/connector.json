@@ -1,0 +1,9 @@
+{
+  "name": "meta-ads",
+  "author": "five-one-four",
+  "issues": {
+    "typescript": {
+      "default": "https://github.com/514-labs/registry/issues/80"
+    }
+  }
+}

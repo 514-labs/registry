@@ -1,0 +1,1 @@
+export type { ConnectorConfig } from "@connector-factory/core";
