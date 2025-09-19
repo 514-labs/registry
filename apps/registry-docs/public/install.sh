@@ -477,8 +477,8 @@ show_next_steps() {
   local config_file="$dest_dir/install.config.toml"
   
   if [ -f "$config_file" ]; then
-    echo ""
     echo "=================================================="
+    echo ""
     
     # Extract and display post-install instructions from TOML
     local post_install_content
@@ -500,11 +500,11 @@ show_next_steps() {
       escaped_connector_title=$(echo "$CONNECTOR_NAME" | sed 's/-//g' | sed 's/[[\.^$(){}*+?|\\]/\\&/g')
       
       processed_content=$(printf '%s\n' "$post_install_content" | \
-        sed "s/{destination_dir}/$dest_basename/g" | \
-        sed "s/{connector}/$escaped_connector/g" | \
-        sed "s/{pipeline}/$pipeline_name/g" | \
-        sed "s/{packageName}/$escaped_workspace_package/g" | \
-        sed "s/{connector|title}/$escaped_connector_title/g")
+        sed "s|{destination_dir}|$dest_basename|g" | \
+        sed "s|{connector}|$escaped_connector|g" | \
+        sed "s|{pipeline}|$pipeline_name|g" | \
+        sed "s|{packageName}|$escaped_workspace_package|g" | \
+        sed "s|{connector\|title}|$escaped_connector_title|g")
       
       echo "$processed_content"
     else
@@ -512,6 +512,7 @@ show_next_steps() {
       show_generic_next_steps
     fi
     
+    echo ""
     echo "=================================================="
     echo ""
   else
@@ -577,7 +578,6 @@ main() {
     dest_dir="$PWD/$CONNECTOR_NAME"
   fi
   copy_connector_into_subdir "$src_dir" "$dest_dir"
-  echo ""
 
   show_next_steps
 }
