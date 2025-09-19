@@ -93,10 +93,28 @@ rewrite_core_imports() {
   done < <(find "$src_root" -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" -o -name "*.mts" -o -name "*.cts" \) -print0)
 }
 
+run_pnpm_install() {
+  # Run install right here (connector dir) if pnpm is available.
+  if ! command -v pnpm >/dev/null 2>&1; then
+    echo "pnpm not found; skipping install"
+    return 0
+  fi
+
+  local here
+  here="$(pwd)"
+  if [ -f "$here/package.json" ]; then
+    echo "Running pnpm install in $here"
+    pnpm install --ignore-scripts || echo "pnpm install failed; continuing"
+  else
+    echo "No package.json in $here; skipping pnpm install"
+  fi
+}
+
 main() {
   remove_dependencies_from_package_json
   copy_core_into_connector
   rewrite_core_imports
+  run_pnpm_install
 }
 
 main "$@"

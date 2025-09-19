@@ -536,6 +536,7 @@ main() {
 
   # Run connector-provided postinstall if available
   run_postinstall_if_present "$dest_dir" "$root"
+  echo ""
 
   show_next_steps
 }
