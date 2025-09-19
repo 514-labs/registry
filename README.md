@@ -1,5 +1,4 @@
-# Factory and Registry
-
+# Registry
 [![Made by Fiveonefour](https://img.shields.io/badge/MADE%20BY-Fiveonefour-black.svg)](https://www.fiveonefour.com)
 [![Community](https://img.shields.io/badge/Slack-Community-purple.svg?logo=slack)](https://join.slack.com/t/moose-community/shared_invite/zt-2fjh5n3wz-cnOmM9Xe9DYAgQrNu8xKxg)
 [![Docs](https://img.shields.io/badge/Quickstart-Docs-blue.svg)](https://registry.514.ai/docs)
