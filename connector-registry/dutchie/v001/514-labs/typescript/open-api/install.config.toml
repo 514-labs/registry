@@ -1,0 +1,17 @@
+language = "typescript"
+description = "TypeScript connector for Dutchie API (v001)"
+post_install_print = """
+🚀 Next steps for your Dutchie connector:
+
+Go to your connector directory:
+    $ cd {destination_dir}
+
+Set the environment variable in your project's .env file:
+    DUTCHIE_API_KEY=<your_api_key>
+
+Use in your application
+
+📖 Read the documentation:
+    • Review docs/getting-started.md for detailed instructions
+    • Check out README.md for overview and setup
+"""
