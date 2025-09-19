@@ -456,7 +456,59 @@ parse_args() {
   fi
 }
 
+# Parse simple TOML values - just the ones we need
+parse_toml_value() {
+  local file="$1"
+  local key="$2"
+  
+  if [ -f "$file" ]; then
+    # Handle multi-line string values between triple quotes
+    if [ "$key" = "post_install_print" ]; then
+      # Extract content between post_install_print = """ and """
+      awk '/^post_install_print *= *"""/{flag=1; next} /^"""/{flag=0} flag' "$file"
+    else
+      # Handle simple key = "value" pairs
+      grep "^$key *= *" "$file" | sed 's/^[^=]*= *"\?\([^"]*\)"\?/\1/' | head -1
+    fi
+  fi
+}
+
 show_next_steps() {
+  local config_file="$dest_dir/install.config.toml"
+  
+  if [ -f "$config_file" ]; then
+    echo ""
+    echo "=================================================="
+    
+    # Extract and display post-install instructions from TOML
+    local post_install_content
+    post_install_content=$(parse_toml_value "$config_file" "post_install_print")
+    
+    if [ -n "$post_install_content" ]; then
+      # Replace placeholders in the post-install content
+      local processed_content
+      processed_content=$(echo "$post_install_content" | \
+        sed "s/{destination_dir}/$(basename "$dest_dir")/g" | \
+        sed "s/{connector}/$CONNECTOR_NAME/g" | \
+        sed "s/{pipeline}/$CONNECTOR_NAME/g" | \
+        sed "s/{packageName}/@workspace\/$CONNECTOR_NAME/g" | \
+        sed "s/{connector|title}/$(echo "$CONNECTOR_NAME" | sed 's/\b\w/\U&/g' | sed 's/-//g')/g")
+      
+      echo "$processed_content"
+    else
+      # Fallback to generic next steps if no post_install_print found
+      show_generic_next_steps
+    fi
+    
+    echo "=================================================="
+    echo ""
+  else
+    # Fallback for when no config file exists
+    show_generic_next_steps
+  fi
+}
+
+show_generic_next_steps() {
   echo "🚀 Next steps:"
   echo "  - Review $dest_dir/README.md"
   echo "  - Review $dest_dir/docs/getting-started.md"

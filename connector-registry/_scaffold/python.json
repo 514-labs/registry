@@ -98,6 +98,11 @@
                         },
                         {
                           "type": "file",
+                          "name": "install.config.toml",
+                          "template": "language = \"python\"\ndescription = \"Python connector for {connector}\"\npost_install_print = \"\"\"\n🚀 Next steps to get your {connector} connector running:\n\n📂 Go to your connector directory:\n    $ cd {destination_dir}\n\n🐍 Create virtual environment (recommended):\n    $ python3 -m venv .venv\n    $ source .venv/bin/activate\n\n📦 Install dependencies:\n    $ pip install -e .\n\n🧪 Run tests:\n    $ python -m pytest\n\n📖 Next, check out the documentation:\n    • Review docs/getting-started.md for configuration details\n    • See examples/ for usage examples\n    • Update src/{connector}/connector.py with your API implementation\n\n🔗 Integration options:\n    • Add to your project: from {packageName} import {connector|title}Connector\n    • Use with pipelines: Configure as a source in your pipeline setup\n    • Standalone usage: Check examples/basic_usage.py\n\"\"\"\n"
+                        },
+                        {
+                          "type": "file",
                           "name": "pyproject.toml",
                           "template": "[project]\nname = \"{packageName}\"\nversion = \"0.1.0\"\nreadme = \"README.md\"\nrequires-python = \">=3.10\"\nlicense = {text = \"MIT\"}\nauthors = [ { name = \"{author}\" } ]\ndependencies = [ ]\n\n[tool.ruff]\nline-length = 100\n\n[build-system]\nrequires = [\"setuptools>=68\",\"wheel\"]\nbuild-backend = \"setuptools.build_meta\"\n"
                         },

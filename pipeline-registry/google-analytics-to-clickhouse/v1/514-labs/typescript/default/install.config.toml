@@ -1,0 +1,24 @@
+language = "typescript"
+description = "TypeScript pipeline for Google Analytics to ClickHouse"
+post_install_print = """
+🚀 Next steps for your Google Analytics to ClickHouse pipeline:
+
+📂 Go to your pipeline directory:
+    $ cd {destination_dir}
+
+🔑 Set environment variables:
+    $ export GA_PROPERTY_ID=your_property_id_here
+    $ export CLICKHOUSE_URL=your_clickhouse_url
+    $ export CLICKHOUSE_DATABASE=your_database
+
+📦 Install dependencies:
+    $ npm install
+
+🚀 Start development:
+    $ npm run dev
+
+📖 Next steps:
+    • Review docs/getting-started.md for configuration details
+    • Check docs/configuration.md for environment setup
+    • See examples/basic-usage.ts for usage patterns
+"""
