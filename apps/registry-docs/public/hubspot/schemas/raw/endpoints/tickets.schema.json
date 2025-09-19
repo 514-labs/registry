@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HubSpot Raw Ticket",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "properties": {
+      "type": "object",
+      "properties": {
+        "subject": { "type": ["string", "null"] },
+        "content": { "type": ["string", "null"] },
+        "hs_pipeline": { "type": ["string", "null"] },
+        "hs_pipeline_stage": { "type": ["string", "null"] },
+        "hs_ticket_priority": { "type": ["string", "null"] },
+        "hubspot_owner_id": { "type": ["string", "null"] },
+        "source_type": { "type": ["string", "null"] },
+        "createdate": { "type": ["string", "null"] },
+        "hs_lastmodifieddate": { "type": ["string", "null"] },
+        "hs_object_id": { "type": ["string", "null"] }
+      },
+      "additionalProperties": { "type": ["string", "null"] }
+    },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "archived": { "type": "boolean" }
+  },
+  "required": ["id", "properties", "createdAt", "updatedAt", "archived"],
+  "additionalProperties": true
+}
