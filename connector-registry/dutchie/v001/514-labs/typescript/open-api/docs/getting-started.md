@@ -61,6 +61,7 @@ import {
   Key,
   OlapTable,
   DeadLetterModel,
+  ClickHouseEngines,
 } from "@514labs/moose-lib";
 
 // Create a new type that extends Brand with modified brandID 
@@ -70,8 +71,11 @@ export interface BrandWithKey extends Omit<Brand, 'brandId'> {
   brandId: Key<string>; // Now non-nullable and marked as Key
 }
 
-export const DutchiePipeline = new IngestPipeline<BrandWithKey>("BrandWithKey",{
-    table: true,
+export const BrandPipeline = new IngestPipeline<BrandWithKey>("Brand",{
+    table: {
+      engine: ClickHouseEngines.ReplacingMergeTree,
+      orderByFields: ["brandId"]
+    },
     stream: true,
     ingest: true,
     deadLetterQueue: false,
