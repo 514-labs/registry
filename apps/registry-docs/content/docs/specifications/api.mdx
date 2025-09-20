@@ -17,55 +17,124 @@ The connector must be language‑agnostic. Any illustrative snippets must be tre
 - **Resilient**: Backoff with jitter, circuit breaking, idempotency, and graceful degradation built in.
 - **Extensible**: Hooks/middleware enable customization without forking core.
 
+### Core Package Architecture
+
+All API connectors must extend the `@connector-factory/core` package which provides standardized base classes and utilities.
+
+#### Required Dependencies
+
+```json
+{
+  "dependencies": {
+    "@connector-factory/core": "workspace:*",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "zod": "^3.25.8"
+  }
+}
+```
+
+#### Base Class Extension
+
+Every connector must extend `ApiConnectorBase` from `@connector-factory/core`:
+
+```typescript
+import { ApiConnectorBase, type RateLimitOptions } from '@connector-factory/core'
+
+export class MyApiConnector extends ApiConnectorBase implements MyConnector {
+  initialize(userConfig: ConnectorConfig) {
+    super.initialize(userConfig, withDefaults, authFunction, rateLimitOptions)
+  }
+}
+```
+
+#### Domain-Based Architecture
+
+- Organize code by domains rather than individual resources
+- Each domain module lives under `src/domains/{resource}.ts` and uses:
+  - `buildResourceDomain(send)` factory that returns a CRUD surface
+  - Built on `makeCrudDomain` utility from core patterns
+  - Operations: `list`, `get`, `streamAll`, `getAll`
+- Models organized under `src/models/{resource}/` with:
+  - `{resource}.ts` - main model definition
+  - `{resource}-api-contracts.ts` - API response types
+  - `index.ts` - exports
+
+#### Domain Factory Pattern
+
+```typescript
+import { makeCrudDomain } from '../core/make-crud-domain'
+import type { SendFn } from '@connector-factory/core'
+
+export function buildContactsDomain(send: SendFn) {
+  const base = makeCrudDomain<Contact, ContactsResponse, ContactResponse>('/contacts', send)
+  return {
+    listContacts: base.list,
+    getContact: base.get,
+    streamContacts: base.streamAll,
+    getContacts: base.getAll
+  }
+}
+```
+
 ### Core Modules and Methods
 
-Every API connector must implement the following core functionality and structure:
-#### Resource Abstraction
-
-- Organize code by API resources rather than ETL stages.
-- Each resource module lives under `src/{resource}` and must expose:
-  - `createResource(send)` factory that binds a base path (e.g., `/{resource}`) and returns a CRUD surface
-  - Operations: `list(params)`, `get({ id, ... })`, `streamAll(params)`, `getAll(params)`
-  - `model` definition describing the item shape for the resource
-- Cross-cutting helpers should live under `src/lib`:
-  - `paginate` iterator supporting cursor pagination (and extensible for other strategies)
-  - `make-resource` (or equivalent) to build the CRUD surface with pagination
+Every API connector must implement the following core functionality:
 
 
 #### Initialization and Lifecycle
 
-- **initialize(configuration)**  
-  Sets up the connector with the provided configuration. Should validate the configuration and prepare any internal state.
+The `ApiConnectorBase` class provides these methods which your connector inherits:
+
+- **initialize(configuration, defaults, authFunction, rateLimitOptions)**  
+  Extends the base initialization with your configuration defaults, authentication strategy, and rate limiting options.
 
 - **connect()**  
-  Establishes connection to the API service. May include authentication, session creation, or connection pooling.
+  Inherited from base class - establishes connection state.
 
 - **disconnect()**  
-  Gracefully closes the connection and cleans up resources. Should complete any pending requests before disconnecting.
+  Inherited from base class - gracefully closes connection.
 
 - **isConnected()**  
-  Returns true if the connector is currently connected and ready to make requests, false otherwise.
+  Inherited from base class - returns connection status.
+
+#### Domain Delegation Pattern
+
+Connectors expose methods that delegate to domain builders:
+
+```typescript
+private get domain() {
+  const sendLite: SendFn = async (args) => this.send<any>(args)
+  return {
+    ...buildContactsDomain((args) => sendLite({ ...args, operation: 'contacts' })),
+    ...buildCompaniesDomain((args) => sendLite({ ...args, operation: 'companies' }))
+  }
+}
+
+// Public methods delegate to domains
+listContacts = (params?) => this.domain.listContacts(params)
+getContact = (params) => this.domain.getContact(params)
+```
 
 #### Request Methods
 
+The `ApiConnectorBase` provides the core request infrastructure:
+
+- **send<T>(options)**  
+  Protected method for making HTTP requests with full rate limiting, retry logic, and hooks.  
+  Automatically handles authentication, rate limiting, and response wrapping.
+
 - **request(options)**  
-  Core method for making HTTP requests. All other HTTP methods should internally use this method.  
-  Options should include: method, path, headers, query parameters, body, timeout, and any method-specific settings.
+  Public alias for `send()` method - inherited from base class.
 
-- **get(path, options)**  
-  Performs an HTTP GET request to the specified path.
+#### HTTP Client Integration
 
-- **post(path, data, options)**  
-  Performs an HTTP POST request with the provided data payload.
-
-- **put(path, data, options)**  
-  Performs an HTTP PUT request to update a resource.
-
-- **patch(path, data, options)**  
-  Performs an HTTP PATCH request for partial updates.
-
-- **delete(path, options)**  
-  Performs an HTTP DELETE request to remove a resource.
+The base class uses `HttpClient` from core package which provides:
+- Automatic retry with exponential backoff
+- Rate limiting with `TokenBucketLimiter`
+- Hook system for middleware
+- Response envelope wrapping
+- Error handling and classification
 
 #### Advanced Operations
 
@@ -173,9 +242,19 @@ Hooks provide extension points for customizing connector behavior without modify
 
 #### Hook Structure
 
+Hooks follow a standardized interface:
+
+```typescript
+interface Hook {
+  name: string
+  priority?: number
+  execute: (ctx: HookContext) => Promise<void> | void
+}
+```
+
 - **name** - Unique identifier for the hook
-- **priority** - Execution order (lower numbers execute first)
-- **execute(context)** - The hook's main function
+- **priority** - Execution order (lower numbers execute first)  
+- **execute(context)** - The hook's main function with full context access
 
 #### Hook Context
 
@@ -187,11 +266,26 @@ Each hook receives a context object containing:
 - **error** - The error object (when applicable)
 - **metadata** - Additional context data
 
-#### Context Methods
+#### Enhanced Hook Context
+
+```typescript
+interface HookContext {
+  type: HookType
+  operation?: string
+  request?: Record<string, unknown>
+  response?: HttpResponseEnvelope<unknown>
+  error?: unknown
+  metadata?: Record<string, unknown>
+  modifyRequest?: (updates: Record<string, unknown>) => void
+  modifyResponse?: (updates: Partial<HttpResponseEnvelope<unknown>>) => void
+  abort?: (reason?: string) => void
+}
+```
 
 - **modifyRequest(updates)** - Modify the outgoing request
-- **modifyResponse(updates)** - Modify the incoming response
+- **modifyResponse(updates)** - Modify the incoming response  
 - **abort(reason)** - Cancel the request with a reason
+- **operation** - Track which domain operation is executing
 
 #### Middleware Pipeline (conceptual)
 
@@ -505,9 +599,35 @@ result = GET /jobs/{jobId}/result
 
 ### Observability
 
-- **Logging**: Structured logs with correlation `requestId`, redaction of secrets, and consistent fields.
-- **Metrics**: Counters (requests, errors, retries), distributions (latency, payload sizes), gauges (in‑flight, rate limits).
-- **Tracing**: Span per request with attributes for method, path, status, retryCount, rateLimit.
+The core package provides built-in observability hooks that connectors should export:
+
+```typescript
+// Export observability hooks for external use
+export { createLoggingHooks, createMetricsHooks, InMemoryMetricsSink, createInMemoryMetricsSink } from './observability'
+```
+
+#### Built-in Observability Features
+
+- **Logging Hooks**: Structured logs with correlation `requestId`, operation tracking, and secret redaction
+- **Metrics Hooks**: Counters (requests, errors, retries), histograms (latency), gauges (in‑flight requests)
+- **Request Correlation**: Every request gets a correlation ID for distributed tracing
+- **Rate Limit Tracking**: Real-time rate limit status in response metadata
+
+#### Observability Integration
+
+```typescript
+const connector = createMyConnector()
+const loggingHooks = createLoggingHooks()
+const metricsHooks = createMetricsHooks(metricsSink)
+
+connector.initialize({
+  auth: { /* auth config */ },
+  hooks: {
+    beforeRequest: [...loggingHooks.beforeRequest, ...metricsHooks.beforeRequest],
+    afterResponse: [...loggingHooks.afterResponse, ...metricsHooks.afterResponse]
+  }
+})
+```
 
 ### Security and Compliance
 
@@ -537,14 +657,31 @@ Connectors must include:
 
 ### Conformance Checklist
 
-- Implements lifecycle: initialize, connect, disconnect, isConnected
-- Provides request primitives, optional stream/upload/download when applicable
-- Config supports baseUrl, timeouts, proxy/tls, auth, retry, rate limit, defaults, hooks
-- Retry with backoff + jitter, honors Retry‑After, has circuit breaker and retry budget
-- Hook pipeline before/after/error/retry; deterministic order and cancellation
-- Response wrapper with data/status/headers/meta including requestId and rateLimit
-- Structured errors with code/status/retryable/details and correlation id
-- Pagination supports cursor/offset/page/link‑header with pluggable extractors
-- Concurrency limits, cancellation, graceful shutdown
-- Observability: logs/metrics/traces with redaction
-- Security controls for credentials, TLS, validation, and redaction
+#### Core Package Integration
+- ✅ Extends `ApiConnectorBase` from `@connector-factory/core`
+- ✅ Uses domain factory pattern with `buildResourceDomain(send)` functions
+- ✅ Implements proper initialization with defaults, auth, and rate limiting
+- ✅ Exports observability hooks (`createLoggingHooks`, `createMetricsHooks`)
+- ✅ Uses `makeCrudDomain` for consistent CRUD operations
+
+#### Architecture Compliance
+- ✅ Domain organization under `src/domains/{resource}.ts`
+- ✅ Model organization under `src/models/{resource}/`
+- ✅ Type exports for external usage (`export type *`)
+- ✅ Configuration with proper TypeScript types
+- ✅ Hook system with named hooks and priority
+
+#### Base Functionality (Inherited)
+- ✅ Lifecycle: initialize, connect, disconnect, isConnected
+- ✅ Request infrastructure with retry, rate limiting, hooks
+- ✅ Response wrapper with data/status/headers/meta including requestId and rateLimit
+- ✅ Structured errors with code/status/retryable/details and correlation
+- ✅ Pagination with cursor support via `paginateCursor`
+- ✅ Concurrency limits, cancellation, graceful shutdown
+- ✅ Security controls for credentials, TLS, validation, and redaction
+
+#### Testing Requirements
+- ✅ Unit tests using Jest framework
+- ✅ Integration tests with real API (gated)
+- ✅ Separate test configurations for unit vs integration
+- ✅ Hook testing and domain testing
