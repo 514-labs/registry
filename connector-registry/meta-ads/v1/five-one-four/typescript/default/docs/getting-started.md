@@ -101,7 +101,11 @@ export const metaAdsTask = new Task<null, void>("testMetaAdsTask", {
     });
 
     console.log('Getting campaigns from Meta Ads');
-    const items = await conn.campaigns.getAll();
+    // First get ad accounts to find an account ID
+    const adAccounts = await conn.getAdAccounts();
+    if (adAccounts.length === 0) throw new Error('No ad accounts found');
+
+    const items = await conn.getCampaigns({ adAccountId: adAccounts[0].id });
     const rows: CampaignWithKey[] = items
       .filter(c => c.id != null)
       .map(c => ({ ...c, id: c.id as Key<string> }));
