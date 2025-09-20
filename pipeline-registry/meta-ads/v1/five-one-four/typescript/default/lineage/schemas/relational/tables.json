@@ -1,5 +1,0 @@
-{
-  "tables": [
-    { "name": "events", "columns": [ { "name": "event_id", "type": "string" } ] }
-  ]
-}
