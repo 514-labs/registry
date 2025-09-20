@@ -31,7 +31,7 @@
     "test:integration": "jest --config jest.integration.cjs"
   },
   "dependencies": {
-    "@connector-factory/core": "workspace:*"
+    "@connector-factory/core": "^0.1.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
