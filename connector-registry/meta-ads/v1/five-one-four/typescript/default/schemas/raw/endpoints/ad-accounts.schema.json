@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/endpoint.schema.json",
+  "version": "0.1.0",
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/v21.0/me/adaccounts",
+      "title": "List Ad Accounts",
+      "summary": "Get all ad accounts accessible to the current user",
+      "folders": ["accounts"],
+      "params": [
+        {
+          "name": "fields",
+          "type": "string[]",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "after",
+          "type": "string",
+          "required": false
+        }
+      ]
+    }
+  ]
+}

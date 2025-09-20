@@ -1,0 +1,59 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/endpoint.schema.json",
+  "version": "0.1.0",
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/v21.0/act_{ad_account_id}/campaigns",
+      "title": "List Campaigns",
+      "summary": "Get all campaigns for an ad account",
+      "folders": ["campaigns"],
+      "params": [
+        {
+          "name": "adAccountId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "fields",
+          "type": "string[]",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "after",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v21.0/{campaign_id}",
+      "title": "Get Campaign",
+      "summary": "Get a specific campaign by ID",
+      "folders": ["campaigns"],
+      "params": [
+        {
+          "name": "adAccountId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "fields",
+          "type": "string[]",
+          "required": false
+        }
+      ]
+    }
+  ]
+}

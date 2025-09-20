@@ -3,18 +3,88 @@
   "version": "0.1.0",
   "datasets": [
     {
-      "name": "events",
+      "name": "ad-accounts",
       "stage": "raw",
       "kind": "endpoints",
-      "path": "raw/endpoints/events.schema.json",
-      "doc": "raw/endpoints/events.md"
+      "path": "raw/endpoints/ad-accounts.schema.json",
+      "doc": "raw/endpoints/ad-accounts.md"
     },
     {
-      "name": "events",
-      "stage": "extracted",
+      "name": "campaigns",
+      "stage": "raw",
       "kind": "endpoints",
-      "path": "extracted/endpoints/events.schema.json",
-      "doc": "extracted/endpoints/events.md"
+      "path": "raw/endpoints/campaigns.schema.json",
+      "doc": "raw/endpoints/campaigns.md"
+    },
+    {
+      "name": "adsets",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/endpoints/adsets.schema.json",
+      "doc": "raw/endpoints/adsets.md"
+    },
+    {
+      "name": "ads",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/endpoints/ads.schema.json",
+      "doc": "raw/endpoints/ads.md"
+    },
+    {
+      "name": "insights",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/endpoints/insights.schema.json",
+      "doc": "raw/endpoints/insights.md"
+    },
+    {
+      "name": "ad-creatives",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/endpoints/ad-creatives.schema.json",
+      "doc": "raw/endpoints/ad-creatives.md"
+    },
+    {
+      "name": "custom-audiences",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/endpoints/custom-audiences.schema.json",
+      "doc": "raw/endpoints/custom-audiences.md"
+    },
+    {
+      "name": "saved-audiences",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/endpoints/saved-audiences.schema.json",
+      "doc": "raw/endpoints/saved-audiences.md"
+    },
+    {
+      "name": "ad-images",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/endpoints/ad-images.schema.json",
+      "doc": "raw/endpoints/ad-images.md"
+    },
+    {
+      "name": "ad-videos",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/endpoints/ad-videos.schema.json",
+      "doc": "raw/endpoints/ad-videos.md"
+    },
+    {
+      "name": "businesses",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/endpoints/businesses.schema.json",
+      "doc": "raw/endpoints/businesses.md"
+    },
+    {
+      "name": "pages",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/endpoints/pages.schema.json",
+      "doc": "raw/endpoints/pages.md"
     }
   ],
   "_examples": {
