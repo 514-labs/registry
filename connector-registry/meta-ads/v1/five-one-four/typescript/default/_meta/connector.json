@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector.schema.json",
+  "identifier": "meta-ads",
+  "name": "Meta Ads",
+  "author": "five-one-four",
+  "authorType": "organization",
+  "avatarUrlOverride": "",
+  "version": "v1",
+  "language": "typescript",
+  "implementation": "default",
+  "tags": ["advertising", "marketing", "facebook", "instagram", "social media"],
+  "category": "advertising",
+  "description": "Extract campaign data, ad sets, ads, and insights from Meta Ads (Facebook Ads) using the Facebook Graph API",
+  "homepage": "https://developers.facebook.com/docs/graph-api/",
+  "license": "MIT",
+  "source": {"type":"api","spec":"https://developers.facebook.com/docs/graph-api/reference/"},
+  "capabilities": {"extract": true, "transform": false, "load": false},
+  "maintainers": [],
+  "issues": "",
+  "registryUrl": "https://github.com/514-labs/factory/tree/main/connector-registry/meta-ads/v1/five-one-four/typescript/default"
+}

@@ -1,0 +1,14 @@
+language = "typescript"
+description = "TypeScript connector for Meta Ads API (v1)"
+post_install_print = """
+🚀 Next steps for your Meta Ads connector:
+
+Set the environment variable in your shell:
+    META_ADS_ACCESS_TOKEN=<your_facebook_access_token>
+
+Then, use in your application!
+
+📖 Read the documentation:
+    • Review docs/getting-started.md for detailed instructions
+    • Check out README.md for overview and setup
+"""

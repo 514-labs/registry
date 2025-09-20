@@ -1,0 +1,353 @@
+{
+  "tables": [
+    {
+      "label": "AdAccounts",
+      "columns": [
+        {
+          "name": "id",
+          "type": "string",
+          "isPrimaryKey": true
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "account_status",
+          "type": "number"
+        },
+        {
+          "name": "currency",
+          "type": "string"
+        },
+        {
+          "name": "timezone_name",
+          "type": "string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "label": "Campaigns",
+      "columns": [
+        {
+          "name": "id",
+          "type": "string",
+          "isPrimaryKey": true
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "objective",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "created_time",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "updated_time",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "start_time",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "stop_time",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "daily_budget",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "lifetime_budget",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "budget_remaining",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "account_id",
+          "type": "string",
+          "nullable": true,
+          "isForeignKey": true
+        }
+      ]
+    },
+    {
+      "label": "AdSets",
+      "columns": [
+        {
+          "name": "id",
+          "type": "string",
+          "isPrimaryKey": true
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "campaign_id",
+          "type": "string",
+          "nullable": true,
+          "isForeignKey": true
+        },
+        {
+          "name": "created_time",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "updated_time",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "start_time",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "end_time",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "daily_budget",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "lifetime_budget",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "budget_remaining",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "billing_event",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "optimization_goal",
+          "type": "string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "label": "Ads",
+      "columns": [
+        {
+          "name": "id",
+          "type": "string",
+          "isPrimaryKey": true
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "adset_id",
+          "type": "string",
+          "nullable": true,
+          "isForeignKey": true
+        },
+        {
+          "name": "campaign_id",
+          "type": "string",
+          "nullable": true,
+          "isForeignKey": true
+        },
+        {
+          "name": "created_time",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "updated_time",
+          "type": "string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "label": "Insights",
+      "columns": [
+        {
+          "name": "date_start",
+          "type": "string",
+          "isPrimaryKey": true
+        },
+        {
+          "name": "date_stop",
+          "type": "string"
+        },
+        {
+          "name": "impressions",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "clicks",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "spend",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "reach",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "frequency",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "ctr",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "cpc",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "cpm",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "cpp",
+          "type": "string",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "label": "AdCreatives",
+      "columns": [
+        {
+          "name": "id",
+          "type": "string",
+          "isPrimaryKey": true
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "body",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "image_hash",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "image_url",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "video_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "thumbnail_url",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "link_url",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "call_to_action_type",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "created_time",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "updated_time",
+          "type": "string",
+          "nullable": true
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "sourceTable": "AdAccounts",
+      "targetTable": "Campaigns",
+      "label": "has campaigns"
+    },
+    {
+      "sourceTable": "Campaigns",
+      "targetTable": "AdSets",
+      "label": "contains ad sets"
+    },
+    {
+      "sourceTable": "AdSets",
+      "targetTable": "Ads",
+      "label": "contains ads"
+    },
+    {
+      "sourceTable": "Campaigns",
+      "targetTable": "Ads",
+      "label": "has ads"
+    }
+  ]
+}\n

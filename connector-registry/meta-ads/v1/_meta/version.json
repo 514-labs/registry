@@ -1,0 +1,4 @@
+{
+  "version": "v1",
+  "description": "Initial release with support for campaigns, ad sets, ads, and insights via Facebook Graph API"
+}

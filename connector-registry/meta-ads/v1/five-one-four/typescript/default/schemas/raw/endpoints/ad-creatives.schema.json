@@ -1,0 +1,59 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/endpoint.schema.json",
+  "version": "0.1.0",
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/v21.0/act_{ad_account_id}/adcreatives",
+      "title": "List Ad Creatives",
+      "summary": "Get all ad creatives for an ad account",
+      "folders": ["creatives"],
+      "params": [
+        {
+          "name": "adAccountId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "fields",
+          "type": "string[]",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "after",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v21.0/{creative_id}",
+      "title": "Get Ad Creative",
+      "summary": "Get a specific ad creative by ID",
+      "folders": ["creatives"],
+      "params": [
+        {
+          "name": "adAccountId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "fields",
+          "type": "string[]",
+          "required": false
+        }
+      ]
+    }
+  ]
+}

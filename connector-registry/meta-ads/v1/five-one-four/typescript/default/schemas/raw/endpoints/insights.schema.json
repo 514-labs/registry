@@ -1,0 +1,73 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/endpoint.schema.json",
+  "version": "0.1.0",
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/v21.0/{object_id}/insights",
+      "title": "Get Insights",
+      "summary": "Get performance insights for campaigns, ad sets, or ads",
+      "folders": ["insights"],
+      "params": [
+        {
+          "name": "objectId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "level",
+          "type": "enum",
+          "required": true,
+          "children": [
+            {
+              "name": "account",
+              "type": "string"
+            },
+            {
+              "name": "campaign",
+              "type": "string"
+            },
+            {
+              "name": "adset",
+              "type": "string"
+            },
+            {
+              "name": "ad",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "name": "fields",
+          "type": "string[]",
+          "required": false
+        },
+        {
+          "name": "timeRange",
+          "type": "object",
+          "required": false,
+          "children": [
+            {
+              "name": "since",
+              "type": "string"
+            },
+            {
+              "name": "until",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "after",
+          "type": "string",
+          "required": false
+        }
+      ]
+    }
+  ]
+}

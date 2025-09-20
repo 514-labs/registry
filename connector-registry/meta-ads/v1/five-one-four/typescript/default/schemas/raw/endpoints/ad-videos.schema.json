@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/endpoint.schema.json",
+  "version": "0.1.0",
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/v21.0/act_{ad_account_id}/advideos",
+      "title": "List Ad Videos",
+      "summary": "Get all ad videos for an ad account",
+      "folders": ["assets", "videos"],
+      "params": [
+        {
+          "name": "adAccountId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "fields",
+          "type": "string[]",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "after",
+          "type": "string",
+          "required": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/endpoint.schema.json",
+  "version": "0.1.0",
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/v21.0/me/accounts",
+      "title": "List Pages",
+      "summary": "Get all pages accessible to the current user",
+      "folders": ["pages"],
+      "params": [
+        {
+          "name": "fields",
+          "type": "string[]",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "after",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v21.0/{page_id}",
+      "title": "Get Page",
+      "summary": "Get a specific page by ID",
+      "folders": ["pages"],
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "fields",
+          "type": "string[]",
+          "required": false
+        }
+      ]
+    }
+  ]
+}

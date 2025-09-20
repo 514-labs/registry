@@ -1,0 +1,49 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/endpoint.schema.json",
+  "version": "0.1.0",
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/v21.0/me/businesses",
+      "title": "List Businesses",
+      "summary": "Get all businesses accessible to the current user",
+      "folders": ["business"],
+      "params": [
+        {
+          "name": "fields",
+          "type": "string[]",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "after",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v21.0/{business_id}",
+      "title": "Get Business",
+      "summary": "Get a specific business by ID",
+      "folders": ["business"],
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "fields",
+          "type": "string[]",
+          "required": false
+        }
+      ]
+    }
+  ]
+}

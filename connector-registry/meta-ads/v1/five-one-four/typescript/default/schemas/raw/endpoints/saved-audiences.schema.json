@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/endpoint.schema.json",
+  "version": "0.1.0",
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/v21.0/act_{ad_account_id}/saved_audiences",
+      "title": "List Saved Audiences",
+      "summary": "Get all saved audiences for an ad account",
+      "folders": ["audiences", "saved"],
+      "params": [
+        {
+          "name": "adAccountId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "fields",
+          "type": "string[]",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "after",
+          "type": "string",
+          "required": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/endpoint.schema.json",
+  "version": "0.1.0",
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/v21.0/act_{ad_account_id}/adsets",
+      "title": "List Ad Sets",
+      "summary": "Get all ad sets for an ad account",
+      "folders": ["adsets"],
+      "params": [
+        {
+          "name": "adAccountId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "fields",
+          "type": "string[]",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "after",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v21.0/{adset_id}",
+      "title": "Get Ad Set",
+      "summary": "Get a specific ad set by ID",
+      "folders": ["adsets"],
+      "params": [
+        {
+          "name": "adAccountId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "fields",
+          "type": "string[]",
+          "required": false
+        }
+      ]
+    }
+  ]
+}
