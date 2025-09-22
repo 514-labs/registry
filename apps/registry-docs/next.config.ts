@@ -17,9 +17,10 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/connectors/**/*": ["../../connector-registry/**/*"],
     "/pipelines/**/*": ["../../pipeline-registry/**/*"],
-    "/discover": ["../../connector-registry/**/*", "../../pipeline-registry/**/*"],
     "/api/connectors/**/*": ["../../connector-registry/**/*"],
     "/api/pipelines/**/*": ["../../pipeline-registry/**/*"],
+    "/api/discover/connectors/**/*": ["../../connector-registry/**/*"],
+    "/api/discover/pipelines/**/*": ["../../pipeline-registry/**/*"],
     "/api/registry/**/*": ["../../connector-registry/**/*", "../../pipeline-registry/**/*"],
     "/registry.json": ["../../connector-registry/**/*", "../../pipeline-registry/**/*"],
   },
