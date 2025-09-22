@@ -9,10 +9,8 @@ import type { ConnectorConfig as CoreConfig } from '@connector-factory/core'
 import { createBrandResource } from '../resources/brand'
 import { createProductsResource } from '../resources/products'
 import { createInventoryResource } from '../resources/inventory'
-import { createOpenApiValidationHook } from '../validation/openapi'
 import { createLoggingHooks } from '../observability/logging-hooks'
-import fs from 'fs'
-import path from 'path'
+import { createTypiaValidationHooks } from '../validation/typia-hooks'
 
 export type DutchieConfig = CoreConfig & {
   validation?: { enabled?: boolean; strict?: boolean }
@@ -30,21 +28,18 @@ export class DutchieApiConnector extends ApiConnectorBase {
     })
     super.initialize(withDefaults(userConfig) as any, (cfg: any) => cfg)
 
-    // Wire validation
+    // Optional Typia-based validation
     if (userConfig.validation?.enabled) {
-      let openapiDoc: any | undefined
-      try {
-        const schemaPath = path.resolve(__dirname, '..', '..', 'schemas', 'files', 'dutchie-openapi.json')
-        openapiDoc = JSON.parse(fs.readFileSync(schemaPath, 'utf-8'))
-      } catch (_) {
-        openapiDoc = undefined
-      }
-      if (openapiDoc) {
-        const vHook = createOpenApiValidationHook(openapiDoc)
-        const after = async (ctx: any) => {
-          try { await vHook(ctx) } catch (e: any) { if (userConfig.validation?.strict) throw e }
+      const hooks = createTypiaValidationHooks({ strict: userConfig.validation?.strict })
+      const curr = (this as any).config?.hooks ?? {}
+      ;(this as any).config = {
+        ...((this as any).config ?? {}),
+        hooks: {
+          beforeRequest: [...(curr.beforeRequest ?? [])],
+          afterResponse: [...(curr.afterResponse ?? []), ...(hooks.afterResponse ?? [])],
+          onError: [...(curr.onError ?? [])],
+          onRetry: [...(curr.onRetry ?? [])],
         }
-        ;(this as any).config = { ...((this as any).config ?? {}), hooks: { ...(((this as any).config?.hooks) ?? {}), afterResponse: [ ...((((this as any).config?.hooks)?.afterResponse) ?? []), after ] } }
       }
     }
 
