@@ -1,20 +1,25 @@
-# Exclude large implementation files but keep metadata and schemas
-connector-registry/**/typescript/
-connector-registry/**/python/
-connector-registry/**/node_modules/
-pipeline-registry/**/typescript/
-pipeline-registry/**/python/
-pipeline-registry/**/node_modules/
+# Exclude all registry directories first
+connector-registry/
+pipeline-registry/
 
-# Keep essential registry files for discovery and schemas
+# Then selectively include only what we need:
+
+# Include all _meta directories at every level (critical for registry discovery)
 !connector-registry/**/_meta/
 !pipeline-registry/**/_meta/
+
+# Include schemas directories at all levels (needed for type generation and specs)
 !connector-registry/**/schemas/
 !pipeline-registry/**/schemas/
+
+# Include documentation and package metadata
 !connector-registry/**/README.md
 !pipeline-registry/**/README.md
 !connector-registry/**/package.json
 !pipeline-registry/**/package.json
+
+# Exclude node_modules everywhere
+**/node_modules/
 
 # Exclude test files and development artifacts
 **/node_modules
