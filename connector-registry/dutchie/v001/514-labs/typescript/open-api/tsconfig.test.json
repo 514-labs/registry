@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": ".temp-test",
+    "declaration": false,
+    "sourceMap": false,
+    "noEmitOnError": false,
+    "plugins": [
+      { "transform": "typia/lib/transform" }
+    ]
+  },
+  "include": [
+    "src/**/*",
+    "tests/unit/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
+
+
