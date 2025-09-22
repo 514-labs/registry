@@ -1,35 +1,25 @@
 {
-  "$schema": "https://schemas.connector-factory.dev/endpoint.schema.json",
-  "version": "0.1.0",
-  "endpoints": [
-    {
-      "method": "GET",
-      "path": "/v21.0/act_{ad_account_id}/customaudiences",
-      "title": "List Custom Audiences",
-      "summary": "Get all custom audiences for an ad account",
-      "folders": ["audiences", "custom"],
-      "params": [
-        {
-          "name": "adAccountId",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "fields",
-          "type": "string[]",
-          "required": false
-        },
-        {
-          "name": "limit",
-          "type": "number",
-          "required": false
-        },
-        {
-          "name": "after",
-          "type": "string",
-          "required": false
-        }
-      ]
-    }
-  ]
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Meta Ads Raw Custom Audience",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "description": { "type": ["string", "null"] },
+    "audience_type": { "type": ["string", "null"] },
+    "subtype": { "type": ["string", "null"] },
+    "approximate_count": { "type": ["number", "null"] },
+    "data_source": { "type": ["string", "null"] },
+    "delivery_status": { "type": ["string", "null"] },
+    "operation_status": { "type": ["string", "null"] },
+    "opt_out_link": { "type": ["string", "null"] },
+    "permission_for_actions": { "type": ["string", "null"] },
+    "pixel_id": { "type": ["string", "null"] },
+    "retention_days": { "type": ["number", "null"] },
+    "rule": { "type": ["string", "null"] },
+    "time_created": { "type": ["string", "null"] },
+    "time_updated": { "type": ["string", "null"] }
+  },
+  "required": ["id", "name"],
+  "additionalProperties": true
 }

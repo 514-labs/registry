@@ -1,59 +1,25 @@
 {
-  "$schema": "https://schemas.connector-factory.dev/endpoint.schema.json",
-  "version": "0.1.0",
-  "endpoints": [
-    {
-      "method": "GET",
-      "path": "/v21.0/act_{ad_account_id}/adcreatives",
-      "title": "List Ad Creatives",
-      "summary": "Get all ad creatives for an ad account",
-      "folders": ["creatives"],
-      "params": [
-        {
-          "name": "adAccountId",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "fields",
-          "type": "string[]",
-          "required": false
-        },
-        {
-          "name": "limit",
-          "type": "number",
-          "required": false
-        },
-        {
-          "name": "after",
-          "type": "string",
-          "required": false
-        }
-      ]
-    },
-    {
-      "method": "GET",
-      "path": "/v21.0/{creative_id}",
-      "title": "Get Ad Creative",
-      "summary": "Get a specific ad creative by ID",
-      "folders": ["creatives"],
-      "params": [
-        {
-          "name": "adAccountId",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "id",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "fields",
-          "type": "string[]",
-          "required": false
-        }
-      ]
-    }
-  ]
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Meta Ads Raw Ad Creative",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "title": { "type": ["string", "null"] },
+    "body": { "type": ["string", "null"] },
+    "image_hash": { "type": ["string", "null"] },
+    "image_url": { "type": ["string", "null"] },
+    "video_id": { "type": ["string", "null"] },
+    "thumbnail_url": { "type": ["string", "null"] },
+    "link_url": { "type": ["string", "null"] },
+    "call_to_action_type": { "type": ["string", "null"] },
+    "object_story_spec": { "type": ["object", "null"] },
+    "asset_feed_spec": { "type": ["object", "null"] },
+    "degrees_of_freedom_spec": { "type": ["object", "null"] },
+    "status": { "type": "string" },
+    "created_time": { "type": ["string", "null"] },
+    "updated_time": { "type": ["string", "null"] }
+  },
+  "required": ["id", "name", "status"],
+  "additionalProperties": true
 }

@@ -1,49 +1,19 @@
 {
-  "$schema": "https://schemas.connector-factory.dev/endpoint.schema.json",
-  "version": "0.1.0",
-  "endpoints": [
-    {
-      "method": "GET",
-      "path": "/v21.0/me/businesses",
-      "title": "List Businesses",
-      "summary": "Get all businesses accessible to the current user",
-      "folders": ["business"],
-      "params": [
-        {
-          "name": "fields",
-          "type": "string[]",
-          "required": false
-        },
-        {
-          "name": "limit",
-          "type": "number",
-          "required": false
-        },
-        {
-          "name": "after",
-          "type": "string",
-          "required": false
-        }
-      ]
-    },
-    {
-      "method": "GET",
-      "path": "/v21.0/{business_id}",
-      "title": "Get Business",
-      "summary": "Get a specific business by ID",
-      "folders": ["business"],
-      "params": [
-        {
-          "name": "id",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "fields",
-          "type": "string[]",
-          "required": false
-        }
-      ]
-    }
-  ]
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Meta Ads Raw Business",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "link": { "type": ["string", "null"] },
+    "primary_page": { "type": ["object", "null"] },
+    "timezone_id": { "type": ["number", "null"] },
+    "two_factor_type": { "type": ["string", "null"] },
+    "updated_time": { "type": ["string", "null"] },
+    "verification_status": { "type": ["string", "null"] },
+    "vertical": { "type": ["string", "null"] },
+    "vertical_id": { "type": ["number", "null"] }
+  },
+  "required": ["id", "name"],
+  "additionalProperties": true
 }

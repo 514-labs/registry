@@ -1,111 +1,88 @@
 {
-  "$schema": "https://schemas.connector-factory.dev/schema-index.schema.json",
-  "version": "0.1.0",
-  "datasets": [
+  "entities": [
     {
       "name": "ad-accounts",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/endpoints/ad-accounts.schema.json",
-      "doc": "raw/endpoints/ad-accounts.md"
+      "raw": {
+        "json": "raw/endpoints/ad-accounts.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
     },
     {
       "name": "campaigns",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/endpoints/campaigns.schema.json",
-      "doc": "raw/endpoints/campaigns.md"
+      "raw": {
+        "json": "raw/endpoints/campaigns.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
     },
     {
       "name": "adsets",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/endpoints/adsets.schema.json",
-      "doc": "raw/endpoints/adsets.md"
+      "raw": {
+        "json": "raw/endpoints/adsets.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
     },
     {
       "name": "ads",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/endpoints/ads.schema.json",
-      "doc": "raw/endpoints/ads.md"
+      "raw": {
+        "json": "raw/endpoints/ads.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
     },
     {
       "name": "insights",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/endpoints/insights.schema.json",
-      "doc": "raw/endpoints/insights.md"
+      "raw": {
+        "json": "raw/endpoints/insights.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
     },
     {
       "name": "ad-creatives",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/endpoints/ad-creatives.schema.json",
-      "doc": "raw/endpoints/ad-creatives.md"
+      "raw": {
+        "json": "raw/endpoints/ad-creatives.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
     },
     {
       "name": "custom-audiences",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/endpoints/custom-audiences.schema.json",
-      "doc": "raw/endpoints/custom-audiences.md"
+      "raw": {
+        "json": "raw/endpoints/custom-audiences.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
     },
     {
       "name": "saved-audiences",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/endpoints/saved-audiences.schema.json",
-      "doc": "raw/endpoints/saved-audiences.md"
+      "raw": {
+        "json": "raw/endpoints/saved-audiences.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
     },
     {
       "name": "ad-images",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/endpoints/ad-images.schema.json",
-      "doc": "raw/endpoints/ad-images.md"
+      "raw": {
+        "json": "raw/endpoints/ad-images.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
     },
     {
       "name": "ad-videos",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/endpoints/ad-videos.schema.json",
-      "doc": "raw/endpoints/ad-videos.md"
+      "raw": {
+        "json": "raw/endpoints/ad-videos.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
     },
     {
       "name": "businesses",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/endpoints/businesses.schema.json",
-      "doc": "raw/endpoints/businesses.md"
+      "raw": {
+        "json": "raw/endpoints/businesses.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
     },
     {
       "name": "pages",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/endpoints/pages.schema.json",
-      "doc": "raw/endpoints/pages.md"
-    }
-  ],
-  "_examples": {
-    "_comment": "Below are examples of how to use nested folders. Copy and modify these patterns:",
-    "endpoint_example": {
-      "name": "users.create",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/endpoints/endpoints/users/create.schema.json",
-      "doc": "raw/endpoints/endpoints/users/create.md",
-      "metadata": {
-        "category": "endpoint",
-        "apiMethod": "POST"
+      "raw": {
+        "json": "raw/endpoints/pages.schema.json",
+        "relational": "raw/relational/tables.json"
       }
-    },
-    "nested_organization_example": {
-      "name": "reports.analytics",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/endpoints/endpoints/reports/analytics.schema.json",
-      "doc": "raw/endpoints/endpoints/reports/analytics.md"
     }
-  }
+  ]
 }

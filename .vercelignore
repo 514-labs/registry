@@ -1,0 +1,19 @@
+# Exclude large registry directories from deployment
+connector-registry/
+pipeline-registry/
+
+# Keep only what's needed for the docs app
+!connector-registry/**/README.md
+!pipeline-registry/**/README.md
+!connector-registry/**/package.json
+!pipeline-registry/**/package.json
+
+# Exclude test files and development artifacts
+**/node_modules
+**/.next
+**/.turbo
+**/dist
+**/.DS_Store
+**/debug-connectors.mjs
+**/test-registry.js
+**/test-simple.ts

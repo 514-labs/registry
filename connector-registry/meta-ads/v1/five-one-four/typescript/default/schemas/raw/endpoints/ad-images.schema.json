@@ -1,35 +1,20 @@
 {
-  "$schema": "https://schemas.connector-factory.dev/endpoint.schema.json",
-  "version": "0.1.0",
-  "endpoints": [
-    {
-      "method": "GET",
-      "path": "/v21.0/act_{ad_account_id}/adimages",
-      "title": "List Ad Images",
-      "summary": "Get all ad images for an ad account",
-      "folders": ["assets", "images"],
-      "params": [
-        {
-          "name": "adAccountId",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "fields",
-          "type": "string[]",
-          "required": false
-        },
-        {
-          "name": "limit",
-          "type": "number",
-          "required": false
-        },
-        {
-          "name": "after",
-          "type": "string",
-          "required": false
-        }
-      ]
-    }
-  ]
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Meta Ads Raw Ad Image",
+  "type": "object",
+  "properties": {
+    "hash": { "type": "string" },
+    "url": { "type": "string" },
+    "url_128": { "type": ["string", "null"] },
+    "width": { "type": ["number", "null"] },
+    "height": { "type": ["number", "null"] },
+    "original_width": { "type": ["number", "null"] },
+    "original_height": { "type": ["number", "null"] },
+    "name": { "type": ["string", "null"] },
+    "status": { "type": ["string", "null"] },
+    "account_id": { "type": ["string", "null"] },
+    "created_time": { "type": ["string", "null"] }
+  },
+  "required": ["hash", "url"],
+  "additionalProperties": true
 }

@@ -1,30 +1,21 @@
 {
-  "$schema": "https://schemas.connector-factory.dev/endpoint.schema.json",
-  "version": "0.1.0",
-  "endpoints": [
-    {
-      "method": "GET",
-      "path": "/v21.0/me/adaccounts",
-      "title": "List Ad Accounts",
-      "summary": "Get all ad accounts accessible to the current user",
-      "folders": ["accounts"],
-      "params": [
-        {
-          "name": "fields",
-          "type": "string[]",
-          "required": false
-        },
-        {
-          "name": "limit",
-          "type": "number",
-          "required": false
-        },
-        {
-          "name": "after",
-          "type": "string",
-          "required": false
-        }
-      ]
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Meta Ads Raw Ad Account",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "account_status": { "type": "number" },
+    "currency": { "type": "string" },
+    "timezone_name": { "type": ["string", "null"] },
+    "business": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" }
+      }
     }
-  ]
+  },
+  "required": ["id", "name", "account_status", "currency"],
+  "additionalProperties": true
 }
