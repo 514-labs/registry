@@ -1,34 +1,29 @@
-# Exclude all registry directories first
-connector-registry/
-pipeline-registry/
-
-# Then selectively include only what we need:
-
-# Include all _meta directories at every level (critical for registry discovery)
-!connector-registry/**/_meta/
-!pipeline-registry/**/_meta/
-
-# Include schemas directories and all their contents (needed for type generation and specs)
-!connector-registry/**/schemas/
-!connector-registry/**/schemas/**
-!pipeline-registry/**/schemas/
-!pipeline-registry/**/schemas/**
-
-# Include documentation and package metadata
-!connector-registry/**/README.md
-!pipeline-registry/**/README.md
-!connector-registry/**/package.json
-!pipeline-registry/**/package.json
-
-# Exclude node_modules everywhere
+# Exclude the heavy implementation files that cause size issues
 **/node_modules/
+**/dist/
+**/.turbo/
+**/.next/
+**/build/
+**/coverage/
 
-# Exclude test files and development artifacts
-**/node_modules
-**/.next
-**/.turbo
-**/dist
+# Exclude large source code directories but keep essential files
+connector-registry/**/src/
+pipeline-registry/**/src/
+connector-registry/**/tests/
+pipeline-registry/**/tests/
+connector-registry/**/examples/
+pipeline-registry/**/examples/
+
+# Exclude development artifacts
 **/.DS_Store
 **/debug-connectors.mjs
 **/test-registry.js
 **/test-simple.ts
+**/*.log
+
+# Keep all essential directories and files:
+# - _meta/ (registry discovery)
+# - schemas/ (schema specs)
+# - docs/ (documentation)
+# - README.md, package.json (metadata)
+# Everything else stays included by default
