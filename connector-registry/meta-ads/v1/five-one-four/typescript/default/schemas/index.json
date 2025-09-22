@@ -1,0 +1,88 @@
+{
+  "entities": [
+    {
+      "name": "ad-accounts",
+      "raw": {
+        "json": "raw/endpoints/ad-accounts.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
+    },
+    {
+      "name": "campaigns",
+      "raw": {
+        "json": "raw/endpoints/campaigns.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
+    },
+    {
+      "name": "adsets",
+      "raw": {
+        "json": "raw/endpoints/adsets.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
+    },
+    {
+      "name": "ads",
+      "raw": {
+        "json": "raw/endpoints/ads.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
+    },
+    {
+      "name": "insights",
+      "raw": {
+        "json": "raw/endpoints/insights.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
+    },
+    {
+      "name": "ad-creatives",
+      "raw": {
+        "json": "raw/endpoints/ad-creatives.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
+    },
+    {
+      "name": "custom-audiences",
+      "raw": {
+        "json": "raw/endpoints/custom-audiences.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
+    },
+    {
+      "name": "saved-audiences",
+      "raw": {
+        "json": "raw/endpoints/saved-audiences.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
+    },
+    {
+      "name": "ad-images",
+      "raw": {
+        "json": "raw/endpoints/ad-images.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
+    },
+    {
+      "name": "ad-videos",
+      "raw": {
+        "json": "raw/endpoints/ad-videos.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
+    },
+    {
+      "name": "businesses",
+      "raw": {
+        "json": "raw/endpoints/businesses.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
+    },
+    {
+      "name": "pages",
+      "raw": {
+        "json": "raw/endpoints/pages.schema.json",
+        "relational": "raw/relational/tables.json"
+      }
+    }
+  ]
+}

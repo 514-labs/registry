@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Meta Ads Raw Saved Audience",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "audience_type": { "type": ["string", "null"] },
+    "description": { "type": ["string", "null"] },
+    "targeting": { "type": ["object", "null"] },
+    "time_created": { "type": ["string", "null"] },
+    "time_updated": { "type": ["string", "null"] },
+    "sentence_lines": { "type": ["array", "null"] },
+    "approximate_count": { "type": ["number", "null"] }
+  },
+  "required": ["id", "name"],
+  "additionalProperties": true
+}

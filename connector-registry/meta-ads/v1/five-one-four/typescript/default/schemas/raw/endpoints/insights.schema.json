@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Meta Ads Raw Insight",
+  "type": "object",
+  "properties": {
+    "date_start": { "type": "string" },
+    "date_stop": { "type": "string" },
+    "impressions": { "type": ["string", "null"] },
+    "clicks": { "type": ["string", "null"] },
+    "spend": { "type": ["string", "null"] },
+    "reach": { "type": ["string", "null"] },
+    "frequency": { "type": ["string", "null"] },
+    "ctr": { "type": ["string", "null"] },
+    "cpc": { "type": ["string", "null"] },
+    "cpm": { "type": ["string", "null"] },
+    "cpp": { "type": ["string", "null"] },
+    "cost_per_unique_click": { "type": ["string", "null"] },
+    "unique_clicks": { "type": ["string", "null"] },
+    "unique_ctr": { "type": ["string", "null"] },
+    "actions": { "type": ["array", "null"] },
+    "conversions": { "type": ["array", "null"] },
+    "conversion_values": { "type": ["array", "null"] },
+    "cost_per_action_type": { "type": ["array", "null"] },
+    "video_play_actions": { "type": ["array", "null"] },
+    "video_p25_watched_actions": { "type": ["array", "null"] },
+    "video_p50_watched_actions": { "type": ["array", "null"] },
+    "video_p75_watched_actions": { "type": ["array", "null"] },
+    "video_p95_watched_actions": { "type": ["array", "null"] },
+    "video_p100_watched_actions": { "type": ["array", "null"] }
+  },
+  "required": ["date_start", "date_stop"],
+  "additionalProperties": true
+}

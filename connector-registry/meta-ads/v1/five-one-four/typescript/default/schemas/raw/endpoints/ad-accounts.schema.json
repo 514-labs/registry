@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Meta Ads Raw Ad Account",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "account_status": { "type": "number" },
+    "currency": { "type": "string" },
+    "timezone_name": { "type": ["string", "null"] },
+    "business": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" }
+      }
+    }
+  },
+  "required": ["id", "name", "account_status", "currency"],
+  "additionalProperties": true
+}

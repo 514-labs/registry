@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Meta Ads Raw Ad Video",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "title": { "type": ["string", "null"] },
+    "description": { "type": ["string", "null"] },
+    "thumbnail": { "type": ["string", "null"] },
+    "source": { "type": ["string", "null"] },
+    "status": { "type": ["string", "null"] },
+    "length": { "type": ["number", "null"] },
+    "created_time": { "type": ["string", "null"] },
+    "updated_time": { "type": ["string", "null"] },
+    "file_size": { "type": ["number", "null"] },
+    "format": { "type": ["array", "null"] }
+  },
+  "required": ["id"],
+  "additionalProperties": true
+}

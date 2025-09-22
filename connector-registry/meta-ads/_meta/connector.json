@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "identifier": "meta-ads",
+  "name": "Meta Ads",
+  "category": "advertising",
+  "tags": ["advertising", "marketing", "facebook", "instagram", "social media"],
+  "description": "Extract campaign data, ad sets, ads, and insights from Meta Ads (Facebook Ads) using the Facebook Graph API",
+  "homepage": "https://developers.facebook.com/docs/graph-api/"
+}
