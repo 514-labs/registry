@@ -1,19 +1,45 @@
-# Exclude large registry directories from deployment
-connector-registry/
-pipeline-registry/
+# Exclude heavy system directories
+**/node_modules/
+**/dist/
+**/.turbo/
+**/.next/
+**/build/
+**/coverage/
 
-# Keep only what's needed for the docs app
-!connector-registry/**/README.md
-!pipeline-registry/**/README.md
-!connector-registry/**/package.json
-!pipeline-registry/**/package.json
+# Exclude specific large files that cause the bundle size issues
+**/dutchie-openapi.json
+**/dutchie.ts
+**/dutchie.d.ts
+**/generated/dutchie.*
 
-# Exclude test files and development artifacts
-**/node_modules
-**/.next
-**/.turbo
-**/dist
+# Exclude most source code files (500 files) but keep essential ones
+connector-registry/**/*.ts
+connector-registry/**/*.js
+connector-registry/**/*.d.ts
+pipeline-registry/**/*.ts
+pipeline-registry/**/*.js
+pipeline-registry/**/*.d.ts
+
+# But keep essential Python files for Shopify fallback
+!connector-registry/**/models.py
+!pipeline-registry/**/models.py
+
+# Exclude development artifacts
+**/*.log
 **/.DS_Store
 **/debug-connectors.mjs
 **/test-registry.js
 **/test-simple.ts
+**/.env*
+!**/.env.example
+**/jest.config.*
+**/vitest.config.*
+**/*.test.*
+**/*.spec.*
+
+# Keep everything else including src/ for Next.js tracing compatibility:
+# - _meta/ (registry discovery)
+# - schemas/ (schema processing)
+# - docs/ (documentation)
+# - src/ (needed for next.config.ts outputFileTracingIncludes)
+# - README.md, package.json (metadata)
