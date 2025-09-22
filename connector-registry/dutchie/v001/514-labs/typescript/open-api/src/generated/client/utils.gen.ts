@@ -76,7 +76,7 @@ export const getParseAs = (
   const cleanContent = contentType.split(';')[0]?.trim();
 
   if (!cleanContent) {
-    return;
+    return 'stream';
   }
 
   if (
@@ -102,7 +102,7 @@ export const getParseAs = (
     return 'text';
   }
 
-  return;
+  return 'stream';
 };
 
 const checkForExistence = (
