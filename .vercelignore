@@ -6,19 +6,38 @@
 **/build/
 **/coverage/
 
-# Exclude the specific large files we identified
-connector-registry/**/src/generated/
-pipeline-registry/**/src/generated/
+# Exclude large source code and generated directories
+connector-registry/**/src/
+pipeline-registry/**/src/
+connector-registry/**/tests/
+pipeline-registry/**/tests/
+connector-registry/**/examples/
+pipeline-registry/**/examples/
+
+# But keep essential source files for schema processing
+!connector-registry/**/src/schema/
+!pipeline-registry/**/src/schema/
+!connector-registry/**/src/data/models.py
 
 # Exclude other heavy generated/compiled files
 **/*.d.ts
-**/generated/dutchie.*
+**/generated/
+**/temp/
+**/tmp/
+**/.cache/
+**/.git/
 
-# Exclude development artifacts
+# Exclude development and testing artifacts
 **/*.log
 **/.DS_Store
 **/debug-connectors.mjs
 **/test-registry.js
 **/test-simple.ts
+**/.env*
+!**/.env.example
+**/jest.config.*
+**/vitest.config.*
+**/*.test.*
+**/*.spec.*
 
 # Keep everything else: _meta/, schemas/, docs/, README.md, package.json, etc.
