@@ -1,9 +1,13 @@
+// Products resource
+// - Binds to GET /products
+// - buildListQuery maps typed params to query string (isActive, fromLastModifiedDateUTC)
+// - Pagination uses the default cursor strategy in makeCrudResource (no override needed here)
 import { makeCrudResource } from '../lib/make-resource'
 import type { SendFn } from '../lib/paginate'
-import type { Product as Model } from '../models/product'
+import type { ProductDetail } from '../generated/types.gen'
 
 export const createProductsResource = (send: SendFn) => {
-  return makeCrudResource<Model, Model[], Model, { isActive?: boolean; fromLastModifiedDateUTC?: string }>(
+  return makeCrudResource<ProductDetail, ProductDetail[], ProductDetail, { isActive?: boolean; fromLastModifiedDateUTC?: string }>(
     '/products',
     send,
     {

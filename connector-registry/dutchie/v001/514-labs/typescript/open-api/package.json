@@ -24,10 +24,11 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "jest --passWithNoTests",
-    "test:watch": "jest --watch",
+    "test": "pnpm run test:build && pnpm run test:rt",
+    "test:build": "tsc -p tsconfig.test.json && rsync -a tests/ .temp-test/tests/",
+    "test:rt": "node ./node_modules/jest/bin/jest.js --runInBand --passWithNoTests --rootDir .temp-test --testRegex '(.*)(test|spec).js$'",
     "test:integration": "jest --config jest.integration.cjs",
-    "generate:types": "openapi-typescript ./schemas/files/dutchie-openapi.json -o src/generated/dutchie.ts"
+    "generate:types": "openapi-ts -i ./schemas/files/dutchie-openapi.json -o ./src/generated"
   },
   "engines": {
     "node": ">=20"
@@ -36,14 +37,15 @@
     "@connector-factory/core": "^0.1.0"
   },
   "devDependencies": {
+    "@hey-api/openapi-ts": "0.84.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^20.14.12",
-    "ajv": "^8.17.1",
-    "ajv-formats": "^3.0.1",
     "jest": "^29.7.0",
     "nock": "^13.5.4",
-    "openapi-typescript": "^7.4.2",
     "ts-jest": "29.1.2",
-    "typescript": "^5.6.3"
+    "ts-patch": "^3.3.0",
+    "ttypescript": "^1.5.15",
+    "typescript": "^5.6.3",
+    "typia": "^9.6.1"
   }
 }
