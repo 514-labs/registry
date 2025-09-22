@@ -8,9 +8,11 @@ pipeline-registry/
 !connector-registry/**/_meta/
 !pipeline-registry/**/_meta/
 
-# Include schemas directories at all levels (needed for type generation and specs)
+# Include schemas directories and all their contents (needed for type generation and specs)
 !connector-registry/**/schemas/
+!connector-registry/**/schemas/**
 !pipeline-registry/**/schemas/
+!pipeline-registry/**/schemas/**
 
 # Include documentation and package metadata
 !connector-registry/**/README.md
