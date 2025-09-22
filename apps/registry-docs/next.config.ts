@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
     "/api/discover/connectors/**/*": ["../../connector-registry/**/*"],
     "/api/discover/pipelines/**/*": ["../../pipeline-registry/**/*"],
     "/api/registry/**/*": ["../../connector-registry/**/*", "../../pipeline-registry/**/*"],
-    "/registry.json": ["../../connector-registry/**/*", "../../pipeline-registry/**/*"],
+    "/registry.json": ["../../connector-registry/**/_meta/", "../../pipeline-registry/**/_meta/"],
   },
   env: {
     GITHUB_PAT: process.env.GITHUB_PAT,
