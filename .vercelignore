@@ -5,22 +5,14 @@ pipeline-registry/
 # Include ONLY the absolute essentials for registry discovery and schemas
 !connector-registry/**/_meta/
 !pipeline-registry/**/_meta/
-!connector-registry/**/schemas/index.json
-!pipeline-registry/**/schemas/index.json
+!connector-registry/**/schemas/
+!pipeline-registry/**/schemas/
+!connector-registry/**/docs/
+!pipeline-registry/**/docs/
 !connector-registry/**/README.md
 !pipeline-registry/**/README.md
 !connector-registry/**/package.json
 !pipeline-registry/**/package.json
-
-# Also include minimal schema files needed for processing
-!connector-registry/**/schemas/raw/endpoints/*.schema.json
-!pipeline-registry/**/schemas/raw/endpoints/*.schema.json
-!connector-registry/**/schemas/raw/relational/tables.json
-!pipeline-registry/**/schemas/raw/relational/tables.json
-
-# For docs functionality - only include docs directories
-!connector-registry/**/docs/
-!pipeline-registry/**/docs/
 
 # Exclude heavy system files everywhere
 **/node_modules/
