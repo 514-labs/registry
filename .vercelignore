@@ -1,43 +1,33 @@
-# Exclude only the heaviest directories that cause deployment size issues
+# Exclude all registry content first
+connector-registry/
+pipeline-registry/
+
+# Include ONLY the absolute essentials for registry discovery and schemas
+!connector-registry/**/_meta/
+!pipeline-registry/**/_meta/
+!connector-registry/**/schemas/index.json
+!pipeline-registry/**/schemas/index.json
+!connector-registry/**/README.md
+!pipeline-registry/**/README.md
+!connector-registry/**/package.json
+!pipeline-registry/**/package.json
+
+# Also include minimal schema files needed for processing
+!connector-registry/**/schemas/raw/endpoints/*.schema.json
+!pipeline-registry/**/schemas/raw/endpoints/*.schema.json
+!connector-registry/**/schemas/raw/relational/tables.json
+!pipeline-registry/**/schemas/raw/relational/tables.json
+
+# For docs functionality - only include docs directories
+!connector-registry/**/docs/
+!pipeline-registry/**/docs/
+
+# Exclude heavy system files everywhere
 **/node_modules/
 **/dist/
 **/.turbo/
 **/.next/
 **/build/
 **/coverage/
-
-# Exclude large source code and generated directories
-connector-registry/**/src/
-pipeline-registry/**/src/
-connector-registry/**/tests/
-pipeline-registry/**/tests/
-connector-registry/**/examples/
-pipeline-registry/**/examples/
-
-# But keep essential source files for schema processing
-!connector-registry/**/src/schema/
-!pipeline-registry/**/src/schema/
-!connector-registry/**/src/data/models.py
-
-# Exclude other heavy generated/compiled files
-**/*.d.ts
-**/generated/
-**/temp/
-**/tmp/
-**/.cache/
-**/.git/
-
-# Exclude development and testing artifacts
 **/*.log
 **/.DS_Store
-**/debug-connectors.mjs
-**/test-registry.js
-**/test-simple.ts
-**/.env*
-!**/.env.example
-**/jest.config.*
-**/vitest.config.*
-**/*.test.*
-**/*.spec.*
-
-# Keep everything else: _meta/, schemas/, docs/, README.md, package.json, etc.
