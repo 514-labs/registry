@@ -1,4 +1,4 @@
-# Exclude only the heaviest directories that cause size issues
+# Exclude heavy system directories
 **/node_modules/
 **/dist/
 **/.turbo/
@@ -6,16 +6,23 @@
 **/build/
 **/coverage/
 
-# Exclude heavy source code and implementation directories
-connector-registry/**/src/
-pipeline-registry/**/src/
-connector-registry/**/tests/
-pipeline-registry/**/tests/
-connector-registry/**/examples/
-pipeline-registry/**/examples/
+# Exclude specific large files that cause the bundle size issues
+**/dutchie-openapi.json
+**/dutchie.ts
+**/dutchie.d.ts
+**/generated/dutchie.*
 
-# Keep essential files for Shopify fallback
-!connector-registry/**/src/data/models.py
+# Exclude most source code files (500 files) but keep essential ones
+connector-registry/**/*.ts
+connector-registry/**/*.js
+connector-registry/**/*.d.ts
+pipeline-registry/**/*.ts
+pipeline-registry/**/*.js
+pipeline-registry/**/*.d.ts
+
+# But keep essential Python files for Shopify fallback
+!connector-registry/**/models.py
+!pipeline-registry/**/models.py
 
 # Exclude development artifacts
 **/*.log
@@ -30,8 +37,9 @@ pipeline-registry/**/examples/
 **/*.test.*
 **/*.spec.*
 
-# Keep everything else by default:
+# Keep everything else including src/ for Next.js tracing compatibility:
 # - _meta/ (registry discovery)
 # - schemas/ (schema processing)
 # - docs/ (documentation)
+# - src/ (needed for next.config.ts outputFileTracingIncludes)
 # - README.md, package.json (metadata)
