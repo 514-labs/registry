@@ -29,8 +29,8 @@ export default function CreatingPipelinesPage() {
 
       <h2>1. Clone the Repository</h2>
       <pre>
-        <code>{`git clone https://github.com/514-labs/factory.git
-cd factory`}</code>
+        <code>{`git clone https://github.com/514-labs/registry.git
+cd registry`}</code>
       </pre>
 
       <h2>2. Generate Pipeline Scaffold</h2>
