@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Meta Ads Raw Ad Creative",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "title": { "type": ["string", "null"] },
+    "body": { "type": ["string", "null"] },
+    "image_hash": { "type": ["string", "null"] },
+    "image_url": { "type": ["string", "null"] },
+    "video_id": { "type": ["string", "null"] },
+    "thumbnail_url": { "type": ["string", "null"] },
+    "link_url": { "type": ["string", "null"] },
+    "call_to_action_type": { "type": ["string", "null"] },
+    "object_story_spec": { "type": ["object", "null"] },
+    "asset_feed_spec": { "type": ["object", "null"] },
+    "degrees_of_freedom_spec": { "type": ["object", "null"] },
+    "status": { "type": "string" },
+    "created_time": { "type": ["string", "null"] },
+    "updated_time": { "type": ["string", "null"] }
+  },
+  "required": ["id", "name", "status"],
+  "additionalProperties": true
+}

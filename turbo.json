@@ -14,7 +14,7 @@
         "connector-registry/**",
         "pipeline-registry/**"
       ],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", ".next/**", "out/**"]
     },
     "lint": {},
     "typecheck": {},

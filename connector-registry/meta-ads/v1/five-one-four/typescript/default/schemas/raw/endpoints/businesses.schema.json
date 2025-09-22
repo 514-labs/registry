@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Meta Ads Raw Business",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "link": { "type": ["string", "null"] },
+    "primary_page": { "type": ["object", "null"] },
+    "timezone_id": { "type": ["number", "null"] },
+    "two_factor_type": { "type": ["string", "null"] },
+    "updated_time": { "type": ["string", "null"] },
+    "verification_status": { "type": ["string", "null"] },
+    "vertical": { "type": ["string", "null"] },
+    "vertical_id": { "type": ["number", "null"] }
+  },
+  "required": ["id", "name"],
+  "additionalProperties": true
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Meta Ads Raw Page",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "category": { "type": ["string", "null"] },
+    "category_list": { "type": ["array", "null"] },
+    "link": { "type": ["string", "null"] },
+    "picture": { "type": ["object", "null"] },
+    "access_token": { "type": ["string", "null"] },
+    "fan_count": { "type": ["number", "null"] },
+    "talking_about_count": { "type": ["number", "null"] },
+    "username": { "type": ["string", "null"] },
+    "website": { "type": ["string", "null"] },
+    "about": { "type": ["string", "null"] },
+    "phone": { "type": ["string", "null"] },
+    "emails": { "type": ["array", "null"] }
+  },
+  "required": ["id", "name"],
+  "additionalProperties": true
+}

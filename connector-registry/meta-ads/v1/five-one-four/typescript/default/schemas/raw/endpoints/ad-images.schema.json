@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Meta Ads Raw Ad Image",
+  "type": "object",
+  "properties": {
+    "hash": { "type": "string" },
+    "url": { "type": "string" },
+    "url_128": { "type": ["string", "null"] },
+    "width": { "type": ["number", "null"] },
+    "height": { "type": ["number", "null"] },
+    "original_width": { "type": ["number", "null"] },
+    "original_height": { "type": ["number", "null"] },
+    "name": { "type": ["string", "null"] },
+    "status": { "type": ["string", "null"] },
+    "account_id": { "type": ["string", "null"] },
+    "created_time": { "type": ["string", "null"] }
+  },
+  "required": ["hash", "url"],
+  "additionalProperties": true
+}
