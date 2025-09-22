@@ -1,8 +1,16 @@
-# Exclude large registry directories from deployment
-connector-registry/
-pipeline-registry/
+# Exclude large implementation files but keep metadata and schemas
+connector-registry/**/typescript/
+connector-registry/**/python/
+connector-registry/**/node_modules/
+pipeline-registry/**/typescript/
+pipeline-registry/**/python/
+pipeline-registry/**/node_modules/
 
-# Keep only what's needed for the docs app
+# Keep essential registry files for discovery and schemas
+!connector-registry/**/_meta/
+!pipeline-registry/**/_meta/
+!connector-registry/**/schemas/
+!pipeline-registry/**/schemas/
 !connector-registry/**/README.md
 !pipeline-registry/**/README.md
 !connector-registry/**/package.json
