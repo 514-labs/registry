@@ -39,7 +39,7 @@ class CDCConfig:
     change_schema: Optional[str] = None  # If None, uses the same schema as monitored tables
     
     # Polling configuration
-    poll_interval_ms: int = 5000
+    poll_interval_ms: int = 1000
     batch_size: int = 1000
     max_poll_records: int = 10000
     

@@ -133,7 +133,7 @@ class SAPHanaCDCConnector:
         
         while self.is_running:
             try:
-                # Poll for changes
+                # Poll for changese
                 batch = await self._poll_changes()
                 
                 if not batch.is_empty():
@@ -143,9 +143,7 @@ class SAPHanaCDCConnector:
                     
                     logger.info(
                         "Processed batch",
-                        batch_id=batch.batch_id,
                         total_changes=batch.get_total_changes(),
-                        tables=list(batch.table_changes.keys()),
                     )
                 
                 # Wait before next poll
@@ -163,10 +161,6 @@ class SAPHanaCDCConnector:
         wait=wait_exponential(multiplier=1, min=4, max=10)
     )
     async def _poll_changes(self) -> BatchChange:
-        """Poll for database changes."""
-        batch_id = str(uuid.uuid4())
-        batch_timestamp = datetime.utcnow()
-        
         # Get changes from extractor
         changes = await self.extractor.get_changes(
             since=self.state.last_processed_timestamp,
@@ -174,24 +168,8 @@ class SAPHanaCDCConnector:
         )
         
         # Group changes by table
-        table_changes: Dict[str, TableChange] = {}
+        return BatchChange(changes)
         
-        for change in changes:
-            key = f"{change.schema_name}.{change.table_name}"
-            
-            if key not in table_changes:
-                table_changes[key] = TableChange(
-                    schema_name=change.schema_name,
-                    table_name=change.table_name,
-                )
-            
-            table_changes[key].add_change(change)
-        
-        return BatchChange(
-            batch_id=batch_id,
-            batch_timestamp=batch_timestamp,
-            table_changes=table_changes,
-        )
     
     async def _process_batch(self, batch: BatchChange) -> None:
         """Process a batch of changes."""
@@ -244,7 +222,8 @@ class SAPHanaCDCConnector:
         
         try:
             # Re-initialize CDC infrastructure with current configuration
-            await self.extractor.init_cdc()
+            await self.extractor.connect()
+            await self.extractor.init_cdc(force_recreate=True)
             
             logger.info(
                 "CDC infrastructure re-initialized",

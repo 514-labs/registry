@@ -13,9 +13,10 @@ print("sys.path:", "\n".join(sys.path))
 
 
 from sap_hana_cdc.streamer import BaseStreamer
-from sap_hana_cdc.models import BatchChange
+from sap_hana_cdc.models import BatchChange, ChangeEvent
 from sap_hana_cdc.connector import SAPHanaCDCConnector
 from sap_hana_cdc.config import CDCConfig, SAPHanaConfig, PipelineConfig
+
 
 import argparse
 import os
@@ -75,6 +76,7 @@ class ConsoleStreamer(BaseStreamer):
             self._print_batch_content(batch)
             print("=" * 80)
         except Exception as e:
+            print(e)
             raise StreamingError(f"Failed to print batch to console: {e}")
     
     def _print_batch_header(self, batch: BatchChange) -> None:
@@ -83,67 +85,35 @@ class ConsoleStreamer(BaseStreamer):
             return
             
         print("\n" + "=" * 80)
-        print(f"📦 BATCH: {batch.batch_id}")
-        print(f"⏰ Timestamp: {batch.batch_timestamp.strftime(self.timestamp_format)}")
         print(f"📊 Total Changes: {batch.get_total_changes()}")
-        print(f"🗂️  Tables: {len(batch.table_changes)}")
         print("-" * 80)
     
     def _print_batch_content(self, batch: BatchChange) -> None:
         """Print the batch content with all changes."""
-        for table_key, table_change in batch.table_changes.items():
-            if table_change.is_empty():
-                continue
-                
-            print(f"\n📋 TABLE: {table_key}")
-            print(f"   Changes: {len(table_change.changes)}")
+        if batch.get_total_changes() == 0:
+            return
             
-            for i, change in enumerate(table_change.changes, 1):
-                self._print_change_event(change, i)
-    
-    def _print_change_event(self, change, index: int) -> None:
+        for i, change in enumerate(batch.changes, 1):
+            self._print_change_event(change, i)
+                
+
+    def _print_change_event(self, change: ChangeEvent, index: int) -> None:
         """Print a single change event."""
         print(f"\n   🔄 Change #{index}:")
         print(f"      ID: {change.event_id}")
         print(f"      Type: {change.change_type.value}")
         print(f"      Time: {change.event_timestamp.strftime(self.timestamp_format)}")
-        
-        if change.transaction_id:
-            print(f"      Transaction: {change.transaction_id}")
-        
-        if change.sequence_number is not None:
-            print(f"      Sequence: {change.sequence_number}")
-        
-        # Print old values if present
-        if change.old_values:
-            print(f"      📤 Old Values:")
-            self._print_values(change.old_values, indent=8)
-        
-        # Print new values if present
-        if change.new_values:
-            print(f"      📥 New Values:")
-            self._print_values(change.new_values, indent=8)
-        
-        # Print primary key values if present
-        if change.primary_key_values:
-            print(f"      🔑 Primary Key:")
-            self._print_values(change.primary_key_values, indent=8)
-    
-    def _print_values(self, values: Dict[str, Any], indent: int = 0) -> None:
-        """Print a dictionary of values with proper indentation."""
-        indent_str = " " * indent
-        for key, value in values.items():
-            if self.pretty_print and isinstance(value, (dict, list)):
-                # Pretty print complex values as JSON
-                json_str = json.dumps(value, indent=2, default=str)
-                # Add indentation to each line
-                indented_json = "\n".join(
-                    indent_str + line for line in json_str.split("\n")
-                )
-                print(f"{indent_str}{key}: {indented_json}")
-            else:
-                print(f"{indent_str}{key}: {value}")
+        print(f"      Schema: {change.schema_name}")
+        print(f"      Table: {change.table_name}")
+        print(f"      Full Table: {change.full_table_name}")
 
+        if change.old_values and change.new_values:
+            print("      Differences:")
+            for k, v in change.old_values[0].items():
+                if v != change.new_values[0][k]:
+                    print(f"            {k}: {v} -> {change.new_values[0][k]}")
+            
+        
 async def main():
     parser = argparse.ArgumentParser(description="Console Streamer for SAP HANA CDC")
     parser.add_argument("--sap-username", dest="sap_username", default=None, help="SAP HANA username")
@@ -152,6 +122,7 @@ async def main():
     parser.add_argument("--sap-port", dest="sap_port", default=None, help="SAP HANA port")
     parser.add_argument("--sap-db", dest="sap_db", default=None, help="SAP HANA database name")
     parser.add_argument("--sap-schema", dest="sap_schema", default=None, help="SAP HANA schema")
+    parser.add_argument("--force-recreate", dest="force_recreate", action="store_true", help="Force recreate CDC infrastructure")
     args = parser.parse_args()
 
     # Load environment variables from .env file if present
@@ -192,7 +163,7 @@ async def main():
         schema=sap_schema,
     )
     cdc_config = CDCConfig(
-        tables=["MARA"],
+        tables=["MARA", "EKKO", "EKPO", "EKKN", "EKBE", "EKET", "EINE", "EINA", "EKAB"],
         poll_interval_ms=5000,
         batch_size=1000,
         change_schema=sap_username,
@@ -202,6 +173,11 @@ async def main():
         cdc=cdc_config
     )
     connector = SAPHanaCDCConnector(config=pipeline_config, streamer=streamer)
+    if args.force_recreate:
+        await connector.reinitialize_cdc()
+        print("CDC infrastructure re-initialized")
+        print("Run command again without --force-recreate to start streaming")
+        return
 
     # Start the connector
     await connector.start()

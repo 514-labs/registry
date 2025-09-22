@@ -1,6 +1,7 @@
 """SAP HANA database extractor for CDC."""
 
 import asyncio
+from enum import StrEnum, auto
 import logging
 from datetime import datetime
 from typing import List, Optional, Dict, Any, Set
@@ -15,6 +16,10 @@ from .models import ChangeEvent
 
 logger = structlog.get_logger(__name__)
 
+class TriggerType(StrEnum):
+    INSERT = auto()
+    UPDATE = auto()
+    DELETE = auto()
 
 class SAPHanaExtractor:
     """Extracts change data from SAP HANA database."""
@@ -56,7 +61,7 @@ class SAPHanaExtractor:
     
     
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
-    async def init_cdc(self) -> None:
+    async def init_cdc(self, force_recreate: bool = False) -> None:
         """Initialize CDC infrastructure.
         
         This method will:
@@ -73,7 +78,7 @@ class SAPHanaExtractor:
             # Ensure change table exists
             cursor = self.connection.cursor()
             try:
-                await self._create_change_table(cursor)
+                await self._create_change_table(cursor, force_recreate)
             finally:
                 cursor.close()
             
@@ -103,7 +108,7 @@ class SAPHanaExtractor:
             
             # Add CDC infrastructure for new tables
             if tables_to_add:
-                await self._add_table_cdc(tables_to_add)
+                await self._add_table_cdc(tables_to_add, force_recreate)
                 logger.info("Added CDC infrastructure", tables=list(tables_to_add))
             
             # Update monitored tables set
@@ -111,7 +116,7 @@ class SAPHanaExtractor:
             
             # If no changes, just ensure all tables have proper CDC setup
             if not tables_to_add and not tables_to_remove:
-                await self._ensure_cdc_infrastructure(current_tables)
+                await self._ensure_cdc_infrastructure(current_tables, force_recreate)
                 logger.info("Verified CDC infrastructure for all tables")
             
             logger.info(
@@ -154,51 +159,15 @@ class SAPHanaExtractor:
                 logger.info("Disconnected from SAP HANA database")
             except Exception as e:
                 logger.error("Error disconnecting from SAP HANA", error=str(e))
-    
-    async def _setup_cdc_infrastructure(self) -> None:
-        """Setup CDC infrastructure (triggers, single change table, etc.)."""        
-        logger.info("Starting CDC infrastructure setup")
-        cursor = self.connection.cursor()
         
-        try:
-            # Create single change table
-            logger.info("Creating change table for CDC events")
-            await self._create_change_table(cursor)
-            
-            # Get list of tables to monitor
-            logger.info("Retrieving list of tables to monitor")
-            tables = await self._get_monitored_tables()
-            
-            logger.info(
-                "Found tables to monitor",
-                table_count=len(tables),
-                tables=tables
-            )
-            
-            for table in tables:
-                logger.info(f"Setting up CDC for table: {table}")
-                await self._setup_table_cdc(cursor, table)
-                self.monitored_tables.add(table)
-                logger.info(f"Successfully configured CDC for table: {table}")
-            
-            logger.info(
-                "CDC infrastructure setup complete",
-                monitored_tables=list(self.monitored_tables),
-                change_table=self._get_change_table_name(),
-                total_tables=len(self.monitored_tables),
-            )
-            
-        finally:
-            cursor.close()
-    
-    async def _add_table_cdc(self, tables: Set[str]) -> None:
+    async def _add_table_cdc(self, tables: Set[str], force_recreate: bool = False) -> None:
         """Add CDC infrastructure for new tables."""
 
         cursor = self.connection.cursor()
         
         try:
             for table in tables:
-                await self._setup_table_cdc(cursor, table)
+                await self._setup_table_cdc(cursor, table, force_recreate)
                 logger.info(f"Added CDC infrastructure for table: {table}")
         finally:
             cursor.close()
@@ -214,7 +183,7 @@ class SAPHanaExtractor:
         finally:
             cursor.close()
     
-    async def _ensure_cdc_infrastructure(self, tables: List[str]) -> None:
+    async def _ensure_cdc_infrastructure(self, tables: List[str], force_recreate: bool = False) -> None:
         """Ensure CDC infrastructure exists for all tables."""
         cursor = self.connection.cursor()
         
@@ -224,7 +193,7 @@ class SAPHanaExtractor:
                 if await self._check_table_cdc_exists(cursor, table):
                     logger.debug(f"CDC infrastructure already exists for table: {table}")
                 else:
-                    await self._setup_table_cdc(cursor, table)
+                    await self._setup_table_cdc(cursor, table, force_recreate)
                     logger.info(f"Created missing CDC infrastructure for table: {table}")
         finally:
             cursor.close()
@@ -262,9 +231,10 @@ class SAPHanaExtractor:
             logger.debug(f"Error checking change table existence: {e}")
             return False
     
-    async def _check_trigger_exists(self, cursor: dbapi.Cursor, trigger_name: str) -> bool:
+    async def _check_trigger_exists(self, cursor: dbapi.Cursor, table_name: str, trigger_type: TriggerType) -> bool:
         """Check if a trigger already exists."""
         try:
+            trigger_name = self._get_trigger_name(table_name, trigger_type)
             cursor.execute("""
                 SELECT COUNT(*) 
                 FROM TRIGGERS 
@@ -286,14 +256,18 @@ class SAPHanaExtractor:
             logger.debug(f"Error checking trigger existence {trigger_name}: {e}")
             return False
     
-    async def _create_change_table(self, cursor: dbapi.Cursor) -> None:
+    async def _create_change_table(self, cursor: dbapi.Cursor, force_recreate: bool = False) -> None:
         """Create the single change table for all CDC changes."""
         change_table = self._get_change_table_name()
         
         # Check if table already exists
         if await self._check_change_table_exists(cursor):
-            logger.info(f"Change table already exists: {change_table}")
-            return
+            if force_recreate:
+                cursor.execute(f"DROP TABLE {change_table}")
+                logger.info(f"Dropped existing change table: {change_table}")
+            else:
+                logger.info(f"Change table already exists: {change_table}")
+                return
         
         logger.info(
             "Creating change table for CDC events",
@@ -309,10 +283,7 @@ class SAPHanaExtractor:
                 CHANGE_TYPE VARCHAR(10) NOT NULL,
                 CHANGE_TIMESTAMP TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 OLD_VALUES NCLOB,
-                NEW_VALUES NCLOB,
-                TRANSACTION_ID VARCHAR(100),
-                SEQUENCE_NUMBER BIGINT,
-                PRIMARY_KEY_VALUES NCLOB
+                NEW_VALUES NCLOB
             )
         """
         
@@ -323,8 +294,7 @@ class SAPHanaExtractor:
                 change_table=change_table,
                 columns=[
                     "CHANGE_ID", "TABLE_SCHEMA", "TABLE_NAME", "CHANGE_TYPE",
-                    "CHANGE_TIMESTAMP", "OLD_VALUES", "NEW_VALUES", 
-                    "TRANSACTION_ID", "SEQUENCE_NUMBER", "PRIMARY_KEY_VALUES"
+                    "CHANGE_TIMESTAMP", "OLD_VALUES", "NEW_VALUES"
                 ]
             )
         except Exception as e:
@@ -333,66 +303,66 @@ class SAPHanaExtractor:
     
     async def _get_monitored_tables(self) -> List[str]:
         """Get list of tables to monitor for changes."""
-        cursor = self.connection.cursor()
         
+        # Build query based on table selection
+        if "*" in self.cdc_config.tables:
+            # Get all tables in schema
+            query = """
+                SELECT TABLE_NAME 
+                FROM TABLES 
+                WHERE SCHEMA_NAME = ?
+            """
+            params = (self.sap_config.schema,)
+        else:
+            # Get specific tables
+            placeholders = ",".join(["?" for _ in self.cdc_config.tables])
+            query = f"""
+                SELECT TABLE_NAME 
+                FROM TABLES 
+                WHERE SCHEMA_NAME = ? 
+                AND TABLE_NAME IN ({placeholders})
+            """
+            
+            params = [self.sap_config.schema] + self.cdc_config.tables
+        
+        tables = [row[0] for row in await self._fetch_all(query, params)]
+        
+        # Filter out excluded tables
+        tables = [t for t in tables if t not in self.cdc_config.exclude_tables]
+        
+        return tables
+            
+    
+    async def _fetch_all(self, query: str, params: tuple) -> Any:
+        cursor = self.connection.cursor()
         try:
-            # Build query based on table selection
-            if "*" in self.cdc_config.tables:
-                # Get all tables in schema
-                query = """
-                    SELECT TABLE_NAME 
-                    FROM TABLES 
-                    WHERE SCHEMA_NAME = ?
-                """
-                cursor.execute(query, (self.sap_config.schema,))
-            else:
-                # Get specific tables
-                placeholders = ",".join(["?" for _ in self.cdc_config.tables])
-                query = f"""
-                    SELECT TABLE_NAME 
-                    FROM TABLES 
-                    WHERE SCHEMA_NAME = ? 
-                    AND TABLE_NAME IN ({placeholders})
-                """
-                cursor.execute(query, [self.sap_config.schema] + self.cdc_config.tables)
-            
-            tables = [row[0] for row in cursor.fetchall()]
-            
-            # Filter out excluded tables
-            tables = [t for t in tables if t not in self.cdc_config.exclude_tables]
-            
-            return tables
-            
+            cursor.execute(query, params)
+            return cursor.fetchall()
         finally:
             cursor.close()
-    
+
+
     async def _get_table_columns(self, table_name: str) -> List[Dict[str, str]]:
         """Get column information for a table."""
-        cursor = self.connection.cursor()
+        query = """
+            SELECT COLUMN_NAME, DATA_TYPE_NAME, IS_NULLABLE
+            FROM TABLE_COLUMNS 
+            WHERE SCHEMA_NAME = ? AND TABLE_NAME = ?
+            ORDER BY POSITION
+        """
         
-        try:
-            query = """
-                SELECT COLUMN_NAME, DATA_TYPE_NAME, IS_NULLABLE
-                FROM TABLE_COLUMNS 
-                WHERE SCHEMA_NAME = ? AND TABLE_NAME = ?
-                ORDER BY POSITION
-            """
-            cursor.execute(query, (self.sap_config.schema, table_name))
+        columns = []
+        for row in await self._fetch_all(query, (self.sap_config.schema, table_name)):
+            columns.append({
+                'name': row[0],
+                'type': row[1],
+                'nullable': row[2] == 'TRUE'
+            })
+        
+        return columns
             
-            columns = []
-            for row in cursor.fetchall():
-                columns.append({
-                    'name': row[0],
-                    'type': row[1],
-                    'nullable': row[2] == 'TRUE'
-                })
-            
-            return columns
-            
-        finally:
-            cursor.close()
     
-    async def _setup_table_cdc(self, cursor: dbapi.Cursor, table_name: str) -> None:
+    async def _setup_table_cdc(self, cursor: dbapi.Cursor, table_name: str, force_recreate: bool = False) -> None:
         """Setup CDC for a specific table."""
         try:
             change_table = self._get_change_table_name()
@@ -404,24 +374,19 @@ class SAPHanaExtractor:
                 change_types=[ct.value for ct in self.cdc_config.change_types]
             )
             
-            # Create sequence for the table
-            await self._create_sequence(cursor, table_name)
-            
             # Create trigger for INSERT
-            if ChangeType.INSERT in self.cdc_config.change_types:
-                logger.info(f"Creating INSERT trigger for table: {table_name}")
-                await self._create_insert_trigger(cursor, table_name, change_table)
-            
-            # Create trigger for UPDATE
-            if ChangeType.UPDATE in self.cdc_config.change_types:
-                logger.info(f"Creating UPDATE trigger for table: {table_name}")
-                await self._create_update_trigger(cursor, table_name, change_table)
-            
-            # Create trigger for DELETE
-            if ChangeType.DELETE in self.cdc_config.change_types:
-                logger.info(f"Creating DELETE trigger for table: {table_name}")
-                await self._create_delete_trigger(cursor, table_name, change_table)
-            
+            for change_type in self.cdc_config.change_types:
+                match(change_type):
+                    case ChangeType.INSERT:
+                        trigger_type = TriggerType.INSERT
+                    case ChangeType.UPDATE:
+                        trigger_type = TriggerType.UPDATE
+                    case ChangeType.DELETE:
+                        trigger_type = TriggerType.DELETE
+                    case _:
+                        raise ValueError(f"Invalid change type: {change_type}")
+                await self._create_trigger(cursor, table_name, change_table, trigger_type, force_recreate)
+        
             logger.info(
                 "CDC setup complete for table",
                 table_name=table_name,
@@ -432,324 +397,86 @@ class SAPHanaExtractor:
             logger.error(f"Failed to setup CDC for table {table_name}", error=str(e))
             raise
     
+    async def _create_select_stmt(self, table_name: str, source_var: str, dest_var: str) -> str:
+        """Create a SELECT statement for a table."""
+        columns = await self._get_table_columns(table_name)
+        if not columns:
+            logger.warning(f"No columns found for table {table_name}, skipping trigger creation")
+            return
+
+        select_columns = ", ".join([f":{source_var}.\"{col['name']}\"" for col in columns])
+        # SELECT new_row.* doesn't work
+        query = f"""
+                SELECT {select_columns} INTO {dest_var} FROM DUMMY FOR JSON;
+        """
+
+        return query
     
-    async def _create_sequence(self, cursor: dbapi.Cursor, table_name: str) -> None:
-        """Create sequence for a table."""
-        sequence_name = f"{table_name}_SEQ"
-        sequence_schema = self.cdc_config.change_schema or self.sap_config.schema
-        full_sequence_name = f"{sequence_schema}.{sequence_name}"
+
+    async def _create_trigger(self, cursor: dbapi.Cursor, table_name: str, change_table: str, trigger_type: TriggerType, force_recreate: bool = False) -> None:
+        """Create trigger for a table."""
+        trigger_name = self._get_trigger_name(table_name, trigger_type)
         
-        try:
-            # Check if sequence already exists
-            cursor.execute("""
-                SELECT COUNT(*) 
-                FROM SEQUENCES 
-                WHERE SCHEMA_NAME = ? AND SEQUENCE_NAME = ?
-            """, (sequence_schema, sequence_name))
-            
-            result = cursor.fetchone()
-            if result and result[0] > 0:
-                logger.info(f"Sequence already exists: {full_sequence_name}")
+        # Check if trigger already exists
+        if await self._check_trigger_exists(cursor, table_name, trigger_type):
+            if not force_recreate:
+                logger.info(f"{trigger_type.value} trigger already exists: {trigger_name}")
                 return
-            
-            # Create sequence
-            sequence_sql = f"CREATE SEQUENCE {full_sequence_name} START WITH 1 INCREMENT BY 1"
-            cursor.execute(sequence_sql)
-            logger.info(f"Created sequence: {full_sequence_name}")
-            
-        except Exception as e:
-            logger.warning(f"Could not create sequence {full_sequence_name}: {e}")
-    
-    async def _create_insert_trigger(self, cursor: dbapi.Cursor, table_name: str, change_table: str) -> None:
-        """Create INSERT trigger for a table."""
-        trigger_name = f"{table_name}_INSERT_TRIGGER"
-        sequence_schema = self.cdc_config.change_schema or self.sap_config.schema
-        full_sequence_name = f"{sequence_schema}.{table_name}_SEQ"
-        
-        # Check if trigger already exists
-        if await self._check_trigger_exists(cursor, trigger_name):
-            logger.info(f"INSERT trigger already exists: {trigger_name}")
-            return
-        
-        # Get table columns to build proper JSON
-        columns = await self._get_table_columns(table_name)
-        if not columns:
-            logger.warning(f"No columns found for table {table_name}, skipping trigger creation")
-            return
-        
-        # Build JSON object with all columns using string concatenation
-        json_parts = []
-        for i, col in enumerate(columns):
-            col_name = col["name"]
-            json_parts.append(f"SELECT 1 as ord, '{col_name}' as col_name, :new_row.\"{col_name}\" as col_value, 'STR' as col_type FROM SYS.DUMMY")
-        
-        row_kv_select = " UNION ALL ".join(json_parts)
-
-        json_sql = f"""
-        WITH kv AS (
-            SELECT STRING_AGG(
-                '\"' || col_name || '\":' || 
-                CASE 
-                    WHEN col_value IS NULL THEN 'null'
-                    WHEN col_type = 'NUM' THEN col_value
-                    ELSE '\"' || REPLACE(REPLACE(col_value, '\\', '\\\\'), '\"', '\\\"') || '\"'
-                END, 
-                ',' 
-                ORDER BY ord
-            ) as json_content
-            FROM ( {row_kv_select} )
-        )
-        SELECT '{' || json_content || '}' INTO json_data FROM kv;      
-        """
         
         try:
             quoted_table_name = f'"{table_name}"'
-            quoted_schema_name = f'"{self.sap_config.schema}"'
+            quoted_schema_name = f'{self.sap_config.schema}'
             trigger_sql = f"""
-                CREATE TRIGGER {trigger_name}
-                AFTER INSERT ON {quoted_schema_name}.{quoted_table_name}
-                REFERENCING NEW ROW AS new_row
-                FOR EACH ROW
-                BEGIN
-                    DECLARE json_data NCLOB;
-                    {json_sql}
-                    INSERT INTO {change_table} (
-                        TABLE_SCHEMA, TABLE_NAME, CHANGE_TYPE, OLD_VALUES, NEW_VALUES, 
-                        TRANSACTION_ID, SEQUENCE_NUMBER, PRIMARY_KEY_VALUES
-                    ) VALUES (
-                        '{self.sap_config.schema}',
-                        '{table_name}',
-                        'INSERT',
-                        NULL,
-                        TO_NCLOB(json_data),
-                        CURRENT_UPDATE_TRANSACTION(),
-                        {full_sequence_name}.NEXTVAL,
-                        TO_NCLOB(json_data)
-                    );
-                END
-            """
-            cursor.execute(trigger_sql)
-            logger.info(f"Successfully created INSERT trigger: {trigger_name}")
-            
-        except Exception as e:
-            logger.error(f"Failed to create INSERT trigger {trigger_name}: {e}")
-            await self._log_problematic_sql_parts_from_error(e, trigger_sql)
-            raise
-    
-    async def _create_update_trigger(self, cursor: dbapi.Cursor, table_name: str, change_table: str) -> None:
-        """Create UPDATE trigger for a table."""
-        trigger_name = f"{table_name}_UPDATE_TRIGGER"
-        sequence_schema = self.cdc_config.change_schema or self.sap_config.schema
-        full_sequence_name = f"{sequence_schema}.{table_name}_SEQ"
-        
-        # Check if trigger already exists
-        if await self._check_trigger_exists(cursor, trigger_name):
-            logger.info(f"UPDATE trigger already exists: {trigger_name}")
-            return
-        
-        # Get table columns to build proper JSON
-        columns = await self._get_table_columns(table_name)
-        if not columns:
-            logger.warning(f"No columns found for table {table_name}, skipping trigger creation")
-            return
-        
-        # Build JSON objects for old and new values using the new approach
-        old_json_parts = []
-        new_json_parts = []
-        
-        for i, col in enumerate(columns):
-            col_name = col["name"]
-            old_json_parts.append(f"SELECT {i+1} as ord, '{col_name}' as col_name, :old_row.\"{col_name}\" as col_value, 'STR' as col_type FROM SYS.DUMMY")
-            new_json_parts.append(f"SELECT {i+1} as ord, '{col_name}' as col_name, :new_row.\"{col_name}\" as col_value, 'STR' as col_type FROM SYS.DUMMY")
-        
-        old_row_kv_select = " UNION ALL ".join(old_json_parts)
-        new_row_kv_select = " UNION ALL ".join(new_json_parts)
-
-        old_json_sql = f"""
-        WITH kv AS (
-            SELECT STRING_AGG(
-                '\"' || col_name || '\":' || 
-                CASE 
-                    WHEN col_value IS NULL THEN 'null'
-                    WHEN col_type = 'NUM' THEN col_value
-                    ELSE '\"' || REPLACE(REPLACE(col_value, '\\', '\\\\'), '\"', '\\\"') || '\"'
-                END, 
-                ',' 
-                ORDER BY ord
-            ) as json_content
-            FROM ( {old_row_kv_select} )
-        )
-        SELECT '{' || json_content || '}' INTO old_json_data FROM kv;      
-        """
-
-        new_json_sql = f"""
-        WITH kv AS (
-            SELECT STRING_AGG(
-                '\"' || col_name || '\":' || 
-                CASE 
-                    WHEN col_value IS NULL THEN 'null'
-                    WHEN col_type = 'NUM' THEN col_value
-                    ELSE '\"' || REPLACE(REPLACE(col_value, '\\', '\\\\'), '\"', '\\\"') || '\"'
-                END, 
-                ',' 
-                ORDER BY ord
-            ) as json_content
-            FROM ( {new_row_kv_select} )
-        )
-        SELECT '{' || json_content || '}' INTO new_json_data FROM kv;      
-        """
-        
-        try:
-            quoted_table_name = f'"{table_name}"'
-            quoted_schema_name = f'"{self.sap_config.schema}"'
-            trigger_sql = f"""
-                CREATE TRIGGER {trigger_name}
-                AFTER UPDATE ON {quoted_schema_name}.{quoted_table_name}
+                CREATE {"OR REPLACE " if force_recreate else ""}TRIGGER {trigger_name}
+                AFTER {trigger_type.value} ON {quoted_schema_name}.{quoted_table_name}
                 REFERENCING OLD ROW AS old_row, NEW ROW AS new_row
                 FOR EACH ROW
                 BEGIN
-                    DECLARE old_json_data NCLOB;
-                    DECLARE new_json_data NCLOB;
-                    {old_json_sql}
-                    {new_json_sql}
-                    INSERT INTO {change_table} (
-                        TABLE_SCHEMA, TABLE_NAME, CHANGE_TYPE, OLD_VALUES, NEW_VALUES, 
-                        TRANSACTION_ID, SEQUENCE_NUMBER, PRIMARY_KEY_VALUES
-                    ) VALUES (
-                        '{self.sap_config.schema}',
-                        '{table_name}',
-                        'UPDATE',
-                        TO_NCLOB(old_json_data),
-                        TO_NCLOB(new_json_data),
-                        CURRENT_UPDATE_TRANSACTION(),
-                        {full_sequence_name}.NEXTVAL,
-                        TO_NCLOB(new_json_data)
-                    );
-                END
-            """
-            
-            cursor.execute(trigger_sql)
-            logger.info(f"Successfully created UPDATE trigger: {trigger_name}")
-            
-        except Exception as e:
-            logger.error(f"Failed to create UPDATE trigger {trigger_name}: {e}")
-            await self._log_problematic_sql_parts_from_error(e, trigger_sql)
-            raise
-    
-    async def _create_delete_trigger(self, cursor: dbapi.Cursor, table_name: str, change_table: str) -> None:
-        """Create DELETE trigger for a table."""
-        trigger_name = f"{table_name}_DELETE_TRIGGER"
-        sequence_schema = self.cdc_config.change_schema or self.sap_config.schema
-        full_sequence_name = f"{sequence_schema}.{table_name}_SEQ"
-        
-        # Check if trigger already exists
-        if await self._check_trigger_exists(cursor, trigger_name):
-            logger.info(f"DELETE trigger already exists: {trigger_name}")
-            return
-        
-        # Get table columns to build proper JSON
-        columns = await self._get_table_columns(table_name)
-        if not columns:
-            logger.warning(f"No columns found for table {table_name}, skipping trigger creation")
-            return
-        
-        # Build JSON object for old values using the new approach
-        old_json_parts = []
-        for i, col in enumerate(columns):
-            col_name = col["name"]
-            old_json_parts.append(f"SELECT {i+1} as ord, '{col_name}' as col_name, :old_row.\"{col_name}\" as col_value, 'STR' as col_type FROM SYS.DUMMY")
-        
-        old_row_kv_select = " UNION ALL ".join(old_json_parts)
+                    DECLARE old_json NCLOB;
+                    DECLARE new_json NCLOB;
+                    {await self._create_select_stmt(table_name, "old_row", "old_json") if trigger_type != TriggerType.INSERT else ""}
+                    {await self._create_select_stmt(table_name, "new_row", "new_json") if trigger_type != TriggerType.DELETE else ""}
 
-        old_json_sql = f"""
-        WITH kv AS (
-            SELECT STRING_AGG(
-                '\"' || col_name || '\":' || 
-                CASE 
-                    WHEN col_value IS NULL THEN 'null'
-                    WHEN col_type = 'NUM' THEN col_value
-                    ELSE '\"' || REPLACE(REPLACE(col_value, '\\', '\\\\'), '\"', '\\\"') || '\"'
-                END, 
-                ',' 
-                ORDER BY ord
-            ) as json_content
-            FROM ( {old_row_kv_select} )
-        )
-        SELECT '{' || json_content || '}' INTO old_json_data FROM kv;      
-        """
-        
-        try:
-            quoted_table_name = f'"{table_name}"'
-            quoted_schema_name = f'"{self.sap_config.schema}"'
-            trigger_sql = f"""
-                CREATE TRIGGER {trigger_name}
-                AFTER DELETE ON {quoted_schema_name}.{quoted_table_name}
-                REFERENCING OLD ROW AS old_row
-                FOR EACH ROW
-                BEGIN
-                    DECLARE old_json_data NCLOB;
-                    {old_json_sql}
                     INSERT INTO {change_table} (
-                        TABLE_SCHEMA, TABLE_NAME, CHANGE_TYPE, OLD_VALUES, NEW_VALUES,
-                        TRANSACTION_ID, SEQUENCE_NUMBER, PRIMARY_KEY_VALUES
+                        TABLE_SCHEMA, TABLE_NAME, CHANGE_TYPE, OLD_VALUES, NEW_VALUES
                     ) VALUES (
                         '{self.sap_config.schema}',
                         '{table_name}',
-                        'DELETE',
-                        TO_NCLOB(old_json_data),
-                        NULL,
-                        CURRENT_UPDATE_TRANSACTION(),
-                        {full_sequence_name}.NEXTVAL,
-                        TO_NCLOB(old_json_data)
+                        '{trigger_type.value}',
+                        :old_json,
+                        :new_json
                     );
                 END
             """
-            
             cursor.execute(trigger_sql)
-            logger.info(f"Successfully created DELETE trigger: {trigger_name}")
+            logger.info(f"Successfully created {trigger_type.value} trigger: {trigger_name}")
             
         except Exception as e:
-            logger.error(f"Failed to create DELETE trigger {trigger_name}: {e}")
-            await self._log_problematic_sql_parts_from_error(e, trigger_sql)
+            logger.error(f"Failed to create {trigger_type.value} trigger {trigger_name}: {e}")
             raise
+
+    def _get_trigger_name(self, table_name: str, trigger_type: TriggerType) -> str:
+        """Get the name of a trigger for a table."""
+        return f"{table_name}_{trigger_type.value.upper()}_TRIGGER"
     
+    def _drop_trigger(self, cursor: dbapi.Cursor, table_name: str, trigger_type: TriggerType) -> None:
+        """Drop a trigger."""
+        trigger_name = self._get_trigger_name(table_name, trigger_type)
+        logger.debug(f"Dropping {trigger_type.value} trigger for table: {table_name}: {trigger_name}")
+        cursor.execute(f"DROP TRIGGER {trigger_name}")
+        logger.info(f"Dropped trigger: {trigger_name}")
+
     async def _cleanup_table_cdc(self, cursor: dbapi.Cursor, table_name: str) -> None:
-        """Clean up CDC infrastructure for a table (triggers, sequence)."""
+        """Clean up CDC infrastructure for a table (triggers)."""
         logger.info(f"Starting CDC cleanup for table: {table_name}")
         
         try:
-            # Drop triggers
-            triggers = [
-                f"{table_name}_INSERT_TRIGGER",
-                f"{table_name}_UPDATE_TRIGGER", 
-                f"{table_name}_DELETE_TRIGGER"
-            ]
-            
-            dropped_triggers = []
-            for trigger_name in triggers:
-                try:
-                    cursor.execute(f"DROP TRIGGER {trigger_name}")
-                    dropped_triggers.append(trigger_name)
-                    logger.info(f"Dropped trigger: {trigger_name}")
-                except Exception as e:
-                    # Trigger might not exist, log but don't fail
-                    logger.debug(f"Could not drop trigger {trigger_name}: {e}")
-            
-            # Drop sequence
-            sequence_name = f"{table_name}_SEQ"
-            sequence_schema = self.cdc_config.change_schema or self.sap_config.schema
-            full_sequence_name = f"{sequence_schema}.{sequence_name}"
-            try:
-                cursor.execute(f"DROP SEQUENCE {full_sequence_name}")
-                logger.info(f"Dropped sequence: {full_sequence_name}")
-            except Exception as e:
-                logger.debug(f"Could not drop sequence {full_sequence_name}: {e}")
-            
+            for trigger_type in TriggerType:
+                self._drop_trigger(cursor, table_name, trigger_type)
+                        
             logger.info(
                 "CDC cleanup completed for table",
                 table_name=table_name,
-                dropped_triggers=dropped_triggers,
-                sequence_dropped=sequence_name
             )
                 
         except Exception as e:
@@ -786,15 +513,6 @@ class SAPHanaExtractor:
         since: Optional[datetime] = None, 
         limit: int = 1000
     ) -> List[ChangeEvent]:
-        """Get changes from the database.
-        
-        Args:
-            since: Get changes since this timestamp
-            limit: Maximum number of changes to return
-            
-        Returns:
-            List of change events
-        """
         if not self.connection:
             raise RuntimeError("Not connected to database")
         
@@ -824,10 +542,7 @@ class SAPHanaExtractor:
                 CHANGE_TYPE,
                 CHANGE_TIMESTAMP,
                 OLD_VALUES,
-                NEW_VALUES,
-                TRANSACTION_ID,
-                SEQUENCE_NUMBER,
-                PRIMARY_KEY_VALUES
+                NEW_VALUES
             FROM {change_table}
         """
         
@@ -838,26 +553,22 @@ class SAPHanaExtractor:
         
         query += " ORDER BY CHANGE_TIMESTAMP ASC LIMIT ?"
         params.append(limit)
-        
         cursor.execute(query, params)
         
         changes = []
-        for row in cursor.fetchall():
+        for row in await self._fetch_all(query, params):
             change = ChangeEvent(
                 event_id=str(row[0]),
                 event_timestamp=row[4],
-                change_type=ChangeType(row[3]),
+                change_type=ChangeType(row[3].upper()),
                 schema_name=row[1],
                 table_name=row[2],
                 full_table_name=f"{row[1]}.{row[2]}",
                 old_values=self._parse_json(row[5]) if row[5] else None,
                 new_values=self._parse_json(row[6]) if row[6] else None,
-                transaction_id=row[7],
-                sequence_number=row[8],
-                primary_key_values=self._parse_json(row[9]) if row[9] else None,
             )
             changes.append(change)
-        
+
         return changes
     
     def _parse_json(self, json_str: str) -> Dict[str, Any]:

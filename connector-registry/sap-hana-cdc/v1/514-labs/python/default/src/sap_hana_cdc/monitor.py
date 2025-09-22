@@ -87,18 +87,8 @@ class CDCMonitor:
                 self.change_processing_rates.append(rate)
             
             # Update table-level metrics
-            for table_key, table_change in batch.table_changes.items():
-                table_metrics = self.table_metrics[table_key]
-                table_metrics["changes_processed"] += len(table_change.changes)
-                table_metrics["last_change_time"] = datetime.utcnow()
-                
-                # Count change types
-                for change in table_change.changes:
-                    table_metrics["change_types"][change.change_type.value] += 1
-            
             logger.debug(
                 "Recorded batch metrics",
-                batch_id=batch.batch_id,
                 changes_count=total_changes,
                 processing_time=processing_time,
             )

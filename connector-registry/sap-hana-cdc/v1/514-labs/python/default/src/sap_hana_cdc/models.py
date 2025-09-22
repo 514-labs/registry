@@ -47,9 +47,6 @@ class ChangeEvent:
             "full_table_name": self.full_table_name,
             "old_values": self.old_values,
             "new_values": self.new_values,
-            "primary_key_values": self.primary_key_values,
-            "transaction_id": self.transaction_id,
-            "sequence_number": self.sequence_number,
             "source_timestamp": self.source_timestamp.isoformat() if self.source_timestamp else None,
             "pipeline_id": self.pipeline_id,
             "version": self.version,
@@ -81,22 +78,18 @@ class TableChange:
 class BatchChange:
     """Represents a batch of changes across multiple tables."""
     
-    batch_id: str
-    batch_timestamp: datetime
-    table_changes: Dict[str, TableChange] = field(default_factory=dict)
-    
-    def add_table_change(self, table_change: TableChange) -> None:
+    changes: List[ChangeEvent]
+    def add_change(self, change: ChangeEvent) -> None:
         """Add changes for a table."""
-        key = f"{table_change.schema_name}.{table_change.table_name}"
-        self.table_changes[key] = table_change
+        self.changes.extend(change)
     
     def get_total_changes(self) -> int:
         """Get total number of changes in this batch."""
-        return sum(len(tc.changes) for tc in self.table_changes.values())
+        return len(self.changes)
     
     def is_empty(self) -> bool:
         """Check if the batch is empty."""
-        return all(tc.is_empty() for tc in self.table_changes.values())
+        return len(self.changes) == 0
 
 
 @dataclass
@@ -115,12 +108,11 @@ class CDCState:
         self.processed_batches += 1
         self.processed_changes += batch.get_total_changes()
         
-        if batch.table_changes:
+        if batch.get_total_changes() > 0:
             # Update to the latest timestamp in the batch
             latest_timestamp = max(
                 change.event_timestamp 
-                for table_change in batch.table_changes.values()
-                for change in table_change.changes
+                for change in batch.changes
             )
             self.last_processed_timestamp = latest_timestamp
     
