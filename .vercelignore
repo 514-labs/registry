@@ -1,25 +1,37 @@
-# Exclude all registry content first
-connector-registry/
-pipeline-registry/
-
-# Include ONLY the absolute essentials for registry discovery and schemas
-!connector-registry/**/_meta/
-!pipeline-registry/**/_meta/
-!connector-registry/**/schemas/
-!pipeline-registry/**/schemas/
-!connector-registry/**/docs/
-!pipeline-registry/**/docs/
-!connector-registry/**/README.md
-!pipeline-registry/**/README.md
-!connector-registry/**/package.json
-!pipeline-registry/**/package.json
-
-# Exclude heavy system files everywhere
+# Exclude only the heaviest directories that cause size issues
 **/node_modules/
 **/dist/
 **/.turbo/
 **/.next/
 **/build/
 **/coverage/
+
+# Exclude heavy source code and implementation directories
+connector-registry/**/src/
+pipeline-registry/**/src/
+connector-registry/**/tests/
+pipeline-registry/**/tests/
+connector-registry/**/examples/
+pipeline-registry/**/examples/
+
+# Keep essential files for Shopify fallback
+!connector-registry/**/src/data/models.py
+
+# Exclude development artifacts
 **/*.log
 **/.DS_Store
+**/debug-connectors.mjs
+**/test-registry.js
+**/test-simple.ts
+**/.env*
+!**/.env.example
+**/jest.config.*
+**/vitest.config.*
+**/*.test.*
+**/*.spec.*
+
+# Keep everything else by default:
+# - _meta/ (registry discovery)
+# - schemas/ (schema processing)
+# - docs/ (documentation)
+# - README.md, package.json (metadata)
