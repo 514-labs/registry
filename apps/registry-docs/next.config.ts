@@ -13,9 +13,15 @@ const nextConfig: NextConfig = {
   output: "standalone",
   // Ensure file tracing can include files outside the app (monorepo root)
   outputFileTracingRoot: resolve(__dirname, "../../"),
-  // Include both registries so ISR/static routes can access them at runtime
+  // Include registries only for routes that actually need them
   outputFileTracingIncludes: {
-    "/**/*": ["../../connector-registry/**/*", "../../pipeline-registry/**/*"],
+    "/connectors/**/*": ["../../connector-registry/**/*"],
+    "/pipelines/**/*": ["../../pipeline-registry/**/*"],
+    "/discover": ["../../connector-registry/**/*", "../../pipeline-registry/**/*"],
+    "/api/connectors/**/*": ["../../connector-registry/**/*"],
+    "/api/pipelines/**/*": ["../../pipeline-registry/**/*"],
+    "/api/registry/**/*": ["../../connector-registry/**/*", "../../pipeline-registry/**/*"],
+    "/registry.json": ["../../connector-registry/**/*", "../../pipeline-registry/**/*"],
   },
   env: {
     GITHUB_PAT: process.env.GITHUB_PAT,
