@@ -1,4 +1,4 @@
-# Exclude the heavy implementation files that cause size issues
+# Exclude only the heaviest directories that cause deployment size issues
 **/node_modules/
 **/dist/
 **/.turbo/
@@ -6,24 +6,19 @@
 **/build/
 **/coverage/
 
-# Exclude large source code directories but keep essential files
-connector-registry/**/src/
-pipeline-registry/**/src/
-connector-registry/**/tests/
-pipeline-registry/**/tests/
-connector-registry/**/examples/
-pipeline-registry/**/examples/
+# Exclude the specific large files we identified
+connector-registry/**/src/generated/
+pipeline-registry/**/src/generated/
+
+# Exclude other heavy generated/compiled files
+**/*.d.ts
+**/generated/dutchie.*
 
 # Exclude development artifacts
+**/*.log
 **/.DS_Store
 **/debug-connectors.mjs
 **/test-registry.js
 **/test-simple.ts
-**/*.log
 
-# Keep all essential directories and files:
-# - _meta/ (registry discovery)
-# - schemas/ (schema specs)
-# - docs/ (documentation)
-# - README.md, package.json (metadata)
-# Everything else stays included by default
+# Keep everything else: _meta/, schemas/, docs/, README.md, package.json, etc.
