@@ -13,12 +13,7 @@
 **/generated/dutchie.*
 
 # Exclude most source code files (500 files) but keep essential ones
-connector-registry/**/*.ts
-connector-registry/**/*.js
-connector-registry/**/*.d.ts
-pipeline-registry/**/*.ts
-pipeline-registry/**/*.js
-pipeline-registry/**/*.d.ts
+
 
 # But keep essential Python files for Shopify fallback
 !connector-registry/**/models.py
