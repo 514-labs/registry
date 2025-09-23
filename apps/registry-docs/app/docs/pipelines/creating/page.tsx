@@ -35,7 +35,7 @@ cd registry`}</code>
 
       <h2>2. Generate Pipeline Scaffold</h2>
       <pre>
-        <code>{`bash -i <(curl https://pipelines.514.ai/install.sh) \
+        <code>{`bash -i <(curl https://registry.514.ai/install.sh) \
   google-analytics-to-clickhouse v1 myusername typescript`}</code>
       </pre>
 

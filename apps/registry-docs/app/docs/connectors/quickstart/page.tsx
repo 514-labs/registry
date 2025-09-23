@@ -23,7 +23,7 @@ cd registry`}</code>
       <h2>2. Generate Your Connector</h2>
       <p>Use our scaffold script to create a new connector:</p>
       <pre>
-        <code>{`bash -i <(curl https://connectors.514.ai/install.sh) \
+        <code>{`bash -i <(curl https://registry.514.ai/install.sh) \
   my-api v1 myusername typescript`}</code>
       </pre>
 
