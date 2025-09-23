@@ -5,5 +5,5 @@
   "tags": ["google-analytics", "ga4", "clickhouse"],
   "description": "Ingest GA4 events into ClickHouse.",
   "homepage": "",
-  "registryUrl": "https://github.com/514-labs/factory/tree/main/pipeline-registry/google-analytics-to-clickhouse"
+  "registryUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/google-analytics-to-clickhouse"
 }
