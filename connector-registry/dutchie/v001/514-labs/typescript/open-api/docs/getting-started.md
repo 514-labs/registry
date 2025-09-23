@@ -41,8 +41,8 @@ async function main() {
     auth: { type: "basic", basic: { username: process.env.DUTCHIE_API_KEY! } },
   });
 
-  for await (const brand of conn.brand.streamAll({ pageSize: 100 })) {
-    console.log('brand:', brand);
+  for await (const page of conn.brand.getAll({ pageSize: 100 })) {
+    console.log('page:', page);
   }
 }
 
@@ -101,13 +101,12 @@ export const dutchietask = new Task<null, void>("testdutchietask", {
     });
 
     console.log('Getting brands from Dutchie');
-    const items = await conn.brand.getAll();
-    const rows: BrandWithKey[] = items
-      .filter(b => b.brandId != null)
-      .map(b => ({ ...b, brandId: b.brandId as Key<number> }));
-
-    console.log('Rows:', rows);
-    await BrandPipeline.table!.insert(rows);
+    for await (const page of conn.brand.getAll({ pageSize: 50 })) {
+      const rows: BrandWithKey[] = page
+        .filter(b => b.brandId != null)
+        .map(b => ({ ...b, brandId: b.brandId as Key<number> }));
+      await BrandPipeline.table!.insert(rows);
+    }
     console.log('Brands inserted into ClickHouse');
   },
   retries: 1,

@@ -93,6 +93,22 @@ rewrite_core_imports() {
   done < <(find "$src_root" -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" -o -name "*.mts" -o -name "*.cts" \) -print0)
 }
 
+prune_connector_tree() {
+  echo "Cleaning up connector directory"
+  # Keep only: src (with copied core), package.json, README
+  shopt -s dotglob
+  for entry in *; do
+    case "$entry" in
+      src|package.json|README.md)
+        ;;
+      *)
+        rm -rf "$entry" || true
+        ;;
+    esac
+  done
+  shopt -u dotglob
+}
+
 run_pnpm_install() {
   # Run install right here (connector dir) if pnpm is available.
   if ! command -v pnpm >/dev/null 2>&1; then
@@ -114,6 +130,7 @@ main() {
   remove_dependencies_from_package_json
   copy_core_into_connector
   rewrite_core_imports
+  prune_connector_tree
   run_pnpm_install
 }
 
