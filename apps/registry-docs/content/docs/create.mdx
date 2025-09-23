@@ -7,11 +7,11 @@ Follow these steps to create your own connector or pipeline:
 
 ## 1. Clone the repository
 
-Clone the factory repository to your local machine:
+Clone the registry repository to your local machine:
 
 ```bash
-git clone https://github.com/514-labs/factory.git
-cd factory
+git clone https://github.com/514-labs/registry.git
+cd registry
 ```
 
 <Tabs defaultValue="connector" className="mt-6">
@@ -24,7 +24,7 @@ cd factory
 
 ## 2. Generate a connector scaffold
 
-From the factory directory, run the install script to generate a new connector with the appropriate structure:
+From the registry directory, run the install script to generate a new connector with the appropriate structure:
 
 ```bash
 bash -i <(curl https://registry.514.ai/install.sh) --type connector [connector-name] [version] [author] [language]
@@ -66,9 +66,9 @@ Your LLM can then help generate the connector implementation following the estab
 
 ## 5. Share your connector
 
-Open a pull request to the [factory repository](https://github.com/514-labs/factory) to share your connector with the community. Mention the connector [Issue](https://github.com/514-labs/factory/issues) in the PR description.
+Open a pull request to the [registry repository](https://github.com/514-labs/registry) to share your connector with the community. Mention the connector [Issue](https://github.com/514-labs/registry/issues) in the PR description.
 
-If you built your connector outside the factory monorepo, you'll need to add it to the monorepo's registry directory with all required metadata (defined in `connector-registry/_scaffold`).
+If you built your connector outside the registry monorepo, you'll need to add it to the monorepo's registry directory with all required metadata (defined in `connector-registry/_scaffold`).
 
 </TabsContent>
 
@@ -76,7 +76,7 @@ If you built your connector outside the factory monorepo, you'll need to add it 
 
 ## 2. Generate a pipeline scaffold
 
-From the factory directory, run the install script to generate a new pipeline with the appropriate structure:
+From the registry directory, run the install script to generate a new pipeline with the appropriate structure:
 
 ```bash
 bash -i <(curl https://registry.514.ai/install.sh) --type pipeline [pipeline-name] [version] [author] [language]
@@ -112,9 +112,9 @@ Your LLM can then help generate the pipeline implementation following the establ
 
 ## 5. Share your pipeline
 
-Open a pull request to the [factory repository](https://github.com/514-labs/factory) to share your pipeline with the community.
+Open a pull request to the [registry repository](https://github.com/514-labs/registry) to share your pipeline with the community.
 
-If you built your pipeline outside the factory monorepo, you'll need to add it to the monorepo's registry directory with all required metadata (defined in `pipeline-registry/_scaffold`).
+If you built your pipeline outside the registry monorepo, you'll need to add it to the monorepo's registry directory with all required metadata (defined in `pipeline-registry/_scaffold`).
 
 </TabsContent>
 </Tabs>
