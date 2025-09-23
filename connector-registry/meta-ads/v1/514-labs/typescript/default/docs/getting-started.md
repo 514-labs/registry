@@ -13,7 +13,7 @@ Go to the root directory of your project.
 Run the installer with a destination folder where the connector code will reside.
 
 ```bash
-bash -i <(curl https://registry.514.ai/install.sh) --dest app/meta-ads meta-ads v1 five-one-four typescript default
+bash -i <(curl https://registry.514.ai/install.sh) --dest app/meta-ads meta-ads v1 514-labs typescript default
 ```
 
 ### 3. Set environment variable in your shell
