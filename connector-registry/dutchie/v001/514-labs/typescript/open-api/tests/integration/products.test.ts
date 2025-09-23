@@ -16,23 +16,18 @@ maybe('integration: products', () => {
     conn.initialize({
       baseUrl,
       auth: { type: 'basic', basic: { username: apiKey! } },
-      logging: {
-        enabled: true,
-        level: 'info',
-      },
+      logging: { enabled: true, level: 'info', },
     })
   })
 
-  it('lists products and streams at least one item', async () => {
-    const listRes = await conn.products.list({})
-    expect(listRes.status).toBe(200)
-    expect(Array.isArray(listRes.data)).toBe(true)
-    expect(listRes.data.length).toBeGreaterThan(0)
-
+  it('streams products and yields items', async () => {
     let count = 0
-    for await (const product of conn.products.streamAll({ pageSize: 50 })) {
-      expect(product).toBeDefined()
-      count += 1
+    for await (const page of conn.products.getAll({ pageSize: 50 })) {
+      for (const product of page) {
+        expect(product).toBeDefined()
+        count += 1
+        if (count >= 10) break
+      }
       if (count >= 10) break
     }
     expect(count).toBeGreaterThan(0)

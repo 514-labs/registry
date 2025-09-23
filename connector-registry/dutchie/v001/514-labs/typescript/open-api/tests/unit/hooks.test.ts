@@ -1,9 +1,7 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 /* eslint-env jest */ /* global jest, describe, it, expect, afterEach */
 import nock from 'nock'
 import { createDutchieConnector } from '../../src'
-import type { Hooks } from '../../src/lib/hooks'
+import type { Hook, HookContext } from '@connector-factory/core'
 
 const BASE = 'https://api.pos.dutchie.com'
 
@@ -14,21 +12,23 @@ describe('hooks', () => {
     const apiKey = 'test-key'
     const basic = Buffer.from(`${apiKey}:`).toString('base64')
     const events: string[] = []
-    const hooks: Hooks = {
-      beforeRequest: [{ name: 'before', execute: () => { events.push('before') } } as any],
-      afterResponse: [{ name: 'after', execute: () => { events.push('after') } } as any],
-      onError: [{ name: 'error', execute: () => { events.push('error') } } as any],
-      onRetry: [{ name: 'retry', execute: () => { events.push('retry') } } as any],
+    const hooks: Partial<Record<'beforeRequest'|'afterResponse'|'onError'|'onRetry', Hook[]>> = {
+      beforeRequest: [{ name: 'before', execute: () => { events.push('before') } }],
+      afterResponse: [{ name: 'after', execute: () => { events.push('after') } }],
+      onError: [{ name: 'error', execute: () => { events.push('error') } }],
+      onRetry: [{ name: 'retry', execute: () => { events.push('retry') } }],
     }
 
     const scope = nock(BASE)
-      .get('/brand')
+      .get('/brand').query(true)
       .matchHeader('authorization', `Basic ${basic}`)
       .reply(200, [])
 
     const conn = createDutchieConnector()
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } }, hooks: hooks as any })
-    await conn.brand.list()
+    // consume first page
+    const iter = conn.brand.getAll({ pageSize: 50 })
+    await iter.next()
     expect(events).toEqual(['before', 'after'])
     scope.done()
   })
@@ -38,24 +38,25 @@ describe('hooks', () => {
     const basic = Buffer.from(`${apiKey}:`).toString('base64')
 
     const scope = nock(BASE)
-      .get('/brand')
+      .get('/brand').query(true)
       .matchHeader('authorization', `Basic ${basic}`)
       .reply(200, [{ id: '1', name: 'Acme' }])
 
-    const hooks: Hooks = {
-      afterResponse: [{ name: 'map', execute: ({ type, response, modifyResponse }: any) => {
-        if (type !== 'afterResponse' || !response || !modifyResponse) return
-        const data = Array.isArray(response.data) ? response.data : []
+    const hooks: Partial<Record<'beforeRequest'|'afterResponse'|'onError'|'onRetry', Hook[]>> = {
+      afterResponse: [{ name: 'map', execute: (ctx: HookContext) => {
+        if (ctx.type !== 'afterResponse') return
+        const data = Array.isArray(ctx.response.data) ? ctx.response.data : []
         const mapped = data.map((b: any) => ({ ...b, upperName: String(b.name ?? '').toUpperCase() }))
-        modifyResponse({ data: mapped as any })
-      }} as any],
+        ctx.modifyResponse({ data: mapped as any })
+      }}],
     }
 
     const conn = createDutchieConnector()
-    conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } }, hooks: hooks as any })
-    const res = await conn.brand.list()
-    expect(Array.isArray(res.data)).toBe(true)
-    expect((res.data as any)[0].upperName).toBe('ACME')
+    conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } }, hooks })
+    const iter = conn.brand.getAll({ pageSize: 50 })
+    const { value: page } = await iter.next()
+    expect(Array.isArray(page)).toBe(true)
+    expect((page as any)[0].upperName).toBe('ACME')
     scope.done()
   })
 })

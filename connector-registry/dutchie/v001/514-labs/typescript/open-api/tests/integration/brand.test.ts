@@ -8,7 +8,7 @@ const baseUrl = process.env.DUTCHIE_BASE_URL || 'https://api.pos.dutchie.com'
 
 const maybe = apiKey ? describe : describe.skip
 
-describe.skip('integration: brand', () => {
+maybe('integration: brand', () => {
   it('streams brands and yields items', async () => {
     const events: Array<{ level: string; event: any }> = []
 
@@ -24,10 +24,13 @@ describe.skip('integration: brand', () => {
     })
 
     let count = 0
-    for await (const brand of conn.brand.streamAll({ pageSize: 50 })) {
-      expect(brand).toBeDefined()
-      count += 1
-      if (count >= 1) break
+    for await (const page of conn.brand.getAll({ pageSize: 50 })) {
+      for (const brand of page) {
+        expect(brand).toBeDefined()
+        count += 1
+        if (count >= 10) break
+      }
+      if (count >= 10) break
     }
 
     expect(count).toBeGreaterThan(0)

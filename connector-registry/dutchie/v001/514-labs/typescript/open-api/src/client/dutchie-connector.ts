@@ -36,7 +36,7 @@ export class DutchieApiConnector extends ApiConnectorBase {
     if (userConfig.validation?.enabled) {
       const hooks = createTypiaValidationHooks({ strict: userConfig.validation?.strict })
       const cfg = (this as any).config
-      const curr = cfg?.hooks ?? {}
+      const curr = this.config?.hooks ?? {}
       cfg.hooks = {
         beforeRequest: [...(curr.beforeRequest ?? [])],
         afterResponse: [...(curr.afterResponse ?? []), ...(hooks.afterResponse ?? [])],
