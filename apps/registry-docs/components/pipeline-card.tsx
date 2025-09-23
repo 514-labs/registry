@@ -31,6 +31,7 @@ export interface PipelineCardProps {
   languages?: string[];
   comingSoon?: boolean;
   implementationCount?: number;
+  reactions?: number;
 
   // Optional meta visualizations
   sourceSystem?: string; // e.g., "google-analytics"
@@ -54,6 +55,7 @@ export default function PipelineCard({
   languages,
   comingSoon,
   implementationCount,
+  reactions,
   sourceSystem,
   destinationSystem,
   scheduleCron,
@@ -127,12 +129,24 @@ export default function PipelineCard({
             {typeof implementationCount === "number" &&
             implementationCount > 0 ? (
               <Badge variant="secondary" className="text-sm">
-                {implementationCount} impls
+                {implementationCount} {implementationCount === 1 ? "implementation" : "implementations"}
               </Badge>
             ) : null}
             {comingSoon ? (
-              <Badge variant="secondary" className="text-sm">
-                Coming soon
+              <Badge variant="secondary" className="text-sm flex items-center gap-1">
+                <span>Requested</span>
+                <span>|</span>
+                <span>👍</span>
+                <span>{reactions ?? 0}</span>
+              </Badge>
+            ) : typeof reactions === "number" && reactions > 0 ? (
+              <Badge
+                variant="secondary"
+                className="text-sm flex items-center gap-1"
+              >
+                <span>❤️</span>
+                <span className="-ml-1">👍</span>
+                <span>{reactions}</span>
               </Badge>
             ) : null}
           </div>

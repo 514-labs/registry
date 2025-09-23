@@ -90,6 +90,9 @@ export default async function PipelineImplementationPage({
     meta?.registryUrl ??
     `https://github.com/514-labs/registry/tree/main/pipeline-registry/${pipeline}/${version}/${creator}`;
 
+  // Get View Source URL for the specific implementation
+  const viewSourceUrl = `https://github.com/514-labs/registry/tree/main/pipeline-registry/${pipeline}/${version}/${creator}/${language}/${implementation}`;
+
   // Build lists and navigation helpers
   const getProviderVersion = (pPath: string): string =>
     pPath.split("/").slice(-2)[0];
@@ -261,6 +264,7 @@ export default async function PipelineImplementationPage({
               reg.pipelineId.split("-to-")[1] ||
               "Destination"
             }
+            viewSourceHref={viewSourceUrl}
             creators={creatorsForVersion.map((c) => ({
               value: c,
               label: c,

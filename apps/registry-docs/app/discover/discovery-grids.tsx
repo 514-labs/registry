@@ -35,8 +35,11 @@ export function DiscoveryGrid({
             Pipelines ({pipelines.length})
           </TabsTrigger>
         </TabsList>
-        <div>
-          <TabsContent value="connectors" className="mt-6">
+      </div>
+
+      <TabsContent value="connectors" className="mt-6">
+        <div className="grid grid-cols-[260px_minmax(0,1fr)] gap-6">
+          <aside className="space-y-4">
             <ConnectorFilterBar
               query={connectorState.query}
               setQuery={connectorState.setQuery}
@@ -53,8 +56,16 @@ export function DiscoveryGrid({
               selectedTags={connectorState.selectedTags}
               setSelectedTags={connectorState.setSelectedTags}
             />
-          </TabsContent>
-          <TabsContent value="pipelines" className="mt-6">
+          </aside>
+          <section>
+            <ConnectorDiscoverGrid connectors={connectorState.filtered} />
+          </section>
+        </div>
+      </TabsContent>
+
+      <TabsContent value="pipelines" className="mt-6">
+        <div className="grid grid-cols-[260px_minmax(0,1fr)] gap-6">
+          <aside className="space-y-4">
             <PipelineFilterBar
               query={pipelineState.query}
               setQuery={pipelineState.setQuery}
@@ -71,14 +82,11 @@ export function DiscoveryGrid({
               selectedTags={pipelineState.selectedTags}
               setSelectedTags={pipelineState.setSelectedTags}
             />
-          </TabsContent>
+          </aside>
+          <section>
+            <PipelineDiscoverGrid pipelines={pipelineState.filtered} />
+          </section>
         </div>
-      </div>
-      <TabsContent value="connectors" className="mt-6">
-        <ConnectorDiscoverGrid connectors={connectorState.filtered} />
-      </TabsContent>
-      <TabsContent value="pipelines" className="mt-6">
-        <PipelineDiscoverGrid pipelines={pipelineState.filtered} />
       </TabsContent>
     </Tabs>
   );

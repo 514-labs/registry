@@ -9,6 +9,8 @@ import { Label } from "@ui/components/label";
 import { RadioGroup, RadioGroupItem } from "@ui/components/radio-group";
 import { Avatar, AvatarFallback, AvatarImage } from "@ui/components/avatar";
 import { GitBranch, Code2, Wrench } from "lucide-react";
+import { SiGithub } from "@icons-pack/react-simple-icons";
+import { Button } from "@ui/components/button";
 
 type SidebarSectionItem = {
   value: string;
@@ -27,6 +29,7 @@ export type ConnectorImplSidebarProps = {
   sourceHref?: string;
   reactionsHref?: string;
   reactionsCount?: number;
+  viewSourceHref?: string;
 
   creators: SidebarSectionItem[];
   versions: SidebarSectionItem[];
@@ -49,6 +52,7 @@ export default function ConnectorImplSidebar(props: ConnectorImplSidebarProps) {
     sourceHref,
     reactionsHref,
     reactionsCount,
+    viewSourceHref,
     creators,
     versions,
     languages,
@@ -158,6 +162,15 @@ export default function ConnectorImplSidebar(props: ConnectorImplSidebarProps) {
             </Badge>
           ) : null}
         </div>
+      ) : null}
+
+      {viewSourceHref ? (
+        <Button variant="outline" size="sm" asChild>
+          <Link href={viewSourceHref} target="_blank" rel="noopener noreferrer">
+            <SiGithub className="h-4 w-4" />
+            View Source
+          </Link>
+        </Button>
       ) : null}
 
       {description ? (

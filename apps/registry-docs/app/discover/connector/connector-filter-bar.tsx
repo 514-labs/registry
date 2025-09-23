@@ -2,6 +2,7 @@
 
 import { Input } from "@ui/components/input";
 import { Button } from "@ui/components/button";
+import { Checkbox } from "@ui/components/checkbox";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -196,22 +197,148 @@ export default function ConnectorFilterBar({
   setSelectedTags,
 }: ConnectorFilterBarProps) {
   return (
-    <div className="mb-6 flex flex-row items-center justify-between gap-4">
-      <ConnectorSearchInput query={query} setQuery={setQuery} />
-      <ConnectorFilterButton
-        sourceTypes={sourceTypes}
-        extractionPatterns={extractionPatterns}
-        domains={domains}
-        tags={tags}
-        selectedSourceTypes={selectedSourceTypes}
-        setSelectedSourceTypes={setSelectedSourceTypes}
-        selectedExtractions={selectedExtractions}
-        setSelectedExtractions={setSelectedExtractions}
-        selectedDomains={selectedDomains}
-        setSelectedDomains={setSelectedDomains}
-        selectedTags={selectedTags}
-        setSelectedTags={setSelectedTags}
-      />
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-sm font-medium text-muted-foreground mb-3">Filter</h3>
+        <ConnectorSearchInput
+          query={query}
+          setQuery={setQuery}
+          placeholder="Search connectors..."
+          className="w-full"
+        />
+      </div>
+
+      {/* Source Type Filters */}
+      {sourceTypes.length > 0 && (
+        <div>
+          <h4 className="text-sm font-medium mb-3">Source type</h4>
+          <div className="space-y-2">
+            {sourceTypes.map((sourceType) => {
+              const isChecked = selectedSourceTypes.includes(sourceType);
+              return (
+                <div key={sourceType} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`source-${sourceType}`}
+                    checked={isChecked}
+                    onCheckedChange={(checked) =>
+                      setSelectedSourceTypes((prev) =>
+                        checked
+                          ? Array.from(new Set([...prev, sourceType]))
+                          : prev.filter((p) => p !== sourceType)
+                      )
+                    }
+                  />
+                  <label
+                    htmlFor={`source-${sourceType}`}
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 capitalize"
+                  >
+                    {sourceType}
+                  </label>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Extraction Pattern Filters */}
+      {extractionPatterns.length > 0 && (
+        <div>
+          <h4 className="text-sm font-medium mb-3">Extraction</h4>
+          <div className="space-y-2">
+            {extractionPatterns.map((pattern) => {
+              const isChecked = selectedExtractions.includes(pattern);
+              return (
+                <div key={pattern} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`extraction-${pattern}`}
+                    checked={isChecked}
+                    onCheckedChange={(checked) =>
+                      setSelectedExtractions((prev) =>
+                        checked
+                          ? Array.from(new Set([...prev, pattern]))
+                          : prev.filter((p) => p !== pattern)
+                      )
+                    }
+                  />
+                  <label
+                    htmlFor={`extraction-${pattern}`}
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 capitalize"
+                  >
+                    {pattern}
+                  </label>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Domain Filters */}
+      {domains.length > 0 && (
+        <div>
+          <h4 className="text-sm font-medium mb-3">Domain</h4>
+          <div className="space-y-2">
+            {domains.map((domain) => {
+              const isChecked = selectedDomains.includes(domain);
+              return (
+                <div key={domain} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`domain-${domain}`}
+                    checked={isChecked}
+                    onCheckedChange={(checked) =>
+                      setSelectedDomains((prev) =>
+                        checked
+                          ? Array.from(new Set([...prev, domain]))
+                          : prev.filter((p) => p !== domain)
+                      )
+                    }
+                  />
+                  <label
+                    htmlFor={`domain-${domain}`}
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 capitalize"
+                  >
+                    {domain}
+                  </label>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Tags Filters */}
+      {tags.length > 0 && (
+        <div>
+          <h4 className="text-sm font-medium mb-3">Tags</h4>
+          <div className="space-y-2">
+            {tags.map((tag) => {
+              const isChecked = selectedTags.includes(tag);
+              return (
+                <div key={tag} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`tag-${tag}`}
+                    checked={isChecked}
+                    onCheckedChange={(checked) =>
+                      setSelectedTags((prev) =>
+                        checked
+                          ? Array.from(new Set([...prev, tag]))
+                          : prev.filter((p) => p !== tag)
+                      )
+                    }
+                  />
+                  <label
+                    htmlFor={`tag-${tag}`}
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 capitalize"
+                  >
+                    {tag}
+                  </label>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
