@@ -3,7 +3,7 @@
 // - buildListQuery maps typed params to query string (isActive, fromLastModifiedDateUTC)
 // - Pagination uses the default cursor strategy in makeCrudResource (no override needed here)
 import { makeCrudResource } from '../lib/make-resource'
-import type { SendFn } from '../lib/paginate'
+import { paginateOffset, type SendFn } from '../lib/paginate'
 import type { ProductDetail } from '../generated/types.gen'
 
 export const createProductsResource = (send: SendFn) => {
@@ -15,6 +15,11 @@ export const createProductsResource = (send: SendFn) => {
         ...(params?.isActive !== undefined ? { isActive: params.isActive } : {}),
         ...(params?.fromLastModifiedDateUTC ? { fromLastModifiedDateUTC: params.fromLastModifiedDateUTC } : {}),
       }),
+      paginate: async function* ({ send: s, path, query, pageSize }) {
+        for await (const items of paginateOffset<ProductDetail>({ send: s, path, query, pageSize })) {
+          yield items
+        }
+      },
     }
   )
 }

@@ -10,19 +10,19 @@ describe('observability hooks', () => {
     const hooks = createLoggingHooks({ level: 'warn', logger: (level, event) => events.push({ level, event }), includeQueryParams: true, includeHeaders: true, includeBody: true })
 
     // Level filter (info suppressed)
-    hooks.beforeRequest?.[0]({ type: 'beforeRequest', request: { method: 'GET', path: '/brand' } })
+    hooks.beforeRequest?.[0].execute({ type: 'beforeRequest', request: { method: 'GET', path: '/brand' } })
     expect(events.length).toBe(0)
 
     // Optional fields included
     const hooks2 = createLoggingHooks({ logger: (level, event) => events.push({ level, event }), includeQueryParams: true, includeHeaders: true, includeBody: true })
-    hooks2.beforeRequest?.[0]({ type: 'beforeRequest', request: { method: 'POST', path: '/brand?x=1', headers: { a: 'b' }, body: { c: 2 } } })
+    hooks2.beforeRequest?.[0].execute({ type: 'beforeRequest', request: { method: 'POST', path: '/brand?x=1', headers: { a: 'b' }, body: { c: 2 } } })
     expect(events.at(-1)?.event.query).toEqual({ x: '1' })
     expect(events.at(-1)?.event.headers).toEqual({ a: 'b' })
     expect(events.at(-1)?.event.body).toEqual({ c: 2 })
 
     // Response meta and item count
     const hooksInfo = createLoggingHooks({ logger: (level, event) => events.push({ level, event }) })
-    hooksInfo.afterResponse?.[0]({ type: 'afterResponse', request: { method: 'GET', path: '/brand' }, response: { status: 200, data: { results: [{}, {}] }, meta: { durationMs: 100, retryCount: 0, requestId: 'req-1', timestamp: Date.now() } } })
+    hooksInfo.afterResponse?.[0].execute({ type: 'afterResponse', request: { method: 'GET', path: '/brand' }, response: { status: 200, data: { results: [{}, {}] }, meta: { durationMs: 100, retryCount: 0, requestId: 'req-1', timestamp: Date.now() } } })
     expect(events.at(-1)?.event.event).toBe('http_response')
     expect(events.at(-1)?.event.itemCount).toBe(2)
     expect(events.at(-1)?.event.requestId).toBe('req-1')

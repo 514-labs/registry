@@ -14,7 +14,11 @@ import { createTypiaValidationHooks } from '../validation/typia-hooks'
 
 export type DutchieConfig = CoreConfig & {
   validation?: { enabled?: boolean; strict?: boolean }
-  logging?: { enabled?: boolean; level?: 'debug' | 'info' | 'warn' | 'error' }
+  logging?: {
+    enabled?: boolean;
+    level?: 'debug' | 'info' | 'warn' | 'error';
+    logger?: (level: string, event: Record<string, unknown>) => void
+  }
 }
 
 export class DutchieApiConnector extends ApiConnectorBase {
@@ -31,30 +35,26 @@ export class DutchieApiConnector extends ApiConnectorBase {
     // Optional Typia-based validation
     if (userConfig.validation?.enabled) {
       const hooks = createTypiaValidationHooks({ strict: userConfig.validation?.strict })
-      const curr = (this as any).config?.hooks ?? {}
-      ;(this as any).config = {
-        ...((this as any).config ?? {}),
-        hooks: {
-          beforeRequest: [...(curr.beforeRequest ?? [])],
-          afterResponse: [...(curr.afterResponse ?? []), ...(hooks.afterResponse ?? [])],
-          onError: [...(curr.onError ?? [])],
-          onRetry: [...(curr.onRetry ?? [])],
-        }
+      const cfg = (this as any).config
+      const curr = cfg?.hooks ?? {}
+      cfg.hooks = {
+        beforeRequest: [...(curr.beforeRequest ?? [])],
+        afterResponse: [...(curr.afterResponse ?? []), ...(hooks.afterResponse ?? [])],
+        onError: [...(curr.onError ?? [])],
+        onRetry: [...(curr.onRetry ?? [])],
       }
     }
 
     // Wire logging
     if (userConfig.logging?.enabled) {
-      const hooks = createLoggingHooks({ level: userConfig.logging.level })
-      const curr = (this as any).config?.hooks ?? {}
-      ;(this as any).config = {
-        ...((this as any).config ?? {}),
-        hooks: {
-          beforeRequest: [...(curr.beforeRequest ?? []), ...(hooks.beforeRequest ?? [])],
-          afterResponse: [...(curr.afterResponse ?? []), ...(hooks.afterResponse ?? [])],
-          onError: [...(curr.onError ?? []), ...(hooks.onError ?? [])],
-          onRetry: [...(curr.onRetry ?? []), ...(hooks.onRetry ?? [])],
-        }
+      const hooks = createLoggingHooks({ level: userConfig.logging.level, logger: userConfig.logging.logger as any })
+      const cfg = (this as any).config
+      const curr = cfg?.hooks ?? {}
+      cfg.hooks = {
+        beforeRequest: [...(curr.beforeRequest ?? []), ...(hooks.beforeRequest ?? [])],
+        afterResponse: [...(curr.afterResponse ?? []), ...(hooks.afterResponse ?? [])],
+        onError: [...(curr.onError ?? []), ...(hooks.onError ?? [])],
+        onRetry: [...(curr.onRetry ?? []), ...(hooks.onRetry ?? [])],
       }
     }
   }

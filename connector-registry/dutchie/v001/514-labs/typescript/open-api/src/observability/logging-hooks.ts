@@ -1,4 +1,4 @@
-import type { Hook, HookContext } from '../lib/hooks'
+import type { Hook, HookContext } from '@connector-factory/core'
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
@@ -20,13 +20,14 @@ function shouldLog(config: LoggingOptions, level: LogLevel): boolean {
 function safeUrl(raw?: string, includeQuery = false): { url?: string; query?: Record<string, unknown> } {
   if (!raw) return {}
   try {
-    const u = new URL(raw)
+    const isPathOnly = raw.startsWith('/')
+    const u = new URL(isPathOnly ? `https://dummy${raw}` : raw)
     if (!includeQuery) {
-      return { url: `${u.origin}${u.pathname}` }
+      return { url: isPathOnly ? u.pathname : u.toString() }
     }
     const query: Record<string, unknown> = {}
     u.searchParams.forEach((v, k) => { query[k] = v })
-    return { url: u.toString(), query }
+    return { url: isPathOnly ? `${u.pathname}${u.search}` : u.toString(), query }
   } catch {
     return { url: raw }
   }
@@ -42,64 +43,79 @@ function countItems(data: unknown): number | undefined {
   return undefined
 }
 
-export function createLoggingHooks(opts: LoggingOptions = {}) {
-  const logger = opts.logger ?? ((level: LogLevel, event: Record<string, unknown>) => { /* no-op */ })
+type CoreHooks = Partial<{ beforeRequest: Hook[]; afterResponse: Hook[]; onError: Hook[]; onRetry: Hook[] }>
 
-  const beforeRequest: Hook = (ctx: HookContext) => {
-    if (ctx.type !== 'beforeRequest' || !shouldLog(opts, 'info')) return
-    const method = ctx.request?.method
-    const path = ctx.request?.path
-    const { url, query } = safeUrl(path ? `https://dummy${path}` : undefined, !!opts.includeQueryParams)
-    const event: Record<string, unknown> = {
-      event: 'http_request',
-      operation: ctx.operation ?? ctx.request?.operation,
-      method,
-      url: url?.replace('https://dummy', ''),
+export function createLoggingHooks(opts: LoggingOptions = {}): CoreHooks {
+  const logger = opts.logger ?? ((level: LogLevel, event: Record<string, unknown>) => {
+    console.log(level, event)
+  })
+
+  const beforeRequest: Hook = {
+    name: 'logging:beforeRequest',
+    execute: (ctx: HookContext) => {
+      if (ctx.type !== 'beforeRequest' || !shouldLog(opts, 'info')) return
+      const method = ctx.request.method
+      const rawUrl = ctx.request.url || ctx.request.path
+      const { url, query } = safeUrl(rawUrl, !!opts.includeQueryParams)
+      const event: Record<string, unknown> = {
+        event: 'http_request',
+        operation: ctx.operation ?? ctx.request.operation,
+        method,
+        url,
+      }
+      if (opts.includeQueryParams && query) event.query = query
+      if (opts.includeHeaders && ctx.request.headers) event.headers = ctx.request.headers
+      if (opts.includeBody && ctx.request.body !== undefined) event.body = ctx.request.body
+      logger('info', event)
     }
-    if (opts.includeQueryParams && query) event.query = query
-    if (opts.includeHeaders && ctx.request?.headers) event.headers = ctx.request.headers
-    if (opts.includeBody && ctx.request?.body !== undefined) event.body = ctx.request.body
-    logger('info', event)
   }
 
-  const afterResponse: Hook = (ctx: HookContext) => {
-    if (ctx.type !== 'afterResponse' || !shouldLog(opts, 'info')) return
-    const method = ctx.request?.method
-    const path = ctx.request?.path
-    const { url } = safeUrl(path ? `https://dummy${path}` : undefined, !!opts.includeQueryParams)
-    const itemCount = countItems(ctx.response?.data)
-    const event: Record<string, unknown> = {
-      event: 'http_response',
-      operation: ctx.operation ?? ctx.request?.operation,
-      method,
-      url: url?.replace('https://dummy', ''),
-      status: ctx.response?.status,
-      durationMs: ctx.response?.meta?.durationMs,
-      retryCount: ctx.response?.meta?.retryCount,
-      requestId: ctx.response?.meta?.requestId,
+  const afterResponse: Hook = {
+    name: 'logging:afterResponse',
+    execute: (ctx: HookContext) => {
+      if (ctx.type !== 'afterResponse' || !shouldLog(opts, 'info')) return
+      const method = ctx.request.method
+      const rawUrl = ctx.request.url || ctx.request.path
+      const { url } = safeUrl(rawUrl, !!opts.includeQueryParams)
+      const itemCount = countItems(ctx.response.data)
+      const event: Record<string, unknown> = {
+        event: 'http_response',
+        operation: ctx.operation ?? ctx.request.operation,
+        method,
+        url,
+        status: ctx.response.status,
+        durationMs: ctx.response.meta?.durationMs,
+        retryCount: ctx.response.meta?.retryCount,
+      }
+      if (itemCount !== undefined) event.itemCount = itemCount
+      logger('info', event)
     }
-    if (itemCount !== undefined) event.itemCount = itemCount
-    logger('info', event)
   }
 
-  const onError: Hook = (ctx: HookContext) => {
-    if (ctx.type !== 'onError' || !shouldLog(opts, 'error')) return
-    logger('error', {
-      event: 'http_error',
-      operation: ctx.operation ?? ctx.request?.operation,
-      message: (ctx.error as any)?.message,
-      code: (ctx.error as any)?.code,
-      statusCode: (ctx.error as any)?.statusCode,
-    })
+  const onError: Hook = {
+    name: 'logging:onError',
+    execute: (ctx: HookContext) => {
+      if (ctx.type !== 'onError' || !shouldLog(opts, 'error')) return
+      logger('error', {
+        event: 'http_error',
+        operation: ctx.operation,
+        message: (ctx.error as any)?.message,
+        code: (ctx.error as any)?.code,
+        statusCode: (ctx.error as any)?.statusCode,
+      })
+    }
   }
 
-  const onRetry: Hook = (ctx: HookContext) => {
-    if (ctx.type !== 'onRetry' || !shouldLog(opts, 'debug')) return
-    logger('debug', {
-      event: 'http_retry',
-      operation: ctx.metadata?.operation ?? ctx.operation ?? ctx.request?.operation,
-      attempt: ctx.metadata?.attempt ?? ctx.attempt,
-    })
+  const onRetry: Hook = {
+    name: 'logging:onRetry',
+    execute: (ctx: HookContext) => {
+      if (ctx.type !== 'onRetry' || !shouldLog(opts, 'debug')) return
+      logger('debug', {
+        event: 'http_retry',
+        operation: ctx.metadata.operation ?? ctx.operation,
+        attempt: ctx.metadata.attempt,
+      })
+    }
   }
 
   return { beforeRequest: [beforeRequest], afterResponse: [afterResponse], onError: [onError], onRetry: [onRetry] }

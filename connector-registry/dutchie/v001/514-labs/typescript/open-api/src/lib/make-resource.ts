@@ -48,13 +48,13 @@ export function makeCrudResource<
       const query = options?.buildListQuery
         ? options.buildListQuery(params)
         : defaultListQuery(params as any)
-      return send<TListResponse>({ method: 'GET', path: objectPath, query })
+      return send<TListResponse>({ method: 'GET', path: objectPath, query, operation: 'list' })
     },
     get: (params: TGetParams) => {
       const query = options?.buildGetQuery
         ? options.buildGetQuery(params as any)
         : defaultGetQuery(params as any)
-      return send<TSingleResponse>({ method: 'GET', path: `${objectPath}/${params.id}`, query })
+      return send<TSingleResponse>({ method: 'GET', path: `${objectPath}/${params.id}`, query, operation: 'get' })
     },
     streamAll: async function* (params?: (TListParams extends undefined ? { pageSize?: number } : TListParams & { pageSize?: number })) {
       const listParams = params as any

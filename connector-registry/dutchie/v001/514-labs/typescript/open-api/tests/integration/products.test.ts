@@ -8,32 +8,36 @@ const baseUrl = process.env.DUTCHIE_BASE_URL || 'https://api.pos.dutchie.com'
 
 const maybe = apiKey ? describe : describe.skip
 
-describe.skip('integration: brand', () => {
-  it('streams brands and yields items', async () => {
-    const events: Array<{ level: string; event: any }> = []
+maybe('integration: products', () => {
+  let conn: ReturnType<typeof createDutchieConnector>
 
-    const conn = createDutchieConnector()
+  beforeAll(() => {
+    conn = createDutchieConnector()
     conn.initialize({
       baseUrl,
       auth: { type: 'basic', basic: { username: apiKey! } },
       logging: {
         enabled: true,
         level: 'info',
-        logger: (level, event) => events.push({ level, event }),
       },
     })
+  })
+
+  it('lists products and streams at least one item', async () => {
+    const listRes = await conn.products.list({})
+    expect(listRes.status).toBe(200)
+    expect(Array.isArray(listRes.data)).toBe(true)
+    expect(listRes.data.length).toBeGreaterThan(0)
 
     let count = 0
-    for await (const brand of conn.brand.streamAll({ pageSize: 50 })) {
-      expect(brand).toBeDefined()
+    for await (const product of conn.products.streamAll({ pageSize: 50 })) {
+      expect(product).toBeDefined()
       count += 1
-      if (count >= 1) break
+      if (count >= 10) break
     }
-
     expect(count).toBeGreaterThan(0)
-    const names = events.map(e => e.event?.event)
-    expect(names).toEqual(expect.arrayContaining(['http_request', 'http_response']))
   })
 })
+
 
 
