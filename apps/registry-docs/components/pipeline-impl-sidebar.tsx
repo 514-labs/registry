@@ -8,6 +8,8 @@ import { Badge } from "@ui/components/badge";
 import { Label } from "@ui/components/label";
 import { RadioGroup, RadioGroupItem } from "@ui/components/radio-group";
 import { Avatar, AvatarFallback, AvatarImage } from "@ui/components/avatar";
+import { SiGithub } from "@icons-pack/react-simple-icons";
+import { Button } from "@ui/components/button";
 
 type SidebarSectionItem = {
   value: string;
@@ -25,6 +27,7 @@ export type PipelineImplSidebarProps = {
   sourceHref?: string | null;
   sourceName?: string | null;
   destinationName?: string | null;
+  viewSourceHref?: string;
 
   creators: SidebarSectionItem[];
   versions: SidebarSectionItem[];
@@ -47,6 +50,7 @@ export default function PipelineImplSidebar(props: PipelineImplSidebarProps) {
     sourceHref,
     sourceName,
     destinationName,
+    viewSourceHref,
     creators,
     versions,
     languages,
@@ -147,6 +151,15 @@ export default function PipelineImplSidebar(props: PipelineImplSidebarProps) {
             </Badge>
           ))}
         </div>
+      ) : null}
+
+      {viewSourceHref ? (
+        <Button variant="outline" size="sm" asChild>
+          <Link href={viewSourceHref} target="_blank" rel="noopener noreferrer">
+            <SiGithub className="h-4 w-4" />
+            View Source
+          </Link>
+        </Button>
       ) : null}
 
       {description ? (
