@@ -1,4 +1,4 @@
-import type { Hook, HookContext } from '../lib/hooks'
+import type { Hook, HookContext } from '@connector-factory/core'
 
 export type MetricsEvent =
   | { type: 'request'; operation?: string }
@@ -16,29 +16,41 @@ export class InMemoryMetricsSink implements MetricsSink {
 }
 
 export function createMetricsHooks(sink: MetricsSink) {
-  const beforeRequest: Hook = (ctx: HookContext) => {
-    if (ctx.type !== 'beforeRequest') return
-    sink.record({ type: 'request', operation: ctx.operation ?? ctx.request?.operation })
+  const beforeRequest: Hook = {
+    name: 'metrics:beforeRequest',
+    execute: (ctx: HookContext) => {
+      if (ctx.type !== 'beforeRequest') return
+      sink.record({ type: 'request', operation: ctx.operation ?? ctx.request?.operation })
+    }
   }
 
-  const afterResponse: Hook = (ctx: HookContext) => {
-    if (ctx.type !== 'afterResponse') return
-    sink.record({
-      type: 'response',
-      operation: ctx.operation ?? ctx.request?.operation,
-      status: ctx.response?.status,
-      durationMs: ctx.response?.meta?.durationMs,
-    })
+  const afterResponse: Hook = {
+    name: 'metrics:afterResponse',
+    execute: (ctx: HookContext) => {
+      if (ctx.type !== 'afterResponse') return
+      sink.record({
+        type: 'response',
+        operation: ctx.operation ?? ctx.request?.operation,
+        status: ctx.response?.status,
+        durationMs: ctx.response?.meta?.durationMs,
+      })
+    }
   }
 
-  const onError: Hook = (ctx: HookContext) => {
-    if (ctx.type !== 'onError') return
-    sink.record({ type: 'error', operation: ctx.operation ?? ctx.request?.operation, code: (ctx.error as any)?.code })
+  const onError: Hook = {
+    name: 'metrics:onError',
+    execute: (ctx: HookContext) => {
+      if (ctx.type !== 'onError') return
+      sink.record({ type: 'error', operation: ctx.operation ?? ctx.request?.operation, code: (ctx.error as any)?.code })
+    }
   }
 
-  const onRetry: Hook = (ctx: HookContext) => {
-    if (ctx.type !== 'onRetry') return
-    sink.record({ type: 'retry', operation: ctx.operation ?? ctx.request?.operation, attempt: ctx.attempt })
+  const onRetry: Hook = {
+    name: 'metrics:onRetry',
+    execute: (ctx: HookContext) => {
+      if (ctx.type !== 'onRetry') return
+      sink.record({ type: 'retry', operation: ctx.operation ?? ctx.metadata?.operation, attempt: ctx.metadata?.attempt })
+    }
   }
 
   return { beforeRequest: [beforeRequest], afterResponse: [afterResponse], onError: [onError], onRetry: [onRetry] }

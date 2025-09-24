@@ -1,4 +1,6 @@
-/* eslint-env jest */ /* global jest, describe, it, expect, afterEach */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+/* eslint-env jest */ /* global describe, it, expect, beforeAll */
 import nock from 'nock'
 import { createDutchieConnector } from '../../src'
 import type { Hook, HookContext } from '@connector-factory/core'
@@ -26,7 +28,7 @@ describe('hooks', () => {
 
     const conn = createDutchieConnector()
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } }, hooks: hooks as any })
-    // consume first page
+
     const iter = conn.brand.getAll({ pageSize: 50 })
     await iter.next()
     expect(events).toEqual(['before', 'after'])
@@ -53,6 +55,7 @@ describe('hooks', () => {
 
     const conn = createDutchieConnector()
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } }, hooks })
+
     const iter = conn.brand.getAll({ pageSize: 50 })
     const { value: page } = await iter.next()
     expect(Array.isArray(page)).toBe(true)

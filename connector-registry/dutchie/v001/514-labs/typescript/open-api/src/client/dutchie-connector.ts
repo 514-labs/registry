@@ -17,6 +17,9 @@ export type DutchieConfig = CoreConfig & {
   logging?: {
     enabled?: boolean;
     level?: 'debug' | 'info' | 'warn' | 'error';
+    includeQueryParams?: boolean;
+    includeHeaders?: boolean;
+    includeBody?: boolean;
     logger?: (level: string, event: Record<string, unknown>) => void
   }
 }
@@ -47,7 +50,13 @@ export class DutchieApiConnector extends ApiConnectorBase {
 
     // Wire logging
     if (userConfig.logging?.enabled) {
-      const hooks = createLoggingHooks({ level: userConfig.logging.level, logger: userConfig.logging.logger as any })
+      const hooks = createLoggingHooks({
+        level: userConfig.logging.level,
+        includeQueryParams: userConfig.logging.includeQueryParams,
+        includeHeaders: userConfig.logging.includeHeaders,
+        includeBody: userConfig.logging.includeBody,
+        logger: userConfig.logging.logger as any,
+      })
       const cfg = (this as any).config
       const curr = cfg?.hooks ?? {}
       cfg.hooks = {

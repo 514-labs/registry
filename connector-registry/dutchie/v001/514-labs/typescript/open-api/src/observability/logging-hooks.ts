@@ -88,6 +88,8 @@ export function createLoggingHooks(opts: LoggingOptions = {}): CoreHooks {
         retryCount: ctx.response.meta?.retryCount,
       }
       if (itemCount !== undefined) event.itemCount = itemCount
+      if (opts.includeHeaders && (ctx.response as any)?.headers) event.headers = (ctx.response as any).headers as Record<string, unknown>
+      if (opts.includeBody) event.body = ctx.response.data
       logger('info', event)
     }
   }
