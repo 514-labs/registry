@@ -239,7 +239,7 @@
                                     {
                                       "type": "file",
                                       "name": "README.md",
-                                      "template": "# File schemas\n\nPlace file-based schemas here (CSV/JSON/Parquet/Avro/NDJSON). Files in this folder are shown in the Files tab.\n\nExamples:\n- `events.csv`\n- `events.schema.json` (with title/description)\n"
+                                      "template": "# File schemas\n\nPlace file-based schemas here (CSV/JSON/Parquet/Avro/NDJSON). Files in this folder are shown in the Files tab.\n\nExamples:\n- `events.csv`\n- `events.schema.json` (with title/description)\n\n## OpenAPI type generation\n\nIf you have an OpenAPI spec, you can generate TypeScript types and then re-export them from your resource model.\n\n### Recommended: hey-api\n```bash\npnpm dlx @hey-api/openapi-ts -i schemas/raw/files/openapi.json -o src/generated\n```\n\nAfter generation, edit `src/{resource}/model.ts` to re-export the generated type.\n"
                                     }
                                   ]
                                 },
@@ -322,6 +322,13 @@
                           "children": [
                             {
                               "type": "dir",
+                              "name": "generated",
+                              "children": [
+                                { "type": "file", "name": ".gitkeep", "template": "" }
+                              ]
+                            },
+                            {
+                              "type": "dir",
                               "name": "observability",
                               "children": [
                                 {
@@ -375,12 +382,12 @@
                                 {
                                   "type": "file",
                                   "name": "index.ts",
-                                      "template": "import { makeCrudResource } from '../lib/make-resource'\nimport type { SendFn } from '../lib/paginate'\nimport type { Model } from './model'\n\nexport const createResource = (send: SendFn) => makeCrudResource<Model, { /* filters */ }>('/{resource}', send, {\n  buildListQuery: (params) => ({ /* map typed filters to query */ }),\n})\n"
+                                      "template": "import { makeCrudResource } from '../lib/make-resource'\nimport type { SendFn } from '../lib/paginate'\nimport type { Model } from './model'\n\nexport const createResource = (send: SendFn) => makeCrudResource<Model, { /* filters */ }>('/* resource path */', send, {\n  buildListQuery: (params) => ({ /* map typed filters to query */ }),\n})\n"
                                 },
                                 {
                                   "type": "file",
                                   "name": "model.ts",
-                                  "template": "export interface Model {\n  // Define your resource model fields\n  [key: string]: unknown\n}\n"
+                                  "template": "// Model typing for this resource.\n// If you generate types from OpenAPI, you can re-export here, e.g.:\n// export type Model = components['schemas']['Widget'];\n// Otherwise, start with a minimal interface and refine as needed.\nexport interface Model {\n  id?: string | number\n}\n"
                                 }
                               ]
                             }
@@ -395,11 +402,11 @@
                               "name": "observability.test.ts",
                               "template": "/* eslint-env jest */\nimport nock from 'nock'\nimport { createConnector } from '../src'\n\nit('logging includes url, headers, body when enabled', async () => {\n  const BASE = 'https://api.example.com'\n  nock(BASE).get('/{resource}').query({ x: '1' }).reply(200, [{ id: 1 }], { 'x-test-header': 'ok' })\n  const events: Array<{ level: string; event: Record<string, unknown> }> = []\n  const conn = createConnector()\n  conn.initialize({ baseUrl: BASE, auth: { type: 'bearer', bearer: { token: 't' } }, logging: { enabled: true, level: 'info', includeQueryParams: true, includeHeaders: true, includeBody: true, logger: (level, event) => events.push({ level, event }) } })\n  await (conn as any).request({ method: 'GET', path: '/{resource}?x=1' })\n  const reqEvt = events.find(e => (e.event as any)?.event === 'http_request')?.event as any\n  const respEvt = events.find(e => (e.event as any)?.event === 'http_response')?.event as any\n  expect(String(respEvt.url)).toContain('/{resource}?x=1')\n  expect(typeof reqEvt.headers).toBe('object')\n  expect((respEvt.headers ?? {})['x-test-header']).toBe('ok')\n  expect(respEvt.body).toEqual([{ id: 1 }])\n})\n"
                             },
-                            {
-                              "type": "file",
-                              "name": "resource.test.ts",
-                              "template": "/* eslint-env jest */\nimport nock from 'nock'\nimport { createConnector } from '../src'\n\nit('getAll yields chunks and respects maxItems', async () => {\n  const BASE = 'https://api.example.com'\n  const data = Array.from({ length: 5 }, (_, i) => ({ id: i + 1 }))\n  nock(BASE).get('/{resource}').reply(200, data)\n  const conn = createConnector()\n  conn.initialize({ baseUrl: BASE, auth: { type: 'bearer', bearer: { token: 't' } } })\n  const pages: any[] = []\n  for await (const page of (conn as any).{resource}.getAll({ pageSize: 2, maxItems: 4 })) pages.push(page)\n  expect(pages.map(p => p.length)).toEqual([2, 2])\n})\n"
-                            }
+                                {
+                                  "type": "file",
+                                  "name": "resource.test.ts",
+                                  "template": "/* eslint-env jest */\nimport nock from 'nock'\nimport { createConnector } from '../src'\n\nit('getAll yields chunks and respects maxItems', async () => {\n  const BASE = 'https://api.example.com'\n  const data = Array.from({ length: 5 }, (_, i) => ({ id: i + 1 }))\n  nock(BASE).get('/{resource}').reply(200, data)\n  const conn = createConnector()\n  conn.initialize({ baseUrl: BASE, auth: { type: 'bearer', bearer: { token: 't' } } })\n  const pages: Array<ReadonlyArray<unknown>> = []\n  for await (const page of (conn as any).{resource}.getAll({ pageSize: 2, maxItems: 4 })) pages.push(page)\n  expect(pages.map(p => p.length)).toEqual([2, 2])\n})\n"
+                                }
                           ]
                         },
                         {
