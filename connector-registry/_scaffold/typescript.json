@@ -42,45 +42,80 @@
       "type": "dir",
       "name": "{connector}",
       "children": [
+            {
+              "type": "dir",
+              "name": "_meta",
+              "children": [
+                {
+                  "type": "file",
+                  "name": "connector.json",
+                  "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector-root.schema.json\",\n  \"identifier\": \"{connector}\",\n  \"name\": \"{connector}\",\n  \"category\": \"api\",\n  \"tags\": [],\n  \"description\": \"\",\n  \"homepage\": \"\"\n}"
+                },
+            {
+              "type": "file",
+              "name": "README.md",
+              "template": "# {connector} (Registry)\n\nThis is the top-level registry entry for `{connector}`.\n\n- Versions live under `{connector}/{version}`\n- See author implementations under `{connector}/{version}/{author}`\n"
+            },
+            { "type": "dir", "name": "assets" }
+          ]
+        },
         {
           "type": "dir",
           "name": "{version}",
           "children": [
             {
               "type": "dir",
+              "name": "_meta",
+              "children": [
+                {
+                  "type": "file",
+                  "name": "version.json",
+                  "template": "{\n  \"name\": \"{connector}\",\n  \"version\": \"{version}\",\n  \"status\": \"beta\",\n  \"releasedAt\": \"\",\n  \"notes\": \"{connector} {version} version\"\n}"
+                }
+              ]
+            },
+            {
+              "type": "dir",
               "name": "{author}",
               "children": [
+                {
+                  "type": "dir",
+                  "name": "_meta",
+                  "children": [
+                    {
+                      "type": "file",
+                      "name": "connector.json",
+                  "template": "{\n  \"name\": \"{connector}\",\n  \"author\": \"{author}\",\n  \"version\": \"{version}\",\n  \"languages\": [\n    \"typescript\"\n  ],\n  \"category\": \"api\",\n  \"capabilities\": {\n    \"extract\": true,\n    \"transform\": false,\n    \"load\": false\n  },\n  \"source\": {\n    \"type\": \"api\",\n    \"spec\": \"\",\n    \"homepage\": \"\"\n  },\n  \"tags\": [],\n  \"maintainers\": [],\n  \"issues\": { \"typescript\": { \"default\": \"\" } }\n}"
+                    },
+                    {
+                      "type": "file",
+                      "name": "README.md",
+                      "template": "# {connector} Connector (by {author})\n\nThis directory contains language-agnostic metadata and documentation for the `{connector}` connector.\n\n- Name: `{connector}`\n- Author: `{author}`\n- Category: `api`\n- Languages: `typescript`\n\nSee `_meta/connector.json` for connector metadata and implementation folders for language-specific code.\n"
+                    },
+                    { "type": "file", "name": "CHANGELOG.md", "template": "# Changelog\n\nAll notable changes to this connector will be documented in this file.\n\n## 0.1.0 - Scaffold created\n\n- Initial scaffold for `{connector}` (TypeScript) added.\n" },
+                    { "type": "file", "name": "LICENSE", "template": "MIT License\n\nCopyright (c) {author}\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n" },
+                    { "type": "dir", "name": "assets" }
+                  ]
+                },
                 {
                   "type": "dir",
                   "name": "typescript",
                   "children": [
                     {
                       "type": "dir",
-                      "name": "{implementation}",
+                      "name": "_meta",
                       "children": [
                         {
-                          "type": "dir",
-                          "name": "_meta",
-                          "children": [
-                            {
-                              "type": "file",
-                              "name": "connector.json",
-                              "template": "{\n  \"$schema\": \"https://schemas.connector-factory.dev/connector.schema.json\",\n  \"identifier\": \"{connector}\",\n  \"name\": \"{connector}\",\n  \"author\": \"{author}\",\n  \"authorType\": \"organization\",\n  \"avatarUrlOverride\": \"\",\n  \"version\": \"{version}\",\n  \"language\": \"typescript\",\n  \"implementation\": \"{implementation}\",\n  \"tags\": [],\n  \"category\": \"api\",\n  \"description\": \"\",\n  \"homepage\": \"\",\n  \"license\": \"MIT\",\n  \"source\": {\"type\":\"api\",\"spec\":\"\"},\n  \"capabilities\": {\"extract\": true, \"transform\": true, \"load\": true},\n  \"maintainers\": [],\n  \"issues\": \"\",\n  \"registryUrl\": \"https://github.com/514-labs/registry/tree/main/connector-registry/{connector}/{version}/{author}/typescript/{implementation}\"\n}\n"
-                            },
-                            {
-                              "type": "file",
-                              "name": "README.md",
-                              "template": "# {connector}\n\n> Maintained by {author}\n\nConnector metadata and assets for the TypeScript {implementation} implementation.\n"
-                            },
-                            {
-                              "type": "file",
-                              "name": "CHANGELOG.md",
-                              "template": "# Changelog\n\nAll notable changes to `{connector}` TypeScript {implementation} implementation by `{author}`.\n\n## [0.1.0] - Initial Release\n\n- Initial connector implementation\n"
-                            },
-                            { "type": "file", "name": "LICENSE", "template": "MIT\n" },
-                            { "type": "dir", "name": "assets" }
-                          ]
-                        },
+                          "type": "file",
+                          "name": "connector.json",
+                          "template": "{\n  \"identifier\": \"{connector}\",\n  \"name\": \"{connector}\",\n  \"author\": \"{author}\",\n  \"version\": \"{version}\",\n  \"language\": \"typescript\",\n  \"implementations\": [\"{implementation}\"]\n}\n"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "dir",
+                      "name": "{implementation}",
+                      "children": [
                         {
                           "type": "file",
                           "name": ".gitignore",
@@ -99,22 +134,38 @@
                         {
                           "type": "file",
                           "name": "install.config.toml",
-                          "template": "language = \"typescript\"\ndescription = \"TypeScript connector for {connector}\"\npost_install_print = \"\"\"\n🚀 Next steps to get your {connector} connector running:\n\n📂 Go to your connector directory:\n    $ cd {destination_dir}\n\n📦 Install dependencies:\n    $ npm install\n\n🔧 Build the connector:\n    $ npm run build\n\n🧪 Run tests:\n    $ npm test\n\n📖 Next, check out the documentation:\n    • Review docs/getting-started.md for configuration details\n    • See examples/ for usage examples\n    • Update src/connector.ts with your API implementation\n\n🔗 Integration options:\n    • Add to your project: import { create{connector|title}Connector } from '{packageName}'\n    • Use with pipelines: Configure as a source in your pipeline setup\n    • Standalone usage: Check examples/basic-usage.ts\n\"\"\"\n"
+                          "template": "language = \"typescript\"\ndescription = \"TypeScript connector for {connector}\"\npost_install_print = \"\"\"\n🚀 Next steps to get your {connector} connector running:\n\n📂 Go to your connector directory:\n    $ cd {destination_dir}\n\n📦 Install dependencies:\n    $ npm install\n\n🔧 Build the connector:\n    $ npm run build\n\n🧪 Run tests:\n    $ npm test\n\n📖 Next, check out the documentation:\n    • Review docs/getting-started.md for configuration details\n    • See examples/ for usage examples\n    • Update src/connector.ts with your API implementation\n\n🔗 Integration options:\n    • Add to your project: import { createConnector } from '{packageName}'\n    • Use with pipelines: Configure as a source in your pipeline setup\n    • Standalone usage: Check examples/basic-usage.ts\n\"\"\"\n"
+                        },
+                        {
+                          "type": "dir",
+                          "name": "scripts",
+                          "children": [
+                            {
+                              "type": "file",
+                              "name": "postinstall.sh",
+                              "template": "#!/usr/bin/env bash\nset -euo pipefail\n\n# This script runs after your package is installed (pnpm/npm postinstall lifecycle).\n# It is intentionally minimal and documented so you can customize it for your distribution needs.\n#\n# Common use cases:\n#  - Copy shared core sources into this package for single-file distribution\n#  - Prune dev-only files from the published artifact\n#  - Flatten directories for easier consumption\n#\n# By default, this script does nothing. Uncomment and adapt as needed.\n\nmain() {\n  echo \"postinstall: no-op (customize scripts/postinstall.sh as needed)\"\n\n  # Example: flatten src into the package root\n  # if [ -d src ]; then\n  #   shopt -s dotglob\n  #   mv src/* . || true\n  #   shopt -u dotglob\n  #   rm -rf src\n  # fi\n\n  # Example: remove dev-only files\n  # rm -f package-lock.json || true\n  # rm -rf tests || true\n}\n\nmain \"$@\"\n"
+                            }
+                          ]
                         },
                         {
                           "type": "file",
                           "name": "package.json",
-                          "template": "{\n  \"name\": \"{packageName}\",\n  \"version\": \"0.1.0\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\",\n  \"scripts\": {\n    \"build\": \"tsup src/index.ts --dts --format esm,cjs\",\n    \"test\": \"vitest run\"\n  },\n  \"engines\": {\"node\": \">=20\"},\n  \"dependencies\": {},\n  \"devDependencies\": {\n    \"tsup\": \"^8.0.0\",\n    \"typescript\": \"^5.4.0\",\n    \"vitest\": \"^1.6.0\"\n  }\n}\n"
+                          "template": "{\n  \"name\": \"{packageName}\",\n  \"version\": \"0.1.0\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\",\n  \"scripts\": {\n    \"build\": \"tsc -p tsconfig.json\",\n    \"test\": \"jest --runInBand\",\n    \"test:build\": \"rm -rf .temp-test && tsc -p tsconfig.test.json\"\n  },\n  \"engines\": {\"node\": \">=20\"},\n  \"dependencies\": {\n    \"@connector-factory/core\": \"^0.0.0\"\n  },\n  \"devDependencies\": {\n    \"typescript\": \"^5.4.0\",\n    \"jest\": \"^29.7.0\",\n    \"ts-jest\": \"^29.1.2\",\n    \"nock\": \"^13.5.0\"\n  }\n}\n"
                         },
                         {
                           "type": "file",
                           "name": "tsconfig.json",
-                          "template": "{\n  \"compilerOptions\": {\n    \"target\": \"ES2022\",\n    \"module\": \"ESNext\",\n    \"moduleResolution\": \"Bundler\",\n    \"outDir\": \"dist\",\n    \"declaration\": true,\n    \"declarationMap\": true,\n    \"strict\": true,\n    \"skipLibCheck\": true\n  },\n  \"include\": [\"src\"]\n}\n"
+                          "template": "{\n  \"compilerOptions\": {\n    \"target\": \"ES2022\",\n    \"module\": \"CommonJS\",\n    \"moduleResolution\": \"Node\",\n    \"declaration\": true,\n    \"outDir\": \"dist\",\n    \"rootDir\": \".\",\n    \"strict\": true,\n    \"skipLibCheck\": true,\n    \"types\": [\"node\", \"jest\"],\n    \"resolveJsonModule\": true,\n    \"esModuleInterop\": true,\n    \"allowSyntheticDefaultImports\": true\n  },\n  \"include\": [\"src/**/*\"],\n  \"exclude\": [\"dist\", \"node_modules\", \"examples\", \"tests\"]\n}\n"
                         },
                         {
                           "type": "file",
-                          "name": "vitest.config.ts",
-                          "template": "import { defineConfig } from 'vitest/config'\nexport default defineConfig({ test: { environment: 'node' } })\n"
+                          "name": "jest.config.cjs",
+                          "template": "module.exports = {\n  testEnvironment: 'node',\n  transform: { '^.+\\.tsx?$': ['ts-jest', { tsconfig: 'tsconfig.test.json' }] },\n};\n"
+                        },
+                        {
+                          "type": "file",
+                          "name": "tsconfig.test.json",
+                          "template": "{\n  \"extends\": \"./tsconfig.json\",\n  \"compilerOptions\": {\n    \"outDir\": \".temp-test\",\n    \"types\": [\n      \"jest\",\n      \"node\"\n    ]\n  },\n  \"include\": [\n    \"src\",\n    \"tests\"\n  ]\n}\n"
                         },
                         {
                           "type": "dir",
@@ -123,12 +174,12 @@
                             {
                               "type": "file",
                               "name": "getting-started.md",
-                              "template": "# Getting started\n\nThis is a placeholder. Document how to configure and run the connector in TypeScript.\n"
+                              "template": "# Getting started\n\n```ts\nimport { createConnector } from './src'\n\nconst conn = createConnector()\nconn.initialize({\n  baseUrl: 'https://api.example.com',\n  auth: { type: 'bearer', bearer: { token: process.env.API_TOKEN! } },\n  logging: { enabled: true, level: 'info' },\n})\n\nfor await (const page of conn.myResource.getAll({ pageSize: 100, maxItems: 500 })) {\n  console.log(page.length)\n}\n```\n"
                             },
                             {
                               "type": "file",
                               "name": "configuration.md",
-                              "template": "# Configuration\n\nDocument configuration options (auth, scopes, IDs).\n"
+                              "template": "# Configuration\n\n- baseUrl, timeoutMs, userAgent\n- auth: api key, basic, bearer, oauth2 (per core)\n- retry: maxAttempts, initialDelayMs, maxDelayMs, backoffMultiplier, respectRetryAfter\n- rateLimit: requestsPerSecond, burstCapacity, adaptiveFromHeaders\n- hooks: arrays for beforeRequest/afterResponse/onError/onRetry\n"
                             },
                             {
                               "type": "file",
@@ -139,6 +190,11 @@
                               "type": "file",
                               "name": "limits.md",
                               "template": "# Limits\n\nDescribe API limits, quotas, and rate limiting behavior.\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "observability.md",
+                              "template": "# Observability\n\n## Logging\n```ts\nconn.initialize({\n  logging: { enabled: true, level: 'info', includeQueryParams: true, includeHeaders: true, includeBody: false }\n})\n```\nEmits http_request and http_response with optional fields.\n\n## Metrics\n```ts\nimport { createMetricsHooks, InMemoryMetricsSink } from '../src/observability/metrics-hooks'\nconst sink = new InMemoryMetricsSink()\nconn.initialize({ hooks: createMetricsHooks(sink) })\n```\nInspect sink.events for telemetry.\n"
                             }
                           ]
                         },
@@ -265,38 +321,34 @@
                           "name": "src",
                           "children": [
                             {
-                              "type": "file",
-                              "name": "index.ts",
-                              "template": "export * from './client'\nexport * from './config'\n"
-                            },
-                            {
-                              "type": "file",
-                              "name": "client.ts",
-                              "template": "export class Client {\n  constructor(public config: Record<string, unknown>) {}\n  ping(): boolean { return true }\n}\n"
-                            },
-                            {
-                              "type": "file",
-                              "name": "config.ts",
-                              "template": "export type ConnectorConfig = { apiKey: string }\n"
-                            },
-                            {
                               "type": "dir",
-                              "name": "auth",
+                              "name": "observability",
                               "children": [
                                 {
                                   "type": "file",
-                                  "name": "base.ts",
-                                  "template": "export interface AuthStrategy { apply(headers: Record<string,string>): Record<string,string> }\n"
+                                  "name": "logging-hooks.ts",
+                                  "template": "import type { Hook, HookContext } from '@connector-factory/core'\n\nexport type LogLevel = 'debug' | 'info' | 'warn' | 'error'\nexport type LoggingOptions = { level?: LogLevel; logger?: (level: LogLevel, event: Record<string, unknown>) => void; includeQueryParams?: boolean; includeHeaders?: boolean; includeBody?: boolean }\n\nconst levelOrder: Record<LogLevel, number> = { debug: 10, info: 20, warn: 30, error: 40 }\nconst shouldLog = (cfg: LoggingOptions, level: LogLevel) => (levelOrder[level] >= levelOrder[cfg.level ?? 'info'])\n\nfunction safeUrl(raw?: string, includeQuery = false): { url?: string; query?: Record<string, unknown> } {\n  if (!raw) return {}\n  try {\n    const isPathOnly = raw.startsWith('/')\n    const u = new URL(isPathOnly ? `https://dummy${raw}` : raw)\n    if (!includeQuery) return { url: isPathOnly ? u.pathname : u.toString() }\n    const query: Record<string, unknown> = {}\n    u.searchParams.forEach((v, k) => { query[k] = v })\n    return { url: isPathOnly ? `${u.pathname}${u.search}` : u.toString(), query }\n  } catch {\n    return { url: raw }\n  }\n}\n\nexport function createLoggingHooks(opts: LoggingOptions = {}): Partial<{ beforeRequest: Hook[]; afterResponse: Hook[]; onError: Hook[]; onRetry: Hook[] }> {\n  const logger = opts.logger ?? ((level: LogLevel, event: Record<string, unknown>) => { console.log(level, event) })\n  const beforeRequest: Hook = { name: 'logging:beforeRequest', execute: (ctx: HookContext) => { if (ctx.type !== 'beforeRequest' || !shouldLog(opts, 'info')) return; const rawUrl = ctx.request.url || ctx.request.path; const { url, query } = safeUrl(rawUrl, !!opts.includeQueryParams); const evt: Record<string, unknown> = { event: 'http_request', operation: ctx.operation ?? ctx.request.operation, method: ctx.request.method, url }; if (opts.includeQueryParams && query) evt.query = query; if (opts.includeHeaders) evt.headers = ctx.request.headers; if (opts.includeBody && ctx.request.body !== undefined) evt.body = ctx.request.body; logger('info', evt) } }\n  const afterResponse: Hook = { name: 'logging:afterResponse', execute: (ctx: HookContext) => { if (ctx.type !== 'afterResponse' || !shouldLog(opts, 'info')) return; const rawUrl = ctx.request.url || ctx.request.path; const { url } = safeUrl(rawUrl, !!opts.includeQueryParams); const evt: Record<string, unknown> = { event: 'http_response', operation: ctx.operation ?? ctx.request.operation, method: ctx.request.method, url, status: ctx.response.status, durationMs: ctx.response.meta?.durationMs, retryCount: ctx.response.meta?.retryCount }; if (opts.includeHeaders) (evt as any).headers = (ctx.response as any).headers; if (opts.includeBody) (evt as any).body = ctx.response.data; logger('info', evt) } }\n  const onError: Hook = { name: 'logging:onError', execute: (ctx: HookContext) => { if (ctx.type !== 'onError' || !shouldLog(opts, 'error')) return; logger('error', { event: 'http_error', operation: ctx.operation, message: (ctx.error as any)?.message, code: (ctx.error as any)?.code, statusCode: (ctx.error as any)?.statusCode }) } }\n  const onRetry: Hook = { name: 'logging:onRetry', execute: (ctx: HookContext) => { if (ctx.type !== 'onRetry' || !shouldLog(opts, 'debug')) return; logger('debug', { event: 'http_retry', operation: ctx.metadata.operation ?? ctx.operation, attempt: ctx.metadata.attempt }) } }\n  return { beforeRequest: [beforeRequest], afterResponse: [afterResponse], onError: [onError], onRetry: [onRetry] }\n}\n"
                                 },
                                 {
                                   "type": "file",
-                                  "name": "apiKey.ts",
-                                  "template": "import type { AuthStrategy } from './base'\nexport class ApiKeyAuth implements AuthStrategy {\n  constructor(private apiKey: string) {}\n  apply(headers: Record<string,string>) { return { ...headers, Authorization: `Bearer ${this.apiKey}` } }\n}\n"
-                                },
+                                  "name": "metrics-hooks.ts",
+                                  "template": "import type { Hook, HookContext } from '@connector-factory/core'\n\nexport type MetricsEvent = { type: 'request'; operation?: string } | { type: 'response'; operation?: string; status?: number; durationMs?: number } | { type: 'error'; operation?: string; code?: string } | { type: 'retry'; operation?: string; attempt?: number }\nexport interface MetricsSink { record: (event: MetricsEvent) => void }\nexport class InMemoryMetricsSink implements MetricsSink { public events: MetricsEvent[] = []; record(e: MetricsEvent) { this.events.push(e) } }\n\nexport function createMetricsHooks(sink: MetricsSink) {\n  const beforeRequest: Hook = { name: 'metrics:beforeRequest', execute: (ctx: HookContext) => { if (ctx.type !== 'beforeRequest') return; sink.record({ type: 'request', operation: ctx.operation ?? ctx.request?.operation }) } }\n  const afterResponse: Hook = { name: 'metrics:afterResponse', execute: (ctx: HookContext) => { if (ctx.type !== 'afterResponse') return; sink.record({ type: 'response', operation: ctx.operation ?? ctx.request?.operation, status: ctx.response?.status, durationMs: ctx.response?.meta?.durationMs }) } }\n  const onError: Hook = { name: 'metrics:onError', execute: (ctx: HookContext) => { if (ctx.type !== 'onError') return; sink.record({ type: 'error', operation: ctx.operation, code: (ctx.error as any)?.code }) } }\n  const onRetry: Hook = { name: 'metrics:onRetry', execute: (ctx: HookContext) => { if (ctx.type !== 'onRetry') return; sink.record({ type: 'retry', operation: ctx.metadata?.operation ?? ctx.operation, attempt: ctx.metadata?.attempt }) } }\n  return { beforeRequest: [beforeRequest], afterResponse: [afterResponse], onError: [onError], onRetry: [onRetry] }\n}\n"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "file",
+                              "name": "index.ts",
+                              "template": "export * from './client/connector'\n"
+                            },
+                            {
+                              "type": "dir",
+                              "name": "client",
+                              "children": [
                                 {
                                   "type": "file",
-                                  "name": "oauth2.ts",
-                                  "template": "export {}\n"
+                                  "name": "connector.ts",
+                                  "template": "import { ApiConnectorBase } from '@connector-factory/core'\nimport type { ConnectorConfig as CoreConfig, Hook } from '@connector-factory/core'\nimport { createLoggingHooks } from '../observability/logging-hooks'\nimport { createMetricsHooks, InMemoryMetricsSink } from '../observability/metrics-hooks'\n\nexport type ConnectorConfig = CoreConfig & {\n  logging?: { enabled?: boolean; level?: 'debug'|'info'|'warn'|'error'; includeQueryParams?: boolean; includeHeaders?: boolean; includeBody?: boolean; logger?: (level: string, event: Record<string, unknown>) => void },\n  metrics?: { enabled?: boolean }\n}\n\nexport class Connector extends ApiConnectorBase {\n  initialize(userConfig: ConnectorConfig) {\n    const withDefaults = (u: ConnectorConfig): ConnectorConfig => ({ userAgent: u.userAgent ?? '{connector}', ...u })\n    super.initialize(withDefaults(userConfig) as any, (cfg: any) => cfg)\n\n    const cfg = (this as any).config as ConnectorConfig\n    const existing = cfg.hooks ?? {} as Partial<Record<'beforeRequest'|'afterResponse'|'onError'|'onRetry', Hook[]>>\n\n    if (userConfig.logging?.enabled) {\n      const logging = createLoggingHooks({ level: userConfig.logging.level, includeQueryParams: userConfig.logging.includeQueryParams, includeHeaders: userConfig.logging.includeHeaders, includeBody: userConfig.logging.includeBody, logger: userConfig.logging.logger as any })\n      cfg.hooks = {\n        beforeRequest: [...(existing.beforeRequest ?? []), ...(logging.beforeRequest ?? [])],\n        afterResponse: [...(existing.afterResponse ?? []), ...(logging.afterResponse ?? [])],\n        onError: [...(existing.onError ?? []), ...(logging.onError ?? [])],\n        onRetry: [...(existing.onRetry ?? []), ...(logging.onRetry ?? [])],\n      }\n    }\n\n    if (userConfig.metrics?.enabled) {\n      const sink = new InMemoryMetricsSink()\n      const metrics = createMetricsHooks(sink)\n      const curr = cfg.hooks ?? {}\n      cfg.hooks = {\n        beforeRequest: [...(curr.beforeRequest ?? []), ...(metrics.beforeRequest ?? [])],\n        afterResponse: [...(curr.afterResponse ?? []), ...(metrics.afterResponse ?? [])],\n        onError: [...(curr.onError ?? []), ...(metrics.onError ?? [])],\n        onRetry: [...(curr.onRetry ?? []), ...(metrics.onRetry ?? [])],\n      }\n      ;(this as any)._metricsSink = sink\n    }\n  }\n}\n\nexport function createConnector() { return new Connector() }\n"
                                 }
                               ]
                             },
@@ -307,22 +359,12 @@
                                 {
                                   "type": "file",
                                   "name": "paginate.ts",
-                                  "template": "export type HttpResponseEnvelope<T> = { data: T }\n\nexport type SendFn = <T = any>(args: {\n  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';\n  path: string;\n  query?: Record<string, any>;\n  headers?: Record<string, string>;\n  body?: unknown;\n  operation?: string;\n}) => Promise<HttpResponseEnvelope<T>>\n\nexport async function* paginateCursor<T = any>(params: {\n  send: SendFn;\n  path: string;\n  query?: Record<string, any>;\n  pageSize?: number;\n  extractItems?: (res: any) => T[];\n  extractNextCursor?: (res: any) => string | undefined;\n}) {\n  const extractItems = params.extractItems ?? ((res: any) => (res?.results ?? []) as T[])\n  const extractNext = params.extractNextCursor ?? ((res: any) => res?.paging?.next?.after as string | undefined)\n  let after: string | undefined = params.query?.after as string | undefined\n  const limit = params.pageSize ?? (params.query?.limit as number | undefined) ?? 100\n  // eslint-disable-next-line no-constant-condition\n  while (true) {\n    const res = await params.send<any>({ method: 'GET', path: params.path, query: { ...(params.query ?? {}), limit, after }, operation: 'paginate' })\n    const items = extractItems(res.data)\n    yield items\n    const next = extractNext(res.data)\n    if (!next) break\n    after = next\n  }\n}\n"
+                                  "template": "export type HttpResponseEnvelope<T> = { data: T }\n\nexport type SendFn = <T = any>(args: {\n  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';\n  path: string;\n  query?: Record<string, any>;\n  headers?: Record<string, string>;\n  body?: unknown;\n  operation?: string;\n}) => Promise<HttpResponseEnvelope<T>>\n\n// Optional: cursor pagination helper (commented)\n// export async function* paginateCursor<T = any>(params: {\n//   send: SendFn; path: string; query?: Record<string, any>; pageSize?: number;\n//   extractItems?: (res: any) => T[]; extractNextCursor?: (res: any) => string | undefined;\n// }) { /* ... see docs for an example ... */ }\n"
                                 },
                                 {
                                   "type": "file",
                                   "name": "make-resource.ts",
-                                  "template": "import { paginateCursor, type SendFn } from './paginate'\n\nexport function makeCrudResource<TItem, TListResponse, TSingleResponse>(objectPath: string, send: SendFn) {\n  const api = {\n    list: (params?: { properties?: string[]; limit?: number; after?: string }) => {\n      const query: Record<string, any> = {}\n      if (params?.properties?.length) query.properties = params.properties.join(',')\n      if (params?.limit) query.limit = params.limit\n      if (params?.after) query.after = params.after\n      return send<TListResponse>({ method: 'GET', path: objectPath, query })\n    },\n    get: (params: { id: string; properties?: string[] }) => {\n      const query: Record<string, any> = {}\n      if (params?.properties?.length) query.properties = params.properties.join(',')\n      return send<TSingleResponse>({ method: 'GET', path: `${objectPath}/${params.id}`, query })\n    },\n    streamAll: async function* (params?: { properties?: string[]; pageSize?: number }) {\n      const query: Record<string, any> = {}\n      if (params?.properties?.length) query.properties = params.properties.join(',')\n      for await (const items of paginateCursor<TItem>({ send, path: objectPath, query, pageSize: params?.pageSize })) {\n        for (const item of items) yield item\n      }\n    },\n    getAll: async (params?: { properties?: string[]; pageSize?: number; maxItems?: number }) => {\n      const results: TItem[] = []\n      for await (const item of api.streamAll({ properties: params?.properties, pageSize: params?.pageSize })) {\n        results.push(item)\n        if (params?.maxItems && results.length >= params.maxItems) break\n      }\n      return results\n    },\n  }\n  return api\n}\n"
-                                },
-                                {
-                                  "type": "file",
-                                  "name": "hooks.ts",
-                                  "template": "export type RequestOptions = {\n  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'\n  path: string\n  query?: Record<string, any>\n  headers?: Record<string, string>\n  body?: unknown\n  timeoutMs?: number\n  operation?: string\n}\n\nexport type ResponseMeta = {\n  timestamp: number\n  durationMs: number\n  retryCount: number\n  requestId?: string\n}\n\nexport type ResponseEnvelope<T> = {\n  data: T\n  status?: number\n  headers?: Record<string, string>\n  meta?: ResponseMeta\n}\n\nexport type HookContext = {\n  type: 'beforeRequest' | 'afterResponse' | 'onError' | 'onRetry'\n  request?: RequestOptions\n  response?: ResponseEnvelope<any>\n  error?: unknown\n  metadata?: Record<string, any>\n  attempt?: number\n}\n\nexport type Hook = (ctx: HookContext) => void | Promise<void>\n\nexport type Hooks = {\n  beforeRequest?: Hook[]\n  afterResponse?: Hook[]\n  onError?: Hook[]\n  onRetry?: Hook[]\n}\n\nexport async function runHooks(hooks: Hook[] | undefined, ctx: HookContext): Promise<void> {\n  for (const hook of hooks ?? []) {\n    // eslint-disable-next-line no-await-in-loop\n    await hook(ctx)\n  }\n}\n"
-                                },
-                                {
-                                  "type": "file",
-                                  "name": "send.ts",
-                                  "template": "import type { Hooks, RequestOptions, ResponseEnvelope } from './hooks'\nimport { runHooks } from './hooks'\n\nexport type DoRequest = <T = any>(req: RequestOptions) => Promise<ResponseEnvelope<T>>\n\nexport type RetryConfig = {\n  maxAttempts?: number\n  initialDelayMs?: number\n  maxDelayMs?: number\n  backoffMultiplier?: number\n  retryableStatusCodes?: number[]\n  respectRetryAfter?: boolean\n}\n\nfunction sleep(ms: number): Promise<void> {\n  return new Promise((resolve) => setTimeout(resolve, ms))\n}\n\nfunction calcDelay(attempt: number, cfg: Required<Pick<RetryConfig, 'initialDelayMs' | 'maxDelayMs' | 'backoffMultiplier'>>): number {\n  const exp = cfg.initialDelayMs * Math.pow(cfg.backoffMultiplier, attempt - 1)\n  const bounded = Math.min(exp, cfg.maxDelayMs)\n  const jitter = bounded * (0.5 + Math.random() * 0.5)\n  return Math.floor(jitter)\n}\n\nexport function createSend({ doRequest, hooks, retry }: { doRequest: DoRequest; hooks?: Hooks; retry?: RetryConfig }) {\n  const retryCfg: Required<RetryConfig> = {\n    maxAttempts: retry?.maxAttempts ?? 3,\n    initialDelayMs: retry?.initialDelayMs ?? 1000,\n    maxDelayMs: retry?.maxDelayMs ?? 30000,\n    backoffMultiplier: retry?.backoffMultiplier ?? 2,\n    retryableStatusCodes: retry?.retryableStatusCodes ?? [408, 425, 429, 500, 502, 503, 504],\n    respectRetryAfter: retry?.respectRetryAfter ?? true,\n  } as Required<RetryConfig>\n\n  async function send<T = any>(req: RequestOptions): Promise<ResponseEnvelope<T>> {\n    const startedAt = Date.now()\n    let lastError: unknown\n    for (let attempt = 1; attempt <= retryCfg.maxAttempts; attempt++) {\n      try {\n        await runHooks(hooks?.beforeRequest, { type: 'beforeRequest', request: req, attempt })\n        const res = await doRequest<T>(req)\n        await runHooks(hooks?.afterResponse, { type: 'afterResponse', request: req, response: res, attempt })\n        const status = res.status ?? 200\n        if (!retryCfg.retryableStatusCodes.includes(status)) {\n          res.meta = { ...(res.meta ?? {}), timestamp: Date.now(), durationMs: Date.now() - startedAt, retryCount: attempt - 1 }\n          return res\n        }\n        lastError = new Error(`Retryable status: ${status}`)\n      } catch (err) {\n        lastError = err\n        await runHooks(hooks?.onError, { type: 'onError', request: req, error: err, attempt })\n      }\n      if (attempt < retryCfg.maxAttempts) {\n        await runHooks(hooks?.onRetry, { type: 'onRetry', request: req, error: lastError, attempt })\n        const delay = calcDelay(attempt, { initialDelayMs: retryCfg.initialDelayMs, maxDelayMs: retryCfg.maxDelayMs, backoffMultiplier: retryCfg.backoffMultiplier })\n        await sleep(delay)\n        continue\n      }\n      break\n    }\n    throw lastError ?? new Error('Request failed')\n  }\n\n  return send\n}\n"
+                                  "template": "import type { SendFn } from './paginate'\n\n/**\n * Create a simple resource API at the given path.\n *\n * Exposes a single getAll async generator that fetches once and yields client-side chunks.\n * This default suits APIs that don't expose server-side pagination.\n *\n * For real pagination, add a paginate helper and layer getAll on top.\n */\nexport function makeCrudResource<\n  Item,\n  ListParams extends Record<string, any> | undefined = undefined\n>(\n  objectPath: string,\n  send: SendFn,\n  options?: {\n    buildListQuery?: (params?: ListParams) => Record<string, any>\n  }\n) {\n  return {\n    async *getAll(\n      params?: (ListParams extends undefined\n        ? { pageSize?: number; maxItems?: number }\n        : ListParams & { pageSize?: number; maxItems?: number })\n    ): AsyncGenerator<ReadonlyArray<Item>> {\n      const listQuery = options?.buildListQuery?.(params as any) ?? {}\n      const res = await send<Item[]>({ method: 'GET', path: objectPath, query: listQuery, operation: 'getAll' })\n      const data = Array.isArray(res.data) ? res.data : []\n\n      const pageSize = (params as any)?.pageSize as number | undefined\n      const maxItems = (params as any)?.maxItems as number | undefined\n\n      let start = 0\n      let remaining = typeof maxItems === 'number' ? Math.max(0, maxItems) : undefined\n\n      if (!pageSize || pageSize <= 0) {\n        yield remaining !== undefined ? data.slice(0, remaining) : data\n        return\n      }\n\n      while (start < data.length) {\n        const end = Math.min(data.length, start + pageSize)\n        let chunk = data.slice(start, end)\n        if (remaining !== undefined) {\n          if (remaining <= 0) break\n          if (chunk.length > remaining) chunk = chunk.slice(0, remaining)\n          remaining -= chunk.length\n        }\n        yield chunk\n        start = end\n      }\n    },\n  }\n}\n"
                                 }
                               ]
                             },
@@ -333,7 +375,7 @@
                                 {
                                   "type": "file",
                                   "name": "index.ts",
-                                  "template": "import { makeCrudResource } from '../lib/make-resource'\nimport type { SendFn } from '../lib/paginate'\nimport type { Model } from './model'\n\nexport const createResource = (send: SendFn) => makeCrudResource<Model, any, any>('/{resource}', send)\n"
+                                      "template": "import { makeCrudResource } from '../lib/make-resource'\nimport type { SendFn } from '../lib/paginate'\nimport type { Model } from './model'\n\nexport const createResource = (send: SendFn) => makeCrudResource<Model, { /* filters */ }>('/{resource}', send, {\n  buildListQuery: (params) => ({ /* map typed filters to query */ }),\n})\n"
                                 },
                                 {
                                   "type": "file",
@@ -350,8 +392,13 @@
                           "children": [
                             {
                               "type": "file",
-                              "name": "client.test.ts",
-                              "template": "import { describe, it, expect } from 'vitest'\nimport { Client } from '../src/client'\n\ndescribe('client', () => {\n  it('ping', () => {\n    expect(new Client({}).ping()).toBe(true)\n  })\n})\n"
+                              "name": "observability.test.ts",
+                              "template": "/* eslint-env jest */\nimport nock from 'nock'\nimport { createConnector } from '../src'\n\nit('logging includes url, headers, body when enabled', async () => {\n  const BASE = 'https://api.example.com'\n  nock(BASE).get('/{resource}').query({ x: '1' }).reply(200, [{ id: 1 }], { 'x-test-header': 'ok' })\n  const events: Array<{ level: string; event: Record<string, unknown> }> = []\n  const conn = createConnector()\n  conn.initialize({ baseUrl: BASE, auth: { type: 'bearer', bearer: { token: 't' } }, logging: { enabled: true, level: 'info', includeQueryParams: true, includeHeaders: true, includeBody: true, logger: (level, event) => events.push({ level, event }) } })\n  await (conn as any).request({ method: 'GET', path: '/{resource}?x=1' })\n  const reqEvt = events.find(e => (e.event as any)?.event === 'http_request')?.event as any\n  const respEvt = events.find(e => (e.event as any)?.event === 'http_response')?.event as any\n  expect(String(respEvt.url)).toContain('/{resource}?x=1')\n  expect(typeof reqEvt.headers).toBe('object')\n  expect((respEvt.headers ?? {})['x-test-header']).toBe('ok')\n  expect(respEvt.body).toEqual([{ id: 1 }])\n})\n"
+                            },
+                            {
+                              "type": "file",
+                              "name": "resource.test.ts",
+                              "template": "/* eslint-env jest */\nimport nock from 'nock'\nimport { createConnector } from '../src'\n\nit('getAll yields chunks and respects maxItems', async () => {\n  const BASE = 'https://api.example.com'\n  const data = Array.from({ length: 5 }, (_, i) => ({ id: i + 1 }))\n  nock(BASE).get('/{resource}').reply(200, data)\n  const conn = createConnector()\n  conn.initialize({ baseUrl: BASE, auth: { type: 'bearer', bearer: { token: 't' } } })\n  const pages: any[] = []\n  for await (const page of (conn as any).{resource}.getAll({ pageSize: 2, maxItems: 4 })) pages.push(page)\n  expect(pages.map(p => p.length)).toEqual([2, 2])\n})\n"
                             }
                           ]
                         },

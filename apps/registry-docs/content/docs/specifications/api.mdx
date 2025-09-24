@@ -25,8 +25,9 @@ Every API connector must implement the following core functionality and structur
 - Organize code by API resources rather than ETL stages.
 - Each resource module lives under `src/{resource}` and must expose:
   - `createResource(send)` factory that binds a base path (e.g., `/{resource}`) and returns a CRUD surface
-  - Operations: `list(params)`, `get({ id, ... })`, `streamAll(params)`, `getAll(params)`
-  - `model` definition describing the item shape for the resource
+  - A minimal, consistent operation: `getAll(params)` that returns an async generator of arrays (pages)
+  - Optional operations based on upstream capability: `getById(id)` (or `get`), and mutation methods when applicable
+  - A typed `model` describing the item shape for the resource
 - Cross-cutting helpers should live under `src/lib`:
   - `paginate` iterator supporting cursor pagination (and extensible for other strategies)
   - `make-resource` (or equivalent) to build the CRUD surface with pagination
@@ -55,17 +56,7 @@ Every API connector must implement the following core functionality and structur
 - **get(path, options)**  
   Performs an HTTP GET request to the specified path.
 
-- **post(path, data, options)**  
-  Performs an HTTP POST request with the provided data payload.
-
-- **put(path, data, options)**  
-  Performs an HTTP PUT request to update a resource.
-
-- **patch(path, data, options)**  
-  Performs an HTTP PATCH request for partial updates.
-
-- **delete(path, options)**  
-  Performs an HTTP DELETE request to remove a resource.
+- Optional sugar methods (`post`, `put`, `patch`, `delete`) may be provided for ergonomics.
 
 #### Advanced Operations
 
@@ -221,7 +212,7 @@ PSEUDOCODE pipeline:
 
 #### Response Structure
 
-All responses should be wrapped in a consistent structure containing:
+Responses should be wrapped consistently (names are illustrative):
 
 - **data** - The actual response payload
 - **status** - HTTP status code
@@ -256,6 +247,11 @@ Schemas should support:
 - **required** - List of required property names
 - **format** - Specific format constraints (e.g., date-time, email, uri)
 - **transform** - Custom transformation function
+
+### Type Safety and API Contracts
+
+- Strong typing is required wherever the implementation language supports it (e.g., TypeScript). Public APIs must not be untyped or use `any`.
+- Prefer named types, generics with constraints, discriminated unions, and exact object shapes over loose records.
 
 ### Error Handling
 
@@ -345,6 +341,23 @@ PSEUDOCODE for paginate method:
    f. Update hasMore flag
 4. End iteration when no more pages
 ```
+
+### Pragmatic Defaults and Starter Pattern
+
+Many vendor APIs either return full lists or have inconsistent pagination. A productive default is:
+
+- Provide `getAll(params)` per resource that:
+  - Performs a single GET and yields client‑side chunks using `pageSize`, with `maxItems` to cap total items
+  - Supports `buildListQuery(params)` to map typed filters to query
+- When real pagination is required, add a `paginate` helper and implement `getAll` on top to keep a consistent surface.
+
+Observability should be on by default at sensible levels. Logging options should include:
+
+- `includeQueryParams` – include parsed query params in request/response URL logs
+- `includeHeaders` – include request and response headers
+- `includeBody` – include response body (and request body when relevant)
+
+Always redact secrets.
 
 ### Concurrency, Cancellation, and Timeouts
 
