@@ -4,30 +4,6 @@ set -euo pipefail
 
 # This script runs inside the installed connector directory.
 
-remove_dependencies_from_package_json() {
-  local pkg_json="package.json"
-  local pkg_abs
-  pkg_abs="$(cd "$(dirname "$pkg_json")" && pwd)/$(basename "$pkg_json")"
-
-  if [ ! -f "$pkg_json" ]; then
-    echo "package.json not found; skipping dependency removal."
-    return 0
-  fi
-
-  if command -v jq >/dev/null 2>&1; then
-    local tmp_file
-    tmp_file="$(mktemp)"
-    jq 'del(.dependencies)' "$pkg_json" > "$tmp_file"
-    mv "$tmp_file" "$pkg_json"
-    echo "Removed dependencies from $pkg_abs"
-  else
-    # Best-effort fallback without jq
-    sed -E ':a;N;$!ba;s/\,?\s*"dependencies"\s*:\s*\{([^}]|\n)*\}\s*,?//g' "$pkg_json" | \
-      sed -E 's/,\s*([}\]])/\1/g' > "$pkg_json.tmp" && mv "$pkg_json.tmp" "$pkg_json" || true
-    echo "Removed dependencies from $pkg_abs (best-effort without jq)"
-  fi
-}
-
 copy_core_into_connector() {
   # Where to place the core sources within the connector
   local dest_dir="src/core"
@@ -56,7 +32,7 @@ copy_core_into_connector() {
   else
     cp -R "$core_src/." "$dest_dir/"
   fi
-  echo "Copied core sources from $core_src_abs to $dest_abs"
+  echo "✅ Copied core sources from $core_src_abs to $dest_abs"
 }
 
 rewrite_core_imports() {
@@ -93,45 +69,24 @@ rewrite_core_imports() {
   done < <(find "$src_root" -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" -o -name "*.mts" -o -name "*.cts" \) -print0)
 }
 
-prune_connector_tree() {
-  echo "Cleaning up connector directory"
-  # Keep only: src (with copied core), package.json, README
-  shopt -s dotglob
-  for entry in *; do
-    case "$entry" in
-      src|package.json|README.md)
-        ;;
-      *)
-        rm -rf "$entry" || true
-        ;;
-    esac
-  done
-  shopt -u dotglob
-}
+flatten_src_and_prune() {
+  # Keep README.md and contents of src/ at root; remove everything else
+  find . -mindepth 1 -maxdepth 1 ! -name src ! -name README.md -exec rm -rf {} +
 
-run_pnpm_install() {
-  # Run install right here (connector dir) if pnpm is available.
-  if ! command -v pnpm >/dev/null 2>&1; then
-    echo "pnpm not found; skipping install"
-    return 0
-  fi
-
-  local here
-  here="$(pwd)"
-  if [ -f "$here/package.json" ]; then
-    echo "Running pnpm install in $here"
-    pnpm install --ignore-scripts || echo "pnpm install failed; continuing"
-  else
-    echo "No package.json in $here; skipping pnpm install"
+  if [ -d "src" ]; then
+    # Move all files (including dotfiles) from src/ to root, then remove src/
+    shopt -s dotglob
+    mv src/* . 2>/dev/null || true
+    shopt -u dotglob
+    rm -rf src
+    echo "✅ Flattened connector directory"
   fi
 }
 
 main() {
-  remove_dependencies_from_package_json
   copy_core_into_connector
   rewrite_core_imports
-  prune_connector_tree
-  run_pnpm_install
+  flatten_src_and_prune
 }
 
 main "$@"
