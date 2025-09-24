@@ -545,8 +545,6 @@ show_next_steps() {
 show_generic_next_steps() {
   echo "🚀 Next steps:"
   echo "  - Review $dest_dir/README.md"
-  echo "  - Review $dest_dir/docs/getting-started.md"
-  echo "  - Review $dest_dir/examples/"
 }
 
 main() {
@@ -599,6 +597,7 @@ main() {
     dest_dir="$PWD/$CONNECTOR_NAME"
   fi
   copy_connector_into_subdir "$src_dir" "$dest_dir"
+  echo ""
 
   # Run connector-provided postinstall if available
   run_postinstall_if_present "$dest_dir" "$root"

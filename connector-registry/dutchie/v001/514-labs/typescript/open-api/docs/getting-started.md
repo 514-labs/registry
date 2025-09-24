@@ -13,7 +13,7 @@ Go to the root directory of your project.
 Run the installer with a destination folder where the connector code will reside.
 
 ```bash
-bash -i <(curl https://registry.514.ai/install.sh) --dest app/dutchie dutchie v001 514-labs typescript open-api
+bash -i <(curl https://registry.514.ai/install.sh) --dest app/connectors/dutchie dutchie v001 514-labs typescript open-api
 ```
 
 ### 3. Set environment variable in your shell
@@ -57,7 +57,7 @@ main().catch((err) => {
 Merge this into your `app/ingest/models.ts`:
 
 ```ts
-import type { Brand } from '../dutchie/src';
+import type { Brand } from '../connectors/dutchie';
 import {
   IngestPipeline,
   OlapTable,
@@ -87,7 +87,7 @@ In `app/workflows/dutchie.ts`:
 
 ```ts
 import { Key, Task, Workflow } from "@514labs/moose-lib";
-import { createDutchieConnector } from '../dutchie/src'
+import { createDutchieConnector } from '../connectors/dutchie'
 import { BrandWithKey, BrandPipeline } from '../ingest/models'
 
 export const dutchietask = new Task<null, void>("testdutchietask", {
