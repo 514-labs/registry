@@ -1,0 +1,8 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/schema-index.schema.json",
+  "version": "0.1.0",
+  "datasets": [],
+  "_examples": {
+    "_comment": "Examples for organizing dataset schemas if your pipeline produces tables/files."
+  }
+}
