@@ -1,4 +1,6 @@
 name: website-registry
+permissions:
+  contents: read
 
 on:
   pull_request:
