@@ -35,6 +35,8 @@ async function main() {
 main().catch((err) => { console.error(err); process.exit(1) })
 ```
 
+See [Getting Started](docs/getting-started.md) for more details and examples of [Moose](https://docs.fiveonefour.com/moose) integration.
+
 ## Debugging
 
 Enable logging with a config:
@@ -57,7 +59,7 @@ conn.initialize({
 })
 ```
 
-## Full documentation
+## Related documentation
 
 - [Dutchie connector docs](https://registry.514.ai/connectors/dutchie/v001/514-labs/typescript/open-api)
-- [Source repository](https://github.com/514-labs/registry/tree/main/connector-registry/dutchie/v001/514-labs/typescript/open-api)
+- [Contribution guide](https://registry.514.ai/create)
