@@ -200,8 +200,8 @@ function validateLanguageMetaShape(meta, ctx, expectedAuthor, expectedVersion, e
   } else {
     const dirs = new Set(implDirs)
     const listed = new Set(meta.implementations)
-    // Validate every directory is listed in meta
     for (const d of dirs) {
+      if (d === '_meta') continue
       if (!listed.has(d)) {
         collector.errors.push(fail('Implementation folder not declared in language meta.implementations', `${ctx} :: ${d}`))
       }
