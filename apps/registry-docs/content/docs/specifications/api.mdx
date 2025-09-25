@@ -23,11 +23,14 @@ Every API connector must implement the following core functionality and structur
 #### Resource Abstraction
 
 - Organize code by API resources rather than ETL stages.
-- Each resource module lives under `src/{resource}` and must expose:
-  - `createResource(send)` factory that binds a base path (e.g., `/{resource}`) and returns a CRUD surface
-  - A minimal, consistent operation: `getAll(params)` that returns an async generator of arrays (pages)
-  - Optional operations based on upstream capability: `getById(id)` (or `get`), and mutation methods when applicable
-  - A typed `model` describing the item shape for the resource
+- Canonical layout for resources:
+  - Single-file per resource under `src/resources/{resource}.ts`.
+  - Barrel export at `src/resources/index.ts` that re-exports per-resource factories.
+  - Each resource module must expose:
+    - `createResource(send)` factory that binds a base path (e.g., `/{resource}`) and returns a CRUD surface
+    - A minimal, consistent operation: `getAll(params)` that returns an async generator of arrays (pages)
+    - Optional operations based on upstream capability: `getById(id)` (or `get`), and mutation methods when applicable
+    - A typed `Model` describing the item shape for the resource
 - Cross-cutting helpers should live under `src/lib`:
   - `paginate` iterator supporting cursor pagination (and extensible for other strategies)
   - `make-resource` (or equivalent) to build the CRUD surface with pagination
@@ -125,6 +128,15 @@ Arrays of hooks to execute at different stages:
 - **afterResponse** - Executed after receiving a response
 - **onError** - Executed when an error occurs
 - **onRetry** - Executed before retrying a request
+
+#### Canonical Hook Event Semantics
+
+- Hooks must accept a discriminated union context with `type` in `{ beforeRequest, afterResponse, onError, onRetry }`.
+- `beforeRequest` emits `http_request`; `afterResponse` emits `http_response`.
+- Optional fields controlled by logging options:
+  - `includeQueryParams` → `query` present on both events when parseable
+  - `includeHeaders` → headers present on request and response events
+  - `includeBody` → response body present on `http_response`; request body present when relevant
 
 ### Retry Mechanism
 
@@ -252,6 +264,13 @@ Schemas should support:
 
 - Strong typing is required wherever the implementation language supports it (e.g., TypeScript). Public APIs must not be untyped or use `any`.
 - Prefer named types, generics with constraints, discriminated unions, and exact object shapes over loose records.
+
+#### OpenAPI Integration
+
+- Use a single generator: `hey-api` for TypeScript.
+- Canonical input path: `schemas/raw/files/openapi.json`.
+- Canonical output directory: `src/generated`.
+- Resource files import generated types directly to avoid drift.
 
 ### Error Handling
 
