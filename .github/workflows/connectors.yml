@@ -51,7 +51,8 @@ jobs:
             ROOTS=$(printf '%s\n' "${INPUTS[@]}" | sed 's#//*#/#g' | sort -u)
           else
             # Default: enumerate only implementation roots: <name>/<version>/<author>/typescript/<implementation>
-            ROOTS=$(ls -d connector-registry/*/*/*/typescript/* 2>/dev/null | sort -u)
+            ROOTS=$(find connector-registry -mindepth 6 -maxdepth 6 -type d -path '*/typescript/*' \
+              -not -name '_meta' -not -name '.*' 2>/dev/null | sort -u)
           fi
           echo "Discovered implementation roots:" && printf '%s\n' "$ROOTS"
           printf '%s\n' "$ROOTS" | awk -F'/' '{printf("{\"impl\":\"%s\",\"lang\":\"%s\"}\n",$0,$5)}' | jq -s '{include: .}' > m.json
