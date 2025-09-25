@@ -29,7 +29,6 @@ jobs:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
       - uses: pnpm/action-setup@v4
-        with: { version: 9 }
       - uses: actions/setup-node@v4
         with: { node-version: 20, cache: 'pnpm' }
       - run: pnpm install --frozen-lockfile
@@ -54,15 +53,12 @@ jobs:
             # Default: run ALL TypeScript implementations in the registry
             ROOTS=$(find connector-registry -type d -path '*/typescript/*' -maxdepth 6 -mindepth 6 | sort -u)
           fi
-          if [ -z "$ROOTS" ]; then echo 'matrix={"include":[]}' >>"$GITHUB_OUTPUT"; exit 0; fi
-          printf '%s\n' "$ROOTS" \
-            | awk -F'/' '{printf("{\"impl\":\"%s\",\"lang\":\"%s\"}\n",$0,$5)}' \
-            | jq -s '{include: .}' > m.json
-          echo "matrix=$(cat m.json)" >>"$GITHUB_OUTPUT"
+          printf '%s\n' "$ROOTS" | awk -F'/' '{printf("{\"impl\":\"%s\",\"lang\":\"%s\"}\n",$0,$5)}' | jq -s '{include: .}' > m.json
+          echo "Discovered implementations matrix:" && cat m.json
+          echo "matrix=$(jq -c . m.json)" >>"$GITHUB_OUTPUT"
 
   test-implementations:
     needs: discover-implementations
-    if: ${{ fromJson(needs.discover-implementations.outputs.matrix).include != '' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -70,7 +66,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with: { version: 9 }
       - uses: actions/setup-node@v4
         with: { node-version: 20, cache: 'pnpm' }
       - name: Install deps (root)
