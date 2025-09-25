@@ -50,9 +50,10 @@ jobs:
           if [ -n "${INPUTS[*]-}" ]; then
             ROOTS=$(printf '%s\n' "${INPUTS[@]}" | sed 's#//*#/#g' | sort -u)
           else
-            # Default: run ALL TypeScript implementations in the registry
-            ROOTS=$(find connector-registry -type d -path '*/typescript/*' -maxdepth 6 -mindepth 6 | sort -u)
+            # Default: enumerate only implementation roots: <name>/<version>/<author>/typescript/<implementation>
+            ROOTS=$(ls -d connector-registry/*/*/*/typescript/* 2>/dev/null | sort -u)
           fi
+          echo "Discovered implementation roots:" && printf '%s\n' "$ROOTS"
           printf '%s\n' "$ROOTS" | awk -F'/' '{printf("{\"impl\":\"%s\",\"lang\":\"%s\"}\n",$0,$5)}' | jq -s '{include: .}' > m.json
           echo "Discovered implementations matrix:" && cat m.json
           echo "matrix=$(jq -c . m.json)" >>"$GITHUB_OUTPUT"
