@@ -1,5 +1,5 @@
 import type { ConnectorConfig } from "../types/config";
-import type { Hook, HookType } from "../types/hooks";
+import type { Hook, HookType } from "@connector-factory/core";
 import { createLoggingHooks } from "../observability/logging-hooks";
 import { createMetricsHooks } from "../observability/metrics-hooks";
 
