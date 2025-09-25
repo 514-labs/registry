@@ -1,0 +1,83 @@
+name: connectors
+
+on:
+  pull_request:
+    paths:
+      - 'connector-registry/**'
+      - 'packages/registry/**'
+      - 'apps/registry-docs/lib/**'
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      impl_path_list:
+        description: 'Comma-separated implementation roots to test (optional)'
+        required: false
+      full_scan:
+        description: 'Run tests for all implementations'
+        type: boolean
+        default: false
+
+concurrency:
+  group: connectors-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  validate-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: 'pnpm' }
+      - run: pnpm install --frozen-lockfile
+      - name: Validate connectors structure
+        run: node scripts/validate-connectors.mjs
+
+  discover-implementations:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.out.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - id: out
+        shell: bash
+        run: |
+          set -euo pipefail
+          IFS=, read -ra INPUTS <<< "${{ github.event.inputs.impl_path_list }}"
+          if [ -n "${INPUTS[*]-}" ]; then
+            ROOTS=$(printf '%s\n' "${INPUTS[@]}" | sed 's#//*#/#g' | sort -u)
+          else
+            # Default: run ALL TypeScript implementations in the registry
+            ROOTS=$(find connector-registry -type d -path '*/typescript/*' -maxdepth 6 -mindepth 6 | sort -u)
+          fi
+          if [ -z "$ROOTS" ]; then echo 'matrix={"include":[]}' >>"$GITHUB_OUTPUT"; exit 0; fi
+          printf '%s\n' "$ROOTS" \
+            | awk -F'/' '{printf("{\"impl\":\"%s\",\"lang\":\"%s\"}\n",$0,$5)}' \
+            | jq -s '{include: .}' > m.json
+          echo "matrix=$(cat m.json)" >>"$GITHUB_OUTPUT"
+
+  test-implementations:
+    needs: discover-implementations
+    if: ${{ fromJson(needs.discover-implementations.outputs.matrix).include != '' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.discover-implementations.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: 'pnpm' }
+      - name: Install deps (root)
+        run: pnpm install --frozen-lockfile
+      - name: Test TypeScript implementation
+        if: ${{ matrix.lang == 'typescript' }}
+        working-directory: ${{ matrix.impl }}
+        run: pnpm test
+
+

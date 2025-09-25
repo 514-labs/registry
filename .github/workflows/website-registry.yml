@@ -1,0 +1,39 @@
+name: website-registry
+
+on:
+  pull_request:
+    paths:
+      - 'apps/registry-docs/**'
+      - 'packages/registry/**'
+      - 'connector-registry/**'
+  workflow_dispatch:
+
+concurrency:
+  group: website-registry-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  e2e-registry-json:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: 'pnpm' }
+      - run: pnpm install --frozen-lockfile
+      - name: Build Next app
+        run: pnpm docs:build
+      - name: Start Next (prod)
+        run: pnpm docs:start &
+      - name: Wait for server
+        run: npx wait-on --timeout 60000 http://localhost:3000 http-get://localhost:3000/registry.json
+      - name: Fetch /registry.json
+        run: curl -sSf http://localhost:3000/registry.json | tee /tmp/registry.json > /dev/null
+      - name: Assert registry.json non-empty array
+        run: jq -e 'type=="array" and length>0' /tmp/registry.json
+      - name: Assert connector shape in registry.json
+        run: jq -e 'all(.[]; (.type=="connector") and (.id and .version and .author and .language and .implementation))' /tmp/registry.json
+
+
