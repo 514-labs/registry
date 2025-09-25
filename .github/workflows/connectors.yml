@@ -51,10 +51,10 @@ jobs:
             ROOTS=$(printf '%s\n' "${INPUTS[@]}" | sed 's#//*#/#g' | sort -u)
           else
             # Default: enumerate only implementation roots: <name>/<version>/<author>/typescript/<implementation>
-            ROOTS=$(find connector-registry -mindepth 6 -maxdepth 6 -type d -path '*/typescript/*' \
+            ROOTS=$(find connector-registry -mindepth 5 -maxdepth 5 -type d -path '*/typescript/*' \
               -not -name '_meta' -not -name '.*' 2>/dev/null | sort -u)
           fi
-          echo "Discovered implementation roots:" && printf '%s\n' "$ROOTS"
+          echo "Discovered implementation roots (count=$(printf '%s\n' "$ROOTS" | grep -c . || true)):" && printf '%s\n' "$ROOTS"
           printf '%s\n' "$ROOTS" | awk -F'/' '{printf("{\"impl\":\"%s\",\"lang\":\"%s\"}\n",$0,$5)}' | jq -s '{include: .}' > m.json
           echo "Discovered implementations matrix:" && cat m.json
           echo "matrix=$(jq -c . m.json)" >>"$GITHUB_OUTPUT"
