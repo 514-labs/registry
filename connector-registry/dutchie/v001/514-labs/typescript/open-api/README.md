@@ -35,7 +35,7 @@ async function main() {
 main().catch((err) => { console.error(err); process.exit(1) })
 ```
 
-See [Getting Started](docs/getting-started.md) for more details and examples of [Moose](https://docs.fiveonefour.com/moose) integration.
+See [Getting Started](https://github.com/514-labs/registry/blob/main/connector-registry/dutchie/v001/514-labs/typescript/open-api/docs/getting-started.md) for more details and examples of [Moose](https://docs.fiveonefour.com/moose) integration.
 
 ## Debugging
 
