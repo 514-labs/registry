@@ -1,4 +1,4 @@
-import type { Hook } from "../types/hooks";
+import type { Hook } from "@connector-factory/core";
 import type { ConnectorConfig } from "../types/config";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";

@@ -32,12 +32,12 @@ describe("hubspot lifecycle", () => {
   });
 
   describe("error handling", () => {
-    it("should throw ConnectorError when making requests before initialization", async () => {
+  it("should throw ConnectorError when making requests before initialization", async () => {
       const hs = createHubSpotConnector();
 
-      await expect(
-        hs.request({ path: "/test", method: "GET" })
-      ).rejects.toThrow(ConnectorError);
+    await expect(
+      hs.request({ path: "/test", method: "GET" })
+    ).rejects.toThrow("Connector not initialized");
     });
 
     it("should throw ConnectorError with proper metadata when not initialized", async () => {
@@ -47,11 +47,11 @@ describe("hubspot lifecycle", () => {
         await hs.request({ path: "/test", method: "GET" });
         fail("Expected ConnectorError to be thrown");
       } catch (error) {
-        expect(error).toBeInstanceOf(ConnectorError);
-        expect(error.code).toBe("NOT_INITIALIZED");
-        expect(error.source).toBe("application");
-        expect(error.retryable).toBe(false);
-        expect(error.message).toContain("not initialized");
+        expect((error as any)?.name).toBe("ConnectorError");
+        expect((error as any)?.code).toBe("NOT_INITIALIZED");
+        expect((error as any)?.source).toBe("application");
+        expect((error as any)?.retryable).toBe(false);
+        expect(String((error as any)?.message)).toContain("not initialized");
       }
     });
   });

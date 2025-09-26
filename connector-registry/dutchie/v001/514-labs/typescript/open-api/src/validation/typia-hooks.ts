@@ -5,7 +5,7 @@ import type { Brand, ProductsGetResponses, InventoryGetResponses } from '../gene
 type ProductArray = ProductsGetResponses[200]
 type InventoryArray = InventoryGetResponses[200]
 
-export function createTypiaValidationHooks(params?: { strict?: boolean }): { afterResponse: Hook[] } {
+export function createTypiaValidationHooks(params?: { strict?: boolean }): { afterResponse: any[] } {
   const strict = Boolean(params?.strict)
 
   const validate = (path: string, data: unknown) => {
@@ -19,10 +19,13 @@ export function createTypiaValidationHooks(params?: { strict?: boolean }): { aft
     }
   }
 
-  const after: Hook = async (ctx) => {
-    if (ctx.type !== 'afterResponse' || !ctx.response || !ctx.request) return
-    validate(ctx.request.path, ctx.response.data)
-  }
+  const after = {
+    name: 'validation:afterResponse',
+    execute: async (ctx: any) => {
+      if (ctx.type !== 'afterResponse' || !ctx.response || !ctx.request) return
+      validate(ctx.request.path, ctx.response.data)
+    }
+  } as any
 
   return { afterResponse: [after] }
 }

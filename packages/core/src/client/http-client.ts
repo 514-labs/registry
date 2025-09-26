@@ -2,6 +2,7 @@ import type { ConnectorConfig } from "../types/config";
 import type { HttpResponseEnvelope } from "../types/envelopes";
 import { ConnectorError } from "../types/errors";
 import { applyHookPipeline } from "./middleware";
+import type { TransportRequest } from "../types/hooks";
 import * as http from "node:http";
 import * as https from "node:https";
 import { URL } from "node:url";
@@ -61,11 +62,13 @@ export class HttpClient {
       headers['Authorization'] = `Bearer ${this.config.auth.bearer.token}`;
     }
 
-    const req: { method: HttpRequestOptions["method"]; url: string; headers: Record<string, string>; body?: unknown } = {
+    const req: TransportRequest = {
       method: opts.method,
       url,
       headers,
       body: opts.body,
+      path,
+      operation: opts.operation,
     };
 
     let aborted = false;
@@ -74,12 +77,12 @@ export class HttpClient {
       type,
       operation: opts.operation,
       request: req,
-      modifyRequest: (updates: Record<string, unknown>) => Object.assign(req, updates),
+      modifyRequest: (updates: Partial<TransportRequest>) => Object.assign(req, updates),
       abort: (reason?: string) => {
         aborted = true;
         abortReason = reason ?? "Aborted by hook";
       },
-    }));
+    } as any));
 
     await hooks.beforeRequest();
     if (aborted) throw new ConnectorError({ message: abortReason || "Aborted", code: "CANCELLED", source: "userHook" });

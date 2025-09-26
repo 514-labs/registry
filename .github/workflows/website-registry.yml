@@ -1,0 +1,42 @@
+name: website-registry
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - 'apps/registry-docs/**'
+      - 'packages/registry/**'
+      - 'connector-registry/**'
+  workflow_dispatch:
+
+concurrency:
+  group: website-registry-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  e2e-registry-json:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: 'pnpm' }
+      - run: pnpm install --frozen-lockfile
+      - name: Build Next app
+        run: pnpm docs:build
+      - name: Start Next (prod)
+        run: pnpm docs:start &
+      - name: Wait for server
+        run: npx wait-on --timeout 60000 http://localhost:3000 http-get://localhost:3000/registry.json
+      - name: Fetch /registry.json
+        run: curl -sSf http://localhost:3000/registry.json | tee /tmp/registry.json > /dev/null
+      - name: Print registry.json (debug)
+        run: cat /tmp/registry.json | jq '.'
+      - name: Assert there is at least one connector
+        run: jq -e '[.[] | select(.type=="connector")] | length > 0' /tmp/registry.json
+      - name: Assert connector item shape
+        run: jq -e 'all(.[] | select(.type=="connector"); (.id and .version and .author and .language and .implementation))' /tmp/registry.json
+
+
