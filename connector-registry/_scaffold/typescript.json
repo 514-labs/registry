@@ -416,7 +416,7 @@
                             {
                               "type": "file",
                               "name": "basic-usage.ts",
-                              "template": "import { Client } from './src/client'\nconsole.log(new Client({}).ping())\n"
+                              "template": "import { createConnector } from '../src'\n\nconst conn = createConnector()\nconn.initialize({\n  baseUrl: 'https://api.example.com',\n  auth: { type: 'bearer', bearer: { token: 'YOUR_TOKEN' } },\n})\n\nconsole.log('Connector initialized')\n\n// Example usage:\n// for await (const page of conn.{resource}.getAll({ pageSize: 100, maxItems: 200 })) {\n//   console.log(page)\n// }\n"
                             }
                           ]
                         }
