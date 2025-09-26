@@ -150,7 +150,7 @@
                         {
                           "type": "file",
                           "name": "package.json",
-                          "template": "{\n  \"name\": \"{packageName}\",\n  \"version\": \"0.1.0\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\",\n  \"scripts\": {\n    \"build\": \"tsc -p tsconfig.json\",\n    \"test\": \"jest --runInBand\",\n    \"test:build\": \"rm -rf .temp-test && tsc -p tsconfig.test.json\"\n  },\n  \"engines\": {\"node\": \">=20\"},\n  \"dependencies\": {\n    \"@connector-factory/core\": \"^0.0.0\"\n  },\n  \"devDependencies\": {\n    \"typescript\": \"^5.4.0\",\n    \"jest\": \"^29.7.0\",\n    \"ts-jest\": \"^29.1.2\",\n    \"@types/jest\": \"^29.5.12\",\n    \"@types/node\": \"^20.11.30\",\n    \"nock\": \"^13.5.0\"\n  }\n}\n"
+                          "template": "{\n  \"name\": \"{packageName}\",\n  \"version\": \"0.0.0\",\n  \"private\": true,\n  \"main\": \"dist/index.js\",\n  \"types\": \"dist/index.d.ts\",\n  \"scripts\": {\n    \"build\": \"tsc -p tsconfig.json\",\n    \"test\": \"jest --runInBand\"\n  },\n  \"engines\": {\"node\": \">=20\"},\n  \"dependencies\": {\n    \"@connector-factory/core\": \"^0.1.0\"\n  },\n  \"devDependencies\": {\n    \"typescript\": \"^5.4.0\",\n    \"jest\": \"^29.7.0\",\n    \"ts-jest\": \"^29.1.2\",\n    \"@types/jest\": \"^29.5.12\",\n    \"@types/node\": \"^20.11.30\",\n    \"nock\": \"^13.5.0\"\n  }\n}\n"
                         },
                         {
                           "type": "file",
