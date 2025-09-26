@@ -11,7 +11,7 @@
   },
   "source": {
     "type": "openapi",
-    "spec": "",
+    "spec": "https://developers.hubspot.com/docs/api-reference/overview",
     "homepage": "https://developers.hubspot.com"
   },
   "tags": [],

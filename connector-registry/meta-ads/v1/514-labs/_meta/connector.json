@@ -11,7 +11,7 @@
   },
   "source": {
     "type": "openapi",
-    "spec": "",
+    "spec": "https://developers.facebook.com/docs/marketing-api/",
     "homepage": ""
   },
   "tags": [],

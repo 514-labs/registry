@@ -1,76 +1,77 @@
-import { paginateCursor, type SendFn } from './paginate'
+import type { SendFn } from './paginate'
 
-type PaginateFn<TItem> = (args: {
-  send: SendFn
-  path: string
-  query?: Record<string, any>
-  pageSize?: number
-}) => AsyncGenerator<TItem[]>
-
-function defaultListQuery(params?: { properties?: string[]; limit?: number; after?: string }) {
-  const query: Record<string, any> = {}
-  if (params?.properties?.length) query.properties = params.properties.join(',')
-  if (params?.limit) query.limit = params.limit
-  if (params?.after) query.after = params.after
-  return query
+/**
+ * Build query string parameters for a resource list call.
+ * - If a custom builder is provided, it maps typed params to a plain query object.
+ * - Otherwise returns an empty object.
+ */
+function buildQuery<ListParams extends Record<string, any> | undefined>(
+  params: ListParams | undefined,
+  custom?: (p?: ListParams) => Record<string, any>
+) {
+  if (custom) return custom(params)
+  return {}
 }
 
-function defaultGetQuery(params: { properties?: string[] }) {
-  const query: Record<string, any> = {}
-  if (params?.properties?.length) query.properties = params.properties.join(',')
-  return query
-}
-
+/**
+ * Create a simple list-style resource with a single HTTP GET and local chunking.
+ *
+ * Semantics:
+ * - Always performs one HTTP GET to the given path and expects an array response.
+ * - getAll returns an async generator that yields arrays of items (pages).
+ * - pageSize controls local chunk size; no extra HTTP requests are made.
+ * - maxItems limits the total number of items yielded across all chunks.
+ */
 export function makeCrudResource<
-  TItem,
-  TListResponse,
-  TSingleResponse,
-  TListParams extends Record<string, any> | undefined = undefined,
-  TGetParams extends { id: string } & Record<string, any> = { id: '' } & Record<string, any>
+  Item,
+  ListParams extends Record<string, any> | undefined = undefined
 >(
   objectPath: string,
   send: SendFn,
   options?: {
-    buildListQuery?: (params?: TListParams) => Record<string, any>
-    buildGetQuery?: (params: Omit<TGetParams, 'id'>) => Record<string, any>
-    paginate?: PaginateFn<TItem>
+    buildListQuery?: (params?: ListParams) => Record<string, any>
   }
 ) {
-  const paginateImpl: PaginateFn<TItem> = options?.paginate
-    ?? (async function* (args) {
-      for await (const items of paginateCursor<TItem>({ send: args.send, path: args.path, query: args.query, pageSize: args.pageSize })) {
-        yield items
-      }
-    })
+  type GetAllOptions = (ListParams extends undefined
+    ? { pageSize?: number; maxItems?: number }
+    : ListParams & { pageSize?: number; maxItems?: number })
 
-  const api = {
-    list: (params?: TListParams) => {
-      const query = options?.buildListQuery
-        ? options.buildListQuery(params)
-        : defaultListQuery(params as any)
-      return send<TListResponse>({ method: 'GET', path: objectPath, query })
-    },
-    get: (params: TGetParams) => {
-      const query = options?.buildGetQuery
-        ? options.buildGetQuery(params as any)
-        : defaultGetQuery(params as any)
-      return send<TSingleResponse>({ method: 'GET', path: `${objectPath}/${params.id}`, query })
-    },
-    streamAll: async function* (params?: (TListParams extends undefined ? { pageSize?: number } : TListParams & { pageSize?: number })) {
-      const listParams = params as any
-      const query = options?.buildListQuery ? options.buildListQuery(listParams) : defaultListQuery(listParams)
-      for await (const items of paginateImpl({ send, path: objectPath, query, pageSize: (params as any)?.pageSize })) {
-        for (const item of items) yield item
+  return {
+    /**
+     * Async generator yielding arrays of items from a single HTTP GET.
+     * - pageSize: chunk size for local slicing (<= 0 or undefined => single chunk of all items)
+     * - maxItems: stop after emitting up to this many items (applies across chunks)
+     */
+    async *getAll(
+      params?: GetAllOptions
+    ): AsyncGenerator<ReadonlyArray<Item>> {
+      const queryParams = params as any
+      const query = buildQuery(queryParams, options?.buildListQuery)
+      const res = await send<Item[]>({ method: 'GET', path: objectPath, query, operation: 'getAll' })
+      const items: Item[] = Array.isArray(res.data) ? res.data : []
+
+      const pageSize = (params as any)?.pageSize as number | undefined
+      const maxItems = (params as any)?.maxItems as number | undefined
+
+      let start = 0
+      let remainingItems = typeof maxItems === 'number' ? Math.max(0, maxItems) : undefined
+
+      if (!pageSize || pageSize <= 0) {
+        yield remainingItems !== undefined ? items.slice(0, remainingItems) : items
+        return
       }
-    },
-    getAll: async (params?: (TListParams extends undefined ? { pageSize?: number; maxItems?: number } : TListParams & { pageSize?: number; maxItems?: number })) => {
-      const results: TItem[] = []
-      for await (const item of (api as any).streamAll(params)) {
-        results.push(item)
-        if ((params as any)?.maxItems && results.length >= (params as any).maxItems) break
+
+      while (start < items.length) {
+        const end = Math.min(items.length, start + pageSize)
+        let chunk = items.slice(start, end)
+        if (remainingItems !== undefined) {
+          if (remainingItems <= 0) break
+          if (chunk.length > remainingItems) chunk = chunk.slice(0, remainingItems)
+          remainingItems -= chunk.length
+        }
+        yield chunk
+        start = end
       }
-      return results
     },
   }
-  return api
 }

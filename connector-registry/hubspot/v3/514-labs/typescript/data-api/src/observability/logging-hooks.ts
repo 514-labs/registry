@@ -1,4 +1,4 @@
-import type { Hook } from "../types/hooks";
+import type { Hook } from "@connector-factory/core";
 import type { HttpResponseEnvelope } from "../types/envelopes";
 import type { LogLevel, LoggingOptions } from "../types/config";
 

@@ -1,4 +1,3 @@
-export * from './config'
 export { createLoggingHooks } from './observability/logging-hooks'
 export { createDutchieConnector, DutchieApiConnector } from './client/dutchie-connector'
 export { createMetricsHooks, InMemoryMetricsSink } from './observability/metrics-hooks'

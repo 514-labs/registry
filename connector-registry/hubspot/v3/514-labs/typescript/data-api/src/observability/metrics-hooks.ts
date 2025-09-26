@@ -1,4 +1,4 @@
-import type { Hook } from "../types/hooks";
+import type { Hook } from "@connector-factory/core";
 import type { MetricsLabels, MetricsOptions, MetricsSink } from "../types/config";
 
 function labelsKey(labels?: MetricsLabels): string {
