@@ -100,9 +100,9 @@ export default function PipelineCard({
                 <Image
                   src={sourceLogo}
                   alt={`${sourceSystem} logo`}
-                  width={32}
-                  height={32}
-                  className="h-8 w-8 rounded-sm object-contain"
+                  width={40}
+                  height={40}
+                  className="h-10 w-10 rounded-sm object-contain"
                 />
               ) : null}
               <span className="text-muted-foreground">→</span>
@@ -110,9 +110,9 @@ export default function PipelineCard({
                 <Image
                   src={destinationLogo}
                   alt={`${destinationSystem} logo`}
-                  width={32}
-                  height={32}
-                  className="h-8 w-8 rounded-sm object-contain"
+                  width={40}
+                  height={40}
+                  className="h-10 w-10 rounded-sm object-contain 0"
                 />
               ) : null}
             </div>
@@ -120,9 +120,9 @@ export default function PipelineCard({
             <Image
               src={imageSrc}
               alt={`${name} logo`}
-              width={48}
-              height={48}
-              className="h-12 w-12 rounded-sm object-contain 0"
+              width={40}
+              height={40}
+              className="h-10 w-10 rounded-sm object-contain 0"
             />
           )}
           <div className="flex items-center gap-2">
@@ -162,14 +162,14 @@ export default function PipelineCard({
                   key={`${url}-${idx}`}
                   src={url}
                   alt="Creator avatar"
-                  width={24}
-                  height={24}
-                  className="h-6 w-6 rounded-full ring-1 ring-background"
+                  width={32}
+                  height={32}
+                  className="h-8 w-8 rounded-full ring-1 ring-background"
                   unoptimized
                 />
               ))}
               {creatorAvatarUrls.length > 5 ? (
-                <div className="h-6 w-6 rounded-full bg-muted text-xs flex items-center justify-center ring-1 ring-background">
+                <div className="h-8 w-8 rounded-full bg-muted text-xs flex items-center justify-center ring-1 ring-background">
                   +{creatorAvatarUrls.length - 5}
                 </div>
               ) : null}
@@ -178,9 +178,9 @@ export default function PipelineCard({
             <Image
               src={creatorAvatarUrl}
               alt="Creator avatar"
-              width={24}
-              height={24}
-              className="h-6 w-6 rounded-full mt-2"
+              width={32}
+              height={32}
+              className="h-8 w-8 rounded-full mt-2"
               unoptimized
             />
           ) : null}
@@ -200,18 +200,34 @@ export default function PipelineCard({
           ) : null}
         </CardContent>
         <CardFooter className="flex flex-col gap-3 items-start">
-          <p className="text-sm text-muted-foreground">{description}</p>
-          <div className="flex flex-wrap gap-2">
-            {(languages ?? []).map((lang) => (
-              <Badge key={`lang-${lang}`} variant="secondary">
-                {lang}
-              </Badge>
-            ))}
-            {tags.map((tag) => (
-              <Badge key={tag} variant="secondary">
-                {tag}
-              </Badge>
-            ))}
+        <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
+        <div className="flex flex-wrap gap-2">
+            {(() => {
+              // Collect all badges into a single array
+              const allBadges = [
+                ...(languages ?? []).map((lang) => ({ key: `lang-${lang}`, label: lang })),
+                ...tags.map((tag) => ({ key: tag, label: tag })),
+              ];
+
+              const maxVisible = 3;
+              const visibleBadges = allBadges.slice(0, maxVisible);
+              const remainingCount = allBadges.length - maxVisible;
+
+              return (
+                <>
+                  {visibleBadges.map((badge) => (
+                    <Badge key={badge.key} variant="secondary">
+                      {badge.label}
+                    </Badge>
+                  ))}
+                  {remainingCount > 0 && (
+                    <Badge variant="secondary" className="text-muted-foreground">
+                      +{remainingCount}
+                    </Badge>
+                  )}
+                </>
+              );
+            })()}
           </div>
         </CardFooter>
       </Card>
