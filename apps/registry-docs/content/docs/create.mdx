@@ -10,8 +10,7 @@ Follow these steps to create your own connector or pipeline:
 Clone the registry repository to your local machine:
 
 ```bash
-git clone https://github.com/514-labs/registry.git
-cd registry
+git clone https://github.com/514-labs/registry.git && cd registry
 ```
 
 <Tabs defaultValue="connector" className="mt-6">
@@ -24,15 +23,10 @@ cd registry
 
 ## 2. Generate a connector scaffold
 
-From the registry directory, run the install script to generate a new connector with the appropriate structure:
+From the registry directory, run the the scaffold to generate a new connector with the appropriate structure:
 
 ```bash
-bash -i <(curl https://registry.514.ai/install.sh) --type connector [connector-name] [version] [author] [language]
-```
-
-**Example:**
-```bash
-bash -i <(curl https://registry.514.ai/install.sh) --type connector ads-b-dot-lol v2 fiveonefour typescript data-api
+npx @514labs/registry scaffold connector typescript --name my-connector --scaffold-version v1 --author 514-labs --implementation default --package-name @workspace/connector-my-connector --resource widgets --yes
 ```
 
 This creates a new directory with your connector scaffold in the chosen language.
