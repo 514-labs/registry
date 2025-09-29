@@ -17,7 +17,7 @@ describe('observability hooks', () => {
     const conn = createDutchieConnector()
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } }, logging: { enabled: true, level: 'info', logger: (level, event) => events.push({ level, event }) } })
 
-    for await (const _ of conn.brand.getAll({ pageSize: 10, maxItems: 2 })) { void _; break }
+    for await (const _ of conn.brand.getAll({ paging: { pageSize: 10, maxItems: 2 } })) { void _; break }
     const names = events.map(e => e.event?.event)
     expect(names).toEqual(expect.arrayContaining(['http_request', 'http_response']))
     const reqEvt = events.find(e => e.event?.event === 'http_request')?.event as any

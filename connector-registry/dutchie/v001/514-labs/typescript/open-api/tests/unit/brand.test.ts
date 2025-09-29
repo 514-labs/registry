@@ -19,7 +19,7 @@ describe('brand resource', () => {
     const conn = createDutchieConnector()
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } } })
 
-    const iter = conn.brand.getAll({ pageSize: 50 })
+    const iter = conn.brand.getAll({ paging: { pageSize: 50 } })
     const { value: page } = await iter.next()
     expect(Array.isArray(page)).toBe(true)
     scope.done()
@@ -34,7 +34,7 @@ describe('brand resource', () => {
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } } })
 
     const pages: number[][] = []
-    for await (const page of conn.brand.getAll({ pageSize: 1, maxItems: 2 })) {
+    for await (const page of conn.brand.getAll({ paging: { pageSize: 1, maxItems: 2 } })) {
       const ids = page
         .map((b) => b.brandId)
         .filter((id): id is number => typeof id === 'number')

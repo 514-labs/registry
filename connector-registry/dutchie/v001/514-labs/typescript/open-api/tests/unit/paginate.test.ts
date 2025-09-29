@@ -21,7 +21,7 @@ describe('pagination (offset fallback)', () => {
     const conn = createDutchieConnector()
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } } })
     const pages: number[][] = []
-    for await (const page of conn.brand.getAll({ pageSize: 1, maxItems: 2 })) {
+    for await (const page of conn.brand.getAll({ paging: { pageSize: 1, maxItems: 2 } })) {
       const ids = page.map((b) => b.brandId).filter((id): id is number => typeof id === 'number')
       pages.push(ids)
     }
@@ -37,7 +37,7 @@ describe('pagination (offset fallback)', () => {
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } } })
 
     const out: number[] = []
-    for await (const page of conn.brand.getAll({ pageSize: 5, maxItems: 2 })) {
+    for await (const page of conn.brand.getAll({ paging: { pageSize: 5, maxItems: 2 } })) {
       out.push(...page.map((b) => b.brandId).filter((id): id is number => typeof id === 'number'))
     }
     expect(out).toEqual([1, 2])
@@ -67,7 +67,7 @@ describe('pagination (offset fallback)', () => {
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } } })
 
     const pages: number[][] = []
-    for await (const page of conn.brand.getAll({ pageSize: 0 })) {
+    for await (const page of conn.brand.getAll({ paging: { pageSize: 0 } })) {
       pages.push(page.map((b) => b.brandId).filter((id): id is number => typeof id === 'number'))
     }
     expect(pages).toEqual([[1, 2]])

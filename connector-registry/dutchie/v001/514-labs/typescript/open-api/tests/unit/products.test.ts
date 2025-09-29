@@ -19,7 +19,7 @@ describe('products resource', () => {
     const conn = createDutchieConnector()
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } } })
 
-    const iter = conn.products.getAll({ isActive: true, pageSize: 50 })
+    const iter = conn.products.getAll({ params: { isActive: true }, paging: { pageSize: 50 } })
     const { value: page } = await iter.next()
     expect(Array.isArray(page)).toBe(true)
     scope.done()
@@ -37,7 +37,7 @@ describe('products resource', () => {
     const conn = createDutchieConnector()
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } } })
 
-    const iter = conn.products.getAll({ isActive: true, fromLastModifiedDateUTC: '2024-01-01T00:00:00Z' })
+    const iter = conn.products.getAll({ params: { isActive: true, fromLastModifiedDateUTC: '2024-01-01T00:00:00Z' } })
     const { value: page } = await iter.next()
     expect(Array.isArray(page)).toBe(true)
     expect((page as any)[0].productId).toBe(99)
