@@ -39,7 +39,7 @@ export function DiscoveryGrid({
 
       <TabsContent value="connectors" className="mt-6">
         <div className="grid grid-cols-[260px_minmax(0,1fr)] gap-6">
-          <aside className="space-y-4">
+          <aside className="sticky top-[calc(var(--header-height)+2.5rem)] h-fit space-y-4">
             <ConnectorFilterBar
               query={connectorState.query}
               setQuery={connectorState.setQuery}
@@ -65,7 +65,7 @@ export function DiscoveryGrid({
 
       <TabsContent value="pipelines" className="mt-6">
         <div className="grid grid-cols-[260px_minmax(0,1fr)] gap-6">
-          <aside className="space-y-4">
+          <aside className="sticky top-[calc(var(--header-height)+2.5rem)] h-fit space-y-4">
             <PipelineFilterBar
               query={pipelineState.query}
               setQuery={pipelineState.setQuery}
@@ -118,7 +118,7 @@ export function DiscoveryGridDetailed({
 
       <TabsContent value="connectors" className="mt-6">
         <div className="grid grid-cols-[260px_minmax(0,1fr)] gap-6">
-          <aside className="space-y-4">
+          <aside className="sticky top-[calc(var(--header-height)+2.5rem)] h-fit space-y-4">
             <ConnectorFilterBar
               query={connectorState.query}
               setQuery={connectorState.setQuery}
@@ -147,7 +147,7 @@ export function DiscoveryGridDetailed({
 
       <TabsContent value="pipelines" className="mt-6">
         <div className="grid grid-cols-[260px_minmax(0,1fr)] gap-6">
-          <aside className="space-y-4">
+          <aside className="sticky top-[calc(var(--header-height)+2.5rem)] h-fit space-y-4">
             <PipelineFilterBar
               query={pipelineState.query}
               setQuery={pipelineState.setQuery}

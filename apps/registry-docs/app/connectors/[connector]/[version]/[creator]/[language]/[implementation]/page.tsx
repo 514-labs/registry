@@ -219,10 +219,11 @@ export default async function ConnectorImplementationPage({
   };
 
   return (
-    <div className="container mx-auto py-16 ">
+    <div className="container mx-auto py-16">
       <PagefindMeta type="connector" />
       <div className="grid grid-cols-12 gap-16">
         <div className="col-span-3">
+          <div className="sticky top-[calc(var(--header-height)+2.5rem)] h-fit">
           <ConnectorImplSidebar
             logoSrc={`/connector-logos/${conn.connectorId}.png`}
             title={displayName}
@@ -258,6 +259,7 @@ export default async function ConnectorImplementationPage({
             selectedLanguage={language}
             selectedImplementation={implEntry.implementation}
           />
+          </div>
         </div>
         <div className="col-span-9 space-y-8">
           {(() => {
