@@ -276,9 +276,10 @@ export async function runScaffold({
   console.log("\nNext steps:");
   if (language === "typescript") {
     console.log(
-      `- Install deps in the new package (if needed): pnpm -F ${answers.packageName} install`
+      `- Install deps in the new package: pnpm -F ${answers.packageName} install`
     );
-    console.log(`- Build TypeScript: pnpm -F ${answers.packageName} build`);
+    console.log(`- Run tests: pnpm -F ${answers.packageName} test`);
+    console.log(`- Review connector specifications in apps/registry-docs/content/docs/specifications/`)
     console.log(
       `- Start implementing in src/ under ${kind}/${id}/${answers.version}/${answers.author}/typescript/${answers.implementation}`
     );
@@ -286,6 +287,7 @@ export async function runScaffold({
     console.log(
       `- Create a venv and install: cd to the impl dir and pip install -e .`
     );
+    console.log(`- Review connector specifications in apps/registry-docs/content/docs/specifications/`)
     console.log(
       `- Start implementing in src/ under ${kind}/${id}/${answers.version}/${answers.author}/python/${answers.implementation}`
     );
