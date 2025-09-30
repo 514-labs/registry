@@ -7,7 +7,7 @@ import type { SendFn } from '../lib/paginate'
 import type { Hook } from '@connector-factory/core'
 import { createMapArrayAfterResponseHook } from '@connector-factory/core'
 import type { DiscountApiResponse } from '../generated/types.gen'
-import type { DiscountApiResponseFlat } from '../generated/flat/discountapiresponse.type'
+import type { DiscountApiResponseFlat } from '../generated/flat.gen'
 
 function mapDiscountApiResponseToFlat(raw: DiscountApiResponse): DiscountApiResponseFlat {
   const flat: Record<string, unknown> = {}

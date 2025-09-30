@@ -2,6 +2,7 @@ import type { ConnectorConfig } from "../types/config";
 import type { HttpResponseEnvelope } from "../types/envelopes";
 import { ConnectorError } from "../types/errors";
 import type { HookType, Hook, TransportRequest } from "../types/hooks";
+import { createSpecConformanceNormalizer } from "../types/hook-helpers";
 import { applyHookPipeline } from "./middleware";
 import type { HttpClientOptions, HttpRequestOptions } from "./types";
 import * as http from "http";
@@ -80,6 +81,8 @@ export class HttpClient {
         ...(opts.resourceHooks?.beforeRequest ?? []),
       ],
       afterResponse: [
+        // Prepend null-drop normalizer only if enabled (default true)
+        ...(this.config.dropNulls === false ? [] : [createSpecConformanceNormalizer()]),
         ...((this.config.hooks?.afterResponse ?? [])),
         ...(opts.resourceHooks?.afterResponse ?? []),
       ],

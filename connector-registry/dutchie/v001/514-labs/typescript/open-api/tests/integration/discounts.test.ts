@@ -28,6 +28,13 @@ maybe('integration: discounts flattened', () => {
         expect(discount).toBeDefined()
         // Check a representative flattened field exists
         if ('reward_discountRewardId' in discount) sawFlat = true
+        // Normalizer expectation: no null values should remain in flattened output
+        const values = Object.values(discount as Record<string, unknown>)
+        expect(values.includes(null)).toBe(false)
+        // If present, specific field should not be null
+        if ('reward_thresholdTypeId' in discount) {
+          expect((discount as any).reward_thresholdTypeId).not.toBeNull()
+        }
         count += 1
         if (count >= 10) break
       }
