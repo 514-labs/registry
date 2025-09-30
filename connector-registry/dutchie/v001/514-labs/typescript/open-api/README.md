@@ -25,7 +25,7 @@ async function main() {
   })
 
   // Stream brands in pages of 100 (single GET, client-side chunking)
-  for await (const page of conn.brand.getAll({ pageSize: 100, maxItems: 500 })) {
+  for await (const page of conn.brand.getAll({ paging: { pageSize: 100, maxItems: 500 } })) {
     for (const brand of page) {
       // do something with brand
     }
@@ -36,6 +36,21 @@ main().catch((err) => { console.error(err); process.exit(1) })
 ```
 
 See [Getting Started](https://github.com/514-labs/registry/blob/main/connector-registry/dutchie/v001/514-labs/typescript/open-api/docs/getting-started.md) for more details and examples of [Moose](https://docs.fiveonefour.com/moose) integration.
+
+## Flattening
+Flatten selected generated types into a single-level interface and write to one file.
+
+Example: flatten `DiscountApiResponse` into `DiscountApiResponseFlat` and save in `src/generated/flat.gen.ts`.
+
+```bash
+pnpm --filter @514labs/registry build
+
+pnpm --filter @514labs/registry flatten -- \
+  --source $(pwd)/src/generated/types.gen.ts \
+  --type DiscountApiResponse \
+  --out $(pwd)/src/generated/flat.gen.ts \
+  --name DiscountApiResponseFlat
+```
 
 ## Debugging
 

@@ -23,10 +23,12 @@
     "README.md"
   ],
   "scripts": {
+    "pretest": "pnpm --filter @connector-factory/core build",
     "build": "tsc -p tsconfig.json",
     "test": "pnpm run test:build && pnpm run test:rt",
     "test:build": "rm -rf .temp-test && tsc -p tsconfig.test.json",
     "test:rt": "node ./node_modules/jest/bin/jest.js --runInBand --passWithNoTests --rootDir .temp-test --testRegex '(.*)(test|spec).js$'",
+    "pretest:integration": "pnpm --filter @connector-factory/core build",
     "test:integration": "jest --config jest.integration.cjs",
     "generate:types": "openapi-ts -i ./schemas/files/dutchie-openapi.json -o ./src/generated"
   },
@@ -34,7 +36,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@connector-factory/core": "^0.1.0"
+    "@connector-factory/core": "workspace:*"
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "0.84.0",

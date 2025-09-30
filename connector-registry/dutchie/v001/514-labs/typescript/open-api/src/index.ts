@@ -3,3 +3,4 @@ export { createDutchieConnector, DutchieApiConnector } from './client/dutchie-co
 export { createMetricsHooks, InMemoryMetricsSink } from './observability/metrics-hooks'
 export { createTypiaValidationHooks } from './validation/typia-hooks'
 export * from './generated/types.gen'
+export * from './generated/flat.gen'

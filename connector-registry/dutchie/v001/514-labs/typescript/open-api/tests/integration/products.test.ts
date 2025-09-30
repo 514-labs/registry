@@ -22,7 +22,7 @@ maybe('integration: products', () => {
 
   it('streams products and yields items', async () => {
     let count = 0
-    for await (const page of conn.products.getAll({ pageSize: 50 })) {
+    for await (const page of conn.products.getAll({ paging: { pageSize: 50 } })) {
       for (const product of page) {
         expect(product).toBeDefined()
         count += 1

@@ -2,6 +2,7 @@
 import { Command } from 'commander'
 import pkg from '../package.json' assert { type: 'json' }
 import { runScaffold } from './scaffold'
+import { runFlatten } from './flatten'
 
 const program = new Command()
 program
@@ -30,6 +31,18 @@ program
   .option('-y, --yes', 'skip prompts and use provided flags/defaults')
   .action(async (kind, language, opts) => {
     await runScaffold({ kind, language, options: opts })
+  })
+
+program
+  .command('flatten')
+  .description('Generate a flattened TS interface from a generated types file')
+  .requiredOption('--source <file>', 'path to types.gen.ts')
+  .requiredOption('--type <name>', 'exported type/interface name to flatten')
+  .requiredOption('--out <file>', 'output .ts file to write')
+  .option('--name <name>', 'name of the generated interface (default: <type>Flat)')
+  .option('--delimiter <char>', 'key join delimiter (default: _)')
+  .action(async (opts) => {
+    await runFlatten(opts)
   })
 
 async function main() {

@@ -41,4 +41,6 @@ export interface ConnectorConfig {
   retry?: RetryConfig;
   rateLimit?: RateLimitConfig;
   hooks?: Partial<Record<HookType, Hook[]>>;
+  /** Drop null-valued properties from responses before resource transforms (default: true). */
+  dropNulls?: boolean;
 }

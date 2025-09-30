@@ -20,7 +20,7 @@ describe('validation (typia)', () => {
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } }, validation: { enabled: true, strict: true } })
 
     // API no longer exposes list(); validation happens after response pages
-    const iter = conn.brand.getAll({ pageSize: 50 })
+    const iter = conn.brand.getAll({ paging: { pageSize: 50 } })
     await expect(iter.next()).rejects.toThrow()
   })
 
@@ -33,7 +33,7 @@ describe('validation (typia)', () => {
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } }, validation: { enabled: true, strict: false } })
 
     const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
-    const iter = conn.brand.getAll({ pageSize: 50 })
+    const iter = conn.brand.getAll({ paging: { pageSize: 50 } })
     const { value: page } = await iter.next()
     // When response is not an array, pagination yields no page
     expect(Array.isArray(page) || page === undefined).toBe(true)

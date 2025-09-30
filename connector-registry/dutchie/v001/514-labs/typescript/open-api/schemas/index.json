@@ -32,6 +32,17 @@
         "json": "extracted/endpoints/inventory.schema.json",
         "relational": "extracted/relational/tables.json"
       }
+    },
+    {
+      "name": "discount",
+      "raw": {
+        "json": "raw/endpoints/discounts.schema.json",
+        "relational": "raw/relational/tables.json"
+      },
+      "extracted": {
+        "json": "extracted/endpoints/discount.schema.json",
+        "relational": "extracted/relational/tables.json"
+      }
     }
   ]
 }

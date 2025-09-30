@@ -1,12 +1,13 @@
 import type { ConnectorConfig } from "../types/config";
 import type { HttpResponseEnvelope } from "../types/envelopes";
 import { ConnectorError } from "../types/errors";
+import type { HookType, Hook, TransportRequest } from "../types/hooks";
+import { createSpecConformanceNormalizer } from "../types/hook-helpers";
 import { applyHookPipeline } from "./middleware";
-import type { TransportRequest } from "../types/hooks";
-import * as http from "node:http";
-import * as https from "node:https";
-import { URL } from "node:url";
 import type { HttpClientOptions, HttpRequestOptions } from "./types";
+import * as http from "http";
+import * as https from "https";
+import { URL } from "url";
 
 export class HttpClient {
   constructor(private config: ConnectorConfig, private options: HttpClientOptions = {}) {}
@@ -73,7 +74,29 @@ export class HttpClient {
 
     let aborted = false;
     let abortReason: string | undefined;
-    const hooks = applyHookPipeline(this.config.hooks ?? {}, opts.operation ?? opts.method, (type) => ({
+    // Merge global connector hooks with per-call resource hooks
+    const mergedHooks: Partial<Record<HookType, Hook[]>> = {
+      beforeRequest: [
+        ...((this.config.hooks?.beforeRequest ?? [])),
+        ...(opts.resourceHooks?.beforeRequest ?? []),
+      ],
+      afterResponse: [
+        // Prepend null-drop normalizer only if enabled (default true)
+        ...(this.config.dropNulls === false ? [] : [createSpecConformanceNormalizer()]),
+        ...((this.config.hooks?.afterResponse ?? [])),
+        ...(opts.resourceHooks?.afterResponse ?? []),
+      ],
+      onError: [
+        ...((this.config.hooks?.onError ?? [])),
+        ...(opts.resourceHooks?.onError ?? []),
+      ],
+      onRetry: [
+        ...((this.config.hooks?.onRetry ?? [])),
+        ...(opts.resourceHooks?.onRetry ?? []),
+      ],
+    };
+
+    const hooks = applyHookPipeline(mergedHooks, opts.operation ?? opts.method, (type) => ({
       type,
       operation: opts.operation,
       request: req,

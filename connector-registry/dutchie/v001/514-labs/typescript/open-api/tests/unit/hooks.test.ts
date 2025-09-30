@@ -29,7 +29,7 @@ describe('hooks', () => {
     const conn = createDutchieConnector()
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } }, hooks: hooks as any })
 
-    const iter = conn.brand.getAll({ pageSize: 50 })
+    const iter = conn.brand.getAll({ paging: { pageSize: 50 } })
     await iter.next()
     expect(events).toEqual(['before', 'after'])
     scope.done()
@@ -56,7 +56,7 @@ describe('hooks', () => {
     const conn = createDutchieConnector()
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } }, hooks })
 
-    const iter = conn.brand.getAll({ pageSize: 50 })
+    const iter = conn.brand.getAll({ paging: { pageSize: 50 } })
     const { value: page } = await iter.next()
     expect(Array.isArray(page)).toBe(true)
     expect((page as any)[0].upperName).toBe('ACME')
