@@ -24,7 +24,7 @@ maybe('integration: brand', () => {
     })
 
     let count = 0
-    for await (const page of conn.brand.getAll({ pageSize: 50 })) {
+    for await (const page of conn.brand.getAll({ paging: { pageSize: 50 } })) {
       for (const brand of page) {
         expect(brand).toBeDefined()
         count += 1

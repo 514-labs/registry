@@ -47,7 +47,7 @@ type CoreHooks = Partial<{ beforeRequest: Hook[]; afterResponse: Hook[]; onError
 
 export function createLoggingHooks(opts: LoggingOptions = {}): CoreHooks {
   const logger = opts.logger ?? ((level: LogLevel, event: Record<string, unknown>) => {
-    console.log(level, event)
+    console.log(level, JSON.stringify(event, null, 2))
   })
 
   const beforeRequest: Hook = {

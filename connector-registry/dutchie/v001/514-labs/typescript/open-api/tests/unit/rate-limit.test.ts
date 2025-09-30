@@ -18,7 +18,7 @@ describe('rate limit and retry behavior', () => {
 
     const conn = createDutchieConnector()
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } } })
-    const iter = conn.brand.getAll({ pageSize: 50 })
+    const iter = conn.brand.getAll({ paging: { pageSize: 50 } })
     const { value: page } = await iter.next()
     // after a 429 then 200([]), first page may be empty
     expect(Array.isArray(page) || page === undefined).toBe(true)
@@ -33,7 +33,7 @@ describe('rate limit and retry behavior', () => {
 
     const conn = createDutchieConnector()
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } }, retry: { maxAttempts: 1 } })
-    const iter = conn.brand.getAll({ pageSize: 50 })
+    const iter = conn.brand.getAll({ paging: { pageSize: 50 } })
     const { value: page } = await iter.next()
     expect(Array.isArray(page) || page === undefined).toBe(true)
     scope.done()
@@ -47,7 +47,7 @@ describe('rate limit and retry behavior', () => {
 
     const conn = createDutchieConnector()
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } }, rateLimit: { adaptiveFromHeaders: false } })
-    const iter = conn.brand.getAll({ pageSize: 50 })
+    const iter = conn.brand.getAll({ paging: { pageSize: 50 } })
     const { value: page } = await iter.next()
     expect(Array.isArray(page) || page === undefined).toBe(true)
     scope.done()

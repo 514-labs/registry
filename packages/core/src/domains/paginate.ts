@@ -1,4 +1,5 @@
 import type { HttpResponseEnvelope } from "../types/envelopes";
+import type { HookType, Hook } from "../types/hooks";
 
 export type SendFn = <T = any>(args: {
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -7,6 +8,7 @@ export type SendFn = <T = any>(args: {
   headers?: Record<string, string>;
   body?: unknown;
   operation?: string;
+  resourceHooks?: Partial<Record<HookType, Hook[]>>;
 }) => Promise<HttpResponseEnvelope<T>>;
 
 export async function* paginateCursor<T = any>(params: {

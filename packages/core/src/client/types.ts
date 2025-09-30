@@ -1,3 +1,5 @@
+import type { HookType, Hook } from "../types/hooks";
+
 export interface HttpRequestOptions {
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   path: string;
@@ -6,6 +8,7 @@ export interface HttpRequestOptions {
   body?: unknown;
   timeoutMs?: number;
   operation?: string;
+  resourceHooks?: Partial<Record<HookType, Hook[]>>;
 }
 
 export interface HttpClientOptions {

@@ -19,7 +19,7 @@ describe('inventory resource', () => {
     const conn = createDutchieConnector()
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } } })
 
-    const iter = conn.inventory.getAll({ includeLabResults: false, pageSize: 50 })
+    const iter = conn.inventory.getAll({ params: { includeLabResults: false }, paging: { pageSize: 50 } })
     const { value: page } = await iter.next()
     expect(Array.isArray(page)).toBe(true)
     scope.done()
@@ -37,7 +37,7 @@ describe('inventory resource', () => {
     const conn = createDutchieConnector()
     conn.initialize({ baseUrl: BASE, auth: { type: 'basic', basic: { username: apiKey } } })
 
-    const iter = conn.inventory.getAll({ includeLabResults: true, includeRoomQuantities: true })
+    const iter = conn.inventory.getAll({ params: { includeLabResults: true, includeRoomQuantities: true } })
     const { value: page } = await iter.next()
     expect(Array.isArray(page)).toBe(true)
     expect(page?.[0].inventoryId).toBe(77)

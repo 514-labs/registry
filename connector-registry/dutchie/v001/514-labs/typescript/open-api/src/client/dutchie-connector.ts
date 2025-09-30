@@ -9,6 +9,7 @@ import type { ConnectorConfig as CoreConfig } from '@connector-factory/core'
 import { createBrandResource } from '../resources/brand'
 import { createProductsResource } from '../resources/products'
 import { createInventoryResource } from '../resources/inventory'
+import { createDiscountsResource } from '../resources/discounts'
 import { createLoggingHooks } from '../observability/logging-hooks'
 import { createTypiaValidationHooks } from '../validation/typia-hooks'
 
@@ -73,6 +74,7 @@ export class DutchieApiConnector extends ApiConnectorBase {
   get brand() { return createBrandResource(this.sendLite as any) }
   get products() { return createProductsResource(this.sendLite as any) }
   get inventory() { return createInventoryResource(this.sendLite as any) }
+  get discounts() { return createDiscountsResource(this.sendLite as any) }
 }
 
 export function createDutchieConnector(): DutchieApiConnector { return new DutchieApiConnector() }
