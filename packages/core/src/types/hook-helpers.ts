@@ -32,39 +32,51 @@ export function createSpecConformanceNormalizer(): Hook {
   return {
     name: 'normalize:specConformance',
     execute: (ctx: HookContext) => {
+      // Run only on afterResponse events
       if (ctx.type !== 'afterResponse') return
+      // Nothing to normalize if there is no data
       const root = ctx.response?.data
       if (root === null || root === undefined) return
 
       const dropped: string[] = []
 
-      const visit = (value: unknown, path: string) => {
+      // Pure pruner:
+      // - Builds a new structure while omitting properties whose value is null
+      // - Never mutates inputs (arrays are mapped; objects are rebuilt)
+      // - Records json-paths of removed properties for observability
+      const prune = (value: unknown, path: string): unknown => {
+        // Preserve undefined (untouched) and bail out on null (parent omits field)
+        if (value === null || value === undefined) return value
         if (Array.isArray(value)) {
-          for (let i = 0; i < value.length; i++) visit(value[i], `${path}[${i}]`)
-          return
+          // Map array elements; do not splice/remove array indices
+          return (value as unknown[]).map((item, i) => prune(item, `${path}[${i}]`))
         }
-        if (value && typeof value === 'object') {
-          const obj = value as Record<string, unknown>
-          for (const key of Object.keys(obj)) {
-            const v = obj[key]
-            if (v === null) {
-              delete obj[key]
+        if (typeof value === 'object') {
+          // Rebuild plain object, skipping null-valued children
+          const src = value as Record<string, unknown>
+          const out: Record<string, unknown> = {}
+          for (const key of Object.keys(src)) {
+            const next = src[key]
+            if (next === null) {
               dropped.push(path ? `${path}.${key}` : key)
               continue
             }
-            visit(v, path ? `${path}.${key}` : key)
+            out[key] = prune(next, path ? `${path}.${key}` : key)
           }
+          return out
         }
+        // Primitive (string/number/boolean) or other non-object types
+        return value
       }
 
-      // Clone shallowly to avoid mutating shared references; deep walk mutates in place
-      const data = Array.isArray(root) ? [...root] : (typeof root === 'object' ? { ...(root as any) } : root)
-      visit(data, '')
-      ctx.modifyResponse?.({ data })
+      // Normalize a deep copy without mutating the original response payload
+      const normalized = prune(root, '')
+      ctx.modifyResponse?.({ data: normalized })
 
       if (dropped.length > 0) {
         try {
           const sample = dropped.slice(0, 5)
+          // Lightweight summary log (replace with structured metrics if desired)
           console.log('[core] normalize: dropped null fields', { count: dropped.length, sample })
         } catch {}
       }
