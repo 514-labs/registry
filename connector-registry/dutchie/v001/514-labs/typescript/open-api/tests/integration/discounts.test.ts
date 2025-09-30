@@ -33,8 +33,12 @@ maybe('integration: discounts flattened', () => {
         expect(values.includes(null)).toBe(false)
         // If present, specific field should not be null
         if ('reward_thresholdTypeId' in discount) {
-          expect((discount as any).reward_thresholdTypeId).not.toBeNull()
+          expect(discount.reward_thresholdTypeId).not.toBeNull()
         }
+        // constraints should not be hoisted into parent keys (we keep arrays under their key)
+        const hasHoistedConstraintKeys = Object.keys(discount as Record<string, unknown>)
+          .some((k) => k.startsWith('constraints_'))
+        expect(hasHoistedConstraintKeys).toBe(false)
         count += 1
         if (count >= 10) break
       }

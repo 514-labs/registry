@@ -54,7 +54,14 @@ export function createFlattenAfterResponseHook<Input extends object, Output exte
       const name = prefix ? `${prefix}${delimiter}${key}` : key
 
       if (Array.isArray(value)) {
-        // For arrays: flatten object elements, leave primitives as-is
+        // For arrays: keep the array under its original key.
+        // IMPORTANT: we intentionally do NOT hoist array element fields into the parent.
+        // Instead, when elements are objects, we flatten each element locally (no parent prefix),
+        // so the array preserves its context and we avoid top-level key collisions.
+        // Example:
+        //   Input  { items: [ { a: 1, b: { c: 2 } }, 3 ] }
+        //   Output { items: [ { a: 1, b_c: 2 }, 3 ] }
+        //   NOT    { items_a: 1, items_b_c: 2, items: [3] }
         const next = value.map((el) => (isPlainObject(el) ? flattenItem(el, depth + 1, '', metrics) : el))
         out[key] = next
         continue
