@@ -154,7 +154,7 @@ export default function PipelineCard({
         <CardHeader>
           <CardTitle className="text-xl">{name}</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-3 grow">
+        <CardContent className="flex flex-col gap-4 grow">
           {creatorAvatarUrls && creatorAvatarUrls.length > 0 ? (
             <div className="flex -space-x-2">
               {creatorAvatarUrls.slice(0, 5).map((url, idx) => (
@@ -199,7 +199,7 @@ export default function PipelineCard({
             </div>
           ) : null}
         </CardContent>
-        <CardFooter className="flex flex-col gap-3 items-start">
+        <CardFooter className="flex flex-col gap-4 items-start">
         <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
         <div className="flex flex-wrap gap-2">
             {(() => {

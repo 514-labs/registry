@@ -223,7 +223,7 @@ export default async function ConnectorImplementationPage({
       <PagefindMeta type="connector" />
       <div className="grid grid-cols-12 gap-16">
         <div className="col-span-3">
-          <div className="sticky top-[calc(var(--header-height)+2.5rem)] h-fit">
+          <div className="sticky top-24 h-fit">
           <ConnectorImplSidebar
             logoSrc={`/connector-logos/${conn.connectorId}.png`}
             title={displayName}

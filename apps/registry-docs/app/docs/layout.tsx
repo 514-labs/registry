@@ -14,7 +14,7 @@ function DocsRightSidebar() {
     <Sidebar
       side="right"
       variant="inset"
-      className="sticky top-[calc(var(--header-height)+2.5rem)] h-[calc(100svh-var(--header-height)-2.5rem)] overflow-y-auto"
+      className="sticky top-24 h-[calc(100svh-6rem)] overflow-y-auto"
     >
       <DocsToc />
     </Sidebar>
@@ -28,7 +28,7 @@ export default function DocsLayout({ children }: { children: ReactNode }) {
       {/* Left navigation */}
       <Sidebar
         variant="inset"
-        className="sticky top-[calc(var(--header-height)+2.5rem)] h-[calc(100svh-var(--header-height)-2.5rem)] pl-4"
+        className="sticky top-24 h-[calc(100svh-6rem)] pl-4"
       >
         <DocsNav />
 
