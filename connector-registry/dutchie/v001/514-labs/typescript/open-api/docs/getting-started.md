@@ -41,7 +41,7 @@ async function main() {
     auth: { type: "basic", basic: { username: process.env.DUTCHIE_API_KEY! } },
   });
 
-  for await (const page of conn.brand.getAll({ pageSize: 100 })) {
+  for await (const page of conn.brand.getAll({ paging: { pageSize: 50 } })) {
     console.log('page:', page);
   }
 }
@@ -101,7 +101,7 @@ export const dutchietask = new Task<null, void>("testdutchietask", {
     });
 
     console.log('Getting brands from Dutchie');
-    for await (const page of conn.brand.getAll({ pageSize: 50 })) {
+    for await (const page of conn.brand.getAll({ paging: { pageSize: 50 } })) {
       const rows: BrandWithKey[] = page
         .filter(b => b.brandId != null)
         .map(b => ({ ...b, brandId: b.brandId as Key<number> }));
@@ -138,9 +138,10 @@ moose workflow run testdutchie
 The connector wraps several Dutchie endpoints and exposes typed helpers for
 common objects:
 
-- **Brand** – `brand.list`, `brand.get`, `brand.stream`
-- **Products** – `products.list`, `products.get`, `products.stream`
-- **Inventory** – `inventory.list`, `inventory.get`, `inventory.stream`
+- **Brand** – `brand.getAll`
+- **Products** – `products.getAll`
+- **Inventory** – `inventory.getAll`
+- **Discounts** - `discounts.getAll`
 
 Each method maps directly to the corresponding Dutchie API endpoint so you can quickly work with data in your workspace.
 

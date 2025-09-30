@@ -17,6 +17,7 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "dev": "tsup src/index.ts --watch --format esm,cjs --dts",
+    "flatten": "node dist/index.js flatten",
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
