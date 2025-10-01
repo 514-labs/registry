@@ -75,7 +75,16 @@ export function DiscoveryGrid({
               <PipelineFilterBar
                 query={pipelineState.query}
                 setQuery={pipelineState.setQuery}
+                sourceTypes={pipelineState.sourceTypes}
+                extractionPatterns={pipelineState.extractionPatterns}
+                domains={pipelineState.domains}
                 tags={pipelineState.tags}
+                selectedSourceTypes={pipelineState.selectedSourceTypes}
+                setSelectedSourceTypes={pipelineState.setSelectedSourceTypes}
+                selectedExtractions={pipelineState.selectedExtractions}
+                setSelectedExtractions={pipelineState.setSelectedExtractions}
+                selectedDomains={pipelineState.selectedDomains}
+                setSelectedDomains={pipelineState.setSelectedDomains}
                 selectedTags={pipelineState.selectedTags}
                 setSelectedTags={pipelineState.setSelectedTags}
               />
@@ -199,7 +208,16 @@ export function DiscoveryGridDetailed({
                 <PipelineFilterBar
                   query={pipelineState.query}
                   setQuery={pipelineState.setQuery}
+                  sourceTypes={pipelineState.sourceTypes}
+                  extractionPatterns={pipelineState.extractionPatterns}
+                  domains={pipelineState.domains}
                   tags={pipelineState.tags}
+                  selectedSourceTypes={pipelineState.selectedSourceTypes}
+                  setSelectedSourceTypes={pipelineState.setSelectedSourceTypes}
+                  selectedExtractions={pipelineState.selectedExtractions}
+                  setSelectedExtractions={pipelineState.setSelectedExtractions}
+                  selectedDomains={pipelineState.selectedDomains}
+                  setSelectedDomains={pipelineState.setSelectedDomains}
                   selectedTags={pipelineState.selectedTags}
                   setSelectedTags={pipelineState.setSelectedTags}
                 />
