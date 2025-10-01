@@ -5,9 +5,9 @@ export function buildPagesDomain(sendFn: SendFn) {
   const factory = createGlobalDomainFactory<Page>("/me/accounts", sendFn);
 
   return {
-    listPages: factory.list,
-    getPage: factory.get,
-    streamPages: factory.stream,
-    getPages: factory.getAll,
+    list: factory.list,
+    get: factory.get,
+    stream: factory.stream,
+    getAll: factory.getAll,
   };
 }

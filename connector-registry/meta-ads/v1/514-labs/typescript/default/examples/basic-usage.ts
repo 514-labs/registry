@@ -21,7 +21,7 @@ async function basicExample() {
 
   try {
     // Discover ad accounts
-    const adAccounts = await connector.listAdAccounts({
+    const adAccounts = await connector.adAccounts.list({
       fields: ['id', 'name', 'account_status']
     });
 
@@ -40,42 +40,42 @@ async function basicExample() {
     }
 
     // List campaigns for the first active ad account
-    const campaigns = await connector.listCampaigns({
+    const campaigns = await connector.campaigns.list({
       adAccountId: activeAccount.id,
       fields: ['id', 'name', 'status', 'objective', 'created_time']
     });
 
     // List ad sets
-    const adSets = await connector.listAdSets({
+    const adSets = await connector.adSets.list({
       adAccountId: activeAccount.id,
       fields: ['id', 'name', 'status', 'campaign_id']
     });
 
     // List ads
-    const ads = await connector.listAds({
+    const ads = await connector.ads.list({
       adAccountId: activeAccount.id,
       fields: ['id', 'name', 'status', 'adset_id']
     });
 
     // List ad creatives
-    const adCreatives = await connector.listAdCreatives({
+    const adCreatives = await connector.adCreatives.list({
       adAccountId: activeAccount.id,
       fields: ['id', 'name', 'title', 'body']
     });
 
     // List custom audiences
-    const customAudiences = await connector.listCustomAudiences({
+    const customAudiences = await connector.customAudiences.list({
       adAccountId: activeAccount.id,
       fields: ['id', 'name', 'description', 'approximate_count']
     });
 
     // List businesses (if user has business access)
-    const businesses = await connector.listBusinesses({
+    const businesses = await connector.businesses.list({
       fields: ['id', 'name', 'verification_status']
     });
 
     // Get insights for the account
-    const accountInsights = await connector.getInsights({
+    const accountInsights = await connector.insights.get({
       objectId: activeAccount.id,
       level: "account",
       fields: ['impressions', 'clicks', 'spend', 'ctr', 'cpc'],

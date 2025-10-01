@@ -65,7 +65,7 @@ async function testToken() {
 
     // Test ad accounts
     console.log('\n3️⃣ Testing ad accounts access...');
-    const adAccounts = await connector.listAdAccounts({
+    const adAccounts = await connector.adAccounts.list({
       fields: ['id', 'name', 'account_status']
     });
 

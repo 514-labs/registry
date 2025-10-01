@@ -19,7 +19,7 @@ async function discoverAccountsExample() {
     // First, discover available ad accounts
     console.log('🔍 Discovering your ad accounts...\n');
 
-    const adAccounts = await connector.listAdAccounts({
+    const adAccounts = await connector.adAccounts.list({
       fields: ['id', 'name', 'account_status', 'currency', 'timezone_name']
     });
 
@@ -48,7 +48,7 @@ async function discoverAccountsExample() {
     console.log(`🚀 Using ad account: ${activeAccount.name} (${activeAccount.id})\n`);
 
     // Now list campaigns for this ad account
-    const campaigns = await connector.listCampaigns({
+    const campaigns = await connector.campaigns.list({
       adAccountId: activeAccount.id,
       fields: ['id', 'name', 'status', 'objective', 'created_time']
     });
@@ -67,7 +67,7 @@ async function discoverAccountsExample() {
       const firstCampaign = campaigns.data[0];
       console.log(`📊 Getting insights for campaign: ${firstCampaign.name}\n`);
 
-      const insights = await connector.getInsights({
+      const insights = await connector.insights.get({
         objectId: firstCampaign.id,
         level: "campaign",
         fields: ['impressions', 'clicks', 'spend', 'ctr', 'cpc'],

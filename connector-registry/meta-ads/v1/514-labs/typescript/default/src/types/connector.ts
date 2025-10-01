@@ -1,5 +1,115 @@
 import type { HttpResponseEnvelope } from "./envelopes";
 
+// Resource interfaces
+export interface AdAccountsResource {
+  list(params?: { fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<AdAccount[]>>;
+  stream(params?: { fields?: string[]; pageSize?: number }): AsyncIterable<AdAccount>;
+  getAll(params?: { fields?: string[]; pageSize?: number; maxItems?: number }): Promise<AdAccount[]>;
+}
+
+export interface CampaignsResource {
+  list(params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<Campaign[]>>;
+  get(params: { adAccountId: string; id: string; fields?: string[] }): Promise<HttpResponseEnvelope<Campaign>>;
+  stream(params: { adAccountId: string; fields?: string[]; pageSize?: number }): AsyncIterable<Campaign>;
+  getAll(params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }): Promise<Campaign[]>;
+}
+
+export interface AdSetsResource {
+  list(params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<AdSet[]>>;
+  get(params: { adAccountId: string; id: string; fields?: string[] }): Promise<HttpResponseEnvelope<AdSet>>;
+  stream(params: { adAccountId: string; fields?: string[]; pageSize?: number }): AsyncIterable<AdSet>;
+  getAll(params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }): Promise<AdSet[]>;
+}
+
+export interface AdsResource {
+  list(params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<Ad[]>>;
+  get(params: { adAccountId: string; id: string; fields?: string[] }): Promise<HttpResponseEnvelope<Ad>>;
+  stream(params: { adAccountId: string; fields?: string[]; pageSize?: number }): AsyncIterable<Ad>;
+  getAll(params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }): Promise<Ad[]>;
+}
+
+export interface InsightsResource {
+  get(params: { objectId: string; level: "account" | "campaign" | "adset" | "ad"; fields?: string[]; timeRange?: { since: string; until: string }; limit?: number; after?: string }): Promise<HttpResponseEnvelope<Insight[]>>;
+  stream(params: { objectId: string; level: "account" | "campaign" | "adset" | "ad"; fields?: string[]; timeRange?: { since: string; until: string }; pageSize?: number }): AsyncIterable<Insight>;
+  getAll(params: { objectId: string; level: "account" | "campaign" | "adset" | "ad"; fields?: string[]; timeRange?: { since: string; until: string }; pageSize?: number; maxItems?: number }): Promise<Insight[]>;
+}
+
+export interface AdCreativesResource {
+  list(params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<AdCreative[]>>;
+  get(params: { adAccountId: string; id: string; fields?: string[] }): Promise<HttpResponseEnvelope<AdCreative>>;
+  stream(params: { adAccountId: string; fields?: string[]; pageSize?: number }): AsyncIterable<AdCreative>;
+  getAll(params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }): Promise<AdCreative[]>;
+}
+
+export interface CustomAudiencesResource {
+  list(params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<CustomAudience[]>>;
+  get(params: { adAccountId: string; id: string; fields?: string[] }): Promise<HttpResponseEnvelope<CustomAudience>>;
+  stream(params: { adAccountId: string; fields?: string[]; pageSize?: number }): AsyncIterable<CustomAudience>;
+  getAll(params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }): Promise<CustomAudience[]>;
+}
+
+export interface SavedAudiencesResource {
+  list(params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<SavedAudience[]>>;
+  get(params: { adAccountId: string; id: string; fields?: string[] }): Promise<HttpResponseEnvelope<SavedAudience>>;
+  stream(params: { adAccountId: string; fields?: string[]; pageSize?: number }): AsyncIterable<SavedAudience>;
+  getAll(params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }): Promise<SavedAudience[]>;
+}
+
+export interface AdImagesResource {
+  list(params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<AdImage[]>>;
+  get(params: { adAccountId: string; hash: string; fields?: string[] }): Promise<HttpResponseEnvelope<AdImage>>;
+  stream(params: { adAccountId: string; fields?: string[]; pageSize?: number }): AsyncIterable<AdImage>;
+  getAll(params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }): Promise<AdImage[]>;
+}
+
+export interface AdVideosResource {
+  list(params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<AdVideo[]>>;
+  get(params: { adAccountId: string; id: string; fields?: string[] }): Promise<HttpResponseEnvelope<AdVideo>>;
+  stream(params: { adAccountId: string; fields?: string[]; pageSize?: number }): AsyncIterable<AdVideo>;
+  getAll(params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }): Promise<AdVideo[]>;
+}
+
+export interface BusinessesResource {
+  list(params?: { fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<Business[]>>;
+  get(params: { id: string; fields?: string[] }): Promise<HttpResponseEnvelope<Business>>;
+  stream(params?: { fields?: string[]; pageSize?: number }): AsyncIterable<Business>;
+  getAll(params?: { fields?: string[]; pageSize?: number; maxItems?: number }): Promise<Business[]>;
+}
+
+export interface PagesResource {
+  list(params?: { fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<Page[]>>;
+  get(params: { id: string; fields?: string[] }): Promise<HttpResponseEnvelope<Page>>;
+  stream(params?: { fields?: string[]; pageSize?: number }): AsyncIterable<Page>;
+  getAll(params?: { fields?: string[]; pageSize?: number; maxItems?: number }): Promise<Page[]>;
+}
+
+export interface ConversionsResource {
+  list(params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<Conversion[]>>;
+  get(params: { adAccountId: string; id: string; fields?: string[] }): Promise<HttpResponseEnvelope<Conversion>>;
+  stream(params: { adAccountId: string; fields?: string[]; pageSize?: number }): AsyncIterable<Conversion>;
+  getAll(params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }): Promise<Conversion[]>;
+}
+
+export interface PixelsResource {
+  list(params?: { fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<Pixel[]>>;
+  stream(params?: { fields?: string[]; pageSize?: number }): AsyncIterable<Pixel>;
+  getAll(params?: { fields?: string[]; pageSize?: number; maxItems?: number }): Promise<Pixel[]>;
+}
+
+export interface AdLabelsResource {
+  list(params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<AdLabel[]>>;
+  get(params: { adAccountId: string; id: string; fields?: string[] }): Promise<HttpResponseEnvelope<AdLabel>>;
+  stream(params: { adAccountId: string; fields?: string[]; pageSize?: number }): AsyncIterable<AdLabel>;
+  getAll(params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }): Promise<AdLabel[]>;
+}
+
+export interface LeadGenFormsResource {
+  list(params?: { fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<LeadGenForm[]>>;
+  get(params: { id: string; fields?: string[] }): Promise<HttpResponseEnvelope<LeadGenForm>>;
+  stream(params?: { fields?: string[]; pageSize?: number }): AsyncIterable<LeadGenForm>;
+  getAll(params?: { fields?: string[]; pageSize?: number; maxItems?: number }): Promise<LeadGenForm[]>;
+}
+
 export interface MetaAdsConnector {
   // Lifecycle methods
   initialize(config: any): Promise<void> | void;
@@ -18,75 +128,23 @@ export interface MetaAdsConnector {
     operation?: string;
   }): Promise<HttpResponseEnvelope<any>>;
 
-  // Ad Accounts
-  listAdAccounts(params?: { fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<AdAccount[]>>;
-  streamAdAccounts(params?: { fields?: string[]; pageSize?: number }): AsyncIterable<AdAccount>;
-  getAdAccounts(params?: { fields?: string[]; pageSize?: number; maxItems?: number }): Promise<AdAccount[]>;
-
-  // Campaigns (requires adAccountId)
-  listCampaigns(params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<Campaign[]>>;
-  getCampaign(params: { adAccountId: string; id: string; fields?: string[] }): Promise<HttpResponseEnvelope<Campaign>>;
-  streamCampaigns(params: { adAccountId: string; fields?: string[]; pageSize?: number }): AsyncIterable<Campaign>;
-  getCampaigns(params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }): Promise<Campaign[]>;
-
-  // Ad Sets
-  listAdSets(params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<AdSet[]>>;
-  getAdSet(params: { adAccountId: string; id: string; fields?: string[] }): Promise<HttpResponseEnvelope<AdSet>>;
-  streamAdSets(params: { adAccountId: string; fields?: string[]; pageSize?: number }): AsyncIterable<AdSet>;
-  getAdSets(params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }): Promise<AdSet[]>;
-
-  // Ads
-  listAds(params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<Ad[]>>;
-  getAd(params: { adAccountId: string; id: string; fields?: string[] }): Promise<HttpResponseEnvelope<Ad>>;
-  streamAds(params: { adAccountId: string; fields?: string[]; pageSize?: number }): AsyncIterable<Ad>;
-  getAds(params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }): Promise<Ad[]>;
-
-  // Insights
-  getInsights(params: { objectId: string; level: "account" | "campaign" | "adset" | "ad"; fields?: string[]; timeRange?: { since: string; until: string }; limit?: number; after?: string }): Promise<HttpResponseEnvelope<Insight[]>>;
-  streamInsights(params: { objectId: string; level: "account" | "campaign" | "adset" | "ad"; fields?: string[]; timeRange?: { since: string; until: string }; pageSize?: number }): AsyncIterable<Insight>;
-  getInsightsAll(params: { objectId: string; level: "account" | "campaign" | "adset" | "ad"; fields?: string[]; timeRange?: { since: string; until: string }; pageSize?: number; maxItems?: number }): Promise<Insight[]>;
-
-  // Ad Creatives
-  listAdCreatives(params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<AdCreative[]>>;
-  getAdCreative(params: { adAccountId: string; id: string; fields?: string[] }): Promise<HttpResponseEnvelope<AdCreative>>;
-  streamAdCreatives(params: { adAccountId: string; fields?: string[]; pageSize?: number }): AsyncIterable<AdCreative>;
-  getAdCreatives(params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }): Promise<AdCreative[]>;
-
-  // Custom Audiences
-  listCustomAudiences(params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<CustomAudience[]>>;
-  getCustomAudience(params: { adAccountId: string; id: string; fields?: string[] }): Promise<HttpResponseEnvelope<CustomAudience>>;
-  streamCustomAudiences(params: { adAccountId: string; fields?: string[]; pageSize?: number }): AsyncIterable<CustomAudience>;
-  getCustomAudiences(params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }): Promise<CustomAudience[]>;
-
-  // Saved Audiences (Interests/Demographics targeting)
-  listSavedAudiences(params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<SavedAudience[]>>;
-  getSavedAudience(params: { adAccountId: string; id: string; fields?: string[] }): Promise<HttpResponseEnvelope<SavedAudience>>;
-  streamSavedAudiences(params: { adAccountId: string; fields?: string[]; pageSize?: number }): AsyncIterable<SavedAudience>;
-  getSavedAudiences(params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }): Promise<SavedAudience[]>;
-
-  // Ad Images
-  listAdImages(params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<AdImage[]>>;
-  getAdImage(params: { adAccountId: string; hash: string; fields?: string[] }): Promise<HttpResponseEnvelope<AdImage>>;
-  streamAdImages(params: { adAccountId: string; fields?: string[]; pageSize?: number }): AsyncIterable<AdImage>;
-  getAdImages(params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }): Promise<AdImage[]>;
-
-  // Ad Videos
-  listAdVideos(params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<AdVideo[]>>;
-  getAdVideo(params: { adAccountId: string; id: string; fields?: string[] }): Promise<HttpResponseEnvelope<AdVideo>>;
-  streamAdVideos(params: { adAccountId: string; fields?: string[]; pageSize?: number }): AsyncIterable<AdVideo>;
-  getAdVideos(params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }): Promise<AdVideo[]>;
-
-  // Business Manager
-  listBusinesses(params?: { fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<Business[]>>;
-  getBusiness(params: { id: string; fields?: string[] }): Promise<HttpResponseEnvelope<Business>>;
-  streamBusinesses(params?: { fields?: string[]; pageSize?: number }): AsyncIterable<Business>;
-  getBusinesses(params?: { fields?: string[]; pageSize?: number; maxItems?: number }): Promise<Business[]>;
-
-  // Pages
-  listPages(params?: { fields?: string[]; limit?: number; after?: string }): Promise<HttpResponseEnvelope<Page[]>>;
-  getPage(params: { id: string; fields?: string[] }): Promise<HttpResponseEnvelope<Page>>;
-  streamPages(params?: { fields?: string[]; pageSize?: number }): AsyncIterable<Page>;
-  getPages(params?: { fields?: string[]; pageSize?: number; maxItems?: number }): Promise<Page[]>;
+  // Resources
+  readonly adAccounts: AdAccountsResource;
+  readonly campaigns: CampaignsResource;
+  readonly adSets: AdSetsResource;
+  readonly ads: AdsResource;
+  readonly insights: InsightsResource;
+  readonly adCreatives: AdCreativesResource;
+  readonly customAudiences: CustomAudiencesResource;
+  readonly savedAudiences: SavedAudiencesResource;
+  readonly adImages: AdImagesResource;
+  readonly adVideos: AdVideosResource;
+  readonly businesses: BusinessesResource;
+  readonly pages: PagesResource;
+  readonly conversions: ConversionsResource;
+  readonly pixels: PixelsResource;
+  readonly adLabels: AdLabelsResource;
+  readonly leadGenForms: LeadGenFormsResource;
 }
 
 export interface AdAccount {
@@ -279,4 +337,65 @@ export interface Page {
   about?: string;
   phone?: string;
   emails?: string[];
+}
+
+export interface Conversion {
+  id: string;
+  name: string;
+  description?: string;
+  event_source_type?: string;
+  rule?: string;
+  creation_time?: string;
+  last_fired_time?: string;
+  is_archived?: boolean;
+  is_unavailable?: boolean;
+  pixel?: {
+    id: string;
+    name: string;
+  };
+}
+
+export interface Pixel {
+  id: string;
+  name: string;
+  creation_time?: string;
+  last_fired_time?: string;
+  code?: string;
+  is_created_by_business?: boolean;
+  owner_business?: {
+    id: string;
+    name: string;
+  };
+  owner_ad_account?: {
+    id: string;
+    name: string;
+  };
+}
+
+export interface AdLabel {
+  id: string;
+  name: string;
+  created_time?: string;
+  updated_time?: string;
+  account?: {
+    id: string;
+    name: string;
+  };
+}
+
+export interface LeadGenForm {
+  id: string;
+  name: string;
+  status: string;
+  locale?: string;
+  page?: {
+    id: string;
+    name: string;
+  };
+  privacy_policy_url?: string;
+  questions?: any[];
+  created_time?: string;
+  leads_count?: number;
+  follow_up_action_url?: string;
+  is_optimized_for_quality?: boolean;
 }

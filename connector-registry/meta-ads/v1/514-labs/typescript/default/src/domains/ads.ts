@@ -5,9 +5,9 @@ export function buildAdsDomain(sendFn: SendFn) {
   const factory = createDomainFactory<Ad>("/{ad_account_id}/ads", sendFn);
 
   return {
-    listAds: factory.list,
-    getAd: factory.get,
-    streamAds: factory.stream,
-    getAds: factory.getAll,
+    list: factory.list,
+    get: factory.get,
+    stream: factory.stream,
+    getAll: factory.getAll,
   };
 }
