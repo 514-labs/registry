@@ -475,7 +475,7 @@ export function PipelineLineageDiagram({
 
   return (
     <Card className="w-full overflow-hidden py-0">
-      <div className="h-[520px]">
+      <div className="h-[400px]">
         <ReactFlow
           nodes={(layoutNodes.length ? layoutNodes : rawNodes) as Node[]}
           edges={rawEdges}

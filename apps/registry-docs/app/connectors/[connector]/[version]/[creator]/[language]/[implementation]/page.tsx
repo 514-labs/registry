@@ -219,10 +219,10 @@ export default async function ConnectorImplementationPage({
   };
 
   return (
-    <div className="container mx-auto py-16">
+    <div className="container mx-auto py-16 px-5 lg:px-0">
       <PagefindMeta type="connector" />
-      <div className="grid grid-cols-12 gap-16">
-        <div className="col-span-3">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-16">
+        <div className="lg:col-span-3">
           <div className="sticky top-24 h-fit">
           <ConnectorImplSidebar
             logoSrc={`/connector-logos/${conn.connectorId}.png`}
@@ -261,7 +261,7 @@ export default async function ConnectorImplementationPage({
           />
           </div>
         </div>
-        <div className="col-span-9 space-y-8">
+        <div className="lg:col-span-9 space-y-8">
           {(() => {
             const { database, endpoints, files, errors } =
               getSchemaDiagramInputs(implEntry.path);
@@ -290,13 +290,15 @@ export default async function ConnectorImplementationPage({
             </div>
           ) : (
             <Tabs defaultValue={defaultTab} className="w-full">
-              <TabsList>
-                {docs.map((d) => (
-                  <TabsTrigger key={d.slug} value={d.slug}>
-                    {d.title}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
+              <div className="w-full overflow-x-auto lg:overflow-visible">
+                <TabsList className="w-max min-w-full lg:w-auto lg:min-w-0">
+                  {docs.map((d) => (
+                    <TabsTrigger key={d.slug} value={d.slug} className="whitespace-nowrap">
+                      {d.title}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </div>
               {docs.map((d) => (
                 <TabsContent key={d.slug} value={d.slug}>
                   <MarkdownContent content={d.content} />

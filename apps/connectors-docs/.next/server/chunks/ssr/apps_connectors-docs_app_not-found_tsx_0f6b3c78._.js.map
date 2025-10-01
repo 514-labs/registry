@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 5, "column": 0}, "map": {"version":3,"sources":["file:///Users/alexander/Documents/factory/apps/connectors-docs/app/not-found.tsx"],"sourcesContent":["export default function NotFound() {\n  return (\n    <div className=\"prose dark:prose-invert prose-neutral max-w-none p-8\">\n      <h2>Page not found</h2>\n      <p>We couldn't find the page you're looking for.</p>\n    </div>\n  );\n}\n"],"names":[],"mappings":";;;;;AAAe,SAAS;IACtB,qBACE,qZAAC;QAAI,WAAU;;0BACb,qZAAC;0BAAG;;;;;;0BACJ,qZAAC;0BAAE;;;;;;;;;;;;AAGT","debugId":null}}]
+}

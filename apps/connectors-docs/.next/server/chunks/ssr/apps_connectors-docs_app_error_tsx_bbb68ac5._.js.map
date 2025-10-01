@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 5, "column": 0}, "map": {"version":3,"sources":["file:///Users/alexander/Documents/factory/apps/connectors-docs/app/error.tsx"],"sourcesContent":["\"use client\";\n\nimport { useEffect } from \"react\";\n\nexport default function Error({\n  error,\n  reset,\n}: {\n  error: Error & { digest?: string };\n  reset: () => void;\n}) {\n  useEffect(() => {\n    // eslint-disable-next-line no-console\n    console.error(error);\n  }, [error]);\n\n  return (\n    <div className=\"prose dark:prose-invert prose-neutral max-w-none p-8\">\n      <h2>Something went wrong</h2>\n      <p className=\"text-sm opacity-80\">{error.message}</p>\n      <button\n        onClick={reset}\n        className=\"mt-4 rounded border px-3 py-1 text-sm hover:bg-muted\"\n      >\n        Try again\n      </button>\n    </div>\n  );\n}\n"],"names":[],"mappings":";;;;AAEA;AAFA;;;AAIe,SAAS,MAAM,EAC5B,KAAK,EACL,KAAK,EAIN;IACC,CAAA,GAAA,4WAAA,CAAA,YAAS,AAAD,EAAE;QACR,sCAAsC;QACtC,QAAQ,KAAK,CAAC;IAChB,GAAG;QAAC;KAAM;IAEV,qBACE,qZAAC;QAAI,WAAU;;0BACb,qZAAC;0BAAG;;;;;;0BACJ,qZAAC;gBAAE,WAAU;0BAAsB,MAAM,OAAO;;;;;;0BAChD,qZAAC;gBACC,SAAS;gBACT,WAAU;0BACX;;;;;;;;;;;;AAKP","debugId":null}}]
+}
