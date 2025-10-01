@@ -21,6 +21,95 @@ export function createMapArrayAfterResponseHook<Input, Output>(
 }
 
 /**
+ * Create a generic flattener hook that converts an array of nested objects
+ * into an array of flat objects using a delimiter (default: '_').
+ *
+ * Rules:
+ * - Runs after null-drop normalizer; values may be undefined but not null.
+ * - Hoists nested object properties to the parent with `${parent}${delim}${key}`.
+ * - Arrays remain arrays. If array elements are objects, each element is flattened in-place.
+ * - Primitives are copied as-is. Inputs are never mutated.
+ */
+export function createFlattenAfterResponseHook<Input extends object, Output extends object>(opts?: {
+  delimiter?: string;
+  depthLimit?: number;
+}): Hook {
+  const delimiter = opts?.delimiter ?? '_'
+  const depthLimit = Number.isFinite(opts?.depthLimit) ? (opts!.depthLimit as number) : Infinity
+
+  const isPlainObject = (v: unknown): v is Record<string, unknown> =>
+    !!v && typeof v === 'object' && !Array.isArray(v)
+
+  const flattenItem = (
+    item: unknown,
+    depth: number,
+    prefix: string,
+    metrics: { keysHoisted: number; sample: string[] }
+  ): Record<string, unknown> => {
+    const out: Record<string, unknown> = {}
+    if (!isPlainObject(item)) return out
+
+    for (const [key, value] of Object.entries(item)) {
+      if (value === undefined) continue
+      const name = prefix ? `${prefix}${delimiter}${key}` : key
+
+      if (Array.isArray(value)) {
+        // For arrays: keep the array under its original key.
+        // IMPORTANT: we intentionally do NOT hoist array element fields into the parent.
+        // Instead, when elements are objects, we flatten each element locally (no parent prefix),
+        // so the array preserves its context and we avoid top-level key collisions.
+        // Example:
+        //   Input  { items: [ { a: 1, b: { c: 2 } }, 3 ] }
+        //   Output { items: [ { a: 1, b_c: 2 }, 3 ] }
+        //   NOT    { items_a: 1, items_b_c: 2, items: [3] }
+        const next = value.map((el) => (isPlainObject(el) ? flattenItem(el, depth + 1, '', metrics) : el))
+        out[key] = next
+        continue
+      }
+
+      if (isPlainObject(value) && depth < depthLimit) {
+        const nested = flattenItem(value, depth + 1, name, metrics)
+        for (const [nk, nv] of Object.entries(nested)) out[nk] = nv
+        continue
+      }
+
+      out[name] = value
+      // Record hoisted key metrics (sample up to 3 for brevity)
+      metrics.keysHoisted += 1
+      if (metrics.sample.length < 3) metrics.sample.push(name)
+    }
+
+    return out
+  }
+
+  return {
+    name: 'transform:flatten',
+    execute: (ctx: HookContext) => {
+      if (ctx.type !== 'afterResponse') return
+      const data = ctx.response?.data
+      if (!Array.isArray(data)) {
+        console.log('[core] flatten: data to flatten is not an array', { operation: ctx.operation })
+        return
+      }
+      const arr = data as unknown[] as Input[]
+      const metrics = { keysHoisted: 0, sample: [] as string[] }
+      const flattened = arr.map((item) => flattenItem(item, 0, '', metrics))
+      ctx.modifyResponse?.({ data: flattened as unknown as Output[] })
+
+      try {
+        console.log('[core] flatten', {
+          operation: ctx.operation,
+          delimiter,
+          itemsProcessed: arr.length,
+          keysHoisted: metrics.keysHoisted,
+          sampleHoistedKeys: metrics.sample,
+        })
+      } catch {}
+    },
+  }
+}
+
+/**
  * Spec-conformance normalizer (schema-agnostic):
  * - Deletes any object property whose value is strictly null (deep walk).
  * - Does not consult optional/required/nullable today (future enhancement).

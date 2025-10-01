@@ -5,27 +5,11 @@
 import { makeCrudResource } from '../lib/make-resource'
 import type { SendFn } from '../lib/paginate'
 import type { Hook } from '@connector-factory/core'
-import { createMapArrayAfterResponseHook } from '@connector-factory/core'
+import { createFlattenAfterResponseHook } from '@connector-factory/core'
 import type { DiscountApiResponse } from '../generated/types.gen'
 import type { DiscountApiResponseFlat } from '../generated/flat.gen'
 
-function mapDiscountApiResponseToFlat(raw: DiscountApiResponse): DiscountApiResponseFlat {
-  const flat: Record<string, unknown> = {}
-  for (const [key, value] of Object.entries(raw)) {
-    if (value === null || value === undefined) continue
-    if (typeof value !== 'object' || Array.isArray(value)) flat[key] = value
-  }
-  const flatten = (parent: string, obj: unknown) => {
-    if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return
-    for (const [k, v] of Object.entries(obj as Record<string, unknown>)) flat[`${parent}_${k}`] = v
-  }
-  flatten('reward', raw.reward)
-  flatten('menuDisplay', raw.menuDisplay)
-  flatten('paymentRestrictions', raw.paymentRestrictions)
-  return flat as DiscountApiResponseFlat
-}
-
-const discountsTransformHook: Hook = createMapArrayAfterResponseHook<DiscountApiResponse, DiscountApiResponseFlat>(mapDiscountApiResponseToFlat)
+const discountsTransformHook: Hook = createFlattenAfterResponseHook<DiscountApiResponse, DiscountApiResponseFlat>({ delimiter: '_' })
 
 export const createDiscountsResource = (send: SendFn) => {
   return makeCrudResource<DiscountApiResponseFlat, { includeInactive?: boolean; includeInclusionExclusionData?: boolean, includePaymentRestrictions?: boolean }>(
