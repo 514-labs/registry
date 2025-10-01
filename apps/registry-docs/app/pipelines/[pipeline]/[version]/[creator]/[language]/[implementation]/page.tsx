@@ -249,6 +249,7 @@ export default async function PipelineImplementationPage({
       <PagefindMeta type="pipeline" />
       <div className="grid grid-cols-12 gap-16">
         <div className="col-span-3">
+          <div className="sticky top-24 h-fit">
           <PipelineImplSidebar
             fromLogoSrc={fromLogo}
             toLogoSrc={toLogo}
@@ -290,6 +291,7 @@ export default async function PipelineImplementationPage({
             selectedLanguage={language}
             selectedImplementation={implEntry.implementation}
           />
+          </div>
         </div>
 
         <div className="col-span-9 space-y-8">

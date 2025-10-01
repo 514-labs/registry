@@ -84,7 +84,7 @@ function ConnectorCard({
       className="block h-full"
       aria-label={`View ${escapeHtml(name)}`}
     >
-      <Card className="h-full group cursor-pointer transition-colors hover:bg-muted/40">
+      <Card className="h-full group cursor-pointer transition-colors hover:bg-muted/40 !gap-6">
         <CardHeader className="flex flex-row items-start justify-between">
           {imageError ? (
             <div className="h-10 w-10 rounded-sm bg-muted text-muted-foreground ring-1 ring-border flex items-center justify-center">
@@ -129,7 +129,7 @@ function ConnectorCard({
         <CardHeader>
           <CardTitle className="text-xl">{name}</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-4 grow">
+        <CardContent className="flex flex-col gap-6 grow">
           {creatorAvatarUrls && creatorAvatarUrls.length > 0 ? (
             <div className="flex -space-x-2">
               {creatorAvatarUrls.slice(0, 5).map((url, idx) => (
@@ -139,7 +139,7 @@ function ConnectorCard({
                   alt="Creator avatar"
                   width={32}
                   height={32}
-                  className="h-8 w-8 rounded-full mt-2"
+                  className="h-8 w-8 rounded-full mt-0"
                   unoptimized
                 />
               ))}
@@ -155,7 +155,7 @@ function ConnectorCard({
               alt="Creator avatar"
               width={32}
               height={32}
-              className="h-8 w-8 rounded-full mt-2"
+              className="h-8 w-8 rounded-full mt-0"
               unoptimized
             />
           ) : null}
