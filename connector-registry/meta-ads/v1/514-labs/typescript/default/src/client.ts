@@ -15,6 +15,10 @@ import { buildAdImagesDomain } from "./domains/adimages";
 import { buildAdVideosDomain } from "./domains/advideos";
 import { buildBusinessesDomain } from "./domains/businesses";
 import { buildPagesDomain } from "./domains/pages";
+import { buildConversionsDomain } from "./domains/conversions";
+import { buildPixelsDomain } from "./domains/pixels";
+import { buildAdLabelsDomain } from "./domains/adlabels";
+import { buildLeadGenFormsDomain } from "./domains/leadgenforms";
 import type { SendFn } from "./domains/factory";
 
 export class MetaAdsApiConnector extends ApiConnectorBase implements MetaAdsConnector {
@@ -49,22 +53,8 @@ export class MetaAdsApiConnector extends ApiConnectorBase implements MetaAdsConn
     );
   }
 
-  private get domain() {
-    const sendLite: SendFn = async (args) => this.send<any>(args);
-    return {
-      ...buildAdAccountsDomain(sendLite),
-      ...buildCampaignsDomain(sendLite),
-      ...buildAdSetsDomain(sendLite),
-      ...buildAdsDomain(sendLite),
-      ...buildInsightsDomain(sendLite),
-      ...buildAdCreativesDomain(sendLite),
-      ...buildCustomAudiencesDomain(sendLite),
-      ...buildSavedAudiencesDomain(sendLite),
-      ...buildAdImagesDomain(sendLite),
-      ...buildAdVideosDomain(sendLite),
-      ...buildBusinessesDomain(sendLite),
-      ...buildPagesDomain(sendLite),
-    };
+  private get sendLite(): SendFn {
+    return async (args) => this.send<any>(args);
   }
 
   // Low-level request method
@@ -78,75 +68,23 @@ export class MetaAdsApiConnector extends ApiConnectorBase implements MetaAdsConn
     operation?: string;
   }) => this.send<any>(options);
 
-  // Ad Accounts
-  listAdAccounts = (params?: { fields?: string[]; limit?: number; after?: string }) => this.domain.listAdAccounts(params);
-  streamAdAccounts = (params?: { fields?: string[]; pageSize?: number }) => this.domain.streamAdAccounts(params);
-  getAdAccounts = (params?: { fields?: string[]; pageSize?: number; maxItems?: number }) => this.domain.getAdAccounts(params);
-
-  // Campaigns
-  listCampaigns = (params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }) => this.domain.listCampaigns(params);
-  getCampaign = (params: { adAccountId: string; id: string; fields?: string[] }) => this.domain.getCampaign(params);
-  streamCampaigns = (params: { adAccountId: string; fields?: string[]; pageSize?: number }) => this.domain.streamCampaigns(params);
-  getCampaigns = (params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }) => this.domain.getCampaigns(params);
-
-  // Ad Sets
-  listAdSets = (params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }) => this.domain.listAdSets(params);
-  getAdSet = (params: { adAccountId: string; id: string; fields?: string[] }) => this.domain.getAdSet(params);
-  streamAdSets = (params: { adAccountId: string; fields?: string[]; pageSize?: number }) => this.domain.streamAdSets(params);
-  getAdSets = (params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }) => this.domain.getAdSets(params);
-
-  // Ads
-  listAds = (params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }) => this.domain.listAds(params);
-  getAd = (params: { adAccountId: string; id: string; fields?: string[] }) => this.domain.getAd(params);
-  streamAds = (params: { adAccountId: string; fields?: string[]; pageSize?: number }) => this.domain.streamAds(params);
-  getAds = (params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }) => this.domain.getAds(params);
-
-  // Insights
-  getInsights = (params: { objectId: string; level: "account" | "campaign" | "adset" | "ad"; fields?: string[]; timeRange?: { since: string; until: string }; limit?: number; after?: string }) => this.domain.getInsights(params);
-  streamInsights = (params: { objectId: string; level: "account" | "campaign" | "adset" | "ad"; fields?: string[]; timeRange?: { since: string; until: string }; pageSize?: number }) => this.domain.streamInsights(params);
-  getInsightsAll = (params: { objectId: string; level: "account" | "campaign" | "adset" | "ad"; fields?: string[]; timeRange?: { since: string; until: string }; pageSize?: number; maxItems?: number }) => this.domain.getInsightsAll(params);
-
-  // Ad Creatives
-  listAdCreatives = (params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }) => this.domain.listAdCreatives(params);
-  getAdCreative = (params: { adAccountId: string; id: string; fields?: string[] }) => this.domain.getAdCreative(params);
-  streamAdCreatives = (params: { adAccountId: string; fields?: string[]; pageSize?: number }) => this.domain.streamAdCreatives(params);
-  getAdCreatives = (params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }) => this.domain.getAdCreatives(params);
-
-  // Custom Audiences
-  listCustomAudiences = (params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }) => this.domain.listCustomAudiences(params);
-  getCustomAudience = (params: { adAccountId: string; id: string; fields?: string[] }) => this.domain.getCustomAudience(params);
-  streamCustomAudiences = (params: { adAccountId: string; fields?: string[]; pageSize?: number }) => this.domain.streamCustomAudiences(params);
-  getCustomAudiences = (params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }) => this.domain.getCustomAudiences(params);
-
-  // Saved Audiences
-  listSavedAudiences = (params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }) => this.domain.listSavedAudiences(params);
-  getSavedAudience = (params: { adAccountId: string; id: string; fields?: string[] }) => this.domain.getSavedAudience(params);
-  streamSavedAudiences = (params: { adAccountId: string; fields?: string[]; pageSize?: number }) => this.domain.streamSavedAudiences(params);
-  getSavedAudiences = (params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }) => this.domain.getSavedAudiences(params);
-
-  // Ad Images
-  listAdImages = (params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }) => this.domain.listAdImages(params);
-  getAdImage = (params: { adAccountId: string; hash: string; fields?: string[] }) => this.domain.getAdImage(params);
-  streamAdImages = (params: { adAccountId: string; fields?: string[]; pageSize?: number }) => this.domain.streamAdImages(params);
-  getAdImages = (params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }) => this.domain.getAdImages(params);
-
-  // Ad Videos
-  listAdVideos = (params: { adAccountId: string; fields?: string[]; limit?: number; after?: string }) => this.domain.listAdVideos(params);
-  getAdVideo = (params: { adAccountId: string; id: string; fields?: string[] }) => this.domain.getAdVideo(params);
-  streamAdVideos = (params: { adAccountId: string; fields?: string[]; pageSize?: number }) => this.domain.streamAdVideos(params);
-  getAdVideos = (params: { adAccountId: string; fields?: string[]; pageSize?: number; maxItems?: number }) => this.domain.getAdVideos(params);
-
-  // Businesses
-  listBusinesses = (params?: { fields?: string[]; limit?: number; after?: string }) => this.domain.listBusinesses(params);
-  getBusiness = (params: { id: string; fields?: string[] }) => this.domain.getBusiness(params);
-  streamBusinesses = (params?: { fields?: string[]; pageSize?: number }) => this.domain.streamBusinesses(params);
-  getBusinesses = (params?: { fields?: string[]; pageSize?: number; maxItems?: number }) => this.domain.getBusinesses(params);
-
-  // Pages
-  listPages = (params?: { fields?: string[]; limit?: number; after?: string }) => this.domain.listPages(params);
-  getPage = (params: { id: string; fields?: string[] }) => this.domain.getPage(params);
-  streamPages = (params?: { fields?: string[]; pageSize?: number }) => this.domain.streamPages(params);
-  getPages = (params?: { fields?: string[]; pageSize?: number; maxItems?: number }) => this.domain.getPages(params);
+  // Resources
+  get adAccounts() { return buildAdAccountsDomain(this.sendLite) }
+  get campaigns() { return buildCampaignsDomain(this.sendLite) }
+  get adSets() { return buildAdSetsDomain(this.sendLite) }
+  get ads() { return buildAdsDomain(this.sendLite) }
+  get insights() { return buildInsightsDomain(this.sendLite) }
+  get adCreatives() { return buildAdCreativesDomain(this.sendLite) }
+  get customAudiences() { return buildCustomAudiencesDomain(this.sendLite) }
+  get savedAudiences() { return buildSavedAudiencesDomain(this.sendLite) }
+  get adImages() { return buildAdImagesDomain(this.sendLite) }
+  get adVideos() { return buildAdVideosDomain(this.sendLite) }
+  get businesses() { return buildBusinessesDomain(this.sendLite) }
+  get pages() { return buildPagesDomain(this.sendLite) }
+  get conversions() { return buildConversionsDomain(this.sendLite) }
+  get pixels() { return buildPixelsDomain(this.sendLite) }
+  get adLabels() { return buildAdLabelsDomain(this.sendLite) }
+  get leadGenForms() { return buildLeadGenFormsDomain(this.sendLite) }
 }
 
 export function createMetaAdsConnector(): MetaAdsConnector {
