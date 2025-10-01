@@ -39,7 +39,7 @@ export function DiscoveryGrid({
 
       <TabsContent value="connectors" className="mt-6">
         <div className="grid grid-cols-[260px_minmax(0,1fr)] gap-6">
-          <aside className="space-y-4">
+          <aside className="sticky top-24 h-fit space-y-4">
             <ConnectorFilterBar
               query={connectorState.query}
               setQuery={connectorState.setQuery}
@@ -65,7 +65,7 @@ export function DiscoveryGrid({
 
       <TabsContent value="pipelines" className="mt-6">
         <div className="grid grid-cols-[260px_minmax(0,1fr)] gap-6">
-          <aside className="space-y-4">
+          <aside className="sticky top-24 h-fit space-y-4">
             <PipelineFilterBar
               query={pipelineState.query}
               setQuery={pipelineState.setQuery}
@@ -118,7 +118,7 @@ export function DiscoveryGridDetailed({
 
       <TabsContent value="connectors" className="mt-6">
         <div className="grid grid-cols-[260px_minmax(0,1fr)] gap-6">
-          <aside className="space-y-4">
+          <aside className="sticky top-24 h-fit space-y-4">
             <ConnectorFilterBar
               query={connectorState.query}
               setQuery={connectorState.setQuery}
@@ -139,7 +139,6 @@ export function DiscoveryGridDetailed({
           <section>
             <ConnectorDiscoverGrid
               connectors={connectorState.filtered}
-              className="grid-cols-2"
             />
           </section>
         </div>
@@ -147,7 +146,7 @@ export function DiscoveryGridDetailed({
 
       <TabsContent value="pipelines" className="mt-6">
         <div className="grid grid-cols-[260px_minmax(0,1fr)] gap-6">
-          <aside className="space-y-4">
+          <aside className="sticky top-24 h-fit space-y-4">
             <PipelineFilterBar
               query={pipelineState.query}
               setQuery={pipelineState.setQuery}
@@ -168,7 +167,6 @@ export function DiscoveryGridDetailed({
           <section>
             <PipelineDiscoverGrid
               pipelines={pipelineState.filtered}
-              className="grid-cols-2"
             />
           </section>
         </div>
