@@ -81,7 +81,7 @@ export async function SiteHeader() {
                 <span className="sr-only">Open menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-80 p-6">
+            <SheetContent side="right" className="w-80 p-6 !h-full !min-h-screen">
               <SheetHeader className="sr-only">
                 <SheetTitle>Navigation Menu</SheetTitle>
               </SheetHeader>

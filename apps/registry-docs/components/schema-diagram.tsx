@@ -648,10 +648,13 @@ export function SchemaDiagram({
     const target = nodes.find(predicate);
     if (!target) return;
     try {
+      // Use smaller padding on mobile for better centering
+      const isMobile = window.innerWidth < 1024;
       instance.fitView({
         nodes: [target as any],
-        padding: 0.2,
+        padding: isMobile ? 0.1 : 0.2,
         duration: 600,
+        maxZoom: isMobile ? 1.5 : 2,
       } as any);
     } catch {}
   }
@@ -858,7 +861,7 @@ export function SchemaDiagram({
   }
 
   return (
-    <Card className="w-full overflow-hidden pt-4">
+    <Card className="w-full overflow-hidden pt-4 pb-0">
       <Tabs
         value={active}
         onValueChange={(v) => setActive(v as any)}
@@ -938,9 +941,14 @@ export function SchemaDiagram({
                   edges={dbEdges}
                   nodeTypes={allNodeTypes as any}
                   fitView
+                  fitViewOptions={{ padding: 0.3, includeHiddenNodes: false }}
                   proOptions={{ hideAttribution: true }}
                   onInit={(instance) => {
                     dbFlowRef.current = instance as ReactFlowInstance;
+                    // Force center after a brief delay
+                    setTimeout(() => {
+                      instance.fitView({ padding: 0.3, duration: 0 });
+                    }, 100);
                   }}
                 >
                   <Background />
@@ -1002,9 +1010,18 @@ export function SchemaDiagram({
                   edges={jsonEdges}
                   nodeTypes={allNodeTypes as any}
                   fitView
+                  defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
+                  fitViewOptions={{ padding: 0.3, includeHiddenNodes: false }}
                   proOptions={{ hideAttribution: true }}
                   onInit={(instance) => {
                     jsonFlowRef.current = instance as ReactFlowInstance;
+                    // Multiple attempts to center properly
+                    setTimeout(() => {
+                      instance.fitView({ padding: 0.3, duration: 0 });
+                    }, 50);
+                    setTimeout(() => {
+                      instance.fitView({ padding: 0.3, duration: 200 });
+                    }, 200);
                   }}
                 >
                   <Background />
@@ -1035,8 +1052,8 @@ export function SchemaDiagram({
         {/* Files Tab */}
         {hasFiles && (
           <TabsContent value="files" className="m-0">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 h-[400px]">
-              <div className="lg:col-span-4 border-r bg-muted/40 h-full">
+            <div className="flex flex-col lg:grid lg:grid-cols-12 gap-0 h-auto lg:h-[400px]">
+              <div className="lg:col-span-4 lg:border-r bg-muted/40 h-60 lg:h-full border-b lg:border-b-0 flex-shrink-0 overflow-hidden">
                 <div className="p-4">
                   <div className="font-medium mb-2">Files</div>
                   <Input
@@ -1047,7 +1064,7 @@ export function SchemaDiagram({
                   />
                 </div>
                 <Separator />
-                <ScrollArea className="h-[calc(12rem-4.5rem)] lg:h-[calc(400px-72px)]">
+                <ScrollArea className="h-44 lg:h-[calc(400px-72px)]" scrollHideDelay={0}>
                   <div className="p-3 space-y-2">
                     <ul className="space-y-1">
                       {(files ?? [])
@@ -1074,7 +1091,7 @@ export function SchemaDiagram({
                 </ScrollArea>
               </div>
 
-              <div className="lg:col-span-8 h-full">
+              <div className="lg:col-span-8 h-80 lg:h-full overflow-hidden">
                 <ReactFlow
                   nodes={
                     (fileLayoutNodes.length
@@ -1084,9 +1101,14 @@ export function SchemaDiagram({
                   edges={fileEdges}
                   nodeTypes={allNodeTypes as any}
                   fitView
+                  fitViewOptions={{ padding: 0.3, includeHiddenNodes: false }}
                   proOptions={{ hideAttribution: true }}
                   onInit={(instance) => {
                     fileFlowRef.current = instance as ReactFlowInstance;
+                    // Force center after a brief delay
+                    setTimeout(() => {
+                      instance.fitView({ padding: 0.3, duration: 0 });
+                    }, 100);
                   }}
                 >
                   <Background />

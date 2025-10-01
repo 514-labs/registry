@@ -362,7 +362,7 @@ export default async function PipelineImplementationPage({
           ) : (
             <Tabs defaultValue={defaultTab} className="w-full">
               <div className="w-full overflow-x-auto lg:overflow-visible">
-                <TabsList className="w-max min-w-full lg:w-auto lg:min-w-0">
+                <TabsList className="w-full lg:w-auto lg:min-w-0 rounded-lg">
                   {docs.map((d) => (
                     <TabsTrigger key={d.slug} value={d.slug} className="whitespace-nowrap">
                       {d.title}

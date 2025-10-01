@@ -497,6 +497,7 @@ export function PipelineLineageDiagram({
             maskColor={miniMapMaskColor}
             nodeColor={miniMapNodeColor}
             nodeStrokeColor={miniMapNodeStrokeColor}
+            className="hidden lg:block"
           />
           <Controls position="bottom-right" />
           <Panel position="top-right" className="space-y-2">

@@ -296,16 +296,54 @@ body:has([data-state="open"]) {
   [data-radix-tabs-list],
   [role="tablist"] {
     border-radius: 0.5rem !important;
-    width: 100% !important;
+    width: auto !important;
+    min-width: 100% !important;
     justify-content: flex-start !important;
     text-align: left !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  
+  [data-radix-tabs-list]::-webkit-scrollbar,
+  [role="tablist"]::-webkit-scrollbar {
+    display: none !important;
   }
   
   [data-radix-tabs-trigger],
   [role="tab"] {
-    justify-content: flex-start !important;
-    text-align: left !important;
-    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+  
+  /* Fix bash/code buttons on mobile */
+  .prose pre {
+    position: relative !important;
+  }
+  
+  .prose pre button,
+  .not-prose button[aria-label="Copy"],
+  [data-radix-tabs-content] button[aria-label="Copy"],
+  [data-radix-tabs-content] .not-prose button,
+  .not-prose [data-radix-tabs-header] button {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.75rem !important;
+    min-height: 2rem !important;
+    border-radius: 0.25rem !important;
+    width: auto !important;
+    max-width: fit-content !important;
+    display: inline-flex !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
+  }
+  
+  /* Target the specific snippet copy button structure */
+  [data-radix-tabs-content] .not-prose [data-radix-tabs-header] button[class*="opacity-0"] {
+    width: auto !important;
+    min-width: auto !important;
+    max-width: fit-content !important;
   }
 }
 
