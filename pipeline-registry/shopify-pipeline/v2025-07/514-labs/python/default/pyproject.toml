@@ -1,0 +1,15 @@
+[project]
+name = "pipeline_shopify"
+version = "0.1.0"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [ { name = "514-labs" } ]
+dependencies = []
+
+[tool.ruff]
+line-length = 100
+
+[build-system]
+requires = ["setuptools>=68","wheel"]
+build-backend = "setuptools.build_meta"
