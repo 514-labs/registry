@@ -31,7 +31,7 @@ const valueProps = [
 
 function Hero() {
   return (
-    <div className="grid grid-cols-2 gap-5 py-16">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 py-16">
       <div className="flex flex-col gap-10">
         {/* <Badge variant="outline">
           This Project is a WIP. Join our{" "}
@@ -45,7 +45,7 @@ function Hero() {
           </Link>{" "}
           to get involved
         </Badge> */}
-        <h1 className="text-6xl mb-0">
+        <h1 className="text-5xl mb-0">
           <span className="text-muted-foreground">
             Embeddable components for
           </span>{" "}
@@ -89,7 +89,7 @@ export default async function Home() {
   return (
     <div className="font-sans items-center justify-items-center min-h-screen space-y-4">
       <PagefindMeta type="docs" />
-      <main className="flex flex-col items-center sm:items-start container max-w-6xl mx-auto">
+      <main className="flex flex-col items-center sm:items-start container max-w-6xl mx-auto p-5">
         <Hero />
         <DiscoveryGrid connectors={connectors} pipelines={pipelines} />
       </main>

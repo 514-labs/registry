@@ -475,7 +475,7 @@ export function PipelineLineageDiagram({
 
   return (
     <Card className="w-full overflow-hidden py-0">
-      <div className="h-[520px]">
+      <div className="h-[400px]">
         <ReactFlow
           nodes={(layoutNodes.length ? layoutNodes : rawNodes) as Node[]}
           edges={rawEdges}
@@ -497,6 +497,7 @@ export function PipelineLineageDiagram({
             maskColor={miniMapMaskColor}
             nodeColor={miniMapNodeColor}
             nodeStrokeColor={miniMapNodeStrokeColor}
+            className="hidden lg:block"
           />
           <Controls position="bottom-right" />
           <Panel position="top-right" className="space-y-2">

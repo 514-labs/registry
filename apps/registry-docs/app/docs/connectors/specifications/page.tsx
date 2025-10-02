@@ -16,7 +16,7 @@ export default function ConnectorSpecificationsPage() {
       </p>
 
       <Tabs defaultValue="api" className="mt-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-4 rounded-lg">
           <TabsTrigger value="api">API</TabsTrigger>
           <TabsTrigger value="saas">SaaS</TabsTrigger>
           <TabsTrigger value="database">Database</TabsTrigger>
