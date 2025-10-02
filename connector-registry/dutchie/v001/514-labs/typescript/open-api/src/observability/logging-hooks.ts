@@ -17,6 +17,22 @@ function shouldLog(config: LoggingOptions, level: LogLevel): boolean {
   return levelOrder[level] >= levelOrder[min]
 }
 
+/**
+ * Create a log function that respects the configured log level.
+ * This function can be passed to core hooks for consistent logging.
+ */
+export function createLogFunction(config: LoggingOptions): (level: string, event: Record<string, unknown>) => void {
+  const logger = config.logger ?? ((level: LogLevel, event: Record<string, unknown>) => {
+    console.log(level, JSON.stringify(event, null, 2))
+  })
+  
+  return (level: string, event: Record<string, unknown>) => {
+    if (shouldLog(config, level as LogLevel)) {
+      logger(level as LogLevel, event)
+    }
+  }
+}
+
 function safeUrl(raw?: string, includeQuery = false): { url?: string; query?: Record<string, unknown> } {
   if (!raw) return {}
   try {

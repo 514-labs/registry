@@ -22,10 +22,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@connector-factory/core": "workspace:*",
+    "@workspace/connector-hubspot": "workspace:*",
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
-    "zod": "^3.25.8",
-    "@workspace/connector-hubspot": "workspace:*"
+    "yaml": "^2.8.1",
+    "zod": "^3.25.8"
   },
   "devDependencies": {
     "tsup": "^8.2.4",

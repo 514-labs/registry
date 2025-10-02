@@ -33,9 +33,11 @@ export function createMapArrayAfterResponseHook<Input, Output>(
 export function createFlattenAfterResponseHook<Input extends object, Output extends object>(opts?: {
   delimiter?: string;
   depthLimit?: number;
+  log?: (level: string, event: Record<string, unknown>) => void;
 }): Hook {
   const delimiter = opts?.delimiter ?? '_'
   const depthLimit = Number.isFinite(opts?.depthLimit) ? (opts!.depthLimit as number) : Infinity
+  const log = opts?.log
 
   const isPlainObject = (v: unknown): v is Record<string, unknown> =>
     !!v && typeof v === 'object' && !Array.isArray(v)
@@ -96,15 +98,14 @@ export function createFlattenAfterResponseHook<Input extends object, Output exte
       const flattened = arr.map((item) => flattenItem(item, 0, '', metrics))
       ctx.modifyResponse?.({ data: flattened as unknown as Output[] })
 
-      try {
-        console.log('[core] flatten', {
-          operation: ctx.operation,
-          delimiter,
-          itemsProcessed: arr.length,
-          keysHoisted: metrics.keysHoisted,
-          sampleHoistedKeys: metrics.sample,
-        })
-      } catch {}
+      log?.('debug', {
+        event: 'core_flatten',
+        operation: ctx.operation,
+        delimiter,
+        itemsProcessed: arr.length,
+        keysHoisted: metrics.keysHoisted,
+        sampleHoistedKeys: metrics.sample,
+      })
     },
   }
 }
@@ -117,7 +118,8 @@ export function createFlattenAfterResponseHook<Input extends object, Output exte
  * - Emits a single summary log per response when drops occur (console.log).
  * - Leaves undefined and all other values untouched; does not remove array elements.
  */
-export function createSpecConformanceNormalizer(): Hook {
+export function createSpecConformanceNormalizer(opts?: { log?: (level: string, event: Record<string, unknown>) => void }): Hook {
+  const log = opts?.log
   return {
     name: 'normalize:specConformance',
     execute: (ctx: HookContext) => {
@@ -163,11 +165,12 @@ export function createSpecConformanceNormalizer(): Hook {
       ctx.modifyResponse?.({ data: normalized })
 
       if (dropped.length > 0) {
-        try {
-          const sample = dropped.slice(0, 5)
-          // Lightweight summary log (replace with structured metrics if desired)
-          console.log('[core] normalize: dropped null fields', { count: dropped.length, sample })
-        } catch {}
+        log?.('debug', {
+          event: 'core_normalize',
+          operation: ctx.operation,
+          droppedFieldCount: dropped.length,
+          sampleDroppedFields: dropped.slice(0, 5),
+        })
       }
     },
   }
