@@ -10,7 +10,7 @@ import { createBrandResource } from '../resources/brand'
 import { createProductsResource } from '../resources/products'
 import { createInventoryResource } from '../resources/inventory'
 import { createDiscountsResource } from '../resources/discounts'
-import { createLoggingHooks } from '../observability/logging-hooks'
+import { createLoggingHooks, createLogFunction } from '../observability/logging-hooks'
 import { createTypiaValidationHooks } from '../validation/typia-hooks'
 
 export type DutchieConfig = CoreConfig & {
@@ -34,7 +34,12 @@ export class DutchieApiConnector extends ApiConnectorBase {
       userAgent: u.userAgent ?? 'connector-dutchie',
       ...u,
     })
-    super.initialize(withDefaults(userConfig) as any, (cfg: any) => cfg)
+
+    const log = userConfig.logging?.enabled
+      ? createLogFunction(userConfig.logging)
+      : undefined
+
+    super.initialize({ ...withDefaults(userConfig), log } as any, (cfg: any) => cfg)
 
     // Optional Typia-based validation
     if (userConfig.validation?.enabled) {
@@ -74,7 +79,7 @@ export class DutchieApiConnector extends ApiConnectorBase {
   get brand() { return createBrandResource(this.sendLite as any) }
   get products() { return createProductsResource(this.sendLite as any) }
   get inventory() { return createInventoryResource(this.sendLite as any) }
-  get discounts() { return createDiscountsResource(this.sendLite as any) }
+  get discounts() { return createDiscountsResource(this.sendLite as any, this.config?.log) }
 }
 
 export function createDutchieConnector(): DutchieApiConnector { return new DutchieApiConnector() }
