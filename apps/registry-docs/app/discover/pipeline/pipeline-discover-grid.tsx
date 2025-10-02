@@ -40,7 +40,7 @@ export default function PipelineDiscoverGrid({
   return (
     <div
       className={cn(
-        "grid grid-cols-2 gap-5 @xl/main:grid-cols-2 @5xl/main:grid-cols-3",
+        "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-5",
         className
       )}
     >

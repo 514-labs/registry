@@ -5,7 +5,7 @@ import { Package, Workflow } from "lucide-react";
 
 export default function RequestPage() {
   return (
-    <div className="mx-auto w-full max-w-2xl px-4 xl:px-0 py-6">
+    <div className="mx-auto w-full max-w-2xl px-4 xl:px-0 py-6 p-5">
       <h1 className="text-2xl font-semibold mb-2">Request a new addition</h1>
       <p className="text-muted-foreground mb-6">
         Tell us what connectors or pipelines you'd like to see. We'll open an
