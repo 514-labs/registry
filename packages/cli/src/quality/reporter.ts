@@ -20,11 +20,13 @@ export interface ReportOptions {
 interface ResourceAnalysis {
   name: string;
   completeness: number;
+  rawCompleteness: number;
   recordCount: number;
   criticalCount: number;
   warningCount: number;
   safeCount: number;
   warning: FieldRisk[];
+  critical: FieldRisk[];
 }
 
 // Module-level state for collecting analyses across resources
@@ -69,14 +71,18 @@ export function displayComparisonReport(
   const completeness = normalized.summaries['completeness']?.score ?? 0;
 
   // Collect analysis for final summary
+  const rawCompleteness = comparison.raw.summaries['completeness']?.score ?? 0;
+
   resourceAnalyses.push({
     name: resourceName,
     completeness,
+    rawCompleteness,
     recordCount: normalized.recordCount,
     criticalCount: risks.critical.length,
     warningCount: risks.warning.length,
     safeCount: risks.safe.length,
     warning: risks.warning,
+    critical: risks.critical,
   });
 
   // CONCISE MODE (default) - Only show if there are issues
@@ -189,61 +195,6 @@ export function displayComparisonReport(
 }
 
 /**
- * Display simple quality report (no comparison - fallback when raw data not available)
- */
-export function displayQualityReport(
-  resourceName: string,
-  results: QualityAnalysisResults,
-  options: ReportOptions = { verbose: false }
-): void {
-  const risks = results.risks ?? { critical: [], warning: [], safe: [] };
-  const completeness = results.summaries['completeness']?.score ?? 0;
-
-  resourceAnalyses.push({
-    name: resourceName,
-    completeness,
-    recordCount: results.recordCount,
-    criticalCount: risks.critical.length,
-    warningCount: risks.warning.length,
-    safeCount: risks.safe.length,
-    warning: risks.warning,
-  });
-
-  const hasIssues = risks.critical.length > 0 || risks.warning.length > 0;
-
-  if (!options.verbose && !hasIssues) {
-    return; // Perfect resource - don't show
-  }
-
-  if (options.verbose) {
-    console.log(`\n${'='.repeat(SEPARATOR_LENGTH)}`);
-    console.log(`📊 QUALITY REPORT: ${resourceName}`);
-    console.log(`${'='.repeat(SEPARATOR_LENGTH)}\n`);
-    console.log(`Records: ${results.recordCount}`);
-    console.log(`Fields: ${results.fieldResults.length}`);
-    console.log(`Completeness: ${completeness.toFixed(1)}%\n`);
-
-    if (risks.critical.length > 0) {
-      console.log(`🔴 CRITICAL: ${risks.critical.length} fields`);
-      for (const field of risks.critical) {
-        console.log(`  ${field.fieldPath}: ${field.completeness.toFixed(1)}%`);
-      }
-      console.log('');
-    }
-
-    if (risks.warning.length > 0) {
-      console.log(`⚠️  WARNING: ${risks.warning.length} fields`);
-      for (const field of risks.warning) {
-        console.log(`  ${field.fieldPath}: ${field.completeness.toFixed(1)}%`);
-      }
-      console.log('');
-    }
-  } else if (hasIssues) {
-    console.log(`\n⚠️  ${resourceName.toUpperCase()}: ${risks.critical.length + risks.warning.length} field(s) need attention`);
-  }
-}
-
-/**
  * Display overall summary (INVERTED PYRAMID - decision first)
  */
 export function displaySummary(): void {
@@ -267,6 +218,19 @@ export function displaySummary(): void {
   // 1. DECISION FIRST (inverted pyramid)
   console.log(`${assessment.emoji} ASSESSMENT: ${assessment.message}`);
   console.log(`   • ${avgCompleteness.toFixed(1)}% average completeness`);
+
+  // Show transformation impact
+  const avgRaw = resourceAnalyses.reduce((sum, r) => sum + r.rawCompleteness, 0) / resourceAnalyses.length;
+  const transformationImpact = avgCompleteness - avgRaw;
+
+  if (Math.abs(transformationImpact) > 1) {
+    const icon = transformationImpact > 0 ? '📈' : '📉';
+    const direction = transformationImpact > 0 ? 'improved' : 'worsened';
+    console.log(`   ${icon} Connector ${direction} quality by ${Math.abs(transformationImpact).toFixed(1)}%`);
+  } else {
+    console.log(`   ✅ Connector preserved data quality (no transformation loss)`);
+  }
+
   if (totalCritical > 0) {
     console.log(`   • ${totalCritical} critical field(s) - avoid using`);
   }
@@ -289,12 +253,12 @@ export function displaySummary(): void {
     if (totalWarnings > 0) {
       console.log(`⚠️  Warning fields (50-90% complete):`);
       console.log(`   → Add null checks to your code:\n`);
-      
+
       // Show example from first warning field
       const firstWarning = resourceAnalyses
         .flatMap(r => r.warning)
         .find(w => w !== undefined);
-      
+
       if (firstWarning) {
         const exampleField = firstWarning.fieldPath;
         console.log(`   const value = record.${exampleField} ?? 'default';`);
@@ -302,12 +266,23 @@ export function displaySummary(): void {
       }
     }
 
+    // Show data source attribution (always available now)
+    console.log(`📊 DATA SOURCE ATTRIBUTION:\n`);
+
+    if (transformationImpact < -2) {
+      console.log(`   🚨 Connector is dropping valid data (${Math.abs(transformationImpact).toFixed(1)}% quality loss)`);
+      console.log(`   → Connector needs investigation/fixes\n`);
+    } else {
+      console.log(`   ✅ Issues originate from source API, not connector`);
+      console.log(`   → Connector is working correctly\n`);
+    }
+
     console.log(`${'─'.repeat(SEPARATOR_LENGTH)}\n`);
   }
 
   // 3. RESOURCE TABLE
   console.log(`Resource Summary:`);
-  
+
   const summaryTable = new Table({
     columns: [
       { name: 'resource', title: 'Resource', alignment: 'left' },
@@ -316,10 +291,22 @@ export function displaySummary(): void {
       { name: 'critical', title: 'Critical', alignment: 'right' },
       { name: 'warning', title: 'Warning', alignment: 'right' },
       { name: 'safe', title: 'Safe', alignment: 'right' },
+      { name: 'attribution', title: 'Attribution', alignment: 'left' },
     ],
   });
 
   for (const analysis of resourceAnalyses) {
+    const impact = analysis.completeness - analysis.rawCompleteness;
+    let attribution: string;
+
+    if (impact < -2) {
+      attribution = 'Connector issue';
+    } else if (impact > 2) {
+      attribution = 'Connector improved';
+    } else {
+      attribution = 'API (no change)';
+    }
+
     summaryTable.addRow({
       resource: analysis.name,
       completeness: `${analysis.completeness.toFixed(1)}%`,
@@ -327,6 +314,7 @@ export function displaySummary(): void {
       critical: analysis.criticalCount,
       warning: analysis.warningCount,
       safe: analysis.safeCount,
+      attribution,
     });
   }
 
@@ -335,7 +323,7 @@ export function displaySummary(): void {
   // 4. GUIDANCE
   if (totalIssues > 0) {
     console.log(`💡 NEXT STEPS:\n`);
-    
+
     if (totalCritical > 0) {
       console.log(`   1. Review critical fields - consider if connector meets your needs`);
     }
