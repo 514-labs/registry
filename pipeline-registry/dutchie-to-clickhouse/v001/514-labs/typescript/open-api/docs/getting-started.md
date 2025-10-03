@@ -1,6 +1,6 @@
 # Getting started
 
-This TypeScript implementation ingests HubSpot deals via the HubSpot connector (v3), transforms them into an analytics-friendly schema, and serves analytics/lookup APIs backed by ClickHouse.
+This TypeScript implementation ingests Dutchie data via the Dutchie connector (v001), transforms them into an analytics-friendly schema, and serves analytics/lookup APIs backed by ClickHouse.
 
 ## Prerequisites
 - Node.js 20+
