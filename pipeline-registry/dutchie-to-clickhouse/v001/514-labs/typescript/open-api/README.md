@@ -25,5 +25,5 @@ pnpm dev
 
 Example trigger (fire-and-forget):
 ```bash
-curl "http://localhost:4000/workflows/testdutchie/trigger"
+curl -X POST "http://localhost:4000/workflows/testdutchie/trigger"
 ```
