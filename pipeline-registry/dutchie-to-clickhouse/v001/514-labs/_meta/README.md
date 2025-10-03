@@ -1,5 +1,5 @@
-# hubspot-to-clickhouse
+# dutchie-to-clickhouse
 
 > Maintained by 514-labs
 
-Provider-level metadata and lineage assets for `hubspot-to-clickhouse`.
+Provider-level metadata and lineage assets for `dutchie-to-clickhouse`.
