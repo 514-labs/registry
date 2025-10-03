@@ -4,7 +4,7 @@ Moose-based pipeline to ingest Dutchie into ClickHouse with consumption APIs and
 
 IMPORTANT: 
 - THIS PROJECT REQUIRES AT LEAST NODEJS 20.19 AND PNPM
-- YOU'LL NEED A DUTCHIE ACCOUNT AND VALID TOKEN WITH AT LEAST READ-ONLY SCOPE
+- YOU'LL NEED A DUTCHIE ACCOUNT AND VALID API KEY
 
 ## Getting started
 
@@ -13,17 +13,22 @@ IMPORTANT:
 pnpm i
 ```
 
-3) Set env vars
+2) Set env vars
 ```bash
 export DUTCHIE_API_KEY=key
 ```
 
-4) Run Moose dev
+3) Run Moose dev
 ```bash
 pnpm dev
 ```
 
-Example trigger (fire-and-forget):
+4) Run a moose workflow to sync data
 ```bash
 curl -X POST "http://localhost:4000/workflows/testdutchie/trigger"
+```
+
+5) Explore other moose commands
+```bash
+pnpm moose --help
 ```
