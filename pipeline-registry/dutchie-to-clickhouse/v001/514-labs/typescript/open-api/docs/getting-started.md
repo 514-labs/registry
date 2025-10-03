@@ -25,7 +25,7 @@ pnpm install
 Create a local `.env` (auto-loaded) or export in your shell. See `ENV.EXAMPLE` for a template.
 
 ```bash
-export DUTCHIE_API_TOKEN=token
+export DUTCHIE_API_KEY=key
 ```
 
 See `moose.config.toml` and `aurora.config.toml` for ClickHouse/Redis/Redpanda/HTTP server settings.

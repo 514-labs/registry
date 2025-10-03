@@ -1,7 +1,7 @@
 # Configuration
 
 ## Environment
-- `DUTCHIE_API_TOKEN` (required): Dutchie api token.
+- `DUTCHIE_API_KEY` (required): Dutchie api key.
 
 ## Connector (v001)
 Install with:
