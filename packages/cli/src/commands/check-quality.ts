@@ -7,8 +7,8 @@ import { loadQualityCheckConfig } from '../analysis/config-loader';
 import { loadConfigFromFileOrEnv } from '../config';
 import { executeResource } from '../connectors/executor';
 import { loadConnector } from '../connectors/loader';
-import { analyzeComparison, analyzeQuality } from '../quality/analyzer';
-import { displayComparisonReport, displayQualityReport, displaySummary, getExitCode } from '../quality/reporter';
+import { analyzeComparison } from '../quality/analyzer';
+import { displayComparisonReport, displaySummary, getExitCode } from '../quality/reporter';
 
 export interface CheckQualityOptions {
   connector: string;
@@ -55,16 +55,18 @@ export async function checkQuality(options: CheckQualityOptions): Promise<number
           continue;
         }
 
+        if (raw.length === 0) {
+          throw new Error(
+            `No raw API data captured for ${resource.name}. ` +
+            `Connector must implement hooks properly to enable quality checks.`
+          );
+        }
+
         console.log(`✅ Fetched ${normalized.length} record(s)\n`);
 
-        // Analyze and display results
-        if (raw.length > 0) {
-          const comparison = analyzeComparison(raw, normalized);
-          displayComparisonReport(resource.name, comparison, { verbose });
-        } else {
-          const analysis = analyzeQuality(normalized);
-          displayQualityReport(resource.name, analysis, { verbose });
-        }
+        // Analyze and compare raw vs normalized
+        const comparison = analyzeComparison(raw, normalized);
+        displayComparisonReport(resource.name, comparison, { verbose });
       } catch (error: unknown) {
         const message = error instanceof Error ? error.message : String(error);
         console.error(`❌ Failed to analyze ${resource.name}: ${message}`);
