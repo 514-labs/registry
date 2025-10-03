@@ -1,0 +1,5 @@
+# Aurora Project Configuration
+ [permissions]
+ enable_telemetry = "standard"
+ # Public PostHog API key used for sending telemetry data.
+ api_key = "phc_zNhMscFP1cbX8rqyhixCcDlL5kLLsmU7w3B2M6efs7Z"
