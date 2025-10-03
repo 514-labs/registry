@@ -14,8 +14,8 @@ Run the installer:
 bash -i <(curl https://registry.514.ai/install.sh) --type pipeline dutchie-to-clickhouse v001 514-labs typescript open-api
 ```
 
-## Install dependencies (monorepo)
-From the repository root:
+## Install dependencies
+From the repository root (i.e. the main folder the installer created):
 
 ```bash
 pnpm install
@@ -31,7 +31,7 @@ export DUTCHIE_API_KEY=key
 See `moose.config.toml` and `aurora.config.toml` for ClickHouse/Redis/Redpanda/HTTP server settings.
 
 ## Run the dev server
-From this package directory:
+From the repository root:
 
 ```bash
 pnpm dev
