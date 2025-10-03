@@ -25,6 +25,7 @@
     "@connector-factory/core": "workspace:*",
     "@workspace/connector-hubspot": "workspace:*",
     "commander": "^12.1.0",
+    "console-table-printer": "^2.14.6",
     "dotenv": "^16.4.5",
     "yaml": "^2.8.1",
     "zod": "^3.25.8"

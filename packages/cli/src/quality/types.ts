@@ -65,9 +65,26 @@ export interface FieldQualityResults {
   checks: QualityCheckResult[];
 }
 
+export type RiskLevel = 'critical' | 'warning' | 'safe';
+
+export interface FieldRisk {
+  fieldPath: string;
+  riskLevel: RiskLevel;
+  completeness: number;
+  nullCount: number;
+  presentCount: number;
+  recommendation: string;
+}
+
 export interface QualityAnalysisResults {
   recordCount: number;
   fieldResults: FieldQualityResults[];
   summaries: Record<string, QualityCheckSummary>;
+  /** Fields categorized by risk level */
+  risks?: {
+    critical: FieldRisk[];
+    warning: FieldRisk[];
+    safe: FieldRisk[];
+  };
 }
 

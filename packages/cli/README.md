@@ -92,10 +92,88 @@ factory check-quality dutchie \
 
 ### What It Checks
 
-- **Completeness** - % of records with non-null values per field
-- **Null Rate** - % of null/undefined values per field
-- **Type Consistency** - Detects fields with mixed types (string vs number, etc.)
-- **Sample Values** - Shows example values for inspection
+- **Field Completeness** - % of records with non-null values
+- **Risk Categorization** - Critical (<50%), Warning (50-90%), Safe (>90%)
+- **Null Rates** - Exact count of null/missing values
+- **Type Consistency** - Detects fields with mixed types
+- **Actionable Recommendations** - Specific code examples for handling issues
+
+### Output Format
+
+**Inverted Pyramid Design:** Decision first, details on demand
+
+**Default (Concise):**
+- Overall assessment (Production Ready / Has Issues)
+- Issue count and severity
+- Only shows problematic fields (hides perfect scores)
+- Code examples for fixes
+- Exit code for CI/CD
+
+**Verbose (`--verbose`):**
+- Full field-by-field breakdown
+- Raw vs normalized comparison
+- Transformation details
+- All fields including safe ones
+
+### Sample Output
+
+```
+======================================================================
+📊 QUALITY CHECK SUMMARY
+======================================================================
+
+✅ ASSESSMENT: Production Ready (with minor caveats)
+   • 94.5% average completeness
+   • 13 field(s) need null handling
+   • 3 resource(s) analyzed, 54 total records
+
+──────────────────────────────────────────────────────────────────────
+⚠️  ACTION REQUIRED
+
+⚠️  Warning fields (50-90% complete):
+   → Add null checks to your code:
+
+   const value = record.strain ?? 'default';
+   const name = record.strain?.toUpperCase() ?? 'Unknown';
+
+──────────────────────────────────────────────────────────────────────
+
+Resource Summary:
+┌───────────┬──────────────┬─────────┬──────────┬─────────┬──────┐
+│ Resource  │ Completeness │ Records │ Critical │ Warning │ Safe │
+├───────────┼──────────────┼─────────┼──────────┼─────────┼──────┤
+│ brands    │       100.0% │      20 │        0 │       0 │    2 │
+│ products  │        91.8% │      20 │        0 │      10 │   48 │
+│ discounts │        91.6% │      14 │        0 │       3 │   30 │
+└───────────┴──────────────┴─────────┴──────────┴─────────┴──────┘
+
+💡 NEXT STEPS:
+
+   1. Add null checks for warning fields (see examples above)
+   2. Run with --verbose for detailed field-level analysis
+
+⚠️  Exit code: 1 (warnings present)
+
+======================================================================
+```
+
+### Exit Codes
+
+- **0** - All checks passed (>90% complete, no issues)
+- **1** - Warnings present (50-90% complete fields)
+- **2** - Critical issues (fields <50% complete or fatal errors)
+
+**CI/CD Integration:**
+
+```bash
+# Fail pipeline if quality is too low
+factory check-quality my-connector -v v001 -a org -l typescript -i open-api
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 2 ]; then
+  echo "Critical quality issues - blocking deployment"
+  exit 1
+fi
+```
 
 ### Setup
 
@@ -112,44 +190,13 @@ resources:
         pageSize: 50
 ```
 
-### Sample Output
-
-```
-============================================================
-📊 QUALITY REPORT: brands (Raw API vs Connector Output)
-============================================================
-
-RAW API RESPONSE:
-  Records: 20
-  Total fields: 3
-  Overall completeness: 66.7%
-
-CONNECTOR OUTPUT:
-  Records: 20
-  Total fields: 2
-  Overall completeness: 100.0%
-
-⚙️  TRANSFORMATIONS APPLIED:
-  • 1 fields removed
-  • Quality impact: +33.3%
-
-💡 QUALITY INSIGHTS:
-
-✅ Safe to use without checks:
-   • brandId (100% complete)
-   • brandName (100% complete)
-
-✅ Connector improved data quality by 33.3%
-============================================================
-```
-
 ### Use Cases
 
-1. **Pre-integration evaluation** - Understand data quality before committing
-2. **Field reliability** - Know which fields need defensive coding (`?.`, defaults)
-3. **Connector comparison** - Compare quality across different options
-4. **Documentation** - Auto-generate quality insights
-5. **CI/CD validation** - Fail builds on quality degradation
+1. **Quick Go/No-Go Decision** - Assessment in first line (30 seconds vs 5+ minutes)
+2. **Defensive Coding** - Specific code examples for null handling
+3. **Connector Comparison** - Overall assessment + completeness scores
+4. **CI/CD Validation** - Exit codes for automated quality gates
+5. **Field Reliability** - Risk categorization (Critical/Warning/Safe)
 
 ### Options
 

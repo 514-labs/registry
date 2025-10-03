@@ -3,13 +3,12 @@
  * Orchestrates quality analysis for connectors using pluggable checks
  */
 
-import { loadConfigFromFileOrEnv } from '../config';
 import { loadQualityCheckConfig } from '../analysis/config-loader';
-import { loadConnector } from '../connectors/loader';
+import { loadConfigFromFileOrEnv } from '../config';
 import { executeResource } from '../connectors/executor';
-import { analyzeQuality, analyzeComparison } from '../quality/analyzer';
-import { displayQualityReport, displayComparisonReport, displaySummary } from '../quality/reporter';
-import type { QualityAnalysisResults } from '../quality/types';
+import { loadConnector } from '../connectors/loader';
+import { analyzeComparison, analyzeQuality } from '../quality/analyzer';
+import { displayComparisonReport, displayQualityReport, displaySummary, getExitCode } from '../quality/reporter';
 
 export interface CheckQualityOptions {
   connector: string;
@@ -17,7 +16,6 @@ export interface CheckQualityOptions {
   implementation: string;
   connectorDir: string;
   configPath?: string;
-  enableLogs: boolean;
   verbose: boolean;
 }
 
@@ -27,36 +25,30 @@ export async function checkQuality(options: CheckQualityOptions): Promise<number
   console.log(`\n🔍 Loading quality check configuration...`);
 
   try {
-    // 1. Load configuration
+    // 1. Load quality check configuration
     const qualityConfig = await loadQualityCheckConfig(connectorDir);
     console.log(`✅ Found ${qualityConfig.resources.length} resource(s) to analyze\n`);
 
+    // 2. Load auth configuration
     const authConfig = await loadConfigFromFileOrEnv(configPath ?? null, {
       connector,
       language,
       implementation,
-      enableLogs: false,
+      enableLogs: false, // Quality check doesn't need connector logs
     });
 
-    // 2. Load and initialize connector
+    // 3. Load and initialize connector
     const { instance, captureResult } = await loadConnector(
       connectorDir,
       authConfig.connectorConfig
     );
 
-    // 3. Process each resource
-    const results: Array<{ resourceName: string; results: QualityAnalysisResults }> = [];
-
+    // 4. Analyze each resource
     for (const resource of qualityConfig.resources) {
       console.log(`\n📥 Fetching sample data for: ${resource.name}...`);
 
       try {
-        // Execute resource operation
-        const { raw, normalized } = await executeResource(
-          instance,
-          captureResult,
-          resource
-        );
+        const { raw, normalized } = await executeResource(instance, captureResult, resource);
 
         if (normalized.length === 0) {
           console.warn(`⚠️  No records returned for ${resource.name}`);
@@ -65,43 +57,34 @@ export async function checkQuality(options: CheckQualityOptions): Promise<number
 
         console.log(`✅ Fetched ${normalized.length} record(s)\n`);
 
-        // Run quality checks
+        // Analyze and display results
         if (raw.length > 0) {
-          // Comparison analysis (raw vs normalized)
           const comparison = analyzeComparison(raw, normalized);
           displayComparisonReport(resource.name, comparison, { verbose });
-          results.push({ resourceName: resource.name, results: comparison.normalized });
         } else {
-          // Simple analysis (normalized only)
           const analysis = analyzeQuality(normalized);
           displayQualityReport(resource.name, analysis, { verbose });
-          results.push({ resourceName: resource.name, results: analysis });
         }
-      } catch (error: any) {
-        console.error(`❌ Failed to analyze ${resource.name}: ${error.message}`);
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(`❌ Failed to analyze ${resource.name}: ${message}`);
         if (verbose) {
           console.error(error);
         }
-        continue;
       }
     }
 
-    // 4. Display overall summary
-    if (results.length > 1) {
-      displaySummary(results);
-    }
-
-    console.log(`${'='.repeat(60)}`);
-    console.log(`✅ Quality check complete!`);
-    console.log(`${'='.repeat(60)}\n`);
-
-    return 0;
-  } catch (error: any) {
-    console.error(`\n❌ Quality check failed: ${error.message}\n`);
+    // 5. Display overall summary
+    displaySummary();
+    
+    return getExitCode();
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`\n❌ Quality check failed: ${message}\n`);
     if (verbose) {
       console.error(error);
     }
-    return 1;
+    return 2; // Fatal error
   }
 }
 

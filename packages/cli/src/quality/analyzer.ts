@@ -3,9 +3,35 @@
  * Orchestrates quality checks on connector data
  */
 
-import type { QualityAnalysisResults, FieldQualityResults, QualityCheck } from './types';
 import { getEnabledChecks } from './checks';
 import { extractFields } from './field-extractor';
+import type { FieldQualityResults, FieldRisk, QualityAnalysisResults, QualityCheckSummary, RiskLevel } from './types';
+
+// Risk thresholds
+const CRITICAL_THRESHOLD = 50; // Below 50% is critical
+const WARNING_THRESHOLD = 90; // Below 90% is warning
+
+/**
+ * Determine risk level based on completeness percentage
+ */
+function getRiskLevel(completeness: number): RiskLevel {
+  if (completeness < CRITICAL_THRESHOLD) return 'critical';
+  if (completeness < WARNING_THRESHOLD) return 'warning';
+  return 'safe';
+}
+
+/**
+ * Generate recommendation based on risk level and field path
+ */
+function getRecommendation(fieldPath: string, riskLevel: RiskLevel): string {
+  if (riskLevel === 'critical') {
+    return `Avoid using ${fieldPath} - too unreliable (<${CRITICAL_THRESHOLD}% complete). Use alternative field or exclude.`;
+  }
+  if (riskLevel === 'warning') {
+    return `const value = record.${fieldPath} ?? 'default';`;
+  }
+  return 'Safe to use as-is';
+}
 
 /**
  * Run all enabled quality checks on the provided records
@@ -16,6 +42,11 @@ export function analyzeQuality(records: any[]): QualityAnalysisResults {
       recordCount: 0,
       fieldResults: [],
       summaries: {},
+      risks: {
+        critical: [],
+        warning: [],
+        safe: [],
+      },
     };
   }
 
@@ -40,7 +71,7 @@ export function analyzeQuality(records: any[]): QualityAnalysisResults {
   });
 
   // Generate summaries for checks that support it
-  const summaries: Record<string, any> = {};
+  const summaries: Record<string, QualityCheckSummary> = {};
 
   for (const check of checks) {
     if (check.summarize) {
@@ -55,10 +86,37 @@ export function analyzeQuality(records: any[]): QualityAnalysisResults {
     }
   }
 
+  // Categorize fields by risk level
+  const risks: { critical: FieldRisk[]; warning: FieldRisk[]; safe: FieldRisk[] } = {
+    critical: [],
+    warning: [],
+    safe: [],
+  };
+
+  for (const fieldResult of fieldResults) {
+    const completenessCheck = fieldResult.checks.find(c => c.checkName === 'completeness');
+    if (completenessCheck) {
+      const completeness = completenessCheck.value as number;
+      const nullCount = completenessCheck.metadata?.nullCount ?? 0;
+      const presentCount = completenessCheck.metadata?.presentCount ?? 0;
+      const riskLevel = getRiskLevel(completeness);
+
+      risks[riskLevel].push({
+        fieldPath: fieldResult.fieldPath,
+        riskLevel,
+        completeness,
+        nullCount,
+        presentCount,
+        recommendation: getRecommendation(fieldResult.fieldPath, riskLevel),
+      });
+    }
+  }
+
   return {
     recordCount: records.length,
     fieldResults,
     summaries,
+    risks,
   };
 }
 
