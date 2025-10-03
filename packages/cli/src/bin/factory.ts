@@ -97,7 +97,6 @@ program
         implementation,
         connectorDir,
         configPath: configPath ?? null,
-        enableLogs: false,
         verbose: verbose ?? false,
       });
 

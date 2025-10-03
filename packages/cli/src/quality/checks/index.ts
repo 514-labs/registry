@@ -64,8 +64,8 @@
 import type { QualityCheck } from '../types';
 import { CompletenessCheck } from './completeness';
 import { NullRateCheck } from './null-rate';
-import { TypeConsistencyCheck } from './type-consistency';
 import { SampleValuesCheck } from './sample-values';
+import { TypeConsistencyCheck } from './type-consistency';
 
 /**
  * Registry of all available quality checks
@@ -74,8 +74,8 @@ import { SampleValuesCheck } from './sample-values';
 export const DEFAULT_QUALITY_CHECKS: QualityCheck[] = [
   new CompletenessCheck(),
   new NullRateCheck(),
-  new TypeConsistencyCheck(),
   new SampleValuesCheck(),
+  new TypeConsistencyCheck(),
 ];
 
 /**
@@ -88,6 +88,6 @@ export function getEnabledChecks(): QualityCheck[] {
 // Re-export check classes for external use
 export { CompletenessCheck } from './completeness';
 export { NullRateCheck } from './null-rate';
-export { TypeConsistencyCheck } from './type-consistency';
 export { SampleValuesCheck } from './sample-values';
+export { TypeConsistencyCheck } from './type-consistency';
 

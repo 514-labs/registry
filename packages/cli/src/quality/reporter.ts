@@ -1,277 +1,373 @@
 /**
  * Quality Reporter
- * Formats and displays quality check results
+ * Displays quality check results using inverted pyramid design
  */
 
-import type { QualityAnalysisResults, FieldQualityResults, ComparisonResults } from './analyzer';
+import { Table } from 'console-table-printer';
+
+import type { ComparisonResults } from './analyzer';
+import type { FieldRisk, QualityAnalysisResults } from './types';
+
+// Constants
+const SEPARATOR_LENGTH = 70;
+const MAX_FIELDS_TO_SHOW = 5;
+const MAX_SAMPLE_FIELDS = 10;
 
 export interface ReportOptions {
   verbose: boolean;
 }
 
+interface ResourceAnalysis {
+  name: string;
+  completeness: number;
+  recordCount: number;
+  criticalCount: number;
+  warningCount: number;
+  safeCount: number;
+  warning: FieldRisk[];
+}
+
+// Module-level state for collecting analyses across resources
+let resourceAnalyses: ResourceAnalysis[] = [];
+
 /**
- * Display quality analysis results
+ * Get overall assessment based on completeness and issue counts
  */
-export function displayQualityReport(
-  resourceName: string,
-  results: QualityAnalysisResults,
-  options: ReportOptions = { verbose: false }
-): void {
-  console.log(`\n${'='.repeat(60)}`);
-  console.log(`📊 QUALITY REPORT: ${resourceName}`);
-  console.log(`${'='.repeat(60)}\n`);
-
-  console.log(`Total Records: ${results.recordCount}\n`);
-
-  // Display summaries
-  if (results.summaries['completeness']) {
-    const summary = results.summaries['completeness'];
-    console.log(`Overall Completeness: ${summary.score.toFixed(1)}%\n`);
-
-    // High quality fields
-    if (summary.details?.highQuality?.length > 0) {
-      console.log(`✅ High Quality (>90% complete):`);
-      for (const fieldPath of summary.details.highQuality) {
-        const fieldResult = results.fieldResults.find(fr => fr.fieldPath === fieldPath);
-        const completeness = fieldResult?.checks.find(c => c.checkName === 'completeness');
-        if (completeness) {
-          console.log(`   ${fieldPath}: ${(completeness.value as number).toFixed(1)}%`);
-        }
-      }
-      console.log('');
-    }
-
-    // Medium quality fields
-    if (summary.details?.mediumQuality?.length > 0) {
-      console.log(`⚠️  Medium Quality (60-90% complete):`);
-      for (const fieldPath of summary.details.mediumQuality) {
-        const fieldResult = results.fieldResults.find(fr => fr.fieldPath === fieldPath);
-        const completeness = fieldResult?.checks.find(c => c.checkName === 'completeness');
-        const nullRate = fieldResult?.checks.find(c => c.checkName === 'null-rate');
-        if (completeness && nullRate) {
-          console.log(`   ${fieldPath}: ${(completeness.value as number).toFixed(1)}% (${(nullRate.value as number).toFixed(1)}% null)`);
-        }
-      }
-      console.log('');
-    }
-
-    // Low quality fields
-    if (summary.details?.lowQuality?.length > 0) {
-      console.log(`🔴 Low Quality (<60% complete):`);
-      for (const fieldPath of summary.details.lowQuality) {
-        const fieldResult = results.fieldResults.find(fr => fr.fieldPath === fieldPath);
-        const completeness = fieldResult?.checks.find(c => c.checkName === 'completeness');
-        const nullRate = fieldResult?.checks.find(c => c.checkName === 'null-rate');
-        if (completeness && nullRate) {
-          console.log(`   ${fieldPath}: ${(completeness.value as number).toFixed(1)}% (${(nullRate.value as number).toFixed(1)}% null)`);
-        }
-      }
-      console.log('');
-    }
+function getAssessment(avgCompleteness: number, criticalCount: number, warningCount: number): {
+  message: string;
+  emoji: string;
+} {
+  if (avgCompleteness >= 95 && criticalCount === 0 && warningCount === 0) {
+    return { message: 'Production Ready', emoji: '✅' };
   }
-
-  // Display recommendations
-  displayRecommendations(results);
-
-  console.log(`${'='.repeat(60)}\n`);
+  
+  if (avgCompleteness >= 90 && criticalCount === 0) {
+    return { message: 'Production Ready (with minor caveats)', emoji: '✅' };
+  }
+  
+  if (avgCompleteness >= 80 && criticalCount === 0) {
+    return { message: 'Good (use with caution)', emoji: '⚠️ ' };
+  }
+  
+  if (avgCompleteness >= 70) {
+    return { message: 'Fair (significant quality issues)', emoji: '⚠️ ' };
+  }
+  
+  return { message: 'Poor (not recommended for production)', emoji: '🔴' };
 }
 
 /**
- * Display comparison report (raw vs normalized)
+ * Display comparison report (raw vs normalized) - CONCISE by default
  */
 export function displayComparisonReport(
   resourceName: string,
   comparison: ComparisonResults,
   options: ReportOptions = { verbose: false }
 ): void {
-  console.log(`\n${'='.repeat(60)}`);
-  console.log(`📊 QUALITY REPORT: ${resourceName} (Raw API vs Connector Output)`);
-  console.log(`${'='.repeat(60)}\n`);
+  const { normalized } = comparison;
+  const risks = normalized.risks ?? { critical: [], warning: [], safe: [] };
+  const completeness = normalized.summaries['completeness']?.score ?? 0;
 
-  const rawCompleteness = comparison.raw.summaries['completeness']?.score ?? 0;
-  const normCompleteness = comparison.normalized.summaries['completeness']?.score ?? 0;
+  // Collect analysis for final summary
+  resourceAnalyses.push({
+    name: resourceName,
+    completeness,
+    recordCount: normalized.recordCount,
+    criticalCount: risks.critical.length,
+    warningCount: risks.warning.length,
+    safeCount: risks.safe.length,
+    warning: risks.warning,
+  });
 
-  // Transformation summary
-  console.log(`RAW API RESPONSE:`);
-  console.log(`  Records: ${comparison.raw.recordCount}`);
-  console.log(`  Total fields: ${comparison.raw.fieldResults.length}`);
-  console.log(`  Overall completeness: ${rawCompleteness.toFixed(1)}%\n`);
-
-  console.log(`CONNECTOR OUTPUT:`);
-  console.log(`  Records: ${comparison.normalized.recordCount}`);
-  console.log(`  Total fields: ${comparison.normalized.fieldResults.length}`);
-  console.log(`  Overall completeness: ${normCompleteness.toFixed(1)}%\n`);
-
-  console.log(`⚙️  TRANSFORMATIONS APPLIED:`);
-  console.log(`  • ${comparison.transformation.fieldsRemoved.length} fields removed`);
-  console.log(`  • ${comparison.transformation.fieldsAdded.length} fields added`);
-  const impact = comparison.transformation.qualityImpact >= 0 ? '+' : '';
-  console.log(`  • Quality impact: ${impact}${comparison.transformation.qualityImpact.toFixed(1)}%\n`);
-
-  // Show removed fields
-  if (comparison.transformation.fieldsRemoved.length > 0) {
-    console.log(`❌ REMOVED BY CONNECTOR:`);
-    const showCount = Math.min(10, comparison.transformation.fieldsRemoved.length);
-    for (const fieldPath of comparison.transformation.fieldsRemoved.slice(0, showCount)) {
-      // Find null rate in raw data
-      const rawField = comparison.raw.fieldResults.find(fr => fr.fieldPath === fieldPath);
-      const nullRate = rawField?.checks.find(c => c.checkName === 'null-rate');
-      if (nullRate) {
-        const reason = (nullRate.value as number) === 100 ? 'all-null' : 
-                      (nullRate.value as number) >= 90 ? 'mostly-null' : 'unknown';
-        console.log(`   ${fieldPath}: ${(nullRate.value as number).toFixed(0)}% null (${reason})`);
-      }
+  // CONCISE MODE (default) - Only show if there are issues
+  if (!options.verbose) {
+    const hasIssues = risks.critical.length > 0 || risks.warning.length > 0;
+    if (!hasIssues) {
+      return; // Perfect resource - don't clutter output
     }
-    if (comparison.transformation.fieldsRemoved.length > showCount) {
-      console.log(`   ... and ${comparison.transformation.fieldsRemoved.length - showCount} more`);
+
+    console.log(`\n${resourceName.toUpperCase()}`);
+    
+    const table = new Table({
+      columns: [
+        { name: 'risk', title: '', alignment: 'left' },
+        { name: 'field', title: 'Field', alignment: 'left' },
+        { name: 'completeness', title: 'Complete', alignment: 'right' },
+        { name: 'nulls', title: 'Nulls', alignment: 'right' },
+        { name: 'action', title: 'Action', alignment: 'left' },
+      ],
+    });
+
+    // Add critical issues (up to MAX_FIELDS_TO_SHOW)
+    for (const field of risks.critical.slice(0, MAX_FIELDS_TO_SHOW)) {
+      table.addRow({
+        risk: '🔴',
+        field: field.fieldPath,
+        completeness: `${field.completeness.toFixed(0)}%`,
+        nulls: `${field.nullCount}/${normalized.recordCount}`,
+        action: 'AVOID',
+      });
     }
-    console.log(`\n   ℹ️  Connector drops fields that are null in all/most records`);
-    console.log(`   ⚠️  If you need to check field existence, these won't be in output\n`);
+    
+    if (risks.critical.length > MAX_FIELDS_TO_SHOW) {
+      table.addRow({
+        risk: '',
+        field: `... ${risks.critical.length - MAX_FIELDS_TO_SHOW} more critical fields`,
+        completeness: '',
+        nulls: '',
+        action: '',
+      });
+    }
+
+    // Add warnings (up to MAX_FIELDS_TO_SHOW)
+    for (const field of risks.warning.slice(0, MAX_FIELDS_TO_SHOW)) {
+      table.addRow({
+        risk: '⚠️ ',
+        field: field.fieldPath,
+        completeness: `${field.completeness.toFixed(0)}%`,
+        nulls: `${field.nullCount}/${normalized.recordCount}`,
+        action: 'null checks',
+      });
+    }
+    
+    if (risks.warning.length > MAX_FIELDS_TO_SHOW) {
+      table.addRow({
+        risk: '',
+        field: `... ${risks.warning.length - MAX_FIELDS_TO_SHOW} more warning fields`,
+        completeness: '',
+        nulls: '',
+        action: '',
+      });
+    }
+
+    table.printTable();
+    return;
   }
 
-  // Show quality insights
-  console.log(`💡 QUALITY INSIGHTS:\n`);
+  // VERBOSE MODE - Full details
+  console.log(`\n${'='.repeat(SEPARATOR_LENGTH)}`);
+  console.log(`📊 DETAILED ANALYSIS: ${resourceName}`);
+  console.log(`${'='.repeat(SEPARATOR_LENGTH)}\n`);
 
-  const normSummary = comparison.normalized.summaries['completeness'];
-  if (normSummary?.details?.highQuality?.length > 0) {
-    console.log(`✅ Safe to use without checks:`);
-    for (const fieldPath of normSummary.details.highQuality.slice(0, 5)) {
-      const fieldResult = comparison.normalized.fieldResults.find(fr => fr.fieldPath === fieldPath);
-      const completeness = fieldResult?.checks.find(c => c.checkName === 'completeness');
-      if (completeness) {
-        console.log(`   • ${fieldPath} (${(completeness.value as number).toFixed(0)}% complete)`);
-      }
-    }
-    if (normSummary.details.highQuality.length > 5) {
-      console.log(`   ... and ${normSummary.details.highQuality.length - 5} more`);
-    }
-  }
+  console.log(`RECORDS: ${normalized.recordCount}`);
+  console.log(`RAW API: ${comparison.raw.fieldResults.length} fields → CONNECTOR OUTPUT: ${normalized.fieldResults.length} fields`);
+  console.log(`TRANSFORMATION: ${comparison.transformation.fieldsRemoved.length} removed, ${comparison.transformation.fieldsAdded.length} added\n`);
 
-  if (normSummary?.details?.mediumQuality?.length > 0) {
-    console.log(`\n⚠️  Need defensive coding:`);
-    for (const fieldPath of normSummary.details.mediumQuality.slice(0, 5)) {
-      const fieldResult = comparison.normalized.fieldResults.find(fr => fr.fieldPath === fieldPath);
-      const completeness = fieldResult?.checks.find(c => c.checkName === 'completeness');
-      if (completeness) {
-        console.log(`   • ${fieldPath} (${(completeness.value as number).toFixed(0)}% complete)`);
-      }
-    }
-    if (normSummary.details.mediumQuality.length > 5) {
-      console.log(`   ... and ${normSummary.details.mediumQuality.length - 5} more`);
-    }
-    console.log(`   → Use optional chaining or default values`);
-  }
-
-  if (comparison.transformation.fieldsRemoved.length > 0) {
-    console.log(`\n❌ Not available in connector output:`);
-    const showCount = Math.min(5, comparison.transformation.fieldsRemoved.length);
-    for (const fieldPath of comparison.transformation.fieldsRemoved.slice(0, showCount)) {
-      const rawField = comparison.raw.fieldResults.find(fr => fr.fieldPath === fieldPath);
-      const nullRate = rawField?.checks.find(c => c.checkName === 'null-rate');
-      if (nullRate) {
-        console.log(`   • ${fieldPath} (${(nullRate.value as number).toFixed(0)}% null in API)`);
-      }
-    }
-    if (comparison.transformation.fieldsRemoved.length > showCount) {
-      console.log(`   ... and ${comparison.transformation.fieldsRemoved.length - showCount} more`);
-    }
-    console.log(`   → If you need these, fetch from raw API directly`);
-  }
-
-  // Overall assessment
-  console.log('');
-  if (comparison.transformation.qualityImpact > 5) {
-    console.log(`✅ Connector improved data quality by ${comparison.transformation.qualityImpact.toFixed(1)}%`);
-    console.log(`   (Removed sparse/null fields, improving signal-to-noise ratio)`);
-  } else if (comparison.transformation.qualityImpact < -5) {
-    console.log(`⚠️  Connector reduced data quality by ${Math.abs(comparison.transformation.qualityImpact).toFixed(1)}%`);
-    console.log(`   (May be removing fields you need)`);
-  } else {
-    const sign = comparison.transformation.qualityImpact >= 0 ? '+' : '';
-    console.log(`✓ Connector maintains data quality (${sign}${comparison.transformation.qualityImpact.toFixed(1)}% impact)`);
-  }
-
-  console.log(`\n${'='.repeat(60)}\n`);
-}
-
-/**
- * Display recommendations based on analysis results
- */
-function displayRecommendations(results: QualityAnalysisResults): void {
-  const recommendations = new Set<string>();
-
-  // Collect unique recommendations from all checks
-  for (const fieldResult of results.fieldResults) {
-    for (const check of fieldResult.checks) {
-      if (check.recommendation) {
-        recommendations.add(check.recommendation);
-      }
-    }
-  }
-
-  if (recommendations.size > 0) {
-    console.log(`💡 RECOMMENDATIONS:\n`);
-    for (const rec of Array.from(recommendations).slice(0, 5)) {
-      console.log(`• ${rec}`);
-    }
-    if (recommendations.size > 5) {
-      console.log(`• ... and ${recommendations.size - 5} more recommendations`);
+  if (risks.critical.length > 0) {
+    console.log(`🔴 CRITICAL ISSUES (avoid using):`);
+    for (const field of risks.critical) {
+      console.log(`  ${field.fieldPath}`);
+      console.log(`    • ${field.completeness.toFixed(1)}% complete (${field.nullCount}/${normalized.recordCount} null)`);
+      console.log(`    • ${field.recommendation}`);
     }
     console.log('');
   }
 
-  // Overall assessment
-  const completeness = results.summaries['completeness'];
-  if (completeness) {
-    if (completeness.score < 70) {
-      console.log(`⚠️  Overall completeness is ${completeness.score.toFixed(1)}%`);
-      console.log(`   Consider if this connector meets your data quality requirements\n`);
-    } else if (completeness.score >= 90) {
-      console.log(`✅ Excellent data quality! This connector is production-ready.\n`);
-    } else {
-      console.log(`✓ Good data quality (${completeness.score.toFixed(1)}%)`);
-      console.log(`  Review medium/low quality fields for your specific use case\n`);
+  if (risks.warning.length > 0) {
+    console.log(`⚠️  WARNINGS (use with caution):`);
+    for (const field of risks.warning) {
+      console.log(`  ${field.fieldPath}`);
+      console.log(`    • ${field.completeness.toFixed(1)}% complete (${field.nullCount}/${normalized.recordCount} null)`);
+      console.log(`    • Fix: ${field.recommendation}`);
     }
+    console.log('');
+  }
+
+  if (risks.safe.length > 0) {
+    console.log(`✅ SAFE FIELDS (>90% complete): ${risks.safe.length} fields`);
+    const sampleFields = risks.safe.slice(0, MAX_SAMPLE_FIELDS).map(f => f.fieldPath).join(', ');
+    console.log(`   ${sampleFields}${risks.safe.length > MAX_SAMPLE_FIELDS ? '...' : ''}\n`);
+  }
+
+  if (comparison.transformation.fieldsRemoved.length > 0) {
+    console.log(`🗑️  REMOVED BY CONNECTOR: ${comparison.transformation.fieldsRemoved.length} fields (all-null in raw API)`);
+    const sample = comparison.transformation.fieldsRemoved.slice(0, MAX_FIELDS_TO_SHOW).join(', ');
+    console.log(`   ${sample}${comparison.transformation.fieldsRemoved.length > MAX_FIELDS_TO_SHOW ? '...' : ''}\n`);
+  }
+
+  console.log(`${'='.repeat(SEPARATOR_LENGTH)}\n`);
+}
+
+/**
+ * Display simple quality report (no comparison - fallback when raw data not available)
+ */
+export function displayQualityReport(
+  resourceName: string,
+  results: QualityAnalysisResults,
+  options: ReportOptions = { verbose: false }
+): void {
+  const risks = results.risks ?? { critical: [], warning: [], safe: [] };
+  const completeness = results.summaries['completeness']?.score ?? 0;
+
+  resourceAnalyses.push({
+    name: resourceName,
+    completeness,
+    recordCount: results.recordCount,
+    criticalCount: risks.critical.length,
+    warningCount: risks.warning.length,
+    safeCount: risks.safe.length,
+    warning: risks.warning,
+  });
+
+  const hasIssues = risks.critical.length > 0 || risks.warning.length > 0;
+
+  if (!options.verbose && !hasIssues) {
+    return; // Perfect resource - don't show
+  }
+
+  if (options.verbose) {
+    console.log(`\n${'='.repeat(SEPARATOR_LENGTH)}`);
+    console.log(`📊 QUALITY REPORT: ${resourceName}`);
+    console.log(`${'='.repeat(SEPARATOR_LENGTH)}\n`);
+    console.log(`Records: ${results.recordCount}`);
+    console.log(`Fields: ${results.fieldResults.length}`);
+    console.log(`Completeness: ${completeness.toFixed(1)}%\n`);
+
+    if (risks.critical.length > 0) {
+      console.log(`🔴 CRITICAL: ${risks.critical.length} fields`);
+      for (const field of risks.critical) {
+        console.log(`  ${field.fieldPath}: ${field.completeness.toFixed(1)}%`);
+      }
+      console.log('');
+    }
+
+    if (risks.warning.length > 0) {
+      console.log(`⚠️  WARNING: ${risks.warning.length} fields`);
+      for (const field of risks.warning) {
+        console.log(`  ${field.fieldPath}: ${field.completeness.toFixed(1)}%`);
+      }
+      console.log('');
+    }
+  } else if (hasIssues) {
+    console.log(`\n⚠️  ${resourceName.toUpperCase()}: ${risks.critical.length + risks.warning.length} field(s) need attention`);
   }
 }
 
 /**
- * Display summary across multiple resources
+ * Display overall summary (INVERTED PYRAMID - decision first)
  */
-export function displaySummary(results: Array<{ resourceName: string; results: QualityAnalysisResults }>): void {
-  console.log(`\n${'='.repeat(60)}`);
-  console.log(`📈 OVERALL SUMMARY`);
-  console.log(`${'='.repeat(60)}\n`);
-
-  console.log(`Resources Analyzed: ${results.length}\n`);
-
-  for (const result of results) {
-    const completeness = result.results.summaries['completeness']?.score ?? 0;
-    const icon = completeness >= 90 ? '✅' : completeness >= 70 ? '⚠️' : '🔴';
-    console.log(
-      `${icon} ${result.resourceName}: ${completeness.toFixed(1)}% (${result.results.recordCount} records)`
-    );
+export function displaySummary(): void {
+  if (resourceAnalyses.length === 0) {
+    console.log('\n✅ All resources passed quality checks!\n');
+    return;
   }
 
-  console.log('');
+  const totalRecords = resourceAnalyses.reduce((sum, r) => sum + r.recordCount, 0);
+  const avgCompleteness = resourceAnalyses.reduce((sum, r) => sum + r.completeness, 0) / resourceAnalyses.length;
+  const totalCritical = resourceAnalyses.reduce((sum, r) => sum + r.criticalCount, 0);
+  const totalWarnings = resourceAnalyses.reduce((sum, r) => sum + r.warningCount, 0);
+  const totalIssues = totalCritical + totalWarnings;
 
-  const avgCompleteness =
-    results.length > 0
-      ? results.reduce((sum, r) => sum + (r.results.summaries['completeness']?.score ?? 0), 0) / results.length
-      : 0;
+  const assessment = getAssessment(avgCompleteness, totalCritical, totalWarnings);
 
-  console.log(`Average Completeness: ${avgCompleteness.toFixed(1)}%`);
+  console.log(`\n${'='.repeat(SEPARATOR_LENGTH)}`);
+  console.log(`📊 QUALITY CHECK SUMMARY`);
+  console.log(`${'='.repeat(SEPARATOR_LENGTH)}\n`);
 
-  if (avgCompleteness >= 90) {
-    console.log(`\n✅ This connector has excellent overall data quality!`);
-  } else if (avgCompleteness >= 70) {
-    console.log(`\n✓ This connector has good overall data quality`);
-    console.log(`  Review individual resources for specific concerns`);
+  // 1. DECISION FIRST (inverted pyramid)
+  console.log(`${assessment.emoji} ASSESSMENT: ${assessment.message}`);
+  console.log(`   • ${avgCompleteness.toFixed(1)}% average completeness`);
+  if (totalCritical > 0) {
+    console.log(`   • ${totalCritical} critical field(s) - avoid using`);
+  }
+  if (totalWarnings > 0) {
+    console.log(`   • ${totalWarnings} field(s) need null handling`);
+  }
+  console.log(`   • ${resourceAnalyses.length} resource(s) analyzed, ${totalRecords} total records\n`);
+
+  // 2. ACTION REQUIRED (if there are issues)
+  if (totalIssues > 0) {
+    console.log(`${'─'.repeat(SEPARATOR_LENGTH)}`);
+    console.log(`⚠️  ACTION REQUIRED\n`);
+
+    if (totalCritical > 0) {
+      console.log(`🔴 Critical fields (<50% complete):`);
+      console.log(`   → Don't use these - too unreliable`);
+      console.log(`   → Use alternative fields or exclude from sync\n`);
+    }
+
+    if (totalWarnings > 0) {
+      console.log(`⚠️  Warning fields (50-90% complete):`);
+      console.log(`   → Add null checks to your code:\n`);
+      
+      // Show example from first warning field
+      const firstWarning = resourceAnalyses
+        .flatMap(r => r.warning)
+        .find(w => w !== undefined);
+      
+      if (firstWarning) {
+        const exampleField = firstWarning.fieldPath;
+        console.log(`   const value = record.${exampleField} ?? 'default';`);
+        console.log(`   const name = record.${exampleField}?.toUpperCase() ?? 'Unknown';\n`);
+      }
+    }
+
+    console.log(`${'─'.repeat(SEPARATOR_LENGTH)}\n`);
+  }
+
+  // 3. RESOURCE TABLE
+  console.log(`Resource Summary:`);
+  
+  const summaryTable = new Table({
+    columns: [
+      { name: 'resource', title: 'Resource', alignment: 'left' },
+      { name: 'completeness', title: 'Completeness', alignment: 'right' },
+      { name: 'records', title: 'Records', alignment: 'right' },
+      { name: 'critical', title: 'Critical', alignment: 'right' },
+      { name: 'warning', title: 'Warning', alignment: 'right' },
+      { name: 'safe', title: 'Safe', alignment: 'right' },
+    ],
+  });
+
+  for (const analysis of resourceAnalyses) {
+    summaryTable.addRow({
+      resource: analysis.name,
+      completeness: `${analysis.completeness.toFixed(1)}%`,
+      records: analysis.recordCount,
+      critical: analysis.criticalCount,
+      warning: analysis.warningCount,
+      safe: analysis.safeCount,
+    });
+  }
+
+  summaryTable.printTable();
+
+  // 4. GUIDANCE
+  if (totalIssues > 0) {
+    console.log(`💡 NEXT STEPS:\n`);
+    
+    if (totalCritical > 0) {
+      console.log(`   1. Review critical fields - consider if connector meets your needs`);
+    }
+    if (totalWarnings > 0) {
+      console.log(`   2. Add null checks for warning fields (see examples above)`);
+    }
+    console.log(`   3. Run with --verbose for detailed field-level analysis\n`);
+  }
+
+  // 5. EXIT CODE GUIDANCE
+  if (totalCritical > 0) {
+    console.log(`🔴 Exit code: 2 (critical issues present)`);
+  } else if (totalWarnings > 0) {
+    console.log(`⚠️  Exit code: 1 (warnings present)`);
   } else {
-    console.log(`\n⚠️  This connector has moderate data quality`);
-    console.log(`   Carefully evaluate if it meets your requirements`);
+    console.log(`✅ Exit code: 0 (all checks passed)`);
   }
 
-  console.log('');
+  console.log(`\n${'='.repeat(SEPARATOR_LENGTH)}\n`);
+
+  // Reset for next run
+  resourceAnalyses = [];
 }
 
+/**
+ * Get exit code based on analysis results
+ */
+export function getExitCode(): number {
+  const totalCritical = resourceAnalyses.reduce((sum, r) => sum + r.criticalCount, 0);
+  const totalWarnings = resourceAnalyses.reduce((sum, r) => sum + r.warningCount, 0);
+
+  if (totalCritical > 0) return 2;
+  if (totalWarnings > 0) return 1;
+  return 0;
+}
