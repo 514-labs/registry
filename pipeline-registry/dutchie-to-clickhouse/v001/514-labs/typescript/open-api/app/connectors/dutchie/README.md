@@ -1,0 +1,80 @@
+# Dutchie (TypeScript)
+
+This folder contains ready‑to‑use Dutchie connector source code. It’s meant to live inside your app and be imported via a relative path.
+
+## Quick start
+
+1) Set your API key in the environment
+
+```
+DUTCHIE_API_KEY=<your_api_key>
+```
+
+2) Use the connector in your code
+
+```ts
+// Adjust the relative import to where this folder resides in your app
+import { createDutchieConnector } from './connectors/dutchie'
+
+async function main() {
+  const conn = createDutchieConnector()
+  conn.initialize({
+    auth: { type: 'basic', basic: { username: process.env.DUTCHIE_API_KEY! } },
+    // Optional: request/response logs to console
+    logging: { enabled: true, level: 'info' },
+  })
+
+  // Stream brands in pages of 100 (single GET, client-side chunking)
+  for await (const page of conn.brand.getAll({ paging: { pageSize: 100, maxItems: 500 } })) {
+    for (const brand of page) {
+      // do something with brand
+    }
+  }
+}
+
+main().catch((err) => { console.error(err); process.exit(1) })
+```
+
+See [Getting Started](https://github.com/514-labs/registry/blob/main/connector-registry/dutchie/v001/514-labs/typescript/open-api/docs/getting-started.md) for more details and examples of [Moose](https://docs.fiveonefour.com/moose) integration.
+
+## Flattening
+Flatten selected generated types into a single-level interface and write to one file.
+
+Example: flatten `DiscountApiResponse` into `DiscountApiResponseFlat` and save in `src/generated/flat.gen.ts`.
+
+```bash
+pnpm --filter @514labs/registry build
+
+pnpm --filter @514labs/registry flatten -- \
+  --source $(pwd)/src/generated/types.gen.ts \
+  --type DiscountApiResponse \
+  --out $(pwd)/src/generated/flat.gen.ts \
+  --name DiscountApiResponseFlat
+```
+
+## Debugging
+
+Enable logging with a config:
+
+```ts
+conn.initialize({
+  auth: { type: 'basic', basic: { username: apiKey } },
+  logging: { enabled: true, level: 'info' }, // default logger prints to console
+})
+```
+
+You’ll see events like `http_request` and `http_response` with URL, status, duration, etc.
+
+Define custom logger with a config:
+
+```ts
+conn.initialize({
+  auth: { type: 'basic', basic: { username: apiKey } },
+  logging: { enabled: true, level: 'info', logger: (level, event) => mySink(level, event) },
+})
+```
+
+## Related documentation
+
+- [Dutchie connector docs](https://registry.514.ai/connectors/dutchie/v001/514-labs/typescript/open-api)
+- [Contribution guide](https://registry.514.ai/create)
