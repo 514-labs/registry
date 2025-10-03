@@ -15,7 +15,7 @@ pnpm i
 
 3) Set env vars
 ```bash
-export DUTCHIE_API_TOKEN=token
+export DUTCHIE_API_KEY=key
 ```
 
 4) Run Moose dev
