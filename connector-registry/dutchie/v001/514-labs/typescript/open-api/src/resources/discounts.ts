@@ -9,11 +9,8 @@ import { createFlattenAfterResponseHook } from '@connector-factory/core'
 import type { DiscountApiResponse } from '../generated/types.gen'
 import type { DiscountApiResponseFlat } from '../generated/flat.gen'
 
-export const createDiscountsResource = (send: SendFn, log?: (level: string, event: Record<string, unknown>) => void) => {
-  const discountsTransformHook: Hook = createFlattenAfterResponseHook<DiscountApiResponse, DiscountApiResponseFlat>({ 
-    delimiter: '_',
-    log
-  })
+export const createDiscountsResource = (send: SendFn) => {
+  const discountsTransformHook: Hook = createFlattenAfterResponseHook<DiscountApiResponse, DiscountApiResponseFlat>()
   return makeCrudResource<DiscountApiResponseFlat, { includeInactive?: boolean; includeInclusionExclusionData?: boolean, includePaymentRestrictions?: boolean }>(
     '/discounts/v2/list',
     send,
