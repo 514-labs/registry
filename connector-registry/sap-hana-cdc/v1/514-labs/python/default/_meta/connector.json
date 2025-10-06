@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector.schema.json",
+  "identifier": "sap-hana-cdc",
+  "name": "SAP HANA CDC",
+  "author": "514-labs",
+  "authorType": "organization",
+  "avatarUrlOverride": "",
+  "version": "v1",
+  "language": "python",
+  "implementation": "default",
+  "tags": ["database", "cdc", "sap", "hana", "real-time"],
+  "category": "database",
+  "description": "High-performance, real-time Change Data Capture (CDC) connector for SAP HANA database",
+  "homepage": "",
+  "license": "MIT",
+  "source": {"type":"database","spec":"SAP HANA"},
+  "capabilities": {"extract": true, "transform": false, "load": false},
+  "maintainers": [],
+  "issues": "",
+  "registryUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/sap-hana-cdc/v1/514-labs/python/default"
+}

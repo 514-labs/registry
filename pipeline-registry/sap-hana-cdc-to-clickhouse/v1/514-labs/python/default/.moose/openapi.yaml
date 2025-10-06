@@ -1,0 +1,61 @@
+# Use https://editor-next.swagger.io/ if the current version does not support 3.1 yet.
+openapi: 3.1.1
+info:
+  title: sap-hana-cdc-pipeline API
+  version: '0.0'
+servers:
+- url: http://localhost:4000
+  description: Server URL
+paths:
+  /api/cdc_status:
+    get:
+      summary: Egress endpoint for cdc_status
+      parameters:
+      - name: order_by
+        in: query
+        required: false
+        schema:
+          type: string
+        example: stringValue
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+        example: 1
+      - name: start_day
+        in: query
+        required: false
+        schema:
+          type: integer
+        example: 1
+      - name: end_day
+        in: query
+        required: false
+        schema:
+          type: integer
+        example: 1
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  last_processed_timestamp:
+                    title: Last Processed Timestamp
+                    type: string
+                  last_processed_change_id:
+                    title: Last Processed Change Id
+                    type: integer
+                  lag:
+                    title: Lag
+                    type: integer
+                required:
+                - last_processed_timestamp
+                - last_processed_change_id
+                - lag
+                title: QueryResult
+                type: object
+components:
+  schemas: {}

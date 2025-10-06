@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SAP HANA CDC Change Table",
+  "description": "Database table structure for storing change events",
+  "type": "object",
+  "properties": {
+    "table_name": {
+      "type": "string",
+      "description": "Name of the change tracking table"
+    },
+    "schema_name": {
+      "type": "string", 
+      "description": "Database schema containing the table"
+    },
+    "columns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Column name"
+          },
+          "type": {
+            "type": "string",
+            "description": "SAP HANA data type"
+          },
+          "nullable": {
+            "type": "boolean",
+            "description": "Whether the column allows NULL values"
+          },
+          "description": {
+            "type": "string",
+            "description": "Column description"
+          }
+        },
+        "required": ["name", "type", "nullable"]
+      }
+    }
+  },
+  "required": ["table_name", "schema_name", "columns"]
+}
