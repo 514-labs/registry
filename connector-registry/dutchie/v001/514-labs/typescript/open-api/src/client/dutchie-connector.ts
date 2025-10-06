@@ -10,7 +10,7 @@ import { createBrandResource } from '../resources/brand'
 import { createProductsResource } from '../resources/products'
 import { createInventoryResource } from '../resources/inventory'
 import { createDiscountsResource } from '../resources/discounts'
-import { createLoggingHooks } from '../observability/logging-hooks'
+import { createLoggingHooks, createLogFunction } from '../observability/logging-hooks'
 import { createTypiaValidationHooks } from '../validation/typia-hooks'
 
 export type DutchieConfig = CoreConfig & {
@@ -26,6 +26,8 @@ export type DutchieConfig = CoreConfig & {
 }
 
 export class DutchieApiConnector extends ApiConnectorBase {
+  private logFn?: (level: string, event: Record<string, unknown>) => void
+
   initialize(userConfig: DutchieConfig) {
     // Derive defaults: baseUrl + auth basic via core
     const withDefaults = (u: DutchieConfig): DutchieConfig => ({
@@ -34,6 +36,12 @@ export class DutchieApiConnector extends ApiConnectorBase {
       userAgent: u.userAgent ?? 'connector-dutchie',
       ...u,
     })
+
+    // Store log function for resources that need it
+    this.logFn = userConfig.logging?.enabled
+      ? createLogFunction(userConfig.logging)
+      : undefined
+
     super.initialize(withDefaults(userConfig) as any, (cfg: any) => cfg)
 
     // Optional Typia-based validation
@@ -74,7 +82,7 @@ export class DutchieApiConnector extends ApiConnectorBase {
   get brand() { return createBrandResource(this.sendLite as any) }
   get products() { return createProductsResource(this.sendLite as any) }
   get inventory() { return createInventoryResource(this.sendLite as any) }
-  get discounts() { return createDiscountsResource(this.sendLite as any) }
+  get discounts() { return createDiscountsResource(this.sendLite as any, this.logFn) }
 }
 
 export function createDutchieConnector(): DutchieApiConnector { return new DutchieApiConnector() }

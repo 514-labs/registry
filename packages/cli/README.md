@@ -1,23 +1,42 @@
-# Factory CLI — Local Connector Testing Harness
+# Factory CLI
 
-Run and test connectors locally without a full pipeline or scheduler.
+Local connector testing harness for running and analyzing connectors without a full pipeline.
 
-## Install (workspace)
+## Features
 
-- Ensure this package is included in your workspace (`pnpm-workspace.yaml`).
-- Build:
+- **Run Operations** - Execute connector operations with custom parameters
+- **Quality Analysis** - Automated data quality checks with actionable insights
+
+---
+
+## Installation
 
 ```bash
+# Build the CLI
 pnpm -w -C packages/cli build
-```
 
-Optionally link a bin:
-
-```bash
+# Optional: Link binary for global use
 pnpm -w -C packages/cli dev
 ```
 
-## Usage
+---
+
+## Run Connector
+
+Execute individual connector operations locally.
+
+```bash
+factory run-connector <connector> \
+  --implementation <impl> \
+  --operation <operation> \
+  [--params <json>] \
+  [--limit <n>] \
+  [--output <file>] \
+  [--config <path>] \
+  [--no-logs]
+```
+
+**Example:**
 
 ```bash
 factory run-connector hubspot \
@@ -32,27 +51,58 @@ factory run-connector hubspot \
 - When no `--config` is provided, it will read `HUBSPOT_TOKEN` (or `API_TOKEN`).
 - Logs are enabled by default; disable with `--no-logs`.
 
-## Config
+---
 
-Example `example.config.json`:
+## Check Quality
+
+Analyze connector data quality before using it.
+
+```bash
+factory check-quality dutchie \
+  -v v001 \
+  -a 514-labs \
+  -l typescript \
+  -i open-api \
+  --verbose
+```
+
+**Requires `quality-check.yaml` in connector directory:**
+
+```yaml
+connector: dutchie
+resources:
+  - name: products
+    operation: products.getAll
+    sampleSize: 20
+```
+
+**Shows:**
+- Overall assessment (Production Ready / Has Issues)
+- Field completeness (Critical <50%, Warning 50-90%, Safe >90%)
+- **Attribution** - Is poor quality from the API or connector?
+- Actionable code examples for null handling
+- Exit codes: `0` (pass), `1` (warnings), `2` (critical issues)
+
+---
+
+## Config File Format
 
 ```json
 {
-  "auth": { "type": "bearer", "bearer": { "token": "hs_pat_xxx" } },
+  "auth": {
+    "type": "bearer",
+    "bearer": { "token": "your_token_here" }
+  },
   "timeoutMs": 30000,
   "rateLimit": { "requestsPerSecond": 5 }
 }
 ```
 
-## Output
+---
 
-- JSON Lines to stdout or a file via `--output`.
-- Streaming operations respect `--limit`.
-- On error, prints a JSON line with `error` containing `ConnectorError` fields when applicable.
+## Supported Connectors
 
-## Supported connectors
-
-- hubspot (typescript/data-api)
+- HubSpot (`typescript/data-api`)
+- Dutchie (`typescript/open-api`)
 
 Extend `dynamicImportConnector` in `src/runner.ts` to add more.
-

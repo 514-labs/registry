@@ -5,6 +5,7 @@ import fs from "node:fs";
 import process from "node:process";
 import { loadConfigFromFileOrEnv, type HarnessConfig } from "../config";
 import { runConnectorOperation } from "../runner";
+import { checkQuality } from "../commands/check-quality";
 
 function parseInteger(value: string, prev: number | undefined): number {
   const parsed = Number.parseInt(value, 10);
@@ -63,6 +64,42 @@ program
         enableLogs: harnessConfig.enableLogs,
       });
       if (output && outputStream !== process.stdout) outputStream.end();
+      process.exit(resultCode);
+    } catch (error) {
+      console.error(`Error: ${error instanceof Error ? error.message : String(error)}`);
+      process.exit(1);
+    }
+  });
+
+program
+  .command("check-quality")
+  .description("Run quality checks on a connector using quality-check.yaml")
+  .argument("<connector>", "connector name (e.g., dutchie)")
+  .requiredOption("-v, --connector-version <version>", "version identifier (e.g., v001)")
+  .requiredOption("-a, --author <author>", "author org/user (e.g., 514-labs)")
+  .requiredOption("-l, --language <language>", "language (e.g., typescript, python)")
+  .requiredOption("-i, --implementation <impl>", "implementation name (e.g., open-api, data-api)")
+  .option("--config <path>", "path to JSON config file for auth")
+  .option("--verbose", "show detailed field statistics")
+  .action(async (connectorName: string, opts: any) => {
+    try {
+      const { connectorVersion, author, language, implementation, config: configPath, verbose } = opts;
+
+      // Resolve connector directory
+      const connectorDir = path.resolve(
+        process.cwd(),
+        `connector-registry/${connectorName}/${connectorVersion}/${author}/${language}/${implementation}`
+      );
+
+      const resultCode = await checkQuality({
+        connector: connectorName,
+        language,
+        implementation,
+        connectorDir,
+        configPath: configPath ?? null,
+        verbose: verbose ?? false,
+      });
+
       process.exit(resultCode);
     } catch (error) {
       console.error(`Error: ${error instanceof Error ? error.message : String(error)}`);
