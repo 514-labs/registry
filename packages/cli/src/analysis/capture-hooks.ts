@@ -29,8 +29,8 @@ export function createCaptureHooks(): { hooks: any; result: CaptureResult } {
       // Deep clone the raw API response to prevent mutation
       const rawData = ctx.response?.data;
       if (Array.isArray(rawData)) {
-        // Clone each item to preserve original structure
-        result.raw.push(...JSON.parse(JSON.stringify(rawData)));
+        // Use structuredClone for reliable deep cloning (handles circular refs, Date, Map, etc.)
+        result.raw.push(...structuredClone(rawData));
       }
     }
   };

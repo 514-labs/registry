@@ -343,17 +343,18 @@ export function displaySummary(): void {
   }
 
   console.log(`\n${'='.repeat(SEPARATOR_LENGTH)}\n`);
-
-  // Reset for next run
-  resourceAnalyses = [];
 }
 
 /**
- * Get exit code based on analysis results
+ * Get exit code based on analysis results and reset state
+ * Must be called AFTER displaySummary()
  */
 export function getExitCode(): number {
   const totalCritical = resourceAnalyses.reduce((sum, r) => sum + r.criticalCount, 0);
   const totalWarnings = resourceAnalyses.reduce((sum, r) => sum + r.warningCount, 0);
+
+  // Reset for next run (after calculating exit code)
+  resourceAnalyses = [];
 
   if (totalCritical > 0) return 2;
   if (totalWarnings > 0) return 1;
