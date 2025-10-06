@@ -34,7 +34,6 @@ export class DutchieApiConnector extends ApiConnectorBase {
       userAgent: u.userAgent ?? 'connector-dutchie',
       ...u,
     })
-
     super.initialize(withDefaults(userConfig) as any, (cfg: any) => cfg)
 
     // Optional Typia-based validation
