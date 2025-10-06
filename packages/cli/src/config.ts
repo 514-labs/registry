@@ -90,9 +90,14 @@ export async function loadConfigFromFileOrEnv(filePath: string | null, opts: { c
 
   if (!connectorConfig) {
     // Map common env vars to a minimal ConnectorConfig
-    const token = process.env.HUBSPOT_TOKEN ?? process.env.API_TOKEN ?? process.env.TOKEN;
+    // Try connector-specific env var first, then fallback to generic ones
+    const connectorEnvVar = `${opts.connector.toUpperCase()}_API_KEY`;
+    const token = process.env[connectorEnvVar] ?? process.env.API_TOKEN ?? process.env.TOKEN;
     if (!token) {
-      throw new Error("No config file provided and no token found in environment (expected HUBSPOT_TOKEN, API_TOKEN, or TOKEN)");
+      throw new Error(
+        `No config file provided and no token found in environment.\n` +
+        `Expected one of: ${connectorEnvVar}, API_TOKEN, or TOKEN`
+      );
     }
     const requestsPerSecond = parseEnvNumber(process.env.REQUESTS_PER_SECOND, "REQUESTS_PER_SECOND");
     connectorConfig = {

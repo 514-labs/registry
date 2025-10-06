@@ -82,7 +82,7 @@ export class HttpClient {
       ],
       afterResponse: [
         // Prepend null-drop normalizer only if enabled (default true)
-        ...(this.config.dropNulls === false ? [] : [createSpecConformanceNormalizer()]),
+        ...(this.config.dropNulls === false ? [] : [createSpecConformanceNormalizer({ log: this.config.log })]),
         ...((this.config.hooks?.afterResponse ?? [])),
         ...(opts.resourceHooks?.afterResponse ?? []),
       ],
