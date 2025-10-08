@@ -1,6 +1,4 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+import re
 
 from ast import Dict
 import time
@@ -17,7 +15,6 @@ sap_config = SAPHanaCDCConfig.from_env(prefix="SAP_HANA_")
 
 def to_snake_case(name: str) -> str:
     """Convert string to snake_case."""
-    import re
     # Insert underscore before uppercase letters that follow lowercase letters
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     # Insert underscore before uppercase letters that follow digits or other uppercase letters
@@ -26,6 +23,10 @@ def to_snake_case(name: str) -> str:
 
 def get_connector() -> SAPHanaCDCConnector:
     return SAPHanaCDCConnector.build_from_config(sap_config)
+
+def insert_table_data(table_name: str, rows: List[Any]) -> None:
+    model = getattr(cdc_module, to_snake_case(table_name))
+    model.insert(rows)
 
 # It's important to synchronize the new tables first, otherwise the destination tables will be incomplete
 def sync_new_tables() -> None:
@@ -42,12 +43,9 @@ def sync_changes(connector: SAPHanaCDCConnector = get_connector()) -> None:
     batch = connector.get_changes(auto_update_client_status=False)
     if batch:
         for change in batch:
-            model = getattr(cdc_module, to_snake_case(change.table_name))
-            model.insert(change.new_values)
+            insert_table_data(change.table_name, list(change.new_values))
             connector.update_client_status(change)
         return True
-
-                
             
 def sync_changes_task(ctx: TaskContext[None]) -> None:
     connector = get_connector()
@@ -55,32 +53,25 @@ def sync_changes_task(ctx: TaskContext[None]) -> None:
         if not sync_changes(connector):
             # Loop quickly when no changes are found
             time.sleep(1)
-        else:
-            print("FOUND CHANGES")
 
-# cdc_task_instance = Task[None, None](
-#     name="cdc",
-#     config=TaskConfig(run=cdc_task)
-# )
+sync_changes_task_instance = Task[None, None](
+    name="sync_changes",
+    config=TaskConfig(run=sync_changes_task)
+)
 
-# sync_new_tables_task_instance = Task[None, None](
-#     name="sync_new_tables",
-#     config=TaskConfig(
-#         run=sync_new_tables_task,
-#         on_complete=[cdc_task_instance]
-#     )
-# )
+sync_new_tables_task_instance = Task[None, None](
+    name="sync_new_tables",
+    config=TaskConfig(
+        run=sync_new_tables_task,
+        on_complete=[sync_changes_task_instance]
+    )
+)
 
-# ingest_workflow = Workflow(
-#     name="cdc",
-#     config=WorkflowConfig(
-#         starting_task=sync_new_tables_task_instance,
-#         retries=3,
-#         timeout="30s",
-#         # uncomment if you want to run it automatically on a schedule
-#         # schedule="@every 5s",
-#     )
-# )
-
-sync_new_tables()
-sync_changes_task(None)
+cdc_workflow = Workflow(
+    name="cdc",
+    config=WorkflowConfig(
+        starting_task=sync_new_tables_task_instance,
+        retries=3,
+        timeout=None,
+    )
+)
