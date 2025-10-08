@@ -127,17 +127,17 @@ export default function PipelineImplSidebar(props: PipelineImplSidebarProps) {
         <Image
           src={fromLogoSrc}
           alt={`from logo`}
-          width={32}
-          height={32}
-          className="h-8 w-8 rounded-sm object-contain "
+          width={48}
+          height={48}
+          className="h-12 w-12 rounded-sm object-contain "
         />
         <span className="text-muted-foreground">→</span>
         <Image
           src={toLogoSrc}
           alt={`to logo`}
-          width={32}
-          height={32}
-          className="h-8 w-8 rounded-sm object-contain "
+          width={48}
+          height={48}
+          className="h-12 w-12 rounded-sm object-contain "
         />
       </div>
 

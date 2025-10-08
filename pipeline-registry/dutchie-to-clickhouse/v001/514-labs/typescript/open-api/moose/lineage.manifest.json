@@ -1,0 +1,173 @@
+{
+  "version": "1.0",
+  "namespace": "moose",
+  "nodes": [
+    {
+      "id": "conn.dutchie.objects",
+      "type": "connector",
+      "name": "Dutchie Objects API",
+      "namespace": "dutchie",
+      "version": "001",
+      "attrs": {
+        "mode": "etl",
+        "schema_hash": "sha256:placeholder",
+        "connector": {
+          "name": "dutchie",
+          "version": "v001",
+          "author": "514-labs",
+          "language": "typescript",
+          "implementation": "open-api"
+        },
+        "identifier": "account/placeholder",
+        "schema_path": "pipeline-registry/dutchie-to-clickhouse/v001/514-labs/typescript/open-api/schemas/index.json"
+      }
+    },
+    {
+      "id": "workflow.dutchie.etl",
+      "type": "workflow",
+      "name": "Dutchie ETL Workflow",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": {
+        "kind": "workflow",
+        "schedule": "0 * * * *"
+      }
+    },
+    {
+      "id": "ingest.dutchie.brands",
+      "type": "ingest_api",
+      "name": "Ingest Dutchie Brands",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": {
+        "route": "/ingest/Brand",
+        "version": "1",
+        "auth": { "method": "none" }
+      }
+    },
+    {
+      "id": "stream.dutchie.brands",
+      "type": "stream",
+      "name": "dutchie_brands",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": { "partitions": 3, "retention_seconds": 604800 }
+    },
+    {
+      "id": "sync.dutchie.brands",
+      "type": "sync",
+      "name": "sync_dutchie_brands",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": {
+        "semantics": "at_least_once",
+        "flush": { "rows": 100000, "interval_ms": 1000 },
+        "offset_tracking": true
+      }
+    },
+    {
+      "id": "table.brand",
+      "type": "table",
+      "name": "Brand",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": {
+        "physical_name": "Brand",
+        "engine": "ReplacingMergeTree",
+        "order_by": "(brandId)"
+      }
+    },
+    {
+      "id": "ingest.dutchie.discounts",
+      "type": "ingest_api",
+      "name": "Ingest Dutchie Discounts",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": {
+        "route": "/ingest/Discount",
+        "version": "1",
+        "auth": { "method": "none" }
+      }
+    },
+    {
+      "id": "stream.dutchie.discounts",
+      "type": "stream",
+      "name": "dutchie_discounts",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": { "partitions": 3, "retention_seconds": 604800 }
+    },
+    {
+      "id": "sync.dutchie.discounts",
+      "type": "sync",
+      "name": "sync_dutchie_discounts",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": {
+        "semantics": "at_least_once",
+        "flush": { "rows": 100000, "interval_ms": 1000 },
+        "offset_tracking": true
+      }
+    },
+    {
+      "id": "table.discount",
+      "type": "table",
+      "name": "Discount",
+      "namespace": "moose",
+      "version": "1",
+      "attrs": {
+        "physical_name": "Discount",
+        "engine": "ReplacingMergeTree",
+        "order_by": "(id)"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "conn.dutchie.objects",
+      "to": "workflow.dutchie.etl",
+      "type": "triggers"
+    },
+    {
+      "from": "workflow.dutchie.etl",
+      "to": "ingest.dutchie.brands",
+      "type": "produces"
+    },
+    {
+      "from": "ingest.dutchie.brands",
+      "to": "stream.dutchie.brands",
+      "type": "publishes"
+    },
+    {
+      "from": "stream.dutchie.brands",
+      "to": "sync.dutchie.brands",
+      "type": "syncs_to"
+    },
+    {
+      "from": "sync.dutchie.brands",
+      "to": "table.brand",
+      "type": "writes"
+    },
+    {
+      "from": "workflow.dutchie.etl",
+      "to": "ingest.dutchie.discounts",
+      "type": "produces"
+    },
+    {
+      "from": "ingest.dutchie.discounts",
+      "to": "stream.dutchie.discounts",
+      "type": "publishes"
+    },
+    {
+      "from": "stream.dutchie.discounts",
+      "to": "sync.dutchie.discounts",
+      "type": "syncs_to"
+    },
+    {
+      "from": "sync.dutchie.discounts",
+      "to": "table.discount",
+      "type": "writes"
+    }
+  ]
+}
+

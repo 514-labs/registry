@@ -84,19 +84,19 @@ function ConnectorCard({
       className="block h-full"
       aria-label={`View ${escapeHtml(name)}`}
     >
-      <Card className="h-full group cursor-pointer transition-colors hover:bg-muted/40">
+      <Card className="h-full group cursor-pointer transition-colors hover:bg-muted/40 !gap-6">
         <CardHeader className="flex flex-row items-start justify-between">
           {imageError ? (
-            <div className="h-12 w-12 rounded-sm bg-muted text-muted-foreground ring-1 ring-border flex items-center justify-center">
+            <div className="h-10 w-10 rounded-sm bg-muted text-muted-foreground ring-1 ring-border flex items-center justify-center">
               <DefaultIcon size={24} />
             </div>
           ) : (
             <Image
               src={imageSrc}
               alt={`${name} logo`}
-              width={48}
-              height={48}
-              className="h-12 w-12 rounded-sm object-contain 0"
+              width={40}
+              height={40}
+              className="h-10 w-10 rounded-sm object-contain 0"
               onError={() => setImageError(true)}
             />
           )}
@@ -129,7 +129,7 @@ function ConnectorCard({
         <CardHeader>
           <CardTitle className="text-xl">{name}</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-4 grow">
+        <CardContent className="flex flex-col gap-6 grow">
           {creatorAvatarUrls && creatorAvatarUrls.length > 0 ? (
             <div className="flex -space-x-2">
               {creatorAvatarUrls.slice(0, 5).map((url, idx) => (
@@ -137,9 +137,9 @@ function ConnectorCard({
                   key={`${url}-${idx}`}
                   src={url}
                   alt="Creator avatar"
-                  width={24}
-                  height={24}
-                  className="h-6 w-6 rounded-full ring-1 ring-background"
+                  width={32}
+                  height={32}
+                  className="h-8 w-8 rounded-full mt-0"
                   unoptimized
                 />
               ))}
@@ -153,41 +153,49 @@ function ConnectorCard({
             <Image
               src={creatorAvatarUrl}
               alt="Creator avatar"
-              width={24}
-              height={24}
-              className="h-6 w-6 rounded-full mt-2"
+              width={32}
+              height={32}
+              className="h-8 w-8 rounded-full mt-0"
               unoptimized
             />
           ) : null}
         </CardContent>
         <CardFooter className="flex flex-col gap-4 items-start">
-          <p className="text-sm text-muted-foreground">{description}</p>
+          <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
           <div className="flex flex-wrap gap-2">
-            {(languages && languages.length > 0
-              ? languages
-              : language
-                ? [language]
-                : []
-            ).map((lang) => (
-              <Badge key={`lang-${lang}`} variant="secondary">
-                {lang}
-              </Badge>
-            ))}
-            {sourceType ? (
-              <Badge key={`type-${sourceType}`} variant="secondary">
-                {sourceType}
-              </Badge>
-            ) : null}
-            {(domains ?? []).map((d) => (
-              <Badge key={`domain-${d}`} variant="secondary">
-                {d}
-              </Badge>
-            ))}
-            {tags.map((tag) => (
-              <Badge key={tag} variant="secondary">
-                {tag}
-              </Badge>
-            ))}
+            {(() => {
+              // Collect all badges into a single array
+              const allBadges = [
+                ...(languages && languages.length > 0
+                  ? languages.map((lang) => ({ key: `lang-${lang}`, label: lang }))
+                  : language
+                    ? [{ key: `lang-${language}`, label: language }]
+                    : []
+                ),
+                ...(sourceType ? [{ key: `type-${sourceType}`, label: sourceType }] : []),
+                ...(domains ?? []).map((d) => ({ key: `domain-${d}`, label: d })),
+                ...tags.map((tag) => ({ key: tag, label: tag })),
+              ];
+
+              const maxVisible = 2;
+              const visibleBadges = allBadges.slice(0, maxVisible);
+              const remainingCount = allBadges.length - maxVisible;
+
+              return (
+                <>
+                  {visibleBadges.map((badge) => (
+                    <Badge key={badge.key} variant="secondary">
+                      {badge.label}
+                    </Badge>
+                  ))}
+                  {remainingCount > 0 && (
+                    <Badge variant="secondary" className="text-muted-foreground">
+                      +{remainingCount}
+                    </Badge>
+                  )}
+                </>
+              );
+            })()}
           </div>
         </CardFooter>
       </Card>

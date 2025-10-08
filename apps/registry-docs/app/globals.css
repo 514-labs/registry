@@ -164,3 +164,190 @@
   outline-offset: 1px;
   border-color: var(--border) !important;
 }
+
+/* Prevent layout shift when sheet opens */
+body:has([data-state="open"]) {
+  padding-right: 0 !important;
+  overflow: visible !important;
+}
+
+/* Force fixed positioning for all sheet components */
+[data-radix-dialog-overlay],
+[data-radix-dialog-content],
+[role="dialog"] {
+  position: fixed !important;
+  z-index: 50 !important;
+}
+
+/* Specific positioning for left side sheet */
+[data-radix-dialog-content][data-side="left"],
+[role="dialog"][data-side="left"] {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  width: 320px !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  max-height: 100vh !important;
+  max-height: 100dvh !important;
+  transform: translateX(-100%) !important;
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1) !important;
+  z-index: 50 !important;
+  background: hsl(var(--background)) !important;
+  border-right: 1px solid hsl(var(--border)) !important;
+}
+
+[data-radix-dialog-content][data-side="left"][data-state="open"],
+[role="dialog"][data-side="left"][data-state="open"] {
+  transform: translateX(0) !important;
+}
+
+/* Ensure overlay doesn't interfere */
+[data-radix-dialog-overlay] {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 49 !important;
+  background: transparent !important;
+  pointer-events: none !important;
+}
+
+/* Prevent code blocks from overflowing on mobile only */
+@media (max-width: 1023px) {
+  .prose pre {
+    overflow-x: auto !important;
+    max-width: calc(100vw - 2.5rem) !important;
+  }
+  
+  .prose code:not(pre code) {
+    word-break: break-word !important;
+  }
+  
+  /* Fix tables on mobile */
+  .prose table {
+    display: block !important;
+    overflow-x: auto !important;
+    max-width: calc(100vw - 2.5rem) !important;
+  }
+}
+
+/* Hide scrollbars in schema diagrams */
+[data-radix-scroll-area-viewport] {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+[data-radix-scroll-area-viewport]::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Hide scrollbars on mobile for better UX */
+@media (max-width: 1023px) {
+  .react-flow__renderer {
+    overflow: hidden !important;
+  }
+  
+  .react-flow__viewport {
+    overflow: hidden !important;
+  }
+  
+  /* Ensure schema diagram containers have proper scrollbar hiding */
+  .overflow-hidden [data-radix-scroll-area-viewport] {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  
+  .overflow-hidden [data-radix-scroll-area-viewport]::-webkit-scrollbar {
+    width: 0px !important;
+    background: transparent !important;
+  }
+  
+  /* Hide scrollbars in prose content (docs pages) */
+  .prose {
+    overflow-x: hidden !important;
+  }
+  
+  .prose pre {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  
+  .prose pre::-webkit-scrollbar {
+    display: none !important;
+  }
+  
+  /* Hide scrollbars in tab content */
+  [data-radix-tabs-content] {
+    overflow-x: hidden !important;
+  }
+  
+  [data-radix-tabs-content] pre {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  
+  [data-radix-tabs-content] pre::-webkit-scrollbar {
+    display: none !important;
+  }
+}
+
+/* Mobile tab styling only */
+@media (max-width: 1023px) {
+  [data-radix-tabs-list],
+  [role="tablist"] {
+    border-radius: 0.5rem !important;
+    width: auto !important;
+    min-width: 100% !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  
+  [data-radix-tabs-list]::-webkit-scrollbar,
+  [role="tablist"]::-webkit-scrollbar {
+    display: none !important;
+  }
+  
+  [data-radix-tabs-trigger],
+  [role="tab"] {
+    justify-content: center !important;
+    text-align: center !important;
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+  
+  /* Fix bash/code buttons on mobile */
+  .prose pre {
+    position: relative !important;
+  }
+  
+  .prose pre button,
+  .not-prose button[aria-label="Copy"],
+  [data-radix-tabs-content] button[aria-label="Copy"],
+  [data-radix-tabs-content] .not-prose button,
+  .not-prose [data-radix-tabs-header] button {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.75rem !important;
+    min-height: 2rem !important;
+    border-radius: 0.25rem !important;
+    width: auto !important;
+    max-width: fit-content !important;
+    display: inline-flex !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
+  }
+  
+  /* Target the specific snippet copy button structure */
+  [data-radix-tabs-content] .not-prose [data-radix-tabs-header] button[class*="opacity-0"] {
+    width: auto !important;
+    min-width: auto !important;
+    max-width: fit-content !important;
+  }
+}
+
+/* Add spacing above tab content */
+[data-radix-tabs-content] {
+  padding-top: 2.5rem !important;
+}

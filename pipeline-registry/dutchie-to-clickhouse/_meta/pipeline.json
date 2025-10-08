@@ -1,0 +1,10 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/pipeline-root.schema.json",
+  "name": "dutchie-to-clickhouse",
+  "title": "dutchie-to-clickhouse",
+  "tags": ["dutchie", "clickhouse"],
+  "description": "Ingest Dutchie data into ClickHouse.",
+  "homepage": "",
+  "registryUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/pipeline-dutchie-to-clickhouse"
+}
+

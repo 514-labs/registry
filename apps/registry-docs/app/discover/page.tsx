@@ -10,9 +10,9 @@ export default async function DiscoverPage() {
     buildDiscoverPipelines(),
   ]);
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 xl:px-0 py-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold">Discover</h1>
+    <div className="mx-auto w-full max-w-6xl p-5 xl:px-0">
+      <div className="mb-6 py-30">
+        <h1 className="text-5xl">Discover</h1>
         <p className="text-muted-foreground mt-1">
           Browse and discover connectors and pipelines for your data
           infrastructure

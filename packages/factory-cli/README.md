@@ -21,8 +21,8 @@ npx @514labs/registry --help
 ### Local development (in this monorepo)
 
 ```bash
-pnpm -C packages/factory-cli install
-pnpm -C packages/factory-cli build
+pnpm --filter @514labs/registry install
+pnpm --filter @514labs/registry build
 ```
 
 Optionally link the binary:
@@ -74,6 +74,24 @@ registry scaffold pipeline typescript \
   --dry-run \
   --yes
 ```
+
+- Flattening generated types
+
+Generate a flattened TypeScript interface from a a nested TypeScript interface. Re-running with the same `--name` replaces the prior declaration (idempotent, no duplicates).
+
+```bash
+# From repo root
+pnpm --filter @514labs/registry build
+pnpm --filter @514labs/registry flatten \
+  --source <absolute-path-to-source-type-file> \
+  --type <type-name-to-flatten> \
+  --out <absolute-path-for-the-flattened-type> \
+  --name <resulting-flattened-type-name>
+```
+
+Notes:
+- The command writes to a single file and updates the exported type by name if it already exists.
+- Optional flags: `--delimiter _` (default `_`), `--name <OutType>` (default `<type>Flat`).
 
 ### Using npx (no installation)
 

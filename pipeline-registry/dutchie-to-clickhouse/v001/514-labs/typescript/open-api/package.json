@@ -1,0 +1,18 @@
+{
+  "name": "pipeline-dutchie-to-clickhouse",
+  "version": "0.0",
+  "scripts": {
+    "moose": "moose-cli",
+    "build": "moose-cli build --docker",
+    "dev": "moose-cli dev"
+  },
+  "dependencies": {
+    "@514labs/moose-lib": "0.6.83",
+    "ts-patch": "^3.3.0",
+    "typia": "^9.6.1"
+  },
+  "devDependencies": {
+    "@514labs/moose-cli": "0.6.83",
+    "@types/node": "^20.12.12"
+  }
+}

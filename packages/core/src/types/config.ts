@@ -41,4 +41,12 @@ export interface ConnectorConfig {
   retry?: RetryConfig;
   rateLimit?: RateLimitConfig;
   hooks?: Partial<Record<HookType, Hook[]>>;
+  /** Drop null-valued properties from responses before resource transforms (default: true). */
+  dropNulls?: boolean;
+  /**
+   * Logger function for core transformations (normalize, flatten).
+   * Should respect configured log level filtering.
+   * Logs at 'debug' level.
+   */
+  log?: (level: string, event: Record<string, unknown>) => void;
 }

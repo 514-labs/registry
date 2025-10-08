@@ -245,10 +245,11 @@ export default async function PipelineImplementationPage({
   }
 
   return (
-    <div className="container mx-auto py-16 ">
+    <div className="container mx-auto py-16 px-5 lg:px-0">
       <PagefindMeta type="pipeline" />
-      <div className="grid grid-cols-12 gap-16">
-        <div className="col-span-3">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-16">
+        <div className="lg:col-span-3">
+          <div className="sticky top-24 h-fit">
           <PipelineImplSidebar
             fromLogoSrc={fromLogo}
             toLogoSrc={toLogo}
@@ -290,9 +291,10 @@ export default async function PipelineImplementationPage({
             selectedLanguage={language}
             selectedImplementation={implEntry.implementation}
           />
+          </div>
         </div>
 
-        <div className="col-span-9 space-y-8">
+        <div className="lg:col-span-9 space-y-8">
           <h1 className="text-2xl">Lineage</h1>
           {(() => {
             const sourceName =
@@ -359,13 +361,15 @@ export default async function PipelineImplementationPage({
             </div>
           ) : (
             <Tabs defaultValue={defaultTab} className="w-full">
-              <TabsList>
-                {docs.map((d) => (
-                  <TabsTrigger key={d.slug} value={d.slug}>
-                    {d.title}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
+              <div className="w-full overflow-x-auto lg:overflow-visible">
+                <TabsList className="w-full lg:w-auto lg:min-w-0 rounded-lg">
+                  {docs.map((d) => (
+                    <TabsTrigger key={d.slug} value={d.slug} className="whitespace-nowrap">
+                      {d.title}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </div>
               {docs.map((d) => (
                 <TabsContent key={d.slug} value={d.slug}>
                   <MarkdownContent content={d.content} />

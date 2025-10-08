@@ -1,0 +1,28 @@
+# Quality check configuration for Dutchie connector
+connector: dutchie
+version: v001
+implementation: typescript/open-api
+
+# Resources to sample for quality analysis
+resources:
+  - name: brands
+    operation: brand.getAll
+    sampleSize: 20
+    params:
+      paging:
+        pageSize: 50
+
+  - name: products
+    operation: products.getAll
+    sampleSize: 20
+    params:
+      paging:
+        pageSize: 50
+
+  - name: discounts
+    operation: discounts.getAll
+    sampleSize: 20
+    params:
+      paging:
+        pageSize: 50
+
