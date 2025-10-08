@@ -2,11 +2,13 @@
 # The implementation has been moved to FastAPI routes in main.py
 
 from moose_lib import MooseClient, Api, MooseCache, Query, and_
+from sap_hana_cdc import SAPHanaCDCConnector
 from pydantic import BaseModel, Field
 from typing import Optional, Literal
 
 from datetime import datetime, timezone
-
+from dotenv import load_dotenv
+load_dotenv()
 # Query params are defined as Pydantic models and are validated automatically
 class QueryParams(BaseModel):
     order_by: Optional[Literal["total_rows", "rows_with_text", "max_text_length", "total_text_length"]] = Field(
@@ -33,21 +35,15 @@ class QueryParams(BaseModel):
     )
 
 class QueryResult(BaseModel):
-    last_processed_timestamp: str
-    last_processed_change_id: int
-    lag: int
-    
+    total_entries: int
+    lag_seconds: int
+    max_timestamp: Optional[str] = None
+    last_client_update: Optional[str] = None
     
 def run(client: MooseClient, params: QueryParams):
-    # Connect to SAP
-    # Fetch the last processed timestamp and change id
-    # Calculate the lag
-    # Return the result
-    return QueryResult(
-        last_processed_timestamp=datetime.now().isoformat(),
-        last_processed_change_id=1000,
-        lag=1000
-    )
+
+    connector = SAPHanaCDCConnector.build_from_env()
+    return QueryResult(**connector.get_status(connector.config.client_id))
 
 
 cdc_status = Api[QueryParams, QueryResult](name="cdc_status", query_function=run)

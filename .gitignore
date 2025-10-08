@@ -19,3 +19,6 @@ scratch*
 *.pf_fragment
 *.pf_index
 *.pf_meta
+
+# Python
+*.pyc

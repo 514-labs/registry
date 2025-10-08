@@ -107,7 +107,7 @@ class Adrc(BaseModel):
     MC_COUNTY: str
     MC_TOWNSHIP: str
     XPCPT: str
-    DATAAGING: str
+    DATAAGING: str = Field(alias="_DATAAGING")
     ADDRESSCREATEDBYUSER: str
     ADDRESSCREATEDONDATETIME: datetime
     ADDRESSCHANGEDBYUSER: str
@@ -124,7 +124,7 @@ class Adrv(BaseModel):
     APPL_KEY: str
     ADDR_GROUP: str
     OWNER: str
-    DATAAGING: str
+    DATAAGING: str = Field(alias="_DATAAGING")
 
 class Aeoi(BaseModel):
     MANDT: Key[str]
@@ -1748,7 +1748,7 @@ class Ekkn(BaseModel):
     AA_FINAL_QTY_F: float
     MENGE_F: float
     FMFGUS_KEY: str
-    DATAAGING: str
+    DATAAGING: str = Field(alias="_DATAAGING")
     EGRUP: str
     VNAME: str
     KBLNR_CAB: str
@@ -2260,7 +2260,7 @@ class Ekpo(BaseModel):
     ENH_DATE2: str
     ENH_PERCENT: float
     ENH_NUMC1: str
-    DATAAGING: str
+    DATAAGING: str = Field(alias="_DATAAGING")
     CUPIT: str
     CIGIT: str
     MGOIT: str
@@ -4242,7 +4242,7 @@ class Matdoc(BaseModel):
     MSR_ACTIVE: str
     XCOMPL: str
     KNUMV: str
-    DATAAGING: str
+    DATAAGING: str = Field(alias="_DATAAGING")
     XPRINT: str
     LMBMV: str
     PABPM: float
@@ -5746,6 +5746,849 @@ class Ztggppconwipmat(BaseModel):
     MTART: str
     RAW_MATRIAL: str
 
+class Aufk(BaseModel):
+    MANDT: Key[str]
+    AUFNR: Key[str]
+    AUART: str
+    AUTYP: str
+    REFNR: str
+    ERNAM: str
+    ERDAT: str
+    AENAM: str
+    AEDAT: str
+    KTEXT: str
+    LTEXT: str
+    BUKRS: str
+    WERKS: str
+    GSBER: str
+    KOKRS: str
+    CCKEY: str
+    KOSTV: str
+    STORT: str
+    SOWRK: str
+    ASTKZ: str
+    WAERS: str
+    ASTNR: str
+    STDAT: str
+    ESTNR: str
+    PHAS0: str
+    PHAS1: str
+    PHAS2: str
+    PHAS3: str
+    PDAT1: str
+    PDAT2: str
+    PDAT3: str
+    IDAT1: str
+    IDAT2: str
+    IDAT3: str
+    OBJID: str
+    VOGRP: str
+    LOEKZ: str
+    PLGKZ: str
+    KVEWE: str
+    KAPPL: str
+    KALSM: str
+    ZSCHL: str
+    ABKRS: str
+    KSTAR: str
+    KOSTL: str
+    SAKNR: str
+    SETNM: str
+    CYCLE: str
+    SDATE: str
+    SEQNR: str
+    USER0: str
+    USER1: str
+    USER2: str
+    USER3: str
+    USER4: float
+    USER5: str
+    USER6: str
+    USER7: str
+    USER8: str
+    USER9: str
+    OBJNR: str
+    PRCTR: str
+    PSPEL: str
+    AWSLS: str
+    ABGSL: str
+    TXJCD: str
+    FUNC_AREA: str
+    SCOPE: str
+    PLINT: str
+    KDAUF: str
+    KDPOS: str
+    AUFEX: str
+    IVPRO: str
+    LOGSYSTEM: str
+    FLG_MLTPS: str
+    ABUKR: str
+    AKSTL: str
+    SIZECL: str
+    IZWEK: str
+    UMWKZ: str
+    KSTEMPF: str
+    ZSCHM: str
+    PKOSA: str
+    ANFAUFNR: str
+    PROCNR: str
+    PROTY: str
+    RSORD: str
+    BEMOT: str
+    ADRNRA: str
+    ERFZEIT: str
+    AEZEIT: str
+    CSTG_VRNT: str
+    COSTESTNR: str
+    VERAA_USER: str
+    EEW_AUFK_PS_DUMMY: str
+    VNAME: str
+    RECID: str
+    ETYPE: str
+    OTYPE: str
+    JV_JIBCL: str
+    JV_JIBSA: str
+    JV_OCO: str
+    CPD_UPDAT: float
+    CUM_INDCU: str = Field(alias="/CUM/INDCU")
+    CUM_CMNUM: str = Field(alias="/CUM/CMNUM")
+    CUM_AUEST: str = Field(alias="/CUM/AUEST")
+    CUM_DESNUM: str = Field(alias="/CUM/DESNUM")
+    AD01PROFNR: str
+    VAPLZ: str
+    WAWRK: str
+    FERC_IND: str
+    CLAIM_CONTROL: str
+    UPDATE_NEEDED: str
+    UPDATE_CONTROL: str
+    EB_POST: str
+    ORDER_PROC_MODE: str
+    AUFK_STATUS: int
+    EBW_KEY: str
+
+class Ekko(BaseModel):
+    MANDT: Key[str]
+    EBELN: Key[str]
+    BUKRS: str
+    BSTYP: str
+    BSART: str
+    BSAKZ: str
+    LOEKZ: str
+    STATU: str
+    AEDAT: str
+    ERNAM: str
+    LASTCHANGEDATETIME: datetime
+    PINCR: str
+    LPONR: str
+    LIFNR: str
+    SPRAS: str
+    ZTERM: str
+    ZBD1T: float
+    ZBD2T: float
+    ZBD3T: float
+    ZBD1P: float
+    ZBD2P: float
+    EKORG: str
+    EKGRP: str
+    WAERS: str
+    WKURS: float
+    KUFIX: str
+    BEDAT: str
+    KDATB: str
+    KDATE: str
+    BWBDT: str
+    ANGDT: str
+    BNDDT: str
+    GWLDT: str
+    AUSNR: str
+    ANGNR: str
+    IHRAN: str
+    IHREZ: str
+    VERKF: str
+    TELF1: str
+    LLIEF: str
+    KUNNR: str
+    ACTIVE_ID: str
+    KONNR: str
+    ABGRU: str
+    AUTLF: str
+    WEAKT: str
+    RESWK: str
+    LBLIF: str
+    INCO1: str
+    INCO2: str
+    KTWRT: float
+    DISTRIBUTIONTYPE: str
+    SUBMI: str
+    KNUMV: str
+    KALSM: str
+    STAFO: str
+    LIFRE: str
+    EXNUM: str
+    UNSEZ: str
+    LOGSY: str
+    UPINC: str
+    STAKO: str
+    FRGGR: str
+    FRGSX: str
+    FRGKE: str
+    FRGZU: str
+    FRGRL: str
+    LANDS: str
+    LPHIS: str
+    ADRNR: str
+    STCEG_L: str
+    STCEG: str
+    ABSGR: str
+    ADDNR: str
+    KORNR: str
+    MEMORY: str
+    PROCSTAT: str
+    PROCESS_INDICATOR: str
+    RLWRT: float
+    CR_STAT: str
+    REVNO: str
+    SCMPROC: str
+    REASON_CODE: str
+    MEMORYTYPE: str
+    RETTP: str
+    RETPC: float
+    DPTYP: str
+    DPPCT: float
+    DPAMT: float
+    DPDAT: str
+    MSR_ID: str
+    HIERARCHY_EXISTS: str
+    GROUPING_ID: str
+    PARENT_ID: str
+    THRESHOLD_EXISTS: str
+    LEGAL_CONTRACT: str
+    DESCRIPTION: str
+    RELEASE_DATE: str
+    VSART: str
+    HANDOVERLOC: str
+    SHIPCOND: str
+    INCOV: str
+    INCO2_L: str
+    INCO3_L: str
+    INCO2_KEY: Optional[str] = 00000000000000000000000000000000
+    INCO3_KEY: Optional[str] = 00000000000000000000000000000000
+    INCO4_KEY: Optional[str] = 00000000000000000000000000000000
+    GRWCU: str
+    INTRA_REL: str
+    INTRA_EXCL: str
+    TOTAL_STATUS_PCS: str
+    TOTAL_STATUS_PMA: str
+    TOTAL_STATUS_DG: str
+    TOTAL_STATUS_SDS: str
+    QTN_ERLST_SUBMSN_DATE: str
+    FOLLOWON_DOC_CAT: str
+    FOLLOWON_DOC_TYPE: str
+    DUMMY_EKKO_INCL_EEW_PS: str
+    EXTERNALSYSTEM: str
+    EXTERNALREFERENCEID: str
+    EXT_REV_TMSTMP: float
+    ISEOPBLOCKED: str
+    ISAGED: str
+    FORCE_ID: str
+    FORCE_CNT: str
+    RELOC_ID: str
+    RELOC_SEQ_ID: str
+    SOURCE_LOGSYS: str
+    FSH_TRANSACTION: str
+    FSH_ITEM_GROUP: str
+    FSH_VAS_LAST_ITEM: str
+    FSH_OS_STG_CHANGE: str
+    TMS_REF_UUID: str
+    DMBE_PAYMENTDEEMED: str = Field(alias="/DMBE/PAYMENTDEEMED")
+    DMBE_DEALNUMBER: str = Field(alias="/DMBE/DEALNUMBER")
+    DMBE_EVGIDRENEWAL: str = Field(alias="/DMBE/EVGIDRENEWAL")
+    DMBE_EVGIDCANCEL: str = Field(alias="/DMBE/EVGIDCANCEL")
+    ZAPCGK: str
+    APCGK_EXTEND: str
+    ZBAS_DATE: str
+    ZADATTYP: str
+    ZSTART_DAT: str
+    Z_DEV: float
+    ZINDANX: str
+    ZLIMIT_DAT: str
+    NUMERATOR: str
+    HASHCAL_BDAT: str
+    HASHCAL: str
+    NEGATIVE: str
+    HASHCAL_EXISTS: str
+    KNOWN_INDEX: str
+    POSTAT: str
+    VZSKZ: str
+    FSH_SNST_STATUS: str
+    PROCE: str
+    CONC: str
+    CONT: str
+    COMP: str
+    OUTR: str
+    DESP: str
+    DESP_DAT: str
+    DESP_CARGO: str
+    PARE: str
+    PARE_DAT: str
+    PARE_CARGO: str
+    PFM_CONTRACT: str
+    POHF_TYPE: str
+    EQ_EINDT: str
+    EQ_WERKS: str
+    FIXPO: str
+    EKGRP_ALLOW: str
+    WERKS_ALLOW: str
+    CONTRACT_ALLOW: str
+    PSTYP_ALLOW: str
+    FIXPO_ALLOW: str
+    KEY_ID_ALLOW: str
+    AUREL_ALLOW: str
+    DELPER_ALLOW: str
+    EINDT_ALLOW: str
+    LTSNR_ALLOW: str
+    OTB_LEVEL: str
+    OTB_COND_TYPE: str
+    KEY_ID: str
+    OTB_VALUE: float
+    OTB_CURR: str
+    OTB_RES_VALUE: float
+    OTB_SPEC_VALUE: float
+    SPR_RSN_PROFILE: str
+    BUDG_TYPE: str
+    OTB_STATUS: str
+    OTB_REASON: str
+    CHECK_TYPE: str
+    CON_OTB_REQ: str
+    CON_PREBOOK_LEV: str
+    CON_DISTR_LEV: str
+    HAS_CATALOG_RELEVANT_ITEMS: str
+    ZHDCONTRACT: str
+
+class Ekpo(BaseModel):
+    MANDT: Key[str]
+    EBELN: Key[str]
+    EBELP: Key[str]
+    UNIQUEID: str
+    LOEKZ: str
+    STATU: str
+    AEDAT: str
+    TXZ01: str
+    MATNR: str
+    EMATN: str
+    BUKRS: str
+    WERKS: str
+    LGORT: str
+    BEDNR: str
+    MATKL: str
+    INFNR: str
+    IDNLF: str
+    KTMNG: float
+    MENGE: float
+    MEINS: str
+    BPRME: str
+    BPUMZ: float
+    BPUMN: float
+    UMREZ: float
+    UMREN: float
+    NETPR: float
+    PEINH: float
+    NETWR: float
+    BRTWR: float
+    AGDAT: str
+    WEBAZ: float
+    MWSKZ: str
+    TXDAT_FROM: str
+    TXDAT: str
+    TAX_COUNTRY: str
+    BONUS: str
+    INSMK: str
+    SPINF: str
+    PRSDR: str
+    SCHPR: str
+    MAHNZ: float
+    MAHN1: float
+    MAHN2: float
+    MAHN3: float
+    UEBTO: float
+    UEBTK: str
+    UNTTO: float
+    BWTAR: str
+    BWTTY: str
+    ABSKZ: str
+    AGMEM: str
+    ELIKZ: str
+    EREKZ: str
+    PSTYP: str
+    KNTTP: str
+    KZVBR: str
+    VRTKZ: str
+    TWRKZ: str
+    WEPOS: str
+    WEUNB: str
+    REPOS: str
+    WEBRE: str
+    KZABS: str
+    LABNR: str
+    KONNR: str
+    KTPNR: str
+    ABDAT: str
+    ABFTZ: float
+    ETFZ1: float
+    ETFZ2: float
+    KZSTU: str
+    NOTKZ: str
+    LMEIN: str
+    EVERS: str
+    ZWERT: float
+    NAVNW: float
+    ABMNG: float
+    PRDAT: str
+    BSTYP: str
+    EFFWR: float
+    XOBLR: str
+    KUNNR: str
+    ADRNR: str
+    EKKOL: str
+    SKTOF: str
+    STAFO: str
+    PLIFZ: float
+    NTGEW: float
+    GEWEI: str
+    TXJCD: str
+    ETDRK: str
+    SOBKZ: str
+    ARSNR: str
+    ARSPS: str
+    INSNC: str
+    SSQSS: str
+    ZGTYP: str
+    EAN11: str
+    BSTAE: str
+    REVLV: str
+    GEBER: str
+    FISTL: str
+    FIPOS: str
+    KO_GSBER: str
+    KO_PARGB: str
+    KO_PRCTR: str
+    KO_PPRCTR: str
+    MEPRF: str
+    BRGEW: float
+    VOLUM: float
+    VOLEH: str
+    INCO1: str
+    INCO2: str
+    VORAB: str
+    KOLIF: str
+    LTSNR: str
+    PACKNO: str
+    FPLNR: str
+    GNETWR: float
+    STAPO: str
+    UEBPO: str
+    LEWED: str
+    EMLIF: str
+    LBLKZ: str
+    SATNR: str
+    ATTYP: str
+    VSART: str
+    HANDOVERLOC: str
+    KANBA: str
+    ADRN2: str
+    DELIVERY_ADDRESS_TYPE: str
+    CUOBJ: str
+    XERSY: str
+    EILDT: str
+    DRDAT: str
+    DRUHR: str
+    DRUNR: str
+    AKTNR: str
+    ABELN: str
+    ABELP: str
+    ANZPU: float
+    PUNEI: str
+    SAISO: str
+    SAISJ: str
+    EBON2: str
+    EBON3: str
+    EBONF: str
+    MLMAA: str
+    MHDRZ: float
+    ANFNR: str
+    ANFPS: str
+    KZKFG: str
+    USEQU: str
+    UMSOK: str
+    BANFN: str
+    BNFPO: str
+    MTART: str
+    UPTYP: str
+    UPVOR: str
+    KZWI1: float
+    KZWI2: float
+    KZWI3: float
+    KZWI4: float
+    KZWI5: float
+    KZWI6: float
+    SIKGR: str
+    MFZHI: float
+    FFZHI: float
+    RETPO: str
+    AUREL: str
+    BSGRU: str
+    LFRET: str
+    MFRGR: str
+    NRFHG: str
+    J_1BNBM: str
+    J_1BMATUSE: str
+    J_1BMATORG: str
+    J_1BOWNPRO: str
+    J_1BINDUST: str
+    ABUEB: str
+    NLABD: str
+    NFABD: str
+    KZBWS: str
+    BONBA: float
+    FABKZ: str
+    LOADINGPOINT: str
+    J_1AINDXP: str
+    J_1AIDATEP: str
+    MPROF: str
+    EGLKZ: str
+    KZTLF: str
+    KZFME: str
+    RDPRF: str
+    TECHS: str
+    CHG_SRV: str
+    CHG_FPLNR: str
+    MFRPN: str
+    MFRNR: str
+    EMNFR: str
+    NOVET: str
+    AFNAM: str
+    TZONRC: str
+    IPRKZ: str
+    LEBRE: str
+    BERID: str
+    XCONDITIONS: str
+    APOMS: str
+    CCOMP: str
+    GRANT_NBR: str
+    FKBER: str
+    STATUS: str
+    RESLO: str
+    KBLNR: str
+    KBLPOS: str
+    PS_PSP_PNR: str
+    KOSTL: str
+    SAKTO: str
+    WEORA: str
+    SRV_BAS_COM: str
+    PRIO_URG: str
+    PRIO_REQ: str
+    EMPST: str
+    DIFF_INVOICE: str
+    TRMRISK_RELEVANT: str
+    CREATIONDATE: str
+    CREATIONTIME: datetime
+    VCM_CHAIN_CATEGORY: str
+    SPE_ABGRU: str
+    SPE_CRM_SO: str
+    SPE_CRM_SO_ITEM: str
+    SPE_CRM_REF_SO: str
+    SPE_CRM_REF_ITEM: str
+    SPE_CRM_FKREL: str
+    SPE_CHNG_SYS: str
+    SPE_INSMK_SRC: str
+    SPE_CQ_CTRLTYPE: str
+    SPE_CQ_NOCQ: str
+    REASON_CODE: str
+    CQU_SAR: float
+    ANZSN: int
+    SPE_EWM_DTC: str
+    EXLIN: str
+    EXSNR: str
+    EHTYP: str
+    RETPC: float
+    DPTYP: str
+    DPPCT: float
+    DPAMT: float
+    DPDAT: str
+    FLS_RSTO: str
+    EXT_RFX_NUMBER: str
+    EXT_RFX_ITEM: str
+    EXT_RFX_SYSTEM: str
+    SRM_CONTRACT_ID: str
+    SRM_CONTRACT_ITM: str
+    GOODS_COUNT_CORRECTION: str
+    LIFEX: str
+    LIFEXPOS: str
+    BLK_REASON_ID: str
+    BLK_REASON_TXT: str
+    ITCONS: str
+    FIXMG: str
+    WABWE: str
+    CMPL_DLV_ITM: str
+    INCO2_L: str
+    INCO3_L: str
+    INCO2_KEY: Optional[str] = 00000000000000000000000000000000
+    INCO3_KEY: Optional[str] = 00000000000000000000000000000000
+    INCO4_KEY: Optional[str] = 00000000000000000000000000000000
+    STAWN: str
+    ISVCO: str
+    GRWRT: float
+    SERVICEPERFORMER: str
+    PRODUCTTYPE: str
+    GR_BY_SES: str
+    PRICE_CHANGE_IN_SES_ALLOWED: str
+    REQUESTFORQUOTATION: str
+    REQUESTFORQUOTATIONITEM: str
+    RENEGOTIATION_STATUS: str
+    STATUS_PCS: str
+    STATUS_PMA: str
+    STATUS_DG: str
+    STATUS_SDS: str
+    EXTMATERIALFORPURG: str
+    PROCMT_HUB_SOURCE_SYSTEM: str
+    TARGET_VALUE: float
+    EXTERNALREFERENCEID: str
+    TC_AUT_DET: str
+    MANUAL_TC_REASON: str
+    FISCAL_INCENTIVE: str
+    TAX_SUBJECT_ST: str
+    FISCAL_INCENTIVE_ID: str
+    SF_TXJCD: str
+    DUMMY_EKPO_INCL_EEW_PS: str
+    EXPECTED_VALUE: float
+    LIMIT_AMOUNT: float
+    CONTRACT_FOR_LIMIT: str
+    ENH_DATE1: str
+    ENH_DATE2: str
+    ENH_PERCENT: float
+    ENH_NUMC1: str
+    DATAAGING: str = Field(alias="_DATAAGING")
+    CUPIT: str
+    CIGIT: str
+    MGOIT: str
+    TXS_BUSINESS_TRANSACTION: str
+    TXS_MATERIAL_USAGE: str
+    TXS_USAGE_PURPOSE: str
+    BEV1_NEGEN_ITEM: str = Field(alias="/BEV1/NEGEN_ITEM")
+    BEV1_NEDEPFREE: str = Field(alias="/BEV1/NEDEPFREE")
+    BEV1_NESTRUCCAT: str = Field(alias="/BEV1/NESTRUCCAT")
+    ADVCODE: str
+    BUDGET_PD: str
+    EXCPE: str
+    FMFGUS_KEY: str
+    IUID_RELEVANT: str
+    MRPIND: str
+    SGT_SCAT: str
+    SGT_RCAT: str
+    TMS_REF_UUID: str
+    TMS_SRC_LOC_KEY: Optional[str] = 00000000000000000000000000000000
+    TMS_DES_LOC_KEY: Optional[str] = 00000000000000000000000000000000
+    WRF_CHARSTC1: str
+    WRF_CHARSTC2: str
+    WRF_CHARSTC3: str
+    REFSITE: str
+    DMBE_OPTIONALITYKEY: str = Field(alias="/DMBE/OPTIONALITYKEY")
+    DMBE_OPTIONALITYFOR: str = Field(alias="/DMBE/OPTIONALITYFOR")
+    DMBE_CIMAX2: str = Field(alias="/DMBE/CIMAX2")
+    DMBE_ITEM_TYPE: str = Field(alias="/DMBE/ITEM_TYPE")
+    DMBE_EFFECTIVEDATEFROM: str = Field(alias="/DMBE/EFFECTIVEDATEFROM")
+    DMBE_EFFECTIVEDATETO: str = Field(alias="/DMBE/EFFECTIVEDATETO")
+    DMBE_OPTIONOF: str = Field(alias="/DMBE/OPTIONOF")
+    DMBE_ACCOUNTING_TYPE: str = Field(alias="/DMBE/ACCOUNTING_TYPE")
+    DMBE_FAS_CODE: str = Field(alias="/DMBE/FAS_CODE")
+    DMBE_SCHEDULING_DESK: str = Field(alias="/DMBE/SCHEDULING_DESK")
+    DMBE_COMPONENTFOR: str = Field(alias="/DMBE/COMPONENTFOR")
+    DMBE_MIXEDPRODUCT: str = Field(alias="/DMBE/MIXEDPRODUCT")
+    DMBE_POSTEDDATE: str = Field(alias="/DMBE/POSTEDDATE")
+    DMBE_DEAL_POSTED: str = Field(alias="/DMBE/DEAL_POSTED")
+    DMBE_INVOICEUOM: str = Field(alias="/DMBE/INVOICEUOM")
+    ZAPCGK: str
+    APCGK_EXTEND: str
+    ZBAS_DATE: str
+    ZADATTYP: str
+    ZSTART_DAT: str
+    Z_DEV: float
+    ZINDANX: str
+    ZLIMIT_DAT: str
+    NUMERATOR: str
+    HASHCAL_BDAT: str
+    HASHCAL: str
+    NEGATIVE: str
+    HASHCAL_EXISTS: str
+    KNOWN_INDEX: str
+    SAPMP_GPOSE: str = Field(alias="/SAPMP/GPOSE")
+    ANGPN: str
+    ADMOI: str
+    ADPRI: str
+    LPRIO: str
+    ADACN: str
+    AFPNR: str
+    BSARK: str
+    AUDAT: str
+    ANGNR: str
+    PNSTAT: str
+    ADDNS: str
+    ASSIGNMENT_PRIORITY: str
+    ARUN_GROUP_PRIO: str
+    ARUN_ORDER_PRIO: int
+    SERRU: str
+    SERNP: str
+    DISUB_SOBKZ: str
+    DISUB_PSPNR: str
+    DISUB_KUNNR: str
+    DISUB_VBELN: str
+    DISUB_POSNR: str
+    DISUB_OWNER: str
+    FSH_SEASON_YEAR: str
+    FSH_SEASON: str
+    FSH_COLLECTION: str
+    FSH_THEME: str
+    FSH_ATP_DATE: str
+    FSH_VAS_REL: str
+    FSH_VAS_PRNT_ID: str
+    FSH_TRANSACTION: str
+    FSH_ITEM_GROUP: str
+    FSH_ITEM: str
+    FSH_SS: str
+    FSH_GRID_COND_REC: str
+    FSH_PSM_PFM_SPLIT: str
+    CNFM_QTY: float
+    FSH_PQR_UEPOS: str
+    RFM_DIVERSION: str
+    RFM_SCC_INDICATOR: str
+    STPAC: str
+    LGBZO: str
+    LGBZO_B: str
+    ADDRNUM: str
+    CONSNUM: str
+    BORGR_MISS: str
+    DEP_ID: str
+    BELNR: str
+    KBLPOS_CAB: str
+    KBLNR_COMP: str
+    KBLPOS_COMP: str
+    WBS_ELEMENT: str
+    RFM_PSST_RULE: str
+    RFM_PSST_GROUP: str
+    RFM_REF_DOC: str
+    RFM_REF_ITEM: str
+    RFM_REF_ACTION: str
+    RFM_REF_SLITEM: str
+    REF_ITEM: str
+    SOURCE_ID: str
+    SOURCE_KEY: str
+    PUT_BACK: str
+    POL_ID: str
+    CONS_ORDER: str
+    IS_CATALOG_RELEVANT: str
+    PFMTRANSDATAFOOTPRINTUUID: str
+
+class Equi(BaseModel):
+    MANDT: Key[str]
+    EQUNR: Key[str]
+    ERDAT: str
+    ERNAM: str
+    EQASP: str
+    AEDAT: str
+    AENAM: str
+    BEGRU: str
+    EQTYP: str
+    EQART: str
+    LVORM: str
+    INVNR: str
+    GROES: str
+    BRGEW: float
+    GEWEI: str
+    ANSDT: str
+    ANSWT: float
+    WAERS: str
+    ELIEF: str
+    GWLEN: str
+    GWLDT: str
+    WDBWT: float
+    HERST: str
+    HERLD: str
+    HZEIN: str
+    SERGE: str
+    TYPBZ: str
+    BAUJJ: str
+    BAUMM: str
+    APLKZ: str
+    AULDT: str
+    INBDT: str
+    GERNR: str
+    EQLFN: str
+    GWLDV: str
+    EQDAT: str
+    EQBER: str
+    EQNUM: str
+    OBJNR: str
+    EQSNR: str
+    CUOBJ: str
+    KRFKZ: str
+    KMATN: str
+    MATNR: str
+    SERNR: str
+    WERK: str
+    LAGER: str
+    CHARGE: str
+    KUNDE: str
+    WARPL: str
+    IMRC_POINT: str
+    REVLV: str
+    MGANR: str
+    BEGRUI: str
+    S_EQUI: str
+    S_SERIAL: str
+    S_KONFI: str
+    S_SALE: str
+    S_FHM: str
+    S_ELSE: str
+    S_ISU: str
+    S_EQBS: str
+    S_FLEET: str
+    BSTVP: str
+    SPARTE: str
+    HANDLE: str
+    TSEGTP: str
+    EMATN: str
+    ACT_CHANGE_AA: str
+    S_CC: str
+    DATLWB: str
+    UII: str
+    IUID_TYPE: str
+    UII_PLANT: str
+    CHANGEDDATETIME: datetime
+    ENDOFUSE: str
+    DUMMY_EQUI_INCL_EEW_PS: str
+    EQEXT_ACTIVE: str
+    EQUI_SRTYPE: str
+    EQUI_SNTYPE: str
+    EQLB_DUTY: str
+    EQLB_HIDE: str
+    J_3GDISPO: str
+    J_3GZDEQUI: str
+    J_3GEQART: str
+    J_3GKZMENG: str
+    J_3GKONDE: str
+    J_3GFIKTIV: str
+    J_3GBELTYP: str
+    MEINS: str
+    J_3GKZLADG: str
+    J_3GKZBERG: str
+    J_3GEIFR: str
+    J_3GVERMEIN: str
+    J_3GZULNR: str
+    SAPCEM_ABRECHVH: str = Field(alias="/SAPCEM/ABRECHVH")
+    SAPCEM_ABRECHLG: str = Field(alias="/SAPCEM/ABRECHLG")
+    SAPCEM_DISPOGR: str = Field(alias="/SAPCEM/DISPOGR")
+    EQUIPMENTOID: str
+
 adrc = OlapTable[Adrc]("ADRC")
 adrv = OlapTable[Adrv]("ADRV")
 aeoi = OlapTable[Aeoi]("AEOI")
@@ -5805,3 +6648,7 @@ t681_a = OlapTable[T681a]("T681A")
 t685_h = OlapTable[T685h]("T685H")
 tca01 = OlapTable[Tca01]("TCA01")
 ztggppconwipmat = OlapTable[Ztggppconwipmat]("ZTGGPPCONWIPMAT")
+aufk = OlapTable[Aufk]("AUFK")
+ekko = OlapTable[Ekko]("EKKO")
+ekpo = OlapTable[Ekpo]("EKPO")
+equi = OlapTable[Equi]("EQUI")

@@ -2,10 +2,20 @@
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Dict, Iterator, List, Optional, Union
-from enum import Enum
+from typing import Any, Dict, Iterator, List, Optional
 
-from .config import ChangeType
+from enum import StrEnum, auto
+
+
+class TriggerType(StrEnum):
+    INSERT = auto()
+    UPDATE = auto()
+    DELETE = auto()
+
+
+class TableStatus(StrEnum):
+    NEW = auto()
+    ACTIVE = auto()
 
 @dataclass
 class ChangeEvent:
@@ -14,7 +24,7 @@ class ChangeEvent:
     # Event metadata
     event_id: str
     event_timestamp: datetime
-    change_type: ChangeType
+    trigger_type: TriggerType
     transaction_id: str
     
     # Table information
@@ -32,7 +42,7 @@ class ChangeEvent:
         return {
             "event_id": self.event_id,
             "event_timestamp": self.event_timestamp.isoformat(),
-            "change_type": self.change_type.value,
+            "trigger_type": self.trigger_type.value,
             "transaction_id": self.transaction_id,
             "schema_name": self.schema_name,
             "table_name": self.table_name,
@@ -46,7 +56,7 @@ class ChangeEvent:
         differences = []
         
         # Handle INSERT events - return only new values with empty old values
-        if self.change_type == ChangeType.INSERT:
+        if self.trigger_type == TriggerType.INSERT:
             if self.new_values:
                 for key, value in self.new_values[0].items():
                     differences.append({
@@ -55,7 +65,7 @@ class ChangeEvent:
                         "new": value,
                     })
             return differences
-        elif self.change_type == ChangeType.DELETE:
+        elif self.trigger_type == TriggerType.DELETE:
             if self.old_values:
                 for key, value in self.old_values[0].items():
                     differences.append({
@@ -64,7 +74,7 @@ class ChangeEvent:
                         "new": None,
                     })
             return differences
-        elif self.change_type == ChangeType.UPDATE:
+        elif self.trigger_type == TriggerType.UPDATE:
             for key, value in self.old_values[0].items():
                 if key in self.new_values[0] and value != self.new_values[0][key]:
                     differences.append({

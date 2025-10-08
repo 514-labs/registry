@@ -1,36 +1,36 @@
 import os
 import sys
+import time
 from dotenv import load_dotenv
 sys.path.append(os.path.dirname(__file__) + "/../src")
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s %(message)s",
+    handlers=[logging.StreamHandler()]
+)
 
 # Handle missing dependencies gracefully
-from sap_hana_cdc import SAPHanaCDCConnector, SAPHanaConfig, CDCConfig
+from sap_hana_cdc import SAPHanaCDCConnector
 
 # Example configuration
-load_dotenv(".env")
-sap_config = SAPHanaConfig(
-    host=os.getenv("SAP_HANA_HOST"),
-    port=int(os.getenv("SAP_HANA_PORT", 30015)),
-    user=os.getenv("SAP_HANA_USERNAME"),
-    password=os.getenv("SAP_HANA_PASSWORD"),
-    schema=os.getenv("SAP_HANA_SCHEMA")
-)
+load_dotenv()
 
-cdc_config = CDCConfig(
-    client_id="sap_hana_cdc_client_001",  # Unique client identifier
-    tables=["EKKO", "MARA"],  # Monitor specific tables
-    exclude_tables=[],  # No exclusions
-    change_types=["INSERT", "UPDATE", "DELETE"],
-    change_table_name="cdc_changes",
-    change_schema=os.getenv("SAP_HANA_USERNAME")  # Use same schema as SAP HANA config
-)
+# Create connector using the new factory method
+connector = SAPHanaCDCConnector.build_from_env()
 
+#connector.infrastructure.cleanup_cdc_infrastructure()
+# connector.init_cdc()
 
-# Create connector
-connector = SAPHanaCDCConnector(sap_config, cdc_config)
-connector.connect()
-connector.init_cdc()
-since_ts = 0
+# print("Newly added tables:")
+# tables = connector.get_newly_added_tables()
+# print(f"Found {len(tables)} new tables")
+# for table in tables:
+#     #print(f"New table {table} has {len(list(connector.reader.get_all_table_rows(table)))} rows")
+#     connector.set_table_status_active(table)
+
+print("Listening for changes...")
 while True:
     changes = connector.get_changes(limit=1)
 
@@ -40,7 +40,7 @@ while True:
         print(f"Found {len(changes.changes)} changes:")
         for change in changes.changes:
             print(f"Table: {change.table_name}")
-            print(f"Type: {change.change_type}")
+            print(f"Type: {change.trigger_type}")
             print(f"Timestamp: {change.event_timestamp}")
             print(f"Event ID: {change.event_id}")
             # if hasattr(change, 'new_values') and change.new_values:
@@ -51,6 +51,7 @@ while True:
         connector.update_client_status(changes.changes[-1])
     else:
         print("No changes found")
-        break
+        time.sleep(1)
 
-connector.disconnect()
+
+        
