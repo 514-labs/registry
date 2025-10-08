@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/pipeline.schema.json",
+  "identifier": "hubspot-to-clickhouse",
+  "name": "HubSpot to ClickHouse",
+  "author": "514-labs",
+  "authorType": "organization",
+  "version": "v3",
+  "description": "Ingest HubSpot objects and load into ClickHouse",
+  "tags": ["hubspot", "clickhouse", "etl"],
+  "schedule": { "cron": "0 * * * *", "timezone": "UTC" },
+  "source": {
+    "type": "connector",
+    "connector": { "name": "sap-hana-cdc", "version": "v1", "author": "514-labs" },
+    "stream": "objects"
+  },
+  "systems": [],
+  "transformations": [],
+  "destination": {
+    "system": "clickhouse",
+    "database": "analytics",
+    "table": "hubspot_objects"
+  },
+  "lineage": { "nodes": [], "edges": [] },
+  "maintainers": []
+}
