@@ -5,9 +5,9 @@ export function buildBusinessesDomain(sendFn: SendFn) {
   const factory = createGlobalDomainFactory<Business>("/me/businesses", sendFn);
 
   return {
-    listBusinesses: factory.list,
-    getBusiness: factory.get,
-    streamBusinesses: factory.stream,
-    getBusinesses: factory.getAll,
+    list: factory.list,
+    get: factory.get,
+    stream: factory.stream,
+    getAll: factory.getAll,
   };
 }
