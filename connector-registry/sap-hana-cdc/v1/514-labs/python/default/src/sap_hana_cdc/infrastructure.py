@@ -76,21 +76,6 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
         
         self._ensure_table_exists(self.CDC_CLIENT_CHANGES_STATUS_TABLE, table_definition)
     
-    def create_client_status_table(self) -> None:
-        """Create the status table for tracking client processing status."""
-        table_definition = f"""
-            CREATE TABLE <TABLENAME> (
-                CLIENT_ID VARCHAR(128) NOT NULL,
-                LAST_PROCESSED_TIMESTAMP TIMESTAMP,
-                LAST_PROCESSED_CHANGE_ID BIGINT,
-                CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY (CLIENT_ID)
-            )
-        """
-        
-        self._ensure_table_exists(self.CDC_CLIENT_CHANGES_STATUS_TABLE, table_definition)
-    
     def create_table_status_table(self) -> None:
         """Create the status table for tracking table processing status."""
         table_definition = f"""
