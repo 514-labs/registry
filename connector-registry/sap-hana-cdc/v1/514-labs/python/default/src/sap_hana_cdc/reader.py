@@ -6,13 +6,13 @@ Requires regular database privileges (no elevated access needed).
 
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Set, Any, Iterator
 
 from hdbcli import dbapi
 
 from .config import SAPHanaCDCConfig
-from .models import BatchChange, ChangeEvent, TriggerType
+from .models import BatchChange, ChangeEvent, TriggerType, PruneResult
 from .base import SAPHanaCDCBase
 
 logger = logging.getLogger(__name__)
@@ -257,3 +257,36 @@ class SAPHanaCDCReader(SAPHanaCDCBase):
                 "max_timestamp": max_timestamp.isoformat() if max_timestamp else None,
                 "last_client_update": last_client_update.isoformat() if last_client_update else None
             }
+    
+    def prune(self, older_than_days: int = 7) -> PruneResult:
+        """Prune old entries from the CDC change table.
+        
+        Args:
+            older_than_days: Number of days to keep (entries older than this will be deleted)
+            
+        Returns:
+            PruneResult containing:
+            - entries_deleted: Number of entries deleted
+            - cutoff_timestamp: The timestamp used as the cutoff (ISO format)
+        """
+        change_table = self._get_change_table_name()
+        
+        with self.connection.cursor() as cursor:
+            # Delete entries in a single query using database server timestamp
+            cursor.execute(f"""
+                DELETE FROM {change_table} 
+                WHERE CHANGE_TIMESTAMP < CURRENT_TIMESTAMP - INTERVAL ? DAY
+            """, (older_than_days,))
+            
+            entries_deleted = cursor.rowcount
+            
+            # Calculate cutoff timestamp for logging and return value
+            # We approximate this since we can't get the exact timestamp from the DELETE query
+            cutoff_timestamp = datetime.now() - timedelta(days=older_than_days)
+            
+            logger.info(f"Deleted {entries_deleted} entries older than {cutoff_timestamp}")
+            
+            return PruneResult(
+                entries_deleted=entries_deleted,
+                cutoff_timestamp=cutoff_timestamp.isoformat()
+            )

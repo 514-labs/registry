@@ -1,6 +1,24 @@
-# Template: Python
+# SAP HANA CDC to ClickHouse Pipeline
 
-This is a Python-based Moose template that provides a foundation for building data-intensive applications using Python.
+This is a Python-based Moose pipeline that provides real-time Change Data Capture (CDC) from SAP HANA to ClickHouse.
+
+## Workflows
+
+### CDC Workflow (`cdc_workflow`)
+- **Purpose**: Continuously syncs changes from SAP HANA to ClickHouse
+- **Schedule**: Continuous (runs indefinitely)
+- **Features**: 
+  - Syncs new tables automatically
+  - Processes CDC changes in real-time
+  - Updates client status for tracking
+
+### Pruning Workflow (`prune_workflow`)
+- **Purpose**: Maintains database performance by removing old CDC entries
+- **Schedule**: Daily at midnight (`@daily`)
+- **Features**:
+  - Configurable retention period via `SAP_HANA_CDC_RETENTION_DAYS` (default: 7 days)
+  - Comprehensive logging
+  - Error handling with retries
 
 [![PyPI Version](https://img.shields.io/pypi/v/moose-cli?logo=python)](https://pypi.org/project/moose-cli/)
 [![Moose Community](https://img.shields.io/badge/slack-moose_community-purple.svg?logo=slack)](https://join.slack.com/t/moose-community/shared_invite/zt-2fjh5n3wz-cnOmM9Xe9DYAgQrNu8xKxg)

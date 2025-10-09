@@ -121,3 +121,15 @@ class BatchChange:
     def __str__(self) -> str:
         """Return a string representation of the batch."""
         return f"BatchChange(changes={len(self.changes)})"
+
+
+@dataclass
+class PruneResult:
+    """Represents the result of a database pruning operation."""
+    
+    entries_deleted: int
+    cutoff_timestamp: str  # ISO format timestamp
+    
+    def __str__(self) -> str:
+        """Return a string representation of the prune result."""
+        return f"PruneResult(entries_deleted={self.entries_deleted}, cutoff_timestamp={self.cutoff_timestamp})"

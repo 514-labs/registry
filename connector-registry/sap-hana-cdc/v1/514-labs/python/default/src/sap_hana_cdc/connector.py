@@ -6,7 +6,7 @@ from typing import List, Optional, Dict, Set, Any, Callable
 from datetime import datetime
 
 from .config import SAPHanaCDCConfig
-from .models import BatchChange
+from .models import BatchChange, PruneResult
 from .infrastructure import SAPHanaCDCInfrastructure
 from .reader import SAPHanaCDCReader
 
@@ -125,5 +125,18 @@ class SAPHanaCDCConnector:
             - lag_seconds: Lag in seconds (max insert timestamp - last client update)
         """
         return self.reader.get_status(client_id)
+    
+    def prune(self, older_than_days: int = 7) -> PruneResult:
+        """Prune old entries from the CDC change table.
+        
+        Args:
+            older_than_days: Number of days to keep (entries older than this will be deleted)
+            
+        Returns:
+            PruneResult containing:
+            - entries_deleted: Number of entries deleted
+            - cutoff_timestamp: The timestamp used as the cutoff (ISO format)
+        """
+        return self.reader.prune(older_than_days)
     
     
