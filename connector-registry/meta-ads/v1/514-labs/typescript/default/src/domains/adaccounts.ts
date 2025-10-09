@@ -5,8 +5,8 @@ export function buildAdAccountsDomain(sendFn: SendFn) {
   const factory = createGlobalDomainFactory<AdAccount>("/me/adaccounts", sendFn);
 
   return {
-    listAdAccounts: factory.list,
-    streamAdAccounts: factory.stream,
-    getAdAccounts: factory.getAll,
+    list: factory.list,
+    stream: factory.stream,
+    getAll: factory.getAll,
   };
 }

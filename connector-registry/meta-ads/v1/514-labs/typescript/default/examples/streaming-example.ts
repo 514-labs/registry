@@ -15,11 +15,25 @@ async function streamingExample() {
   await connector.connect();
 
   try {
+    // First get an ad account to use for streaming
+    console.log('Getting ad accounts...');
+    const adAccounts = await connector.adAccounts.list({
+      fields: ['id', 'name', 'account_status']
+    });
+
+    const activeAccount = adAccounts.data?.find(acc => acc.account_status === 1);
+    if (!activeAccount) {
+      console.log('No active ad accounts found');
+      return;
+    }
+
+    console.log(`Using ad account: ${activeAccount.name}`);
     console.log('Streaming all campaigns...');
 
     // Stream all campaigns with pagination
     let campaignCount = 0;
-    for await (const campaign of connector.streamCampaigns({
+    for await (const campaign of connector.campaigns.stream({
+      adAccountId: activeAccount.id,
       fields: ['id', 'name', 'status'],
       pageSize: 10 // Process 10 campaigns at a time
     })) {
@@ -33,7 +47,8 @@ async function streamingExample() {
 
     // Stream all ads
     let adCount = 0;
-    for await (const ad of connector.streamAds({
+    for await (const ad of connector.ads.stream({
+      adAccountId: activeAccount.id,
       fields: ['id', 'name', 'status'],
       pageSize: 20
     })) {
