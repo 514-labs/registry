@@ -47,12 +47,14 @@ else:
 load_dotenv()
 connector = SAPHanaCDCConnector.build_from_config(config=config)
 
-if args.init_cdc or args.recreate_moose_models:
+if args.recreate_moose_models:
     tables_metadata = introspect_hana_database(connector.connection, table_names, config.source_schema)
     generate_moose_models(tables_metadata, MODEL_PATH)
     print(f"Generated Moose models for {len(tables_metadata)} tables in '{MODEL_PATH}'.")
-elif args.init_cdc or args.recreate_cdc_tables:
+
+if args.init_cdc or args.recreate_cdc_tables:
     connector.init_cdc(args.recreate_cdc_tables)
     print(f"Initialized CDC tables and triggers.")
-else:
+
+if not (args.recreate_moose_models or args.init_cdc or args.recreate_cdc_tables):
     parser.error("You must specify either --recreate-moose-models or --recreate-cdc-tables or --init-cdc")

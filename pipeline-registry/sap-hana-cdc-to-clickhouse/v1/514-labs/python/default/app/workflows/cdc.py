@@ -25,8 +25,12 @@ def get_connector() -> SAPHanaCDCConnector:
     return SAPHanaCDCConnector.build_from_config(sap_config)
 
 def insert_table_data(table_name: str, rows: List[Any]) -> None:
-    model = getattr(cdc_module, to_snake_case(table_name))
-    model.insert(rows)
+    try:
+        model = getattr(cdc_module, to_snake_case(table_name))
+        model.insert(rows)
+    except AttributeError:
+        print(f"Error: Model for table '{table_name}' not found in cdc_module.")
+        return
 
 # It's important to synchronize the new tables first, otherwise the destination tables will be incomplete
 def sync_new_tables() -> None:
@@ -39,13 +43,14 @@ def sync_new_tables() -> None:
 def sync_new_tables_task(ctx: TaskContext[None]) -> None:
     sync_new_tables()
 
-def sync_changes(connector: SAPHanaCDCConnector = get_connector()) -> None:
+def sync_changes(connector: SAPHanaCDCConnector = get_connector()) -> bool:
     batch = connector.get_changes(auto_update_client_status=False)
     if batch:
         for change in batch:
             insert_table_data(change.table_name, list(change.new_values))
             connector.update_client_status(change)
         return True
+    return False
             
 def sync_changes_task(ctx: TaskContext[None]) -> None:
     connector = get_connector()

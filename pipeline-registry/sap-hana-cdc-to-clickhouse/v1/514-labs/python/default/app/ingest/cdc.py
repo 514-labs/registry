@@ -5,7 +5,7 @@ This file was automatically generated from database metadata.
 
 from typing import Optional
 from datetime import datetime
-from moose_lib import BaseModel, Key, IngestPipeline, IngestPipelineConfig, Field, OlapTable, OlapConfig
+from moose_lib import BaseModel, Key, Field, OlapTable, OlapConfig
 
 class Adrc(BaseModel):
     CLIENT: Key[str]
