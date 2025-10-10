@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/pipeline.schema.json",
+  "identifier": "sap-hana-cdc-to-clickhouse",
+  "name": "SAP HANA CDC to ClickHouse",
+  "author": "514-labs",
+  "authorType": "organization",
+  "version": "v1",
+  "description": "Real-time Change Data Capture pipeline from SAP HANA to ClickHouse",
+  "tags": ["sap-hana", "cdc", "clickhouse", "real-time", "etl"],
+  "schedule": { "cron": "0 * * * *", "timezone": "UTC" },
+  "source": {
+    "type": "connector",
+    "connector": { "name": "sap-hana-cdc", "version": "v1", "author": "514-labs" },
+    "stream": "changes"
+  },
+  "systems": [],
+  "transformations": [],
+  "destination": {
+    "system": "clickhouse",
+    "database": "analytics",
+    "table": "sap_hana_changes"
+  },
+  "lineage": {
+    "nodes": [
+      { "id": "source", "kind": "source", "label": "SAP HANA" },
+      { "id": "cdc_processor", "kind": "transform", "label": "CDC Processor" },
+      { "id": "dest", "kind": "destination", "label": "ClickHouse analytics.sap_hana_changes" }
+    ],
+    "edges": [
+      { "from": "source", "to": "cdc_processor", "label": "extract changes" },
+      { "from": "cdc_processor", "to": "dest", "label": "load changes" }
+    ]
+  },
+  "maintainers": []
+}

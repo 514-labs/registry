@@ -1,0 +1,53 @@
+[project]
+name = "connectorsap-hana-cdc"
+version = "0.1.0"
+readme = "README.md"
+requires-python = ">=3.13"
+license = {text = "MIT"}
+authors = [{name = "514-labs"}]
+dependencies = [
+    "hdbcli>=2.20.0",
+    "kafka-python>=2.0.2",
+    "asyncio-mqtt>=0.16.1",
+    "pydantic>=2.0.0",
+    "structlog>=23.0.0",
+    "tenacity>=8.0.0",
+    "python-dotenv>=1.0.0",
+    "click>=8.0.0",
+    "uvloop>=0.17.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-mock>=3.10.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0"
+]
+
+[project.scripts]
+sap-hana-cdc = "sap_hana_cdc.cli:main"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "C90", "I", "N", "UP", "YTT", "S", "BLE", "FBT", "B", "A", "COM", "C4", "DTZ", "T10", "EM", "EXE", "FA", "ISC", "ICN", "G", "INP", "PIE", "T20", "PYI", "PT", "Q", "RSE", "RET", "SLF", "SLOT", "SIM", "TID", "TCH", "INT", "ARG", "PTH", "TD", "FIX", "ERA", "PD", "PGH", "PL", "TRY", "FLY", "NPY", "AIR", "PERF", "FURB", "LOG", "RUF"]
+ignore = ["S101", "S104", "S108", "S110", "S112", "S311", "S603", "S607"]
+
+[tool.black]
+line-length = 100
+target-version = ['py313']
+
+[tool.mypy]
+python_version = "3.13"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
