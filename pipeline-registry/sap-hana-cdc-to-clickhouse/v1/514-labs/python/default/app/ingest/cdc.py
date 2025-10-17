@@ -7,6587 +7,13382 @@ from typing import Optional
 from datetime import datetime
 from moose_lib import BaseModel, Key, Field, OlapTable, OlapConfig
 
-class Adrc(BaseModel):
-    CLIENT: Key[str]
-    ADDRNUMBER: Key[str]
-    DATE_FROM: Key[str]
-    NATION: Key[str]
-    DATE_TO: str
-    TITLE: str
-    NAME1: str
-    NAME2: str
-    NAME3: str
-    NAME4: str
-    NAME_TEXT: str
-    NAME_CO: str
-    CITY1: str
-    CITY2: str
-    CITY_CODE: str
-    CITYP_CODE: str
-    HOME_CITY: str
-    CITYH_CODE: str
-    CHCKSTATUS: str
-    REGIOGROUP: str
-    POST_CODE1: str
-    POST_CODE2: str
-    POST_CODE3: str
-    PCODE1_EXT: str
-    PCODE2_EXT: str
-    PCODE3_EXT: str
-    PO_BOX: str
-    DONT_USE_P: str
-    PO_BOX_NUM: str
-    PO_BOX_LOC: str
-    CITY_CODE2: str
-    PO_BOX_REG: str
-    PO_BOX_CTY: str
-    POSTALAREA: str
-    TRANSPZONE: str
-    STREET: str
-    DONT_USE_S: str
-    STREETCODE: str
-    STREETABBR: str
-    HOUSE_NUM1: str
-    HOUSE_NUM2: str
-    HOUSE_NUM3: str
-    STR_SUPPL1: str
-    STR_SUPPL2: str
-    STR_SUPPL3: str
-    LOCATION: str
-    BUILDING: str
-    FLOOR: str
-    ROOMNUMBER: str
-    COUNTRY: str
-    LANGU: str
-    REGION: str
-    ADDR_GROUP: str
-    FLAGGROUPS: str
-    PERS_ADDR: str
-    SORT1: str
-    SORT2: str
-    SORT_PHN: str
-    DEFLT_COMM: str
-    TEL_NUMBER: str
-    TEL_EXTENS: str
-    FAX_NUMBER: str
-    FAX_EXTENS: str
-    FLAGCOMM2: str
-    FLAGCOMM3: str
-    FLAGCOMM4: str
-    FLAGCOMM5: str
-    FLAGCOMM6: str
-    FLAGCOMM7: str
-    FLAGCOMM8: str
-    FLAGCOMM9: str
-    FLAGCOMM10: str
-    FLAGCOMM11: str
-    FLAGCOMM12: str
-    FLAGCOMM13: str
-    ADDRORIGIN: str
-    MC_NAME1: str
-    MC_CITY1: str
-    MC_STREET: str
-    EXTENSION1: str
-    EXTENSION2: str
-    TIME_ZONE: datetime
-    TAXJURCODE: str
-    ADDRESS_ID: str
-    LANGU_CREA: str
-    ADRC_UUID: Optional[str] = 00000000000000000000000000000000
-    UUID_BELATED: str
-    ID_CATEGORY: str
-    ADRC_ERR_STATUS: str
-    PO_BOX_LOBBY: str
-    DELI_SERV_TYPE: str
-    DELI_SERV_NUMBER: str
-    COUNTY_CODE: str
-    COUNTY: str
-    TOWNSHIP_CODE: str
-    TOWNSHIP: str
-    MC_COUNTY: str
-    MC_TOWNSHIP: str
-    XPCPT: str
-    DATAAGING: str = Field(alias="_DATAAGING")
-    ADDRESSCREATEDBYUSER: str
-    ADDRESSCREATEDONDATETIME: datetime
-    ADDRESSCHANGEDBYUSER: str
-    ADDRESSCHANGEDONDATETIME: datetime
-    DUNS: str
-    DUNSP4: str
+from moose_lib_extras import (
+    # Base model
+    SapHanaBaseModel,
+    
+    # Datetime types
+    SapDate, SapTime, SapSecondDate, SapTimestamp,
+    
+    # Numeric types
+    SapTinyInt, SapSmallInt, SapInteger, SapBigInt,
+    SapSmallDecimal, SapDecimal, SapReal, SapDouble,
+    
+    # Boolean type
+    SapBoolean,
+    
+    # Character string types
+    SapVarchar, SapNvarchar, SapAlphanum, SapShortText,
+    
+    # Binary types
+    SapVarbinary,
+    
+    # Large Object types
+    SapBlob, SapClob, SapNclob, SapText,
+    
+    # Multi-valued types
+    SapArray,
+    
+    # Spatial types
+    SapStGeometry, SapStPoint,
+)
 
-class Adrv(BaseModel):
-    CLIENT: Key[str]
-    ADDRNUMBER: Key[str]
-    CONSNUMBER: Key[str]
-    APPL_TABLE: str
-    APPL_FIELD: str
-    APPL_KEY: str
-    ADDR_GROUP: str
-    OWNER: str
-    DATAAGING: str = Field(alias="_DATAAGING")
+class Adrc(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: ADRC
+    Schema: SAPHANADB
+    """
 
-class Aeoi(BaseModel):
-    MANDT: Key[str]
-    AENNR: Key[str]
-    AETYP: Key[str]
-    OBJKT: Key[str]
-    USOBJ: str
-    CCVMS: str
-    OITXT: str
-    LTXSP: str
-    AEDAT: str
-    AENAM: str
-    ANDAT: str
-    ANNAM: str
-    OBJDT: str
-    OBJNM: str
-    CCLCK: str
-    AEOST: str
-    REVLV: str
-    AEDTZ: str
-    CCSTO: str
-    CCOAA: str
-    CONT1: str
-    AEOI_GUID: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    CLIENT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ADDRNUMBER: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    DATE_FROM: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    NATION: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATE_TO: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TITLE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME_TEXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME_CO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CITY1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CITY2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CITY_CODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CITYP_CODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HOME_CITY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CITYH_CODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHCKSTATUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REGIOGROUP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POST_CODE1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POST_CODE2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POST_CODE3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PCODE1_EXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PCODE2_EXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PCODE3_EXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PO_BOX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DONT_USE_P: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PO_BOX_NUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PO_BOX_LOC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CITY_CODE2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PO_BOX_REG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PO_BOX_CTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POSTALAREA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TRANSPZONE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STREET: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DONT_USE_S: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STREETCODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STREETABBR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HOUSE_NUM1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HOUSE_NUM2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HOUSE_NUM3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STR_SUPPL1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STR_SUPPL2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STR_SUPPL3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOCATION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUILDING: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLOOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ROOMNUMBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COUNTRY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LANGU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REGION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDR_GROUP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLAGGROUPS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PERS_ADDR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SORT1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SORT2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SORT_PHN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DEFLT_COMM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TEL_NUMBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TEL_EXTENS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FAX_NUMBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FAX_EXTENS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLAGCOMM2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLAGCOMM3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLAGCOMM4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLAGCOMM5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLAGCOMM6: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLAGCOMM7: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLAGCOMM8: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLAGCOMM9: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLAGCOMM10: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLAGCOMM11: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLAGCOMM12: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLAGCOMM13: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDRORIGIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MC_NAME1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MC_CITY1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MC_STREET: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTENSION1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTENSION2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Order by field
+    TIME_ZONE: SapNvarchar
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAXJURCODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDRESS_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LANGU_CREA: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    ADRC_UUID: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UUID_BELATED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ID_CATEGORY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADRC_ERR_STATUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PO_BOX_LOBBY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DELI_SERV_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DELI_SERV_NUMBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COUNTY_CODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COUNTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOWNSHIP_CODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOWNSHIP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MC_COUNTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MC_TOWNSHIP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XPCPT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATAAGING: Optional[SapNvarchar] = Field(alias="_DATAAGING", default=00000000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDRESSCREATEDBYUSER: Optional[SapNvarchar] = ""
+    # SAP HANA type: TIMESTAMP | Order by field
+    ADDRESSCREATEDONDATETIME: SapTimestamp
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDRESSCHANGEDBYUSER: Optional[SapNvarchar] = ""
+    # SAP HANA type: TIMESTAMP | Forced nullable
+    ADDRESSCHANGEDONDATETIME: Optional[SapTimestamp] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUNS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUNSP4: Optional[SapNvarchar] = ""
 
-class Afko(BaseModel):
-    MANDT: Key[str]
-    AUFNR: Key[str]
-    GLTRP: str
-    GSTRP: str
-    FTRMS: str
-    GLTRS: str
-    GSTRS: str
-    GSTRI: str
-    GETRI: str
-    GLTRI: str
-    FTRMI: str
-    FTRMP: str
-    RSNUM: str
-    GASMG: float
-    GAMNG: float
-    GMEIN: str
-    PLNBEZ: str
-    PLNTY: str
-    PLNNR: str
-    PLNAW: str
-    PLNAL: str
-    PVERW: str
-    PLAUF: str
-    PLSVB: float
-    PLNME: str
-    PLSVN: float
-    PDATV: str
-    PAENR: str
-    PLGRP: str
-    LODIV: float
-    STLTY: str
-    STLBEZ: str
-    STLST: str
-    STLNR: str
-    SDATV: str
-    SBMNG: float
-    SBMEH: str
-    SAENR: str
-    STLAL: str
-    STLAN: str
-    SLSVN: float
-    SLSBS: float
-    AUFLD: str
-    DISPO: str
-    AUFPL: str
-    FEVOR: str
-    FHORI: str
-    TERKZ: str
-    REDKZ: str
-    APRIO: str
-    NTZUE: str
-    VORUE: str
-    PROFID: str
-    VORGZ: str
-    SICHZ: str
-    FREIZ: str
-    UPTER: str
-    BEDID: str
-    PRONR: str
-    ZAEHL: str
-    MZAEHL: str
-    ZKRIZ: str
-    PRUEFLOS: str
-    KLVARP: str
-    KLVARI: str
-    RGEKZ: str
-    PLART: str
-    FLG_AOB: str
-    FLG_ARBEI: str
-    GLTPP: str
-    GSTPP: str
-    GLTPS: str
-    GSTPS: str
-    FTRPS: str
-    RDKZP: str
-    TRKZP: str
-    RUECK: str
-    RMZHL: str
-    IGMNG: float
-    RATID: str
-    GROID: str
-    CUOBJ: str
-    GLUZS: str
-    GSUZS: str
-    REVLV: str
-    RSHTY: str
-    RSHID: str
-    RSNTY: str
-    RSNID: str
-    NAUTERM: str
-    NAUCOST: str
-    STUFE: float
-    WEGXX: float
-    VWEGX: float
-    ARSNR: str
-    ARSPS: str
-    MAUFNR: str
-    LKNOT: str
-    RKNOT: str
-    PRODNET: str
-    IASMG: float
-    ABARB: str
-    AUFNT: str
-    AUFPT: str
-    APLZT: str
-    NO_DISP: str
-    CSPLIT: str
-    AENNR: str
-    CY_SEQNR: str
-    BREAKS: str
-    VORGZ_TRM: float
-    SICHZ_TRM: float
-    TRMDT: str
-    GLUZP: str
-    GSUZP: str
-    GSUZI: str
-    GEUZI: str
-    GLUPP: str
-    GSUPP: str
-    GLUPS: str
-    GSUPS: str
-    CHSCH: str
-    KAPT_VORGZ: str
-    KAPT_SICHZ: str
-    LEAD_AUFNR: str
-    PNETSTARTD: str
-    PNETSTARTT: str
-    PNETENDD: str
-    PNETENDT: str
-    KBED: str
-    KKALKR: str
-    SFCPF: str
-    RMNGA: float
-    GSBTR: str
-    VFMNG: float
-    NOPCOST: str
-    NETZKONT: str
-    ATRKZ: str
-    OBJTYPE: str
-    CH_PROC: str
-    KAPVERSA: str
-    COLORDPROC: str
-    KZERB: str
-    CONF_KEY: str
-    ST_ARBID: str
-    VSNMR_V: str
-    TERHW: str
-    SPLSTAT: str
-    COSTUPD: str
-    MAX_GAMNG: float
-    MES_ROUTINGID: str
-    TL_VERSN: str
-    BOM_VERSN: str
-    FLEXIBLE_PROCESSING: str
-    ADPSP: str
-    RMANR: str
-    POSNR_RMA: str
-    POSNV_RMA: str
-    CFB_MAXLZ: float
-    CFB_LZEIH: str
-    CFB_ADTDAYS: float
-    CFB_DATOFM: str
-    CFB_BBDPI: str
-    OIHANTYP: str
-    FSH_MPROD_ORD: str
-    FLG_BUNDLE: str
-    MILL_RATIO: int
-    BMEINS: str
-    BMENGE: float
-    MILL_OC_ZUSKZ: str
+class Adrv(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: ADRV
+    Schema: SAPHANADB
+    """
 
-class Afpo(BaseModel):
-    MANDT: Key[str]
-    AUFNR: Key[str]
-    POSNR: Key[str]
-    PSOBS: str
-    QUNUM: str
-    QUPOS: str
-    PROJN: str
-    PLNUM: str
-    STRMP: str
-    ETRMP: str
-    KDAUF: str
-    KDPOS: str
-    KDEIN: str
-    BESKZ: str
-    PSAMG: float
-    PSMNG: float
-    WEMNG: float
-    IAMNG: float
-    AMEIN: str
-    MEINS: str
-    MATNR: str
-    PAMNG: float
-    PGMNG: float
-    KNTTP: str
-    TPAUF: str
-    LTRMI: str
-    LTRMP: str
-    KALNR: str
-    UEBTO: float
-    UEBTK: str
-    UNTTO: float
-    INSMK: str
-    WEPOS: str
-    BWTAR: str
-    BWTTY: str
-    PWERK: str
-    LGORT: str
-    UMREZ: float
-    UMREN: float
-    WEBAZ: float
-    ELIKZ: str
-    SAFNR: str
-    VERID: str
-    SERNR: str
-    TECHS: str
-    DWERK: str
-    DAUTY: str
-    DAUAT: str
-    DGLTP: str
-    DGLTS: str
-    DFREI: str
-    DNREL: str
-    VERTO: str
-    SOBKZ: str
-    KZVBR: str
-    WEWRT: float
-    WEUNB: str
-    ABLAD: str
-    WEMPF: str
-    CHARG: str
-    GSBER: str
-    WEAED: str
-    CUOBJ: str
-    KBNKZ: str
-    ARSNR: str
-    ARSPS: str
-    KRSNR: str
-    KRSPS: str
-    KCKEY: str
-    RTP01: str
-    RTP02: str
-    RTP03: str
-    RTP04: str
-    KSVON: str
-    KSBIS: str
-    OBJNP: str
-    NDISR: str
-    VFMNG: float
-    GSBTR: str
-    KZAVC: str
-    KZBWS: str
-    XLOEK: str
-    SERNP: str
-    ANZSN: int
-    OBJTYPE: str
-    CH_PROC: str
-    FXPRU: str
-    CUOBJ_ROOT: str
-    BERID: str
-    TECHS_COPY: str
-    SGT_SCAT: str
-    KUNNR2: str
-    FSH_SEASON_YEAR: str
-    FSH_SEASON: str
-    FSH_COLLECTION: str
-    FSH_THEME: str
-    FSH_SALLOC_QTY: float
-    MILL_OC_AUFNR_U: str
-    MILL_OC_RUMNG: float
-    MILL_OC_SORT: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    CLIENT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    ADDRNUMBER: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    CONSNUMBER: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APPL_TABLE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APPL_FIELD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APPL_KEY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDR_GROUP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OWNER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATAAGING: Optional[SapNvarchar] = Field(alias="_DATAAGING", default=00000000)
 
-class Afvc(BaseModel):
-    MANDT: Key[str]
-    AUFPL: Key[str]
-    APLZL: Key[str]
-    PLNFL: str
-    PLNKN: str
-    PLNAL: str
-    PLNTY: str
-    VINTV: float
-    PLNNR: str
-    ZAEHL: str
-    VORNR: str
-    STEUS: str
-    ARBID: str
-    PDEST: str
-    WERKS: str
-    KTSCH: str
-    LTXA1: str
-    LTXA2: str
-    TXTSP: str
-    VPLTY: str
-    VPLNR: str
-    VPLAL: str
-    VPLFL: str
-    VGWTS: str
-    LAR01: str
-    LAR02: str
-    LAR03: str
-    LAR04: str
-    LAR05: str
-    LAR06: str
-    ZERMA: str
-    ZGDAT: str
-    ZCODE: str
-    ZULNR: str
-    LOANZ: float
-    LOART: str
-    RSANZ: str
-    QUALF: str
-    ANZMA: float
-    RFGRP: str
-    RFSCH: str
-    RASCH: str
-    AUFAK: float
-    LOGRP: str
-    UEMUS: str
-    UEKAN: str
-    FLIES: str
-    SPMUS: str
-    SPLIM: float
-    ABLIPKZ: str
-    RSTRA: str
-    SUMNR: str
-    SORTL: str
-    LIFNR: str
-    PREIS: float
-    PEINH: float
-    SAKTO: str
-    WAERS: str
-    INFNR: str
-    ESOKZ: str
-    EKORG: str
-    EKGRP: str
-    KZLGF: str
-    KZWRTF: str
-    MATKL: str
-    DDEHN: str
-    ANZZL: int
-    PRZNT: int
-    MLSTN: str
-    PPRIO: str
-    BUKRS: str
-    ANFKO: str
-    ANFKOKRS: str
-    INDET: str
-    LARNT: str
-    PRKST: float
-    APLFL: str
-    RUECK: str
-    RMZHL: str
-    PROJN: str
-    OBJNR: str
-    SPANZ: float
-    BEDID: str
-    BEDZL: str
-    BANFN: str
-    BNFPO: str
-    LEK01: str
-    LEK02: str
-    LEK03: str
-    LEK04: str
-    LEK05: str
-    LEK06: str
-    SELKZ: str
-    KALID: str
-    FRSP: str
-    STDKN: str
-    ANLZU: str
-    ISTRU: str
-    ISTTY: str
-    ISTNR: str
-    ISTKN: str
-    ISTPO: str
-    IUPOZ: str
-    EBORT: str
-    VERTL: str
-    LEKNW: str
-    NPRIO: str
-    PVZKN: str
-    PHFLG: str
-    PHSEQ: str
-    KNOBJ: str
-    ERFSICHT: str
-    QPPKTABS: str
-    OTYPE: str
-    OBJEKTID: str
-    QLKAPAR: str
-    RSTUF: str
-    NPTXTKY: str
-    SUBSYS: str
-    PSPNR: str
-    PACKNO: str
-    TXJCD: str
-    SCOPE: str
-    GSBER: str
-    PRCTR: str
-    NO_DISP: str
-    QKZPRZEIT: str
-    QKZZTMG1: str
-    QKZPRMENG: str
-    QKZPRFREI: str
-    KZFEAT: str
-    QKZTLSBEST: str
-    AENNR: str
-    CUOBJ_ARB: str
-    EVGEW: float
-    ARBII: str
-    WERKI: str
-    CY_SEQNRV: str
-    KAPT_PUFFR: int
-    EBELN: str
-    EBELP: str
-    WEMPF: str
-    ABLAD: str
-    CLASF: str
-    FRUNV: str
-    ZSCHL: str
-    KALSM: str
-    SCHED_END: str
-    NETZKONT: str
-    OWAER: str
-    AFNAM: str
-    BEDNR: str
-    KZFIX: str
-    PERNR: str
-    FRDLB: str
-    QPART: str
-    LOEKZ: str
-    WKURS: float
-    PROD_ACT: str
-    FPLNR: str
-    OBJTYPE: str
-    CH_PROC: str
-    KLVAR: str
-    KALNR: str
-    FORDN: str
-    FORDP: str
-    MAT_PRKST: float
-    PRZ01: str
-    RFPNT: str
-    FUNC_AREA: str
-    TECHS: str
-    ADPSP: str
-    RFIPPNT: str
-    MES_OPERID: str
-    MES_STEPID: str
-    OAN_INST_ID_SETUP: int
-    OAN_INST_ID_PRODUCE: int
-    OAN_INST_ID_TEARDOWN: int
-    TL_VERSN: str
-    VERSN_TRACK_GUID: Optional[str] = 00000000000000000000000000000000
-    MAINTORDOPPROCESSPHASECODE: str
-    MAINTORDOPPROCESSSUBPHASECODE: str
-    CL_TYPE: str
-    ALLMAINTORDCOMPCMTDQTSAREKEPT: str
-    DUMMY_EAM_AFVC_INCL_EEW_PS: str
-    DUMMY_AFVC_INCL_EEW_PS: str
-    CUM_CUGUID: Optional[str] = Field(alias="/CUM/CUGUID", default=00000000000000000000000000000000)
-    ISDFPS_OBJNR: str = Field(alias="/ISDFPS/OBJNR")
-    AFVC_STATUS: int
-    ADRNR: str
-    ADRN2: str
-    KUNN2: str
-    IND_ADR: str
-    FLDLOGSDELIVISHELDONSHORE: str
-    MILL_OC_AUFNR_MO: str
-    PS_ADRNR: str
-    PS_ADRN2: str
-    PS_KUNNR: str
-    PS_EMLIF: str
-    WTY_IND: str
-    TPLNR: str
-    EQUNR: str
-    MAINTOPEXECUTIONPHASECODE: str
-    CPD_UPDAT: float
-    MAINTORDOPHASLEANSERVICES: str
+class Aeoi(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: AEOI
+    Schema: SAPHANADB
+    """
 
-class Afvv(BaseModel):
-    MANDT: Key[str]
-    AUFPL: Key[str]
-    APLZL: Key[str]
-    MEINH: str
-    UMREN: float
-    UMREZ: float
-    BMSCH: float
-    ZMERH: float
-    ZEIER: str
-    VGE01: str
-    VGW01: float
-    VGE02: str
-    VGW02: float
-    VGE03: str
-    VGW03: float
-    VGE04: str
-    VGW04: float
-    VGE05: str
-    VGW05: float
-    VGE06: str
-    VGW06: float
-    ZEIMU: str
-    ZMINU: float
-    MINWE: float
-    ZEIMB: str
-    ZMINB: float
-    ZEILM: str
-    ZLMAX: float
-    ZEILP: str
-    ZLPRO: float
-    ZEIWN: str
-    ZWNOR: float
-    ZEIWM: str
-    ZWMIN: float
-    ZEITN: str
-    ZTNOR: float
-    ZEITM: str
-    ZTMIN: float
-    PLIFZ: float
-    DAUNO: float
-    DAUNE: str
-    DAUMI: float
-    DAUME: str
-    EINSA: str
-    EINSE: str
-    ARBEI: float
-    ARBEH: str
-    MGVRG: float
-    ASVRG: float
-    LMNGA: float
-    XMNGA: float
-    GMNGA: float
-    ISM01: float
-    ISM02: float
-    ISM03: float
-    ISM04: float
-    ISM05: float
-    ISM06: float
-    ISMNW: float
-    FSAVD: str
-    FSAVZ: str
-    FSSBD: str
-    FSSBZ: str
-    FSSAD: str
-    FSSAZ: str
-    FSEDD: str
-    FSEDZ: str
-    FSSLD: str
-    FSSLZ: str
-    FSELD: str
-    FSELZ: str
-    SSAVD: str
-    SSAVZ: str
-    SSSBD: str
-    SSSBZ: str
-    SSSAD: str
-    SSSAZ: str
-    SSEDD: str
-    SSEDZ: str
-    SSSLD: str
-    SSSLZ: str
-    SSELD: str
-    SSELZ: str
-    ISAVD: str
-    IEAVD: str
-    ISDD: str
-    ISDZ: str
-    IERD: str
-    IERZ: str
-    ISBD: str
-    ISBZ: str
-    IEBD: str
-    IEBZ: str
-    ISAD: str
-    ISAZ: str
-    IEDD: str
-    IEDZ: str
-    PEDD: str
-    PEDZ: str
-    PUFFR: float
-    PUFGS: float
-    NTANF: str
-    NTANZ: str
-    NTEND: str
-    NTENZ: str
-    EWSTD: str
-    EWSTZ: str
-    EWEND: str
-    EWENZ: str
-    EWDAN: float
-    EWDNE: str
-    EWDAM: float
-    EWDME: str
-    EWSTE: str
-    EWSTA: str
-    WARTZ: float
-    WRTZE: str
-    RUEST: float
-    RSTZE: str
-    BEARZ: float
-    BEAZE: str
-    ABRUE: float
-    ARUZE: str
-    LIEGZ: float
-    LIGZE: str
-    TRANZ: float
-    TRAZE: str
-    ISERH: float
-    OFM01: float
-    OFM02: float
-    OFM03: float
-    OFM04: float
-    OFM05: float
-    OFM06: float
-    OFMNW: float
-    BZOFFB: str
-    EHOFFB: str
-    OFFSTB: float
-    OFFSTE: float
-    BZOFFE: str
-    EHOFFE: str
-    FPAVD: str
-    FPAVZ: str
-    FPEDD: str
-    FPEDZ: str
-    SPAVD: str
-    SPAVZ: str
-    SPEDD: str
-    SPEDZ: str
-    BEAZP: str
-    PUFGP: float
-    PUFFP: float
-    BEARP: float
-    EPANF: str
-    EPANZ: str
-    EPEND: str
-    EPENZ: str
-    PDAU: float
-    PDAE: str
-    KNOTE: str
-    VSTZW: str
-    VSTGA: str
-    QRASTZEHT: str
-    QRASTZFAK: float
-    QRASTMENG: float
-    QRASTEREH: str
-    AUFKT: float
-    RMNGA: float
-    ILE01: str
-    ILE02: str
-    ILE03: str
-    ILE04: str
-    ILE05: str
-    ILE06: str
-    RWFAK: float
-    IPRZ1: float
-    IPRE1: str
-    IPRK1: str
-    TAKT: str
-    OPRZ1: float
-    OPRE1: str
-    PSPM_INDICATOR: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    AENNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    AETYP: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    OBJKT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USOBJ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CCVMS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OITXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTXSP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBJDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBJNM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CCLCK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEOST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REVLV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDTZ: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CCSTO: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CCOAA: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONT1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEOI_GUID: Optional[SapNvarchar] = ""
 
-class Bp030(BaseModel):
-    MANDT: Key[str]
-    PARTNR: Key[str]
-    ADR_REF_K: Key[str]
-    ADR_DAT: Key[str]
-    ADRNR: str
-    ADDRNUMBER: str
-    ADDRESS_ID: str
-    ADR_D_E: str
-    ADR_LOC: str
-    FLOOR: str
-    ROOM_NR: str
-    NAME3: str
-    NAME4: str
-    NAME_CO: str
-    PFACH: str
-    PSTL2: str
-    TELF1: str
-    TELF2: str
-    TELFX1: str
-    TELFX2: str
-    TELBX: str
-    TELX1: str
-    DATLT: str
-    TELTX: str
-    ADSMTP: str
-    TELNR_CALL1: str
-    TELNR_CALL2: str
+class Afko(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: AFKO
+    Schema: SAPHANADB
+    """
 
-class But000(BaseModel):
-    CLIENT: Key[str]
-    PARTNER: Key[str]
-    TYPE: str
-    BPKIND: str
-    BU_GROUP: str
-    BPEXT: str
-    BU_SORT1: str
-    BU_SORT2: str
-    SOURCE: str
-    TITLE: str
-    XDELE: str
-    XBLCK: str
-    AUGRP: str
-    TITLE_LET: str
-    BU_LOGSYS: str
-    CONTACT: str
-    NOT_RELEASED: str
-    NOT_LG_COMPETENT: str
-    PRINT_MODE: str
-    BP_EEW_DUMMY: str
-    RATE: str
-    NAME_ORG1: str
-    NAME_ORG2: str
-    NAME_ORG3: str
-    NAME_ORG4: str
-    LEGAL_ENTY: str
-    IND_SECTOR: str
-    LEGAL_ORG: str
-    DC_NOT_REQ: str
-    FOUND_DAT: str
-    LIQUID_DAT: str
-    LOCATION_1: str
-    LOCATION_2: str
-    LOCATION_3: str
-    NAME_LAST: str
-    NAME_FIRST: str
-    NAME_LST2: str
-    NAME_LAST2: str
-    NAMEMIDDLE: str
-    TITLE_ACA1: str
-    TITLE_ACA2: str
-    TITLE_ROYL: str
-    PREFIX1: str
-    PREFIX2: str
-    NAME1_TEXT: str
-    NICKNAME: str
-    INITIALS: str
-    NAMEFORMAT: str
-    NAMCOUNTRY: str
-    LANGU_CORR: str
-    XSEXM: str
-    XSEXF: str
-    BIRTHPL: str
-    MARST: str
-    EMPLO: str
-    JOBGR: str
-    NATIO: str
-    CNTAX: str
-    CNDSC: str
-    PERSNUMBER: str
-    XSEXU: str
-    XUBNAME: str
-    BU_LANGU: str
-    GENDER: str
-    BIRTHDT: str
-    DEATHDT: str
-    PERNO: str
-    CHILDREN: str
-    MEM_HOUSE: float
-    BIRTHDT_STATUS: str
-    PARTGRPTYP: str
-    NAME_GRP1: str
-    NAME_GRP2: str
-    MC_NAME1: str
-    MC_NAME2: str
-    CRUSR: str
-    CRDAT: str
-    CRTIM: str
-    CHUSR: str
-    CHDAT: str
-    CHTIM: str
-    PARTNER_GUID: Optional[str] = 00000000000000000000000000000000
-    ADDRCOMM: str
-    TD_SWITCH: str
-    IS_ORG_CENTRE: str
-    DB_KEY: Optional[str] = 00000000000000000000000000000000
-    VALID_FROM: float
-    VALID_TO: float
-    XPCPT: str
-    DATA_CTRLR1: str
-    DATA_CTRLR2: str
-    DATA_CTRLR3: str
-    DATA_CTRLR4: str
-    DATA_CTRLR5: str
-    DATA_CTRLR6: str
-    DATA_CTRLR7: str
-    DATA_CTRLR8: str
-    DATA_CTRLR9: str
-    DATA_CTRLR10: str
-    XDCSET: str
-    CEEIB_SK_RESID: str = Field(alias="/CEEIB/SK_RESID")
-    BANK_AREA: str
-    CREDIT_TAX_CODE: str
-    DEBIT_TAX_CODE: str
-    CREDIT_TAX_TYPE: str
-    DEBIT_TAX_TYPE: str
-    NATPERS: str
-    MILVE: str
-    NUC_SEC: str
-    PAR_REL: str
-    BP_SORT: str
-    KBANKS: str
-    KBANKL: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    AUFNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GLTRP: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSTRP: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FTRMS: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GLTRS: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSTRS: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSTRI: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GETRI: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GLTRI: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FTRMI: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FTRMP: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSNUM: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    GASMG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    GAMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GMEIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNBEZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNAW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PVERW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLAUF: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    PLSVB: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNME: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PLSVN: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PDATV: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAENR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    LODIV: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLBEZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLST: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SDATV: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    SBMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SBMEH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAENR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLAN: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SLSVN: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SLSBS: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUFLD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISPO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUFPL: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FEVOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FHORI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TERKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REDKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APRIO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NTZUE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VORUE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROFID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VORGZ: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SICHZ: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FREIZ: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UPTER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEDID: Optional[SapNvarchar] = 000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRONR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZAEHL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MZAEHL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZKRIZ: Optional[SapNvarchar] = 0000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRUEFLOS: Optional[SapNvarchar] = 000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KLVARP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KLVARI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RGEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_AOB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_ARBEI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GLTPP: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSTPP: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GLTPS: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSTPS: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FTRPS: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RDKZP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TRKZP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RUECK: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RMZHL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    IGMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RATID: Optional[SapNvarchar] = 000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GROID: Optional[SapNvarchar] = 000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUOBJ: Optional[SapNvarchar] = 000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GLUZS: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSUZS: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REVLV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSHTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSHID: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSNTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSNID: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAUTERM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAUCOST: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    STUFE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    WEGXX: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VWEGX: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARSNR: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARSPS: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAUFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LKNOT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RKNOT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRODNET: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    IASMG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABARB: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUFNT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUFPT: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APLZT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NO_DISP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CSPLIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CY_SEQNR: Optional[SapNvarchar] = 00000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BREAKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VORGZ_TRM: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SICHZ_TRM: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TRMDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GLUZP: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSUZP: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSUZI: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GEUZI: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GLUPP: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSUPP: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GLUPS: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSUPS: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHSCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KAPT_VORGZ: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KAPT_SICHZ: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEAD_AUFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PNETSTARTD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PNETSTARTT: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PNETENDD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PNETENDT: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KKALKR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SFCPF: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    RMNGA: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSBTR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    VFMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NOPCOST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NETZKONT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATRKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBJTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CH_PROC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KAPVERSA: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COLORDPROC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZERB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONF_KEY: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ST_ARBID: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSNMR_V: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TERHW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPLSTAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COSTUPD: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MAX_GAMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MES_ROUTINGID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TL_VERSN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BOM_VERSN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLEXIBLE_PROCESSING: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADPSP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RMANR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POSNR_RMA: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POSNV_RMA: Optional[SapNvarchar] = 000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    CFB_MAXLZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CFB_LZEIH: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    CFB_ADTDAYS: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CFB_DATOFM: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CFB_BBDPI: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OIHANTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_MPROD_ORD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_BUNDLE: Optional[SapNvarchar] = ""
+    # SAP HANA type: INTEGER | Forced nullable
+    MILL_RATIO: Optional[SapInteger] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BMEINS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BMENGE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MILL_OC_ZUSKZ: Optional[SapNvarchar] = ""
 
-class But020(BaseModel):
-    CLIENT: Key[str]
-    PARTNER: Key[str]
-    ADDRNUMBER: Key[str]
-    XDFADR: str
-    ADEXT: str
-    NATION: str
-    GUID: str
-    MOVE_ADDR: str
-    DATE_FROM: str
-    ADDRESS_GUID: Optional[str] = 00000000000000000000000000000000
-    ADDR_VALID_FROM: float
-    ADDR_VALID_TO: float
-    ADDR_MOVE_DATE: float
+class Afpo(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: AFPO
+    Schema: SAPHANADB
+    """
 
-class But050(BaseModel):
-    CLIENT: Key[str]
-    RELNR: Key[str]
-    PARTNER1: Key[str]
-    PARTNER2: Key[str]
-    DATE_TO: Key[str]
-    DATE_FROM: str
-    RELTYP: str
-    XRF: str
-    DFTVAL: str
-    RLTYP: str
-    RELKIND: str
-    CRUSR: str
-    CRDAT: str
-    CRTIM: str
-    CHUSR: str
-    CHDAT: str
-    CHTIM: str
-    XDFREL: str
-    XDFREL2: str
-    DB_KEY: Optional[str] = 00000000000000000000000000000000
-    DB_KEY_TD: Optional[str] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    AUFNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    POSNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSOBS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QUNUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QUPOS: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROJN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STRMP: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ETRMP: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDAUF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDPOS: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDEIN: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BESKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PSAMG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PSMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    WEMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    IAMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AMEIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEINS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PAMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PGMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNTTP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TPAUF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTRMI: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTRMP: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALNR: Optional[SapNvarchar] = 000000000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    UEBTO: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UEBTK: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    UNTTO: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INSMK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEPOS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWTAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWTTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PWERK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    UMREZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    UMREN: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    WEBAZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ELIKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TECHS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DWERK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DAUTY: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DAUAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DGLTP: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DGLTS: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DFREI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DNREL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERTO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOBKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZVBR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    WEWRT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEUNB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABLAD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEMPF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHARG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEAED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUOBJ: Optional[SapNvarchar] = 000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBNKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARSNR: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARSPS: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KRSNR: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KRSPS: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KCKEY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RTP01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RTP02: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RTP03: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RTP04: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KSVON: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KSBIS: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBJNP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NDISR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VFMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSBTR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZAVC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZBWS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XLOEK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERNP: Optional[SapNvarchar] = ""
+    # SAP HANA type: INTEGER | Forced nullable
+    ANZSN: Optional[SapInteger] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBJTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CH_PROC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FXPRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUOBJ_ROOT: Optional[SapNvarchar] = 000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BERID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TECHS_COPY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_SCAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUNNR2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SEASON_YEAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SEASON: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_COLLECTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_THEME: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    FSH_SALLOC_QTY: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MILL_OC_AUFNR_U: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MILL_OC_RUMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MILL_OC_SORT: Optional[SapNvarchar] = 00000000
 
-class But100(BaseModel):
-    MANDT: Key[str]
-    PARTNER: Key[str]
-    RLTYP: Key[str]
-    DFVAL: Key[str]
-    VALID_FROM: float
-    VALID_TO: float
-    ROLE: str
-    AUTHORITY: str
+class Afvc(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: AFVC
+    Schema: SAPHANADB
+    """
 
-class Cabn(BaseModel):
-    MANDT: Key[str]
-    ATINN: Key[str]
-    ADZHL: Key[str]
-    ATNAM: str
-    ATIDN: str
-    ATFOR: str
-    ANZST: int
-    ANZDZ: int
-    ATVOR: str
-    ATSCH: str
-    ATKLE: str
-    ATKON: str
-    ATEND: str
-    ATAEN: str
-    ATKLA: str
-    ATERF: str
-    ATEIN: str
-    ATAME: str
-    ATWME: str
-    MSEHI: str
-    ATDIM: int
-    ATGLO: str
-    ATGLA: str
-    ATINT: str
-    ATUNS: str
-    ATSON: str
-    ATTAB: str
-    ATFEL: str
-    ATTEI: str
-    ATPRT: str
-    ATPRR: str
-    ATPRF: str
-    ATWRD: str
-    ATFOD: str
-    ATHIE: str
-    ATDEX: str
-    ATFGA: str
-    ATVSC: str
-    ANAME: str
-    ADATU: str
-    VNAME: str
-    VDATU: str
-    ATXAC: str
-    ATYAC: str
-    ATMST: str
-    ATWSO: str
-    ATBSO: str
-    DATUV: str
-    TECHV: str
-    AENNR: str
-    LKENZ: str
-    ATWRI: str
-    DOKAR: str
-    DOKNR: str
-    DOKVR: str
-    DOKTL: str
-    KNOBJ: str
-    ATINP: str
-    ATVIE: str
-    WERKS: str
-    KATALOGART: str
-    AUSWAHLMGE: str
-    ATHKA: str
-    ATHKO: str
-    CLINT: str
-    ATTOL: str
-    ATZUS: str
-    ATVPL: str
-    ATAUTH: str
-    COUNTRYGRP: str
-    DATUB: str
-    LASTCHANGEDDATETIME: datetime
-    UNIT: str
-    CURRENCY: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    AUFPL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    APLZL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNFL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNKN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VINTV: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZAEHL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VORNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STEUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARBID: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PDEST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTSCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTXA1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTXA2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXTSP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VPLTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VPLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VPLAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VPLFL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGWTS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAR01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAR02: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAR03: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAR04: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAR05: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAR06: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZERMA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGDAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZCODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZULNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    LOANZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSANZ: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QUALF: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ANZMA: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFSCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RASCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    AUFAK: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UEMUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UEKAN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLIES: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPMUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SPLIM: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABLIPKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSTRA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SUMNR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SORTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PREIS: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PEINH: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAKTO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WAERS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ESOKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKORG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZLGF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZWRTF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATKL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DDEHN: Optional[SapNvarchar] = ""
+    # SAP HANA type: SMALLINT | Forced nullable
+    ANZZL: Optional[SapSmallInt] = 0
+    # SAP HANA type: SMALLINT | Forced nullable
+    PRZNT: Optional[SapSmallInt] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MLSTN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PPRIO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUKRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANFKO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANFKOKRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INDET: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LARNT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PRKST: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APLFL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RUECK: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RMZHL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROJN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBJNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SPANZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEDID: Optional[SapNvarchar] = 000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEDZL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BANFN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BNFPO: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEK01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEK02: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEK03: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEK04: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEK05: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEK06: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SELKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRSP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STDKN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANLZU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISTRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISTTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISTNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISTKN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISTPO: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IUPOZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEKNW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NPRIO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PVZKN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PHFLG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PHSEQ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNOBJ: Optional[SapNvarchar] = 000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERFSICHT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QPPKTABS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBJEKTID: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QLKAPAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSTUF: Optional[SapNvarchar] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NPTXTKY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SUBSYS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSPNR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PACKNO: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXJCD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCOPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRCTR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NO_DISP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QKZPRZEIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QKZZTMG1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QKZPRMENG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QKZPRFREI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZFEAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QKZTLSBEST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUOBJ_ARB: Optional[SapNvarchar] = 000000000000000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    EVGEW: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARBII: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERKI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CY_SEQNRV: Optional[SapNvarchar] = 00000000000000
+    # SAP HANA type: INTEGER | Forced nullable
+    KAPT_PUFFR: Optional[SapInteger] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBELN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBELP: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEMPF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABLAD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CLASF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRUNV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZSCHL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALSM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCHED_END: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NETZKONT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OWAER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AFNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEDNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZFIX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PERNR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRDLB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QPART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    WKURS: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROD_ACT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FPLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBJTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CH_PROC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KLVAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALNR: Optional[SapNvarchar] = 000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORDN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORDP: Optional[SapNvarchar] = 00000
+    # SAP HANA type: DECIMAL | Forced nullable
+    MAT_PRKST: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRZ01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFPNT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FUNC_AREA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TECHS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADPSP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFIPPNT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MES_OPERID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MES_STEPID: Optional[SapNvarchar] = ""
+    # SAP HANA type: INTEGER | Forced nullable
+    OAN_INST_ID_SETUP: Optional[SapInteger] = 0
+    # SAP HANA type: INTEGER | Forced nullable
+    OAN_INST_ID_PRODUCE: Optional[SapInteger] = 0
+    # SAP HANA type: INTEGER | Forced nullable
+    OAN_INST_ID_TEARDOWN: Optional[SapInteger] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TL_VERSN: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    VERSN_TRACK_GUID: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAINTORDOPPROCESSPHASECODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAINTORDOPPROCESSSUBPHASECODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CL_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALLMAINTORDCOMPCMTDQTSAREKEPT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_EAM_AFVC_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_AFVC_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    CUM_CUGUID: Optional[SapVarbinary] = Field(alias="/CUM/CUGUID", default=00000000000000000000000000000000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISDFPS_OBJNR: Optional[SapNvarchar] = Field(alias="/ISDFPS/OBJNR", default="")
+    # SAP HANA type: SMALLINT | Forced nullable
+    AFVC_STATUS: Optional[SapSmallInt] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADRNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADRN2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUNN2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IND_ADR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLDLOGSDELIVISHELDONSHORE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MILL_OC_AUFNR_MO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PS_ADRNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PS_ADRN2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PS_KUNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PS_EMLIF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WTY_IND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TPLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQUNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAINTOPEXECUTIONPHASECODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    CPD_UPDAT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAINTORDOPHASLEANSERVICES: Optional[SapNvarchar] = ""
 
-class Cawn(BaseModel):
-    MANDT: Key[str]
-    ATINN: Key[str]
-    ATZHL: Key[str]
-    ADZHL: Key[str]
-    ATWRT: str
-    ATFLV: float
-    ATFLB: float
-    ATCOD: str
-    ATSTD: str
-    ATAWE: str
-    ATAW1: str
-    ATIDN: str
-    SPRAS: str
-    TXTNR: str
-    DATUV: str
-    TECHV: str
-    AENNR: str
-    LKENZ: str
-    DOKAR: str
-    DOKNR: str
-    DOKVR: str
-    DOKTL: str
-    ATZHH: str
-    KNOBJ: str
-    ATWHI: str
-    ATTLV: float
-    ATTLB: float
-    ATPRZ: str
-    ATINC: float
-    ATVPL: str
-    DATUB: str
-    DEC_FROM: float
-    DEC_TO: float
-    DATE_FROM: str
-    DATE_TO: str
-    TIME_FROM: datetime
-    TIME_TO: datetime
-    CURR_FROM: float
-    CURR_TO: float
-    CURRENCY: str
+class Afvv(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: AFVV
+    Schema: SAPHANADB
+    """
 
-class Crca(BaseModel):
-    MANDT: Key[str]
-    OBJTY: Key[str]
-    OBJID: Key[str]
-    CANUM: Key[str]
-    BEGDA: str
-    ENDDA: str
-    AEDAT_KAPA: str
-    AENAM_KAPA: str
-    KAPID: str
-    FORK1: str
-    FORK2: str
-    FORK3: str
-    FORKN: str
-    PROZT: str
-    VERT1: str
-    VERT2: str
-    VERT3: str
-    VERTN: str
-    CAROL: str
-    ISTBED_KZ: str
-    VGWT1: str
-    VGWT2: str
-    VGWT3: str
-    VGWTN: str
-    CAP_BACKFLUSH_SU: str
-    CAP_BACKFLUSH_PR: str
-    CAP_BACKFLUSH_TD: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    AUFPL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    APLZL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEINH: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    UMREN: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    UMREZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BMSCH: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZMERH: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEIER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGE01: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VGW01: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGE02: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VGW02: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGE03: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VGW03: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGE04: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VGW04: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGE05: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VGW05: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGE06: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VGW06: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEIMU: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZMINU: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MINWE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEIMB: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZMINB: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEILM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZLMAX: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEILP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZLPRO: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEIWN: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZWNOR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEIWM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZWMIN: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEITN: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZTNOR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEITM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZTMIN: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PLIFZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    DAUNO: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DAUNE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    DAUMI: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DAUME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EINSA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EINSE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ARBEI: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARBEH: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MGVRG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ASVRG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    LMNGA: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    XMNGA: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    GMNGA: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ISM01: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ISM02: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ISM03: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ISM04: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ISM05: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ISM06: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ISMNW: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSAVD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSAVZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSSBD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSSBZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSSAD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSSAZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSEDD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSEDZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSSLD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSSLZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSELD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSELZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SSAVD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SSAVZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SSSBD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SSSBZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SSSAD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SSSAZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SSEDD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SSEDZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SSSLD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SSSLZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SSELD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SSELZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISAVD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IEAVD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISDD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISDZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IERD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IERZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISBD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISBZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IEBD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IEBZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISAD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISAZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IEDD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IEDZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PEDD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PEDZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    PUFFR: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PUFGS: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NTANF: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NTANZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NTEND: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NTENZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EWSTD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EWSTZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EWEND: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EWENZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    EWDAN: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EWDNE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    EWDAM: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EWDME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EWSTE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EWSTA: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    WARTZ: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WRTZE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    RUEST: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSTZE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    BEARZ: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEAZE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    ABRUE: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARUZE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    LIEGZ: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIGZE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    TRANZ: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TRAZE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ISERH: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    OFM01: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    OFM02: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    OFM03: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    OFM04: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    OFM05: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    OFM06: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    OFMNW: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BZOFFB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EHOFFB: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    OFFSTB: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    OFFSTE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BZOFFE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EHOFFE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FPAVD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FPAVZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FPEDD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FPEDZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPAVD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPAVZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPEDD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPEDZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEAZP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PUFGP: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PUFFP: Optional[SapDecimal] = 0
+    # SAP HANA type: DOUBLE | Forced nullable
+    BEARP: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EPANF: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EPANZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EPEND: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EPENZ: Optional[SapNvarchar] = 000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    PDAU: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PDAE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNOTE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSTZW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSTGA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QRASTZEHT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    QRASTZFAK: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    QRASTMENG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QRASTEREH: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    AUFKT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    RMNGA: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ILE01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ILE02: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ILE03: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ILE04: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ILE05: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ILE06: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    RWFAK: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    IPRZ1: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IPRE1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IPRK1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAKT: Optional[SapNvarchar] = 0000
+    # SAP HANA type: DECIMAL | Forced nullable
+    OPRZ1: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OPRE1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSPM_INDICATOR: Optional[SapNvarchar] = ""
 
-class Crfh(BaseModel):
-    MANDT: Key[str]
-    OBJTY: Key[str]
-    OBJID: Key[str]
-    ZAEHL: Key[str]
-    FHMAR: str
-    OBJTY_V: str
-    OBJID_V: str
-    LOEKZ: str
-    DATUV: str
-    DATUB: str
-    AENNR: str
-    ANNAM: str
-    ANDAT: str
-    AENAM: str
-    AEDAT: str
-    BRGRU: str
-    STATUS: str
-    KZKBL: str
-    STOWK: str
-    STORT: str
-    BASEH: str
-    STEUF: str
-    STEUF_REF: str
-    FGRU1: str
-    FGRU2: str
-    PLANV: str
-    KTSCH: str
-    KTSCH_REF: str
-    BZOFFB: str
-    BZOFFB_REF: str
-    OFFSTB: float
-    EHOFFB: str
-    OFFSTB_REF: str
-    BZOFFE: str
-    BZOFFE_REF: str
-    OFFSTE: float
-    EHOFFE: str
-    OFFSTE_REF: str
-    MGFORM: str
-    MGFORM_REF: str
-    EWFORM: str
-    EWFORM_REF: str
-    PAR01: str
-    PAR02: str
-    PAR03: str
-    PAR04: str
-    PAR05: str
-    PAR06: str
-    PARU1: str
-    PARU2: str
-    PARU3: str
-    PARU4: str
-    PARU5: str
-    PARU6: str
-    PARV1: float
-    PARV2: float
-    PARV3: float
-    PARV4: float
-    PARV5: float
-    PARV6: float
-    REGISTRABLE: str
-    TOOL_WC_OBJTY: str
-    TOOL_WC_OBJID: str
-    TOOL_WC_WERKS: str
+class Bp030(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: BP030
+    Schema: SAPHANADB
+    """
 
-class Crhd(BaseModel):
-    MANDT: Key[str]
-    OBJTY: Key[str]
-    OBJID: Key[str]
-    BEGDA: str
-    ENDDA: str
-    AEDAT_GRND: str
-    AENAM_GRND: str
-    AEDAT_VORA: str
-    AENAM_VORA: str
-    AEDAT_TERM: str
-    AENAM_TERM: str
-    AEDAT_TECH: str
-    AENAM_TECH: str
-    ARBPL: str
-    WERKS: str
-    VERWE: str
-    LVORM: str
-    PAR01: str
-    PAR02: str
-    PAR03: str
-    PAR04: str
-    PAR05: str
-    PAR06: str
-    PARU1: str
-    PARU2: str
-    PARU3: str
-    PARU4: str
-    PARU5: str
-    PARU6: str
-    PARV1: float
-    PARV2: float
-    PARV3: float
-    PARV4: float
-    PARV5: float
-    PARV6: float
-    PLANV: str
-    STAND: str
-    VERAN: str
-    VGWTS: str
-    VGM01: str
-    VGM02: str
-    VGM03: str
-    VGM04: str
-    VGM05: str
-    VGM06: str
-    XDEFA: str
-    XKOST: str
-    XSPRR: str
-    XTERM: str
-    ZGR01: str
-    ZGR02: str
-    ZGR03: str
-    ZGR04: str
-    ZGR05: str
-    ZGR06: str
-    KTSCH: str
-    LOANZ: float
-    LOART: str
-    LOGRP: str
-    QUALF: str
-    RASCH: str
-    STEUS: str
-    VGE01: str
-    VGE02: str
-    VGE03: str
-    VGE04: str
-    VGE05: str
-    VGE06: str
-    KTSCH_REF: str
-    LOART_REF: str
-    LOANZ_REF: str
-    LOGRP_REF: str
-    QUALF_REF: str
-    RASCH_REF: str
-    STEUS_REF: str
-    FORT1: str
-    FORT2: str
-    FORT3: str
-    KAPID: str
-    ORTGR: str
-    ZEIWN: str
-    ZWNOR: float
-    ZEIWM: str
-    ZWMIN: float
-    FORMR: str
-    MATYP: str
-    CPLGR: str
-    SORTB: str
-    MTRVP: float
-    MTMVP: float
-    MTPVP: float
-    RSANZ: str
-    PDEST: str
-    HROID: str
-    FORTN: str
-    ZGR01_REF: str
-    ZGR02_REF: str
-    ZGR03_REF: str
-    ZGR04_REF: str
-    ZGR05_REF: str
-    ZGR06_REF: str
-    STEUS_C: str
-    STEUS_I: str
-    STEUS_N: str
-    STEUS_Q: str
-    RUZUS: str
-    RSANZ_REF: str
-    HR: str
-    PRVBE: str
-    SUBSYS: str
-    BDEGR: str
-    RGEKZ: str
-    HRTYP: str
-    SLWID: str
-    LIFNR: str
-    SLWID_REF: str
-    LIFNR_REF: str
-    VGARB: str
-    VGDIM: str
-    HRPLVAR: str
-    VGDAU: str
-    STOBJ: str
-    RESGR: str
-    LGORT_RES: str
-    MIXMAT: str
-    ISTBED_KZ: str
-    LASTCHANGE_DATETIME: datetime
-    EBELN_EXT: str
-    EBELP_EXT: str
-    LIFNR_EXT: str
-    EKGRP_EXT: str
-    EKORG_EXT: str
-    MGHNO_EXT: str
-    MATKL_EXT: str
-    PPSKZ: str
-    SRTYPE: str
-    SNTYPE: str
-    S_LABOR_TRACK: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    PARTNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ADR_REF_K: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ADR_DAT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADRNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDRNUMBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDRESS_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADR_D_E: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADR_LOC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLOOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ROOM_NR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME_CO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PFACH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSTL2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELF1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELF2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELFX1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELFX2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELBX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELX1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATLT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELTX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADSMTP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELNR_CALL1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELNR_CALL2: Optional[SapNvarchar] = ""
 
-class Crtx(BaseModel):
-    MANDT: Key[str]
-    OBJTY: Key[str]
-    OBJID: Key[str]
-    SPRAS: Key[str]
-    AEDAT_TEXT: str
-    AENAM_TEXT: str
-    KTEXT: str
-    KTEXT_UP: str
+class But000(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: BUT000
+    Schema: SAPHANADB
+    """
 
-class Dd01t(BaseModel):
-    DOMNAME: Key[str]
-    DDLANGUAGE: Key[str]
-    AS4LOCAL: Key[str]
-    AS4VERS: Key[str]
-    DDTEXT: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    CLIENT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    PARTNER: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BPKIND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BU_GROUP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BPEXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BU_SORT1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BU_SORT2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOURCE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TITLE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XDELE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XBLCK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TITLE_LET: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BU_LOGSYS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONTACT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NOT_RELEASED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NOT_LG_COMPETENT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRINT_MODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BP_EEW_DUMMY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RATE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME_ORG1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME_ORG2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME_ORG3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME_ORG4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEGAL_ENTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IND_SECTOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEGAL_ORG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DC_NOT_REQ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FOUND_DAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIQUID_DAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOCATION_1: Optional[SapNvarchar] = 0000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOCATION_2: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOCATION_3: Optional[SapNvarchar] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME_LAST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME_FIRST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME_LST2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME_LAST2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAMEMIDDLE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TITLE_ACA1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TITLE_ACA2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TITLE_ROYL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PREFIX1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PREFIX2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME1_TEXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NICKNAME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INITIALS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAMEFORMAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAMCOUNTRY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LANGU_CORR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XSEXM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XSEXF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BIRTHPL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MARST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EMPLO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    JOBGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NATIO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CNTAX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CNDSC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PERSNUMBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XSEXU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XUBNAME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BU_LANGU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GENDER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BIRTHDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DEATHDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PERNO: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHILDREN: Optional[SapNvarchar] = 00
+    # SAP HANA type: DECIMAL | Forced nullable
+    MEM_HOUSE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BIRTHDT_STATUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARTGRPTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME_GRP1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME_GRP2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MC_NAME1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MC_NAME2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CRUSR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CRDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CRTIM: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHUSR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHTIM: Optional[SapNvarchar] = 000000
+    # SAP HANA type: VARBINARY | Nullable
+    PARTNER_GUID: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDRCOMM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TD_SWITCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IS_ORG_CENTRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    DB_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    VALID_FROM: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VALID_TO: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XPCPT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR6: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR7: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR8: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR9: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR10: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XDCSET: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CEEIB_SK_RESID: Optional[SapNvarchar] = Field(alias="/CEEIB/SK_RESID", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BANK_AREA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CREDIT_TAX_CODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DEBIT_TAX_CODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CREDIT_TAX_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DEBIT_TAX_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NATPERS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MILVE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NUC_SEC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAR_REL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BP_SORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBANKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBANKL: Optional[SapNvarchar] = ""
 
-class Dd02l(BaseModel):
-    TABNAME: Key[str]
-    AS4LOCAL: Key[str]
-    AS4VERS: Key[str]
-    TABCLASS: str
-    SQLTAB: str
-    DATMIN: str
-    DATMAX: str
-    DATAVG: str
-    CLIDEP: str
-    BUFFERED: str
-    COMPRFLAG: str
-    LANGDEP: str
-    ACTFLAG: str
-    APPLCLASS: str
-    AUTHCLASS: str
-    AS4USER: str
-    AS4DATE: str
-    AS4TIME: datetime
-    MASTERLANG: str
-    MAINFLAG: str
-    CONTFLAG: str
-    RESERVETAB: str
-    GLOBALFLAG: str
-    PROZPUFF: str
-    VIEWCLASS: str
-    VIEWGRANT: str
-    MULTIPLEX: str
-    SHLPEXI: str
-    PROXYTYPE: str
-    EXCLASS: str
-    WRONGCL: str
-    ALWAYSTRP: str
-    ALLDATAINCL: str
-    WITH_PARAMETERS: str
-    EXVIEW_INCLUDED: str
-    KEYMAX_FEATURE: str
-    KEYLEN_FEATURE: str
-    TABLEN_FEATURE: str
-    NONTRP_INCLUDED: str
-    VIEWREF: str
-    VIEWREF_ERR: str
-    VIEWREF_POS_CHG: str
-    TBFUNC_INCLUDED: str
-    IS_GTT: str
-    SESSION_VAR_EX: str
-    FROM_ENTITY: str
-    PK_IS_INVHASH: str
-    USED_SESSION_VARS: str
-    ABAP_LANGUAGE_VERSION: str
-    HDB_ONLY_ENTITY_INCLUDED: str
-    FIELD_SUFFIX: str
-    QUOTA_MAX_FIELDS: str
-    QUOTA_MAX_BYTES: str
-    QUOTA_SHARE_PARTNER: str
-    QUOTA_SHARE_CUSTOMER: str
+class But020(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: BUT020
+    Schema: SAPHANADB
+    """
 
-class Dd02t(BaseModel):
-    TABNAME: Key[str]
-    DDLANGUAGE: Key[str]
-    AS4LOCAL: Key[str]
-    AS4VERS: Key[str]
-    DDTEXT: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    CLIENT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    PARTNER: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ADDRNUMBER: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XDFADR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADEXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NATION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GUID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MOVE_ADDR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATE_FROM: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: VARBINARY | Nullable
+    ADDRESS_GUID: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    ADDR_VALID_FROM: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ADDR_VALID_TO: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ADDR_MOVE_DATE: Optional[SapDecimal] = 0
 
-class Eban(BaseModel):
-    MANDT: Key[str]
-    BANFN: Key[str]
-    BNFPO: Key[str]
-    BSART: str
-    BSTYP: str
-    BSAKZ: str
-    LOEKZ: str
-    STATU: str
-    ESTKZ: str
-    FRGKZ: str
-    FRGZU: str
-    FRGST: str
-    EKGRP: str
-    ERNAM: str
-    ERDAT: str
-    AFNAM: str
-    TXZ01: str
-    MATNR: str
-    EMATN: str
-    WERKS: str
-    LGORT: str
-    BEDNR: str
-    MATKL: str
-    RESWK: str
-    MENGE: float
-    MEINS: str
-    BUMNG: float
-    BADAT: str
-    LPEIN: str
-    LFDAT: str
-    FRGDT: str
-    WEBAZ: float
-    PREIS: float
-    PEINH: float
-    PSTYP: str
-    KNTTP: str
-    KZVBR: str
-    KFLAG: str
-    VRTKZ: str
-    TWRKZ: str
-    WEPOS: str
-    WEUNB: str
-    REPOS: str
-    LIFNR: str
-    FLIEF: str
-    EKORG: str
-    VRTYP: str
-    KONNR: str
-    KTPNR: str
-    INFNR: str
-    ZUGBA: str
-    QUNUM: str
-    QUPOS: str
-    DISPO: str
-    SERNR: str
-    BVDAT: str
-    BATOL: float
-    BVDRK: float
-    EBELN: str
-    EBELP: str
-    BEDAT: str
-    BSMNG: float
-    LIMIT_CONSUMPTION_VALUE: float
-    LBLNI: str
-    BWTAR: str
-    XOBLR: str
-    EBAKZ: str
-    RSNUM: str
-    SOBKZ: str
-    ARSNR: str
-    ARSPS: str
-    FIXKZ: str
-    BMEIN: str
-    REVLV: str
-    VORAB: str
-    PACKNO: str
-    KANBA: str
-    BPUEB: str
-    CUOBJ: str
-    FRGGR: str
-    FRGRL: str
-    AKTNR: str
-    CHARG: str
-    UMSOK: str
-    VERID: str
-    FIPOS: str
-    FISTL: str
-    GEBER: str
-    KZKFG: str
-    SATNR: str
-    MNG02: float
-    DAT01: str
-    ATTYP: str
-    ADRNR: str
-    ADRN2: str
-    KUNNR: str
-    EMLIF: str
-    LBLKZ: str
-    KZBWS: str
-    WAERS: str
-    IDNLF: str
-    GSFRG: str
-    MPROF: str
-    KZFME: str
-    SPRAS: str
-    TECHS: str
-    MFRPN: str
-    MFRNR: str
-    EMNFR: str
-    FORDN: str
-    FORDP: str
-    PLIFZ: float
-    BERID: str
-    UZEIT: str
-    FKBER: str
-    GRANT_NBR: str
-    MEMORY: str
-    BANPR: str
-    RLWRT: float
-    BLCKD: str
-    REVNO: str
-    BLCKT: str
-    BESWK: str
-    EPROFILE: str
-    EPREFDOC: str
-    EPREFITM: str
-    GMMNG: float
-    WRTKZ: str
-    RESLO: str
-    KBLNR: str
-    KBLPOS: str
-    PRIO_URG: str
-    PRIO_REQ: str
-    MEMORYTYPE: str
-    ANZSN: int
-    MHDRZ: float
-    IPRKZ: str
-    NODISP: str
-    SRM_CONTRACT_ID: str
-    SRM_CONTRACT_ITM: str
-    BUDGET_PD: str
-    ELDAT: str
-    EXPERT_MODE: str
-    CENTRAL_PURREQN_PROC: str
-    SPE_CRM_REF_SO: str
-    SPE_CRM_REF_ITEM: str
-    INDELEGATEAPPROVAL: str
-    DUMMY_EBAN_INCL_EEW_PS: str
-    STORENETWORKID: str
-    STORESUPPLIERID: str
-    CREATIONDATE: str
-    CREATIONTIME: datetime
-    PRODUCTTYPE: str
-    SERVICEPERFORMER: str
-    ISEOPBLOCKED: str
-    EXT_REV_TMSTMP: float
-    FMFGUS_KEY: str
-    STARTDATE: str
-    ENDDATE: str
-    EXTMATERIALFORPURG: str
-    EXTFIXEDSUPPLIERFORPURG: str
-    EXTDESIREDSUPPLIERFORPURG: str
-    EXTCONTRACTFORPURG: str
-    EXTCONTRACTITEMFORPURG: str
-    EXTINFORECORDFORPURG: str
-    EXTPLANTFORPURG: str
-    EXTSTORAGELOCATIONFORPURG: str
-    EXTCOMPANYCODEFORPURG: str
-    EXTPURGORGFORPURG: str
-    EXTSOURCESYSTEM: str
-    EXT_BE_SOURCE_SYS: str
-    EXT_BE_PRCHANGEINDICATOR: str
-    EXTDOCTYPEFORPURG: str
-    ISCRREPLICATIONBEFOREAPPROVAL: str
-    MMPUR_PR_CEN_REQN_APP_RPLD_PR: str
-    EXTAPPROVALSTATUS: str
-    STAGINGFLDEXTAPPROVALSTATUS: str
-    PURCHASEREQNITEMUNIQUEID: str
-    LASTCHANGEDATETIME: datetime
-    ISONBEHALFCART: str
-    SDM_VERSION: str
-    SAKTO: str
-    KOSTL: str
-    EXPECTED_VALUE: float
-    LIMIT_AMOUNT: float
-    CONTRACT_FOR_LIMIT: str
-    DELIVERYADDRTYPE: str
-    MWSKZ: str
-    PFMTRANSDATAFOOTPRINTUUID: Optional[str] = 00000000000000000000000000000000
-    HASTRADECOMPLIANCEISSUE: str
-    PURREQNDESCRIPTION: str
-    ISOUTLINE: str
-    PARENT_ITEM_NO: str
-    OUTLINE_TYPE: str
-    EXLIN: str
-    EXSNR: str
-    ADVCODE: str
-    STACODE: str
-    BANFN_CS: str
-    BNFPO_CS: str
-    ITEM_CS: str
-    BSMNG_SND: float
-    NO_MARD_DATA: str
-    ADMOI: str
-    ADPRI: str
-    LPRIO: str
-    ADACN: str
-    ADDNS: str
-    SERRU: str
-    DISUB_SOBKZ: str
-    DISUB_PSPNR: str
-    DISUB_KUNNR: str
-    DISUB_VBELN: str
-    DISUB_POSNR: str
-    DISUB_OWNER: str
-    FLDLOGSSUPPLYPROCESS: str
-    FLDLOGSDELIVISHELDONSHORE: str
-    FLDLOGSVERSION: str
-    FSH_SEASON_YEAR: str
-    FSH_SEASON: str
-    FSH_COLLECTION: str
-    FSH_THEME: str
-    FSH_VAS_REL: str
-    FSH_VAS_PRNT_ID: str
-    FSH_TRANSACTION: str
-    FSH_ITEM_GROUP: str
-    FSH_ITEM: str
-    IUID_RELEVANT: str
-    SC_SR_ITEM_KEY: int
-    SC_CATALOGID: str
-    SC_CATALOGITEM: str
-    SC_REQUESTOR: str
-    SC_AUTHOR: str
-    SGT_SCAT: str
-    SGT_RCAT: str
-    WRF_CHARSTC1: str
-    WRF_CHARSTC2: str
-    WRF_CHARSTC3: str
+class But050(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: BUT050
+    Schema: SAPHANADB
+    """
 
-class Ekkn(BaseModel):
-    MANDT: Key[str]
-    EBELN: Key[str]
-    EBELP: Key[str]
-    ZEKKN: Key[str]
-    LOEKZ: str
-    AEDAT: str
-    KFLAG: str
-    MENGE: float
-    VPROZ: float
-    NETWR: float
-    SAKTO: str
-    GSBER: str
-    KOSTL: str
-    PROJN: str
-    VBELN: str
-    VBELP: str
-    VETEN: str
-    KZBRB: str
-    ANLN1: str
-    ANLN2: str
-    AUFNR: str
-    WEMPF: str
-    ABLAD: str
-    KOKRS: str
-    XBKST: str
-    XBAUF: str
-    XBPRO: str
-    EREKZ: str
-    KSTRG: str
-    PAOBJNR: str
-    PRCTR: str
-    PS_PSP_PNR: str
-    NPLNR: str
-    AUFPL: str
-    IMKEY: str
-    APLZL: str
-    VPTNR: str
-    FIPOS: str
-    RECID: str
-    SERVICE_DOC_TYPE: str
-    SERVICE_DOC_ID: str
-    SERVICE_DOC_ITEM_ID: str
-    DUMMY_INCL_EEW_COBL: str
-    FISTL: str
-    GEBER: str
-    FKBER: str
-    DABRZ: str
-    AUFPL_ORD: str
-    APLZL_ORD: str
-    MWSKZ: str
-    TXJCD: str
-    NAVNW: float
-    KBLNR: str
-    KBLPOS: str
-    LSTAR: str
-    PRZNR: str
-    GRANT_NBR: str
-    BUDGET_PD: str
-    FM_SPLIT_BATCH: str
-    FM_SPLIT_BEGRU: str
-    AA_FINAL_IND: str
-    AA_FINAL_REASON: str
-    AA_FINAL_QTY: float
-    AA_FINAL_QTY_F: float
-    MENGE_F: float
-    FMFGUS_KEY: str
-    DATAAGING: str = Field(alias="_DATAAGING")
-    EGRUP: str
-    VNAME: str
-    KBLNR_CAB: str
-    KBLPOS_CAB: str
-    TCOBJNR: str
-    DATEOFSERVICE: str
-    NOTAXCORR: str
-    DIFFOPTRATE: float
-    HASDIFFOPTRATE: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    CLIENT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    RELNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    PARTNER1: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    PARTNER2: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    DATE_TO: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATE_FROM: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RELTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DFTVAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RLTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RELKIND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CRUSR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CRDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CRTIM: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHUSR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHTIM: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XDFREL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XDFREL2: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    DB_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: VARBINARY | Nullable
+    DB_KEY_TD: Optional[SapVarbinary] = 00000000000000000000000000000000
 
-class Ekko(BaseModel):
-    MANDT: Key[str]
-    EBELN: Key[str]
-    BUKRS: str
-    BSTYP: str
-    BSART: str
-    BSAKZ: str
-    LOEKZ: str
-    STATU: str
-    AEDAT: str
-    ERNAM: str
-    LASTCHANGEDATETIME: datetime
-    PINCR: str
-    LPONR: str
-    LIFNR: str
-    SPRAS: str
-    ZTERM: str
-    ZBD1T: float
-    ZBD2T: float
-    ZBD3T: float
-    ZBD1P: float
-    ZBD2P: float
-    EKORG: str
-    EKGRP: str
-    WAERS: str
-    WKURS: float
-    KUFIX: str
-    BEDAT: str
-    KDATB: str
-    KDATE: str
-    BWBDT: str
-    ANGDT: str
-    BNDDT: str
-    GWLDT: str
-    AUSNR: str
-    ANGNR: str
-    IHRAN: str
-    IHREZ: str
-    VERKF: str
-    TELF1: str
-    LLIEF: str
-    KUNNR: str
-    ACTIVE_ID: str
-    KONNR: str
-    ABGRU: str
-    AUTLF: str
-    WEAKT: str
-    RESWK: str
-    LBLIF: str
-    INCO1: str
-    INCO2: str
-    KTWRT: float
-    DISTRIBUTIONTYPE: str
-    SUBMI: str
-    KNUMV: str
-    KALSM: str
-    STAFO: str
-    LIFRE: str
-    EXNUM: str
-    UNSEZ: str
-    LOGSY: str
-    UPINC: str
-    STAKO: str
-    FRGGR: str
-    FRGSX: str
-    FRGKE: str
-    FRGZU: str
-    FRGRL: str
-    LANDS: str
-    LPHIS: str
-    ADRNR: str
-    STCEG_L: str
-    STCEG: str
-    ABSGR: str
-    ADDNR: str
-    KORNR: str
-    MEMORY: str
-    PROCSTAT: str
-    PROCESS_INDICATOR: str
-    RLWRT: float
-    CR_STAT: str
-    REVNO: str
-    SCMPROC: str
-    REASON_CODE: str
-    MEMORYTYPE: str
-    RETTP: str
-    RETPC: float
-    DPTYP: str
-    DPPCT: float
-    DPAMT: float
-    DPDAT: str
-    MSR_ID: str
-    HIERARCHY_EXISTS: str
-    GROUPING_ID: str
-    PARENT_ID: str
-    THRESHOLD_EXISTS: str
-    LEGAL_CONTRACT: str
-    DESCRIPTION: str
-    RELEASE_DATE: str
-    VSART: str
-    HANDOVERLOC: str
-    SHIPCOND: str
-    INCOV: str
-    INCO2_L: str
-    INCO3_L: str
-    INCO2_KEY: Optional[str] = 00000000000000000000000000000000
-    INCO3_KEY: Optional[str] = 00000000000000000000000000000000
-    INCO4_KEY: Optional[str] = 00000000000000000000000000000000
-    GRWCU: str
-    INTRA_REL: str
-    INTRA_EXCL: str
-    TOTAL_STATUS_PCS: str
-    TOTAL_STATUS_PMA: str
-    TOTAL_STATUS_DG: str
-    TOTAL_STATUS_SDS: str
-    QTN_ERLST_SUBMSN_DATE: str
-    FOLLOWON_DOC_CAT: str
-    FOLLOWON_DOC_TYPE: str
-    DUMMY_EKKO_INCL_EEW_PS: str
-    EXTERNALSYSTEM: str
-    EXTERNALREFERENCEID: str
-    EXT_REV_TMSTMP: float
-    ISEOPBLOCKED: str
-    ISAGED: str
-    FORCE_ID: str
-    FORCE_CNT: str
-    RELOC_ID: str
-    RELOC_SEQ_ID: str
-    SOURCE_LOGSYS: str
-    FSH_TRANSACTION: str
-    FSH_ITEM_GROUP: str
-    FSH_VAS_LAST_ITEM: str
-    FSH_OS_STG_CHANGE: str
-    TMS_REF_UUID: str
-    DMBE_PAYMENTDEEMED: str = Field(alias="/DMBE/PAYMENTDEEMED")
-    DMBE_DEALNUMBER: str = Field(alias="/DMBE/DEALNUMBER")
-    DMBE_EVGIDRENEWAL: str = Field(alias="/DMBE/EVGIDRENEWAL")
-    DMBE_EVGIDCANCEL: str = Field(alias="/DMBE/EVGIDCANCEL")
-    ZAPCGK: str
-    APCGK_EXTEND: str
-    ZBAS_DATE: str
-    ZADATTYP: str
-    ZSTART_DAT: str
-    Z_DEV: float
-    ZINDANX: str
-    ZLIMIT_DAT: str
-    NUMERATOR: str
-    HASHCAL_BDAT: str
-    HASHCAL: str
-    NEGATIVE: str
-    HASHCAL_EXISTS: str
-    KNOWN_INDEX: str
-    POSTAT: str
-    VZSKZ: str
-    FSH_SNST_STATUS: str
-    PROCE: str
-    CONC: str
-    CONT: str
-    COMP: str
-    OUTR: str
-    DESP: str
-    DESP_DAT: str
-    DESP_CARGO: str
-    PARE: str
-    PARE_DAT: str
-    PARE_CARGO: str
-    PFM_CONTRACT: str
-    POHF_TYPE: str
-    EQ_EINDT: str
-    EQ_WERKS: str
-    FIXPO: str
-    EKGRP_ALLOW: str
-    WERKS_ALLOW: str
-    CONTRACT_ALLOW: str
-    PSTYP_ALLOW: str
-    FIXPO_ALLOW: str
-    KEY_ID_ALLOW: str
-    AUREL_ALLOW: str
-    DELPER_ALLOW: str
-    EINDT_ALLOW: str
-    LTSNR_ALLOW: str
-    OTB_LEVEL: str
-    OTB_COND_TYPE: str
-    KEY_ID: str
-    OTB_VALUE: float
-    OTB_CURR: str
-    OTB_RES_VALUE: float
-    OTB_SPEC_VALUE: float
-    SPR_RSN_PROFILE: str
-    BUDG_TYPE: str
-    OTB_STATUS: str
-    OTB_REASON: str
-    CHECK_TYPE: str
-    CON_OTB_REQ: str
-    CON_PREBOOK_LEV: str
-    CON_DISTR_LEV: str
-    HAS_CATALOG_RELEVANT_ITEMS: str
-    ZHDCONTRACT: str
+class But100(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: BUT100
+    Schema: SAPHANADB
+    """
 
-class Ekpo(BaseModel):
-    MANDT: Key[str]
-    EBELN: Key[str]
-    EBELP: Key[str]
-    UNIQUEID: str
-    LOEKZ: str
-    STATU: str
-    AEDAT: str
-    TXZ01: str
-    MATNR: str
-    EMATN: str
-    BUKRS: str
-    WERKS: str
-    LGORT: str
-    BEDNR: str
-    MATKL: str
-    INFNR: str
-    IDNLF: str
-    KTMNG: float
-    MENGE: float
-    MEINS: str
-    BPRME: str
-    BPUMZ: float
-    BPUMN: float
-    UMREZ: float
-    UMREN: float
-    NETPR: float
-    PEINH: float
-    NETWR: float
-    BRTWR: float
-    AGDAT: str
-    WEBAZ: float
-    MWSKZ: str
-    TXDAT_FROM: str
-    TXDAT: str
-    TAX_COUNTRY: str
-    BONUS: str
-    INSMK: str
-    SPINF: str
-    PRSDR: str
-    SCHPR: str
-    MAHNZ: float
-    MAHN1: float
-    MAHN2: float
-    MAHN3: float
-    UEBTO: float
-    UEBTK: str
-    UNTTO: float
-    BWTAR: str
-    BWTTY: str
-    ABSKZ: str
-    AGMEM: str
-    ELIKZ: str
-    EREKZ: str
-    PSTYP: str
-    KNTTP: str
-    KZVBR: str
-    VRTKZ: str
-    TWRKZ: str
-    WEPOS: str
-    WEUNB: str
-    REPOS: str
-    WEBRE: str
-    KZABS: str
-    LABNR: str
-    KONNR: str
-    KTPNR: str
-    ABDAT: str
-    ABFTZ: float
-    ETFZ1: float
-    ETFZ2: float
-    KZSTU: str
-    NOTKZ: str
-    LMEIN: str
-    EVERS: str
-    ZWERT: float
-    NAVNW: float
-    ABMNG: float
-    PRDAT: str
-    BSTYP: str
-    EFFWR: float
-    XOBLR: str
-    KUNNR: str
-    ADRNR: str
-    EKKOL: str
-    SKTOF: str
-    STAFO: str
-    PLIFZ: float
-    NTGEW: float
-    GEWEI: str
-    TXJCD: str
-    ETDRK: str
-    SOBKZ: str
-    ARSNR: str
-    ARSPS: str
-    INSNC: str
-    SSQSS: str
-    ZGTYP: str
-    EAN11: str
-    BSTAE: str
-    REVLV: str
-    GEBER: str
-    FISTL: str
-    FIPOS: str
-    KO_GSBER: str
-    KO_PARGB: str
-    KO_PRCTR: str
-    KO_PPRCTR: str
-    MEPRF: str
-    BRGEW: float
-    VOLUM: float
-    VOLEH: str
-    INCO1: str
-    INCO2: str
-    VORAB: str
-    KOLIF: str
-    LTSNR: str
-    PACKNO: str
-    FPLNR: str
-    GNETWR: float
-    STAPO: str
-    UEBPO: str
-    LEWED: str
-    EMLIF: str
-    LBLKZ: str
-    SATNR: str
-    ATTYP: str
-    VSART: str
-    HANDOVERLOC: str
-    KANBA: str
-    ADRN2: str
-    DELIVERY_ADDRESS_TYPE: str
-    CUOBJ: str
-    XERSY: str
-    EILDT: str
-    DRDAT: str
-    DRUHR: str
-    DRUNR: str
-    AKTNR: str
-    ABELN: str
-    ABELP: str
-    ANZPU: float
-    PUNEI: str
-    SAISO: str
-    SAISJ: str
-    EBON2: str
-    EBON3: str
-    EBONF: str
-    MLMAA: str
-    MHDRZ: float
-    ANFNR: str
-    ANFPS: str
-    KZKFG: str
-    USEQU: str
-    UMSOK: str
-    BANFN: str
-    BNFPO: str
-    MTART: str
-    UPTYP: str
-    UPVOR: str
-    KZWI1: float
-    KZWI2: float
-    KZWI3: float
-    KZWI4: float
-    KZWI5: float
-    KZWI6: float
-    SIKGR: str
-    MFZHI: float
-    FFZHI: float
-    RETPO: str
-    AUREL: str
-    BSGRU: str
-    LFRET: str
-    MFRGR: str
-    NRFHG: str
-    J_1BNBM: str
-    J_1BMATUSE: str
-    J_1BMATORG: str
-    J_1BOWNPRO: str
-    J_1BINDUST: str
-    ABUEB: str
-    NLABD: str
-    NFABD: str
-    KZBWS: str
-    BONBA: float
-    FABKZ: str
-    LOADINGPOINT: str
-    J_1AINDXP: str
-    J_1AIDATEP: str
-    MPROF: str
-    EGLKZ: str
-    KZTLF: str
-    KZFME: str
-    RDPRF: str
-    TECHS: str
-    CHG_SRV: str
-    CHG_FPLNR: str
-    MFRPN: str
-    MFRNR: str
-    EMNFR: str
-    NOVET: str
-    AFNAM: str
-    TZONRC: str
-    IPRKZ: str
-    LEBRE: str
-    BERID: str
-    XCONDITIONS: str
-    APOMS: str
-    CCOMP: str
-    GRANT_NBR: str
-    FKBER: str
-    STATUS: str
-    RESLO: str
-    KBLNR: str
-    KBLPOS: str
-    PS_PSP_PNR: str
-    KOSTL: str
-    SAKTO: str
-    WEORA: str
-    SRV_BAS_COM: str
-    PRIO_URG: str
-    PRIO_REQ: str
-    EMPST: str
-    DIFF_INVOICE: str
-    TRMRISK_RELEVANT: str
-    CREATIONDATE: str
-    CREATIONTIME: datetime
-    VCM_CHAIN_CATEGORY: str
-    SPE_ABGRU: str
-    SPE_CRM_SO: str
-    SPE_CRM_SO_ITEM: str
-    SPE_CRM_REF_SO: str
-    SPE_CRM_REF_ITEM: str
-    SPE_CRM_FKREL: str
-    SPE_CHNG_SYS: str
-    SPE_INSMK_SRC: str
-    SPE_CQ_CTRLTYPE: str
-    SPE_CQ_NOCQ: str
-    REASON_CODE: str
-    CQU_SAR: float
-    ANZSN: int
-    SPE_EWM_DTC: str
-    EXLIN: str
-    EXSNR: str
-    EHTYP: str
-    RETPC: float
-    DPTYP: str
-    DPPCT: float
-    DPAMT: float
-    DPDAT: str
-    FLS_RSTO: str
-    EXT_RFX_NUMBER: str
-    EXT_RFX_ITEM: str
-    EXT_RFX_SYSTEM: str
-    SRM_CONTRACT_ID: str
-    SRM_CONTRACT_ITM: str
-    GOODS_COUNT_CORRECTION: str
-    LIFEX: str
-    LIFEXPOS: str
-    BLK_REASON_ID: str
-    BLK_REASON_TXT: str
-    ITCONS: str
-    FIXMG: str
-    WABWE: str
-    CMPL_DLV_ITM: str
-    INCO2_L: str
-    INCO3_L: str
-    INCO2_KEY: Optional[str] = 00000000000000000000000000000000
-    INCO3_KEY: Optional[str] = 00000000000000000000000000000000
-    INCO4_KEY: Optional[str] = 00000000000000000000000000000000
-    STAWN: str
-    ISVCO: str
-    GRWRT: float
-    SERVICEPERFORMER: str
-    PRODUCTTYPE: str
-    GR_BY_SES: str
-    PRICE_CHANGE_IN_SES_ALLOWED: str
-    REQUESTFORQUOTATION: str
-    REQUESTFORQUOTATIONITEM: str
-    RENEGOTIATION_STATUS: str
-    STATUS_PCS: str
-    STATUS_PMA: str
-    STATUS_DG: str
-    STATUS_SDS: str
-    EXTMATERIALFORPURG: str
-    PROCMT_HUB_SOURCE_SYSTEM: str
-    TARGET_VALUE: float
-    EXTERNALREFERENCEID: str
-    TC_AUT_DET: str
-    MANUAL_TC_REASON: str
-    FISCAL_INCENTIVE: str
-    TAX_SUBJECT_ST: str
-    FISCAL_INCENTIVE_ID: str
-    SF_TXJCD: str
-    DUMMY_EKPO_INCL_EEW_PS: str
-    EXPECTED_VALUE: float
-    LIMIT_AMOUNT: float
-    CONTRACT_FOR_LIMIT: str
-    ENH_DATE1: str
-    ENH_DATE2: str
-    ENH_PERCENT: float
-    ENH_NUMC1: str
-    DATAAGING: str = Field(alias="_DATAAGING")
-    CUPIT: str
-    CIGIT: str
-    MGOIT: str
-    TXS_BUSINESS_TRANSACTION: str
-    TXS_MATERIAL_USAGE: str
-    TXS_USAGE_PURPOSE: str
-    BEV1_NEGEN_ITEM: str = Field(alias="/BEV1/NEGEN_ITEM")
-    BEV1_NEDEPFREE: str = Field(alias="/BEV1/NEDEPFREE")
-    BEV1_NESTRUCCAT: str = Field(alias="/BEV1/NESTRUCCAT")
-    ADVCODE: str
-    BUDGET_PD: str
-    EXCPE: str
-    FMFGUS_KEY: str
-    IUID_RELEVANT: str
-    MRPIND: str
-    SGT_SCAT: str
-    SGT_RCAT: str
-    TMS_REF_UUID: str
-    TMS_SRC_LOC_KEY: Optional[str] = 00000000000000000000000000000000
-    TMS_DES_LOC_KEY: Optional[str] = 00000000000000000000000000000000
-    WRF_CHARSTC1: str
-    WRF_CHARSTC2: str
-    WRF_CHARSTC3: str
-    REFSITE: str
-    DMBE_OPTIONALITYKEY: str = Field(alias="/DMBE/OPTIONALITYKEY")
-    DMBE_OPTIONALITYFOR: str = Field(alias="/DMBE/OPTIONALITYFOR")
-    DMBE_CIMAX2: str = Field(alias="/DMBE/CIMAX2")
-    DMBE_ITEM_TYPE: str = Field(alias="/DMBE/ITEM_TYPE")
-    DMBE_EFFECTIVEDATEFROM: str = Field(alias="/DMBE/EFFECTIVEDATEFROM")
-    DMBE_EFFECTIVEDATETO: str = Field(alias="/DMBE/EFFECTIVEDATETO")
-    DMBE_OPTIONOF: str = Field(alias="/DMBE/OPTIONOF")
-    DMBE_ACCOUNTING_TYPE: str = Field(alias="/DMBE/ACCOUNTING_TYPE")
-    DMBE_FAS_CODE: str = Field(alias="/DMBE/FAS_CODE")
-    DMBE_SCHEDULING_DESK: str = Field(alias="/DMBE/SCHEDULING_DESK")
-    DMBE_COMPONENTFOR: str = Field(alias="/DMBE/COMPONENTFOR")
-    DMBE_MIXEDPRODUCT: str = Field(alias="/DMBE/MIXEDPRODUCT")
-    DMBE_POSTEDDATE: str = Field(alias="/DMBE/POSTEDDATE")
-    DMBE_DEAL_POSTED: str = Field(alias="/DMBE/DEAL_POSTED")
-    DMBE_INVOICEUOM: str = Field(alias="/DMBE/INVOICEUOM")
-    ZAPCGK: str
-    APCGK_EXTEND: str
-    ZBAS_DATE: str
-    ZADATTYP: str
-    ZSTART_DAT: str
-    Z_DEV: float
-    ZINDANX: str
-    ZLIMIT_DAT: str
-    NUMERATOR: str
-    HASHCAL_BDAT: str
-    HASHCAL: str
-    NEGATIVE: str
-    HASHCAL_EXISTS: str
-    KNOWN_INDEX: str
-    SAPMP_GPOSE: str = Field(alias="/SAPMP/GPOSE")
-    ANGPN: str
-    ADMOI: str
-    ADPRI: str
-    LPRIO: str
-    ADACN: str
-    AFPNR: str
-    BSARK: str
-    AUDAT: str
-    ANGNR: str
-    PNSTAT: str
-    ADDNS: str
-    ASSIGNMENT_PRIORITY: str
-    ARUN_GROUP_PRIO: str
-    ARUN_ORDER_PRIO: int
-    SERRU: str
-    SERNP: str
-    DISUB_SOBKZ: str
-    DISUB_PSPNR: str
-    DISUB_KUNNR: str
-    DISUB_VBELN: str
-    DISUB_POSNR: str
-    DISUB_OWNER: str
-    FSH_SEASON_YEAR: str
-    FSH_SEASON: str
-    FSH_COLLECTION: str
-    FSH_THEME: str
-    FSH_ATP_DATE: str
-    FSH_VAS_REL: str
-    FSH_VAS_PRNT_ID: str
-    FSH_TRANSACTION: str
-    FSH_ITEM_GROUP: str
-    FSH_ITEM: str
-    FSH_SS: str
-    FSH_GRID_COND_REC: str
-    FSH_PSM_PFM_SPLIT: str
-    CNFM_QTY: float
-    FSH_PQR_UEPOS: str
-    RFM_DIVERSION: str
-    RFM_SCC_INDICATOR: str
-    STPAC: str
-    LGBZO: str
-    LGBZO_B: str
-    ADDRNUM: str
-    CONSNUM: str
-    BORGR_MISS: str
-    DEP_ID: str
-    BELNR: str
-    KBLPOS_CAB: str
-    KBLNR_COMP: str
-    KBLPOS_COMP: str
-    WBS_ELEMENT: str
-    RFM_PSST_RULE: str
-    RFM_PSST_GROUP: str
-    RFM_REF_DOC: str
-    RFM_REF_ITEM: str
-    RFM_REF_ACTION: str
-    RFM_REF_SLITEM: str
-    REF_ITEM: str
-    SOURCE_ID: str
-    SOURCE_KEY: str
-    PUT_BACK: str
-    POL_ID: str
-    CONS_ORDER: str
-    IS_CATALOG_RELEVANT: str
-    PFMTRANSDATAFOOTPRINTUUID: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    PARTNER: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    RLTYP: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    DFVAL: Key[SapNvarchar]
+    # SAP HANA type: DECIMAL | Forced nullable
+    VALID_FROM: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VALID_TO: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ROLE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUTHORITY: Optional[SapNvarchar] = ""
 
-class Kna1(BaseModel):
-    MANDT: Key[str]
-    KUNNR: Key[str]
-    LAND1: str
-    NAME1: str
-    NAME2: str
-    ORT01: str
-    PSTLZ: str
-    REGIO: str
-    SORTL: str
-    STRAS: str
-    TELF1: str
-    TELFX: str
-    XCPDK: str
-    ADRNR: str
-    MCOD1: str
-    MCOD2: str
-    MCOD3: str
-    ANRED: str
-    AUFSD: str
-    BAHNE: str
-    BAHNS: str
-    BBBNR: str
-    BBSNR: str
-    BEGRU: str
-    BRSCH: str
-    BUBKZ: str
-    DATLT: str
-    ERDAT: str
-    ERNAM: str
-    EXABL: str
-    FAKSD: str
-    FISKN: str
-    KNAZK: str
-    KNRZA: str
-    KONZS: str
-    KTOKD: str
-    KUKLA: str
-    LIFNR: str
-    LIFSD: str
-    LOCCO: str
-    LOEVM: str
-    NAME3: str
-    NAME4: str
-    NIELS: str
-    ORT02: str
-    PFACH: str
-    PSTL2: str
-    COUNC: str
-    CITYC: str
-    RPMKR: str
-    SPERR: str
-    SPRAS: str
-    STCD1: str
-    STCD2: str
-    STKZA: str
-    STKZU: str
-    TELBX: str
-    TELF2: str
-    TELTX: str
-    TELX1: str
-    LZONE: str
-    XZEMP: str
-    VBUND: str
-    STCEG: str
-    DEAR1: str
-    DEAR2: str
-    DEAR3: str
-    DEAR4: str
-    DEAR5: str
-    GFORM: str
-    BRAN1: str
-    BRAN2: str
-    BRAN3: str
-    BRAN4: str
-    BRAN5: str
-    EKONT: str
-    UMSAT: float
-    UMJAH: str
-    UWAER: str
-    JMZAH: str
-    JMJAH: str
-    KATR1: str
-    KATR2: str
-    KATR3: str
-    KATR4: str
-    KATR5: str
-    KATR6: str
-    KATR7: str
-    KATR8: str
-    KATR9: str
-    KATR10: str
-    STKZN: str
-    UMSA1: float
-    TXJCD: str
-    PERIV: str
-    ABRVW: str
-    INSPBYDEBI: str
-    INSPATDEBI: str
-    KTOCD: str
-    PFORT: str
-    WERKS: str
-    DTAMS: str
-    DTAWS: str
-    DUEFL: str
-    HZUOR: str
-    SPERZ: str
-    ETIKG: str
-    CIVVE: str
-    MILVE: str
-    KDKG1: str
-    KDKG2: str
-    KDKG3: str
-    KDKG4: str
-    KDKG5: str
-    XKNZA: str
-    FITYP: str
-    STCDT: str
-    STCD3: str
-    STCD4: str
-    STCD5: str
-    STCD6: str
-    XICMS: str
-    XXIPI: str
-    XSUBT: str
-    CFOPC: str
-    TXLW1: str
-    TXLW2: str
-    CCC01: str
-    CCC02: str
-    CCC03: str
-    CCC04: str
-    BONDED_AREA_CONFIRM: str
-    DONATE_MARK: str
-    CONSOLIDATE_INVOICE: str
-    ALLOWANCE_TYPE: str
-    EINVOICE_MODE: str
-    B2C_INDICATOR: str
-    CASSD: str
-    KNURL: str
-    J_1KFREPRE: str
-    J_1KFTBUS: str
-    J_1KFTIND: str
-    CONFS: str
-    UPDAT: str
-    UPTIM: str
-    NODEL: str
-    DEAR6: str
-    DELIVERY_DATE_RULE: str
-    CVP_XBLCK: str
-    SUFRAMA: str
-    RG: str
-    EXP: str
-    UF: str
-    RGDATE: str
-    RIC: str
-    RNE: str
-    RNEDATE: str
-    CNAE: str
-    LEGALNAT: str
-    CRTN: str
-    ICMSTAXPAY: str
-    INDTYP: str
-    TDT: str
-    COMSIZE: str
-    DECREGPC: str
-    PH_BIZ_STYLE: str
-    PAYTRSN: str
-    KNA1_EEW_CUST: str
-    RULE_EXCLUSION: str
-    KNA1_ADDR_EEW_CUST: str
-    DATA_CTRLR1: str
-    DATA_CTRLR2: str
-    DATA_CTRLR3: str
-    DATA_CTRLR4: str
-    DATA_CTRLR5: str
-    DATA_CTRLR6: str
-    DATA_CTRLR7: str
-    DATA_CTRLR8: str
-    DATA_CTRLR9: str
-    DATA_CTRLR10: str
-    XDCSET: str
-    VSO_R_PALHGT: float = Field(alias="/VSO/R_PALHGT")
-    VSO_R_PAL_UL: str = Field(alias="/VSO/R_PAL_UL")
-    VSO_R_PK_MAT: str = Field(alias="/VSO/R_PK_MAT")
-    VSO_R_MATPAL: str = Field(alias="/VSO/R_MATPAL")
-    VSO_R_I_NO_LYR: str = Field(alias="/VSO/R_I_NO_LYR")
-    VSO_R_ONE_MAT: str = Field(alias="/VSO/R_ONE_MAT")
-    VSO_R_ONE_SORT: str = Field(alias="/VSO/R_ONE_SORT")
-    VSO_R_ULD_SIDE: str = Field(alias="/VSO/R_ULD_SIDE")
-    VSO_R_LOAD_PREF: str = Field(alias="/VSO/R_LOAD_PREF")
-    VSO_R_DPOINT: str = Field(alias="/VSO/R_DPOINT")
-    ALC: str
-    PMT_OFFICE: str
-    FEE_SCHEDULE: str
-    DUNS: str
-    DUNS4: str
-    SAM_UE_ID: str
-    SAM_EFT_IND: str
-    PSOFG: str
-    PSOIS: str
-    PSON1: str
-    PSON2: str
-    PSON3: str
-    PSOVN: str
-    PSOTL: str
-    PSOHS: str
-    PSOST: str
-    PSOO1: str
-    PSOO2: str
-    PSOO3: str
-    PSOO4: str
-    PSOO5: str
-    J_1IEXCD: str
-    J_1IEXRN: str
-    J_1IEXRG: str
-    J_1IEXDI: str
-    J_1IEXCO: str
-    J_1ICSTNO: str
-    J_1ILSTNO: str
-    J_1IPANNO: str
-    J_1IEXCICU: str
-    AEDAT: str
-    USNAM: str
-    J_1ISERN: str
-    J_1IPANREF: str
-    GST_TDS: str
-    J_3GETYP: str
-    J_3GREFTYP: str
-    PSPNR: str
-    COAUFNR: str
-    J_3GAGEXT: str
-    J_3GAGINT: str
-    J_3GAGDUMI: str
-    J_3GAGSTDI: str
-    LGORT: str
-    KOKRS: str
-    KOSTL: str
-    J_3GABGLG: str
-    J_3GABGVG: str
-    J_3GABRART: str
-    J_3GSTDMON: float
-    J_3GSTDTAG: float
-    J_3GTAGMON: float
-    J_3GZUGTAG: str
-    J_3GMASCHB: str
-    J_3GMEINSA: str
-    J_3GKEINSA: str
-    J_3GBLSPER: str
-    J_3GKLEIVO: str
-    J_3GCALID: str
-    J_3GVMONAT: str
-    J_3GABRKEN: str
-    J_3GLABRECH: str
-    J_3GAABRECH: str
-    J_3GZUTVHLG: str
-    J_3GNEGMEN: str
-    J_3GFRISTLO: str
-    J_3GEMINBE: str
-    J_3GFMGUE: str
-    J_3GZUSCHUE: str
-    J_3GSCHPRS: str
-    J_3GINVSTA: str
-    SAPCEM_DBER: str = Field(alias="/SAPCEM/DBER")
-    SAPCEM_KVMEQ: str = Field(alias="/SAPCEM/KVMEQ")
-    CARRID: str
+class Cabn(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: CABN
+    Schema: SAPHANADB
+    """
 
-class Knvv(BaseModel):
-    MANDT: Key[str]
-    KUNNR: Key[str]
-    VKORG: Key[str]
-    VTWEG: Key[str]
-    SPART: Key[str]
-    ERNAM: str
-    ERDAT: str
-    BEGRU: str
-    LOEVM: str
-    VERSG: str
-    AUFSD: str
-    KALKS: str
-    KDGRP: str
-    BZIRK: str
-    KONDA: str
-    PLTYP: str
-    AWAHR: str
-    INCO1: str
-    INCO2: str
-    LIFSD: str
-    AUTLF: str
-    ANTLF: float
-    KZTLF: str
-    KZAZU: str
-    CHSPL: str
-    LPRIO: str
-    EIKTO: str
-    VSBED: str
-    FAKSD: str
-    MRNKZ: str
-    PERFK: str
-    PERRL: str
-    KVAKZ: str
-    KVAWT: float
-    WAERS: str
-    KLABC: str
-    KTGRD: str
-    ZTERM: str
-    VWERK: str
-    VKGRP: str
-    VKBUR: str
-    VSORT: str
-    KVGR1: str
-    KVGR2: str
-    KVGR3: str
-    KVGR4: str
-    KVGR5: str
-    BOKRE: str
-    BOIDT: str
-    KURST: str
-    PRFRE: str
-    PRAT1: str
-    PRAT2: str
-    PRAT3: str
-    PRAT4: str
-    PRAT5: str
-    PRAT6: str
-    PRAT7: str
-    PRAT8: str
-    PRAT9: str
-    PRATA: str
-    KABSS: str
-    KKBER: str
-    CASSD: str
-    RDOFF: str
-    AGREL: str
-    MEGRU: str
-    UEBTO: float
-    UNTTO: float
-    UEBTK: str
-    PVKSM: str
-    PODKZ: str
-    PODTG: float
-    BLIND: str
-    CARRIER_NOTIF: str
-    CVP_XBLCK_V: str
-    INCOV: str
-    INCO2_L: str
-    INCO3_L: str
-    INCO2_KEY: Optional[str] = 00000000000000000000000000000000
-    INCO3_KEY: Optional[str] = 00000000000000000000000000000000
-    INCO4_KEY: Optional[str] = 00000000000000000000000000000000
-    KNVV_EEW_CONTACT: str
-    STATUS_OBJ_GUID: Optional[str] = 00000000000000000000000000000000
-    BILLPLAN_PROC: str
-    KNVV_ADDR_EEW_CUST: str
-    BEV1_EMLGPFAND: str = Field(alias="/BEV1/EMLGPFAND")
-    BEV1_EMLGFORTS: str = Field(alias="/BEV1/EMLGFORTS")
-    J_1NBOESL: str
-    FSH_KVGR6: str
-    FSH_KVGR7: str
-    FSH_KVGR8: str
-    FSH_KVGR9: str
-    FSH_KVGR10: str
-    FSH_GRREG: str
-    FSH_RESGY: str
-    FSH_SC_CID: str
-    FSH_VAS_DETC: str
-    FSH_VAS_CG: str
-    FSH_GRSGY: str
-    FSH_SS: str
-    FSH_FRATE: str
-    FSH_FRATE_AGG_LEVEL: str
-    FSH_MSOCDC: str
-    FSH_MSOPID: str
-    RFM_PSST_RULE: str
-    RFM_PSST_EXCLUDE: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ATINN: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ADZHL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATIDN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATFOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: SMALLINT | Forced nullable
+    ANZST: Optional[SapSmallInt] = 0
+    # SAP HANA type: SMALLINT | Forced nullable
+    ANZDZ: Optional[SapSmallInt] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATVOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATSCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATKLE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATKON: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATEND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATAEN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATKLA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATERF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATEIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATAME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATWME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MSEHI: Optional[SapNvarchar] = ""
+    # SAP HANA type: SMALLINT | Forced nullable
+    ATDIM: Optional[SapSmallInt] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATGLO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATGLA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATINT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATUNS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATSON: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATTAB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATFEL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATTEI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATPRT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATPRR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATPRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATWRD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATFOD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATHIE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATDEX: Optional[SapNvarchar] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATFGA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATVSC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANAME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADATU: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VNAME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VDATU: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATXAC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATYAC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATMST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATWSO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATBSO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATUV: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TECHV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LKENZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATWRI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DOKAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DOKNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DOKVR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DOKTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNOBJ: Optional[SapNvarchar] = 000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATINP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATVIE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATALOGART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWAHLMGE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATHKA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATHKO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CLINT: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATTOL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATZUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATVPL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATAUTH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COUNTRYGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATUB: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Order by field
+    LASTCHANGEDDATETIME: SapDecimal
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UNIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CURRENCY: Optional[SapNvarchar] = ""
 
-class Konp(BaseModel):
-    MANDT: Key[str]
-    KNUMH: Key[str]
-    KOPOS: Key[str]
-    KAPPL: str
-    KSCHL: str
-    KNUMT: str
-    STFKZ: str
-    KZBZG: str
-    KSTBM: float
-    KONMS: str
-    KSTBW: float
-    KONWS: str
-    KRECH: str
-    KBETR: float
-    KONWA: str
-    KPEIN: float
-    KMEIN: str
-    PRSCH: str
-    KUMZA: float
-    KUMNE: float
-    MEINS: str
-    MXWRT: float
-    GKWRT: float
-    PKWRT: float
-    FKWRT: float
-    RSWRT: float
-    KWAEH: str
-    UKBAS: float
-    KZNEP: str
-    KUNNR: str
-    LIFNR: str
-    MWSK1: str
-    LOEVM_KO: str
-    ZAEHK_IND: str
-    BOMAT: str
-    KBRUE: float
-    KSPAE: str
-    BOSTA: str
-    KNUMA_PI: str
-    KNUMA_AG: str
-    KNUMA_SQ: str
-    VALTG: str
-    VALDT: str
-    ZTERM: str
-    ANZAUF: str
-    MIKBAS: float
-    MXKBAS: float
-    KOMXWRT: float
-    KLF_STG: str
-    KLF_KAL: str
-    VKKAL: str
-    AKTNR: str
-    KNUMA_BO: str
-    MWSK2: str
-    VERTT: str
-    VERTN: str
-    VBEWA: str
-    MDFLG: str
-    KFRST: str
-    UASTA: str
-    CNDN_CHGREASON: str
-    CMMDTYPRCGCNDNFMLAUUID: str
+class Cawn(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: CAWN
+    Schema: SAPHANADB
+    """
 
-class Koth030(BaseModel):
-    MANDT: Key[str]
-    KAPPL: Key[str]
-    KSCHL: Key[str]
-    AUART: Key[str]
-    WERKS: Key[str]
-    MATNR: Key[str]
-    DATBI: Key[str]
-    DATAB: str
-    KNUMH: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ATINN: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ATZHL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ADZHL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATWRT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    ATFLV: Optional[SapDouble] = 0
+    # SAP HANA type: DOUBLE | Forced nullable
+    ATFLB: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATCOD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATSTD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATAWE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATAW1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATIDN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPRAS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXTNR: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATUV: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TECHV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LKENZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DOKAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DOKNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DOKVR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DOKTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATZHH: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNOBJ: Optional[SapNvarchar] = 000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATWHI: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    ATTLV: Optional[SapDouble] = 0
+    # SAP HANA type: DOUBLE | Forced nullable
+    ATTLB: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATPRZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    ATINC: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATVPL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATUB: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    DEC_FROM: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    DEC_TO: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATE_FROM: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATE_TO: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Order by field
+    TIME_FROM: SapNvarchar
+    # SAP HANA type: NVARCHAR | Order by field
+    TIME_TO: SapNvarchar
+    # SAP HANA type: DECIMAL | Forced nullable
+    CURR_FROM: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    CURR_TO: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CURRENCY: Optional[SapNvarchar] = ""
 
-class Lfa1(BaseModel):
-    MANDT: Key[str]
-    LIFNR: Key[str]
-    LAND1: str
-    NAME1: str
-    NAME2: str
-    NAME3: str
-    NAME4: str
-    ORT01: str
-    ORT02: str
-    PFACH: str
-    PSTL2: str
-    PSTLZ: str
-    REGIO: str
-    SORTL: str
-    STRAS: str
-    ADRNR: str
-    MCOD1: str
-    MCOD2: str
-    MCOD3: str
-    ANRED: str
-    BAHNS: str
-    BBBNR: str
-    BBSNR: str
-    BEGRU: str
-    BRSCH: str
-    BUBKZ: str
-    DATLT: str
-    DTAMS: str
-    DTAWS: str
-    ERDAT: str
-    ERNAM: str
-    ESRNR: str
-    KONZS: str
-    KTOKK: str
-    KUNNR: str
-    LNRZA: str
-    LOEVM: str
-    SPERR: str
-    SPERM: str
-    SPRAS: str
-    STCD1: str
-    STCD2: str
-    STKZA: str
-    STKZU: str
-    TELBX: str
-    TELF1: str
-    TELF2: str
-    TELFX: str
-    TELTX: str
-    TELX1: str
-    XCPDK: str
-    XZEMP: str
-    VBUND: str
-    FISKN: str
-    STCEG: str
-    STKZN: str
-    SPERQ: str
-    GBORT: str
-    GBDAT: str
-    SEXKZ: str
-    KRAUS: str
-    REVDB: str
-    QSSYS: str
-    KTOCK: str
-    PFORT: str
-    WERKS: str
-    LTSNA: str
-    WERKR: str
-    PLKAL: str
-    DUEFL: str
-    TXJCD: str
-    SPERZ: str
-    SCACD: str
-    SFRGR: str
-    LZONE: str
-    XLFZA: str
-    DLGRP: str
-    FITYP: str
-    STCDT: str
-    REGSS: str
-    ACTSS: str
-    STCD3: str
-    STCD4: str
-    STCD5: str
-    STCD6: str
-    IPISP: str
-    TAXBS: str
-    PROFS: str
-    STGDL: str
-    EMNFR: str
-    LFURL: str
-    J_1KFREPRE: str
-    J_1KFTBUS: str
-    J_1KFTIND: str
-    CONFS: str
-    UPDAT: str
-    UPTIM: str
-    NODEL: str
-    QSSYSDAT: str
-    PODKZB: str
-    FISKU: str
-    STENR: str
-    CARRIER_CONF: str
-    MIN_COMP: str
-    TERM_LI: str
-    CRC_NUM: str
-    CVP_XBLCK: str
-    WEORA: str
-    RG: str
-    EXP: str
-    UF: str
-    RGDATE: str
-    RIC: str
-    RNE: str
-    RNEDATE: str
-    CNAE: str
-    LEGALNAT: str
-    CRTN: str
-    ICMSTAXPAY: str
-    INDTYP: str
-    TDT: str
-    COMSIZE: str
-    DECREGPC: str
-    ALLOWANCE_TYPE: str
-    PAYTRSN: str
-    LFA1_EEW_SUPP: str
-    DATA_CTRLR1: str
-    DATA_CTRLR2: str
-    DATA_CTRLR3: str
-    DATA_CTRLR4: str
-    DATA_CTRLR5: str
-    DATA_CTRLR6: str
-    DATA_CTRLR7: str
-    DATA_CTRLR8: str
-    DATA_CTRLR9: str
-    DATA_CTRLR10: str
-    XDCSET: str
-    DUMMY_LFA1_ADDR_INCL_EEW_PS: str
-    J_SC_CAPITAL: float
-    J_SC_CURRENCY: str
-    ALC: str
-    PMT_OFFICE: str
-    PPA_RELEVANT: str
-    SAM_UE_ID: str
-    SAM_EFT_IND: str
-    PSOFG: str
-    PSOIS: str
-    PSON1: str
-    PSON2: str
-    PSON3: str
-    PSOVN: str
-    PSOTL: str
-    PSOHS: str
-    PSOST: str
-    BORGR_DATUN: str
-    BORGR_YEAUN: str
-    AU_CARRYING_ENT: str
-    AU_IND_UNDER_18: str
-    AU_PAYMENT_NOT_EXCEED_75: str
-    AU_WHOLLY_INP_TAXED: str
-    AU_PARTNER_WITHOUT_GAIN: str
-    AU_NOT_ENTITLED_ABN: str
-    AU_PAYMENT_EXEMPT: str
-    AU_PRIVATE_HOBBY: str
-    AU_DOMESTIC_NATURE: str
-    ADDR2_STREET: str
-    ADDR2_HOUSE_NUM: str
-    ADDR2_POST: str
-    ADDR2_CITY: str
-    ADDR2_COUNTRY: str
-    CATEG: str
-    PARTNER_NAME: str
-    PARTNER_UTR: str
-    STATUS: str
-    VFNUM: str
-    VFNID: str
-    CRN: str
-    FR_OCCUPATION: str
-    J_1IEXCD: str
-    J_1IEXRN: str
-    J_1IEXRG: str
-    J_1IEXDI: str
-    J_1IEXCO: str
-    J_1ICSTNO: str
-    J_1ILSTNO: str
-    J_1IPANNO: str
-    J_1IEXCIVE: str
-    J_1ISSIST: str
-    J_1IVTYP: str
-    J_1IVENCRE: str
-    AEDAT: str
-    USNAM: str
-    J_1ISERN: str
-    J_1IPANREF: str
-    J_1IPANVALDT: str
-    J_1I_CUSTOMS: str
-    J_1IDEDREF: str
-    VEN_CLASS: str
-    ENTPUB: str
-    ESCRIT: str
-    DVALSS: str
-    FRMCSS: str
-    CODCAE: str
-    AUSDIV: str
-    SC_CAPITAL: float
-    SC_CURRENCY: str
-    TRANSPORT_CHAIN: str
-    STAGING_TIME: datetime
-    SCHEDULING_TYPE: str
-    SUBMI_RELEVANT: str
+class Crca(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: CRCA
+    Schema: SAPHANADB
+    """
 
-class Lfm1(BaseModel):
-    MANDT: Key[str]
-    LIFNR: Key[str]
-    EKORG: Key[str]
-    ERDAT: str
-    ERNAM: str
-    SPERM: str
-    LOEVM: str
-    LFABC: str
-    WAERS: str
-    VERKF: str
-    TELF1: str
-    MINBW: float
-    ZTERM: str
-    INCO1: str
-    INCO2: str
-    WEBRE: str
-    KZABS: str
-    KALSK: str
-    KZAUT: str
-    EXPVZ: str
-    ZOLLA: str
-    MEPRF: str
-    EKGRP: str
-    XERSY: str
-    PLIFZ: float
-    MRPPP: str
-    LFRHY: str
-    LIBES: str
-    LIPRE: str
-    LISER: str
-    INCOV: str
-    INCO2_L: str
-    INCO3_L: str
-    WEORA: str
-    PRFRE: str
-    NRGEW: str
-    BOIND: str
-    BLIND: str
-    KZRET: str
-    SKRIT: str
-    BSTAE: str
-    RDPRF: str
-    MEGRU: str
-    VENSL: float
-    BOPNR: str
-    XERSR: str
-    EIKTO: str
-    ABUEB: str
-    PAPRF: str
-    AGREL: str
-    XNBWY: str
-    VSBED: str
-    LEBRE: str
-    BOLRE: str
-    UMSAE: str
-    VENDOR_RMA_REQ: str
-    INCO2_KEY: Optional[str] = 00000000000000000000000000000000
-    INCO3_KEY: Optional[str] = 00000000000000000000000000000000
-    INCO4_KEY: Optional[str] = 00000000000000000000000000000000
-    LFM1_EEW_PS: str
-    J_1NBOESL: str
-    AUBEL: str
-    VALID_PRO: str
-    HSCABS: float
-    HSCPE: float
-    HSCMIN: float
-    HSCMAX: float
-    FSH_SC_CID: str
-    FSH_VAS_DETC: str
-    UPPRS: str
-    ACTIVITY_PROFIL: str
-    TRANSPORT_CHAIN: str
-    STAGING_TIME: datetime
-    DUMMY_LFM1_ADDR_INCL_EEW_PS: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    OBJTY: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    OBJID: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    CANUM: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEGDA: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ENDDA: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT_KAPA: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM_KAPA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KAPID: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORK1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORK2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORK3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORKN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROZT: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERT1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERT2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERT3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERTN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CAROL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISTBED_KZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGWT1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGWT2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGWT3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGWTN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CAP_BACKFLUSH_SU: Optional[SapNvarchar] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CAP_BACKFLUSH_PR: Optional[SapNvarchar] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CAP_BACKFLUSH_TD: Optional[SapNvarchar] = 0
 
-class Lfm2(BaseModel):
-    MANDT: Key[str]
-    LIFNR: Key[str]
-    EKORG: Key[str]
-    LTSNR: Key[str]
-    WERKS: Key[str]
-    ERDAT: str
-    ERNAM: str
-    SPERM: str
-    LOEVM: str
-    LFABC: str
-    WAERS: str
-    VERKF: str
-    TELF1: str
-    MINBW: float
-    ZTERM: str
-    INCO1: str
-    INCO2: str
-    WEBRE: str
-    KZABS: str
-    KALSK: str
-    KZAUT: str
-    EXPVZ: str
-    ZOLLA: str
-    MEPRF: str
-    EKGRP: str
-    XERSY: str
-    PLIFZ: float
-    MRPPP: str
-    LFRHY: str
-    LIBES: str
-    LIPRE: str
-    LISER: str
-    INCOV: str
-    INCO2_L: str
-    INCO3_L: str
-    WEORA: str
-    INCO2_KEY: Optional[str] = 00000000000000000000000000000000
-    INCO3_KEY: Optional[str] = 00000000000000000000000000000000
-    INCO4_KEY: Optional[str] = 00000000000000000000000000000000
-    DISPO: str
-    BOIND: str
-    BSTAE: str
-    RDPRF: str
-    MEGRU: str
-    BOPNR: str
-    XERSR: str
-    ABUEB: str
-    PAPRF: str
-    XNBWY: str
-    LEBRE: str
-    BOLRE: str
-    UMSAE: str
-    UPPRS: str
-    TRANSPORT_CHAIN: str
-    STAGING_TIME: datetime
+class Crfh(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: CRFH
+    Schema: SAPHANADB
+    """
 
-class Makt(BaseModel):
-    MANDT: Key[str]
-    MATNR: Key[str]
-    SPRAS: Key[str]
-    MAKTX: str
-    MAKTG: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    OBJTY: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    OBJID: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ZAEHL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FHMAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBJTY_V: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBJID_V: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATUV: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATUB: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BRGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STATUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZKBL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STOWK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BASEH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STEUF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STEUF_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FGRU1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FGRU2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLANV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTSCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTSCH_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BZOFFB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BZOFFB_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    OFFSTB: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EHOFFB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OFFSTB_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BZOFFE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BZOFFE_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    OFFSTE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EHOFFE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OFFSTE_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MGFORM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MGFORM_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EWFORM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EWFORM_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAR01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAR02: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAR03: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAR04: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAR05: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAR06: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARU1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARU2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARU3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARU4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARU5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARU6: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PARV1: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PARV2: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PARV3: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PARV4: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PARV5: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PARV6: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REGISTRABLE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOOL_WC_OBJTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOOL_WC_OBJID: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOOL_WC_WERKS: Optional[SapNvarchar] = ""
 
-class Mapl(BaseModel):
-    MANDT: Key[str]
-    MATNR: Key[str]
-    WERKS: Key[str]
-    PLNTY: Key[str]
-    PLNNR: Key[str]
-    PLNAL: Key[str]
-    ZKRIZ: Key[str]
-    ZAEHL: Key[str]
-    DATUV: str
-    TECHV: str
-    AENNR: str
-    LOEKZ: str
-    PARKZ: str
-    ANDAT: str
-    ANNAM: str
-    AEDAT: str
-    AENAM: str
-    LIFNR: str
-    KUNR: str
-    SUCHFELD: str
-    VBELN: str
-    POSNR: str
-    PSPNR: str
-    VALID_TO: str
-    LOEKZ_INHERITED: str
-    VERSN: str
-    VERSN_SOURCE: str
-    VERSN_SOURCE_ZKRIZ: str
-    MS_OBJECT: str
-    MS_OBJTYPE: str
+class Crhd(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: CRHD
+    Schema: SAPHANADB
+    """
 
-class Mara(BaseModel):
-    MANDT: Key[str]
-    MATNR: Key[str]
-    ERSDA: str
-    CREATED_AT_TIME: datetime
-    ERNAM: str
-    LAEDA: str
-    AENAM: str
-    VPSTA: str
-    PSTAT: str
-    LVORM: str
-    MTART: str
-    MBRSH: str
-    MATKL: str
-    BISMT: str
-    MEINS: str
-    BSTME: str
-    ZEINR: str
-    ZEIAR: str
-    ZEIVR: str
-    ZEIFO: str
-    AESZN: str
-    BLATT: str
-    BLANZ: str
-    FERTH: str
-    FORMT: str
-    GROES: str
-    WRKST: str
-    NORMT: str
-    LABOR: str
-    EKWSL: str
-    BRGEW: float
-    NTGEW: float
-    GEWEI: str
-    VOLUM: float
-    VOLEH: str
-    BEHVO: str
-    RAUBE: str
-    TEMPB: str
-    DISST: str
-    TRAGR: str
-    STOFF: str
-    SPART: str
-    KUNNR: str
-    EANNR: str
-    WESCH: float
-    BWVOR: str
-    BWSCL: str
-    SAISO: str
-    ETIAR: str
-    ETIFO: str
-    ENTAR: str
-    EAN11: str
-    NUMTP: str
-    LAENG: float
-    BREIT: float
-    HOEHE: float
-    MEABM: str
-    PRDHA: str
-    AEKLK: str
-    CADKZ: str
-    QMPUR: str
-    ERGEW: float
-    ERGEI: str
-    ERVOL: float
-    ERVOE: str
-    GEWTO: float
-    VOLTO: float
-    VABME: str
-    KZREV: str
-    KZKFG: str
-    XCHPF: str
-    VHART: str
-    FUELG: float
-    STFAK: int
-    MAGRV: str
-    BEGRU: str
-    DATAB: str
-    LIQDT: str
-    SAISJ: str
-    PLGTP: str
-    MLGUT: str
-    EXTWG: str
-    SATNR: str
-    ATTYP: str
-    KZKUP: str
-    KZNFM: str
-    PMATA: str
-    MSTAE: str
-    MSTAV: str
-    MSTDE: str
-    MSTDV: str
-    TAKLV: str
-    RBNRM: str
-    MHDRZ: float
-    MHDHB: float
-    MHDLP: float
-    INHME: str
-    INHAL: float
-    VPREH: float
-    ETIAG: str
-    INHBR: float
-    CMETH: str
-    CUOBF: str
-    KZUMW: str
-    KOSCH: str
-    SPROF: str
-    NRFHG: str
-    MFRPN: str
-    MFRNR: str
-    BMATN: str
-    MPROF: str
-    KZWSM: str
-    SAITY: str
-    PROFL: str
-    IHIVI: str
-    ILOOS: str
-    SERLV: str
-    KZGVH: str
-    XGCHP: str
-    KZEFF: str
-    COMPL: str
-    IPRKZ: str
-    RDMHD: str
-    PRZUS: str
-    MTPOS_MARA: str
-    BFLME: str
-    MATFI: str
-    CMREL: str
-    BBTYP: str
-    SLED_BBD: str
-    GTIN_VARIANT: str
-    GENNR: str
-    RMATP: str
-    GDS_RELEVANT: str
-    WEORA: str
-    HUTYP_DFLT: str
-    PILFERABLE: str
-    WHSTC: str
-    WHMATGR: str
-    HNDLCODE: str
-    HAZMAT: str
-    HUTYP: str
-    TARE_VAR: str
-    MAXC: float
-    MAXC_TOL: float
-    MAXL: float
-    MAXB: float
-    MAXH: float
-    MAXDIM_UOM: str
-    HERKL: str
-    MFRGR: str
-    QQTIME: datetime
-    QQTIMEUOM: datetime
-    QGRP: str
-    SERIAL: str
-    PS_SMARTFORM: str
-    LOGUNIT: str
-    CWQREL: str
-    CWQPROC: str
-    CWQTOLGR: str
-    ADPROF: str
-    IPMIPPRODUCT: str
-    ALLOW_PMAT_IGNO: str
-    MEDIUM: str
-    COMMODITY: str
-    ANIMAL_ORIGIN: str
-    TEXTILE_COMP_IND: str
-    LAST_CHANGED_TIME: datetime
-    MATNR_EXTERNAL: str
-    CHML_CMPLNC_RLVNCE_IND: str
-    LOGISTICAL_MAT_CATEGORY: str
-    SALES_MATERIAL: str
-    IDENTIFICATION_TAG_TYPE: str
-    PRODUCTOID: str
-    SDM_VERSION: str
-    SGT_CSGR: str
-    SGT_COVSA: str
-    SGT_STAT: str
-    SGT_SCOPE: str
-    SGT_REL: str
-    ANP: str
-    PSM_CODE: str
-    FSH_MG_AT1: str
-    FSH_MG_AT2: str
-    FSH_MG_AT3: str
-    FSH_SEALV: str
-    FSH_SEAIM: str
-    FSH_SC_MID: str
-    DUMMY_PRD_INCL_EEW_PS: str
-    SCM_MATID_GUID16: Optional[str] = 00000000000000000000000000000000
-    SCM_MATID_GUID22: str
-    SCM_MATURITY_DUR: float
-    SCM_SHLF_LFE_REQ_MIN: float
-    SCM_SHLF_LFE_REQ_MAX: float
-    SCM_PUOM: str
-    RMATP_PB: str
-    PROD_SHAPE: str
-    MO_PROFILE_ID: str
-    OVERHANG_TRESH: float
-    BRIDGE_TRESH: float
-    BRIDGE_MAX_SLOPE: float
-    HEIGHT_NONFLAT: float
-    HEIGHT_NONFLAT_UOM: str
-    SCM_KITCOMP: str
-    SCM_PROD_PAOOPT: str
-    SCM_BOD_DEPLVL: str
-    SCM_RESTRICT_INVBAL: str
-    SCM_DRP_GL_STOCK: str
-    SCM_EXCL_EXPEDITE: str
-    NEWPROD_INDI: str
-    PRD_STARTDT: str
-    PRD_ENDDT: str
-    INV_PLN_MODE: str
-    FLAGCLASS: str
-    CWM_XCWMAT: str = Field(alias="/CWM/XCWMAT")
-    CWM_VALUM: str = Field(alias="/CWM/VALUM")
-    CWM_TOLGR: str = Field(alias="/CWM/TOLGR")
-    CWM_TARA: str = Field(alias="/CWM/TARA")
-    CWM_TARUM: str = Field(alias="/CWM/TARUM")
-    BEV1_LULEINH: str = Field(alias="/BEV1/LULEINH")
-    BEV1_LULDEGRP: str = Field(alias="/BEV1/LULDEGRP")
-    BEV1_NESTRUCCAT: str = Field(alias="/BEV1/NESTRUCCAT")
-    DSD_SL_TOLTYP: str = Field(alias="/DSD/SL_TOLTYP")
-    DSD_SV_CNT_GRP: str = Field(alias="/DSD/SV_CNT_GRP")
-    DSD_VC_GROUP: str = Field(alias="/DSD/VC_GROUP")
-    SAPMP_KADU: float = Field(alias="/SAPMP/KADU")
-    SAPMP_ABMEIN: str = Field(alias="/SAPMP/ABMEIN")
-    SAPMP_KADP: float = Field(alias="/SAPMP/KADP")
-    SAPMP_BRAD: float = Field(alias="/SAPMP/BRAD")
-    SAPMP_SPBI: float = Field(alias="/SAPMP/SPBI")
-    SAPMP_TRAD: float = Field(alias="/SAPMP/TRAD")
-    SAPMP_KEDU: float = Field(alias="/SAPMP/KEDU")
-    SAPMP_SPTR: float = Field(alias="/SAPMP/SPTR")
-    SAPMP_FBDK: float = Field(alias="/SAPMP/FBDK")
-    SAPMP_FBHK: float = Field(alias="/SAPMP/FBHK")
-    SAPMP_RILI: str = Field(alias="/SAPMP/RILI")
-    SAPMP_FBAK: str = Field(alias="/SAPMP/FBAK")
-    SAPMP_AHO: str = Field(alias="/SAPMP/AHO")
-    SAPMP_MIFRR: float = Field(alias="/SAPMP/MIFRR")
-    STTPEC_SERTYPE: int = Field(alias="/STTPEC/SERTYPE")
-    STTPEC_SYNCACT: str = Field(alias="/STTPEC/SYNCACT")
-    STTPEC_SYNCTIME: datetime = Field(alias="/STTPEC/SYNCTIME")
-    STTPEC_SYNCCHG: str = Field(alias="/STTPEC/SYNCCHG")
-    STTPEC_COUNTRY_REF: str = Field(alias="/STTPEC/COUNTRY_REF")
-    STTPEC_PRDCAT: str = Field(alias="/STTPEC/PRDCAT")
-    VSO_R_TILT_IND: str = Field(alias="/VSO/R_TILT_IND")
-    VSO_R_STACK_IND: str = Field(alias="/VSO/R_STACK_IND")
-    VSO_R_BOT_IND: str = Field(alias="/VSO/R_BOT_IND")
-    VSO_R_TOP_IND: str = Field(alias="/VSO/R_TOP_IND")
-    VSO_R_STACK_NO: str = Field(alias="/VSO/R_STACK_NO")
-    VSO_R_PAL_IND: str = Field(alias="/VSO/R_PAL_IND")
-    VSO_R_PAL_OVR_D: float = Field(alias="/VSO/R_PAL_OVR_D")
-    VSO_R_PAL_OVR_W: float = Field(alias="/VSO/R_PAL_OVR_W")
-    VSO_R_PAL_B_HT: float = Field(alias="/VSO/R_PAL_B_HT")
-    VSO_R_PAL_MIN_H: float = Field(alias="/VSO/R_PAL_MIN_H")
-    VSO_R_TOL_B_HT: float = Field(alias="/VSO/R_TOL_B_HT")
-    VSO_R_NO_P_GVH: str = Field(alias="/VSO/R_NO_P_GVH")
-    VSO_R_QUAN_UNIT: str = Field(alias="/VSO/R_QUAN_UNIT")
-    VSO_R_KZGVH_IND: str = Field(alias="/VSO/R_KZGVH_IND")
-    PACKCODE: str
-    DG_PACK_STATUS: str
-    SRV_DURA: float
-    SRV_DURA_UOM: str
-    SRV_SERWI: str
-    SRV_ESCAL: str
-    SOM_CYCLE: str
-    SOM_CYCLE_RULE: str
-    SOM_TC_SCHEMA: str
-    SOM_CTR_AUTORENEWAL: str
-    MCOND: str
-    RETDELC: str
-    LOGLEV_RETO: str
-    NSNID: str
-    ICFA: str
-    RIC_ID: int
-    DFS_SENSITIVITY_KEY: str
-    DFS_MFRP2: str
-    OVLPN: str
-    ADSPC_SPC: str
-    VARID: Optional[str] = 00000000000000000000000000000000
-    MSBOOKPARTNO: str
-    TOLERANCE_TYPE: str
-    DPCBT: str
-    XGRDT: str
-    IMATN: str
-    PICNUM: str
-    BSTAT: str
-    COLOR_ATINN: str
-    SIZE1_ATINN: str
-    SIZE2_ATINN: str
-    COLOR: str
-    SIZE1: str
-    SIZE2: str
-    FREE_CHAR: str
-    CARE_CODE: str
-    BRAND_ID: str
-    FIBER_CODE1: str
-    FIBER_PART1: str
-    FIBER_CODE2: str
-    FIBER_PART2: str
-    FIBER_CODE3: str
-    FIBER_PART3: str
-    FIBER_CODE4: str
-    FIBER_PART4: str
-    FIBER_CODE5: str
-    FIBER_PART5: str
-    FASHGRD: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    OBJTY: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    OBJID: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEGDA: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ENDDA: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT_GRND: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM_GRND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT_VORA: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM_VORA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT_TERM: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM_TERM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT_TECH: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM_TECH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARBPL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERWE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LVORM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAR01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAR02: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAR03: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAR04: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAR05: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAR06: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARU1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARU2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARU3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARU4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARU5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARU6: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PARV1: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PARV2: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PARV3: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PARV4: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PARV5: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PARV6: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLANV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STAND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERAN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGWTS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGM01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGM02: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGM03: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGM04: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGM05: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGM06: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XDEFA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XKOST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XSPRR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XTERM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGR01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGR02: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGR03: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGR04: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGR05: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGR06: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTSCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    LOANZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QUALF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RASCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STEUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGE01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGE02: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGE03: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGE04: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGE05: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGE06: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTSCH_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOART_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOANZ_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOGRP_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QUALF_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RASCH_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STEUS_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORT1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORT2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORT3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KAPID: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ORTGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEIWN: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZWNOR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEIWM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZWMIN: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORMR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CPLGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SORTB: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MTRVP: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MTMVP: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MTPVP: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSANZ: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PDEST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HROID: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORTN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGR01_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGR02_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGR03_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGR04_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGR05_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGR06_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STEUS_C: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STEUS_I: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STEUS_N: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STEUS_Q: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RUZUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSANZ_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRVBE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SUBSYS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BDEGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RGEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HRTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SLWID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SLWID_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFNR_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGARB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGDIM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HRPLVAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGDAU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STOBJ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RESGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGORT_RES: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MIXMAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISTBED_KZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Order by field
+    LASTCHANGE_DATETIME: SapDecimal
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBELN_EXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBELP_EXT: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFNR_EXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKGRP_EXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKORG_EXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MGHNO_EXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATKL_EXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PPSKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SRTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SNTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    S_LABOR_TRACK: Optional[SapNvarchar] = ""
 
-class Marc(BaseModel):
-    MANDT: Key[str]
-    MATNR: Key[str]
-    WERKS: Key[str]
-    PSTAT: str
-    LVORM: str
-    BWTTY: str
-    XCHAR: str
-    MMSTA: str
-    MMSTD: str
-    MAABC: str
-    KZKRI: str
-    EKGRP: str
-    AUSME: str
-    DISPR: str
-    DISMM: str
-    DISPO: str
-    KZDIE: str
-    PLIFZ: float
-    WEBAZ: float
-    PERKZ: str
-    AUSSS: float
-    DISLS: str
-    BESKZ: str
-    SOBSL: str
-    MINBE: float
-    EISBE: float
-    BSTMI: float
-    BSTMA: float
-    BSTFE: float
-    BSTRF: float
-    MABST: float
-    LOSFX: float
-    SBDKZ: str
-    LAGPR: str
-    ALTSL: str
-    KZAUS: str
-    AUSDT: str
-    NFMAT: str
-    KZBED: str
-    MISKZ: str
-    FHORI: str
-    PFREI: str
-    FFREI: str
-    RGEKZ: str
-    FEVOR: str
-    BEARZ: float
-    RUEZT: float
-    TRANZ: float
-    BASMG: float
-    DZEIT: float
-    MAXLZ: float
-    LZEIH: str
-    KZPRO: str
-    GPMKZ: str
-    UEETO: float
-    UEETK: str
-    UNETO: float
-    WZEIT: float
-    ATPKZ: str
-    VZUSL: float
-    HERBL: str
-    INSMK: str
-    SPROZ: float
-    QUAZT: float
-    SSQSS: str
-    MPDAU: float
-    KZPPV: str
-    KZDKZ: str
-    WSTGH: float
-    PRFRQ: float
-    NKMPR: str
-    UMLMC: float
-    LADGR: str
-    XCHPF: str
-    USEQU: str
-    LGRAD: float
-    AUFTL: str
-    PLVAR: str
-    OTYPE: str
-    OBJID: str
-    MTVFP: str
-    PERIV: str
-    KZKFK: str
-    VRVEZ: float
-    VBAMG: float
-    VBEAZ: float
-    LIZYK: str
-    BWSCL: str
-    KAUTB: str
-    KORDB: str
-    STAWN: str
-    HERKL: str
-    HERKR: str
-    EXPME: str
-    MTVER: str
-    PRCTR: str
-    TRAME: float
-    MRPPP: str
-    SAUFT: str
-    FXHOR: str
-    VRMOD: str
-    VINT1: str
-    VINT2: str
-    VERKZ: str
-    STLAL: str
-    STLAN: str
-    PLNNR: str
-    APLAL: str
-    LOSGR: float
-    SOBSK: str
-    FRTME: str
-    LGPRO: str
-    DISGR: str
-    KAUSF: float
-    QZGTP: str
-    QMATV: str
-    TAKZT: float
-    RWPRO: str
-    COPAM: str
-    ABCIN: str
-    AWSLS: str
-    SERNP: str
-    CUOBJ: str
-    STDPD: str
-    SFEPR: str
-    XMCNG: str
-    QSSYS: str
-    LFRHY: str
-    RDPRF: str
-    VRBMT: str
-    VRBWK: str
-    VRBDT: str
-    VRBFK: float
-    AUTRU: str
-    PREFE: str
-    PRENC: str
-    PRENO: str
-    PREND: str
-    PRENE: str
-    PRENG: str
-    ITARK: str
-    SERVG: str
-    KZKUP: str
-    STRGR: str
-    CUOBV: str
-    LGFSB: str
-    SCHGT: str
-    CCFIX: str
-    EPRIO: str
-    QMATA: str
-    RESVP: float
-    PLNTY: str
-    UOMGR: str
-    UMRSL: str
-    ABFAC: float
-    SFCPF: str
-    SHFLG: str
-    SHZET: str
-    MDACH: str
-    KZECH: str
-    MEGRU: str
-    MFRGR: str
-    SFTY_STK_METH: str
-    PROFIL: str
-    VKUMC: float
-    VKTRW: float
-    KZAGL: str
-    FVIDK: str
-    FXPRU: str
-    LOGGR: str
-    FPRFM: str
-    GLGMG: float
-    VKGLG: float
-    INDUS: str
-    MOWNR: str
-    MOGRU: str
-    CASNR: str
-    GPNUM: str
-    STEUC: str
-    FABKZ: str
-    MATGR: str
-    VSPVB: str
-    DPLFS: str
-    DPLPU: str
-    DPLHO: float
-    MINLS: float
-    MAXLS: float
-    FIXLS: float
-    LTINC: float
-    COMPL: str
-    CONVT: str
-    SHPRO: str
-    AHDIS: str
-    DIBER: str
-    KZPSP: str
-    OCMPF: str
-    APOKZ: str
-    MCRUE: str
-    LFMON: str
-    LFGJA: str
-    EISLO: float
-    NCOST: str
-    ROTATION_DATE: str
-    UCHKZ: str
-    UCMAT: str
-    EXCISE_TAX_RLVNCE: str
-    TEMP_CTRL_MAX: float
-    TEMP_CTRL_MIN: float
-    TEMP_UOM: str
-    JITPRODNCONFPROFILE: str
-    BWESB: float
-    SGT_COVS: str
-    SGT_STATC: str
-    SGT_SCOPE: str
-    SGT_MRPSI: str
-    SGT_PRCM: str
-    SGT_CHINT: str
-    SGT_STK_PRT: str
-    SGT_DEFSC: str
-    SGT_MRP_ATP_STATUS: str
-    SGT_MMSTD: str
-    FSH_MG_ARUN_REQ: str
-    FSH_SEAIM: str
-    FSH_VAR_GROUP: str
-    FSH_KZECH: str
-    FSH_CALENDAR_GROUP: str
-    ARUN_FIX_BATCH: str
-    PPSKZ: str
-    CONS_PROCG: str
-    GI_PR_TIME: datetime
-    MULTIPLE_EKGRP: str
-    REF_SCHEMA: str
-    MIN_TROC: str
-    MAX_TROC: str
-    TARGET_STOCK: float
-    NF_FLAG: str
-    CWM_UMLMC: float = Field(alias="/CWM/UMLMC")
-    CWM_TRAME: float = Field(alias="/CWM/TRAME")
-    CWM_BWESB: float = Field(alias="/CWM/BWESB")
-    SCM_MATLOCID_GUID16: Optional[str] = 00000000000000000000000000000000
-    SCM_MATLOCID_GUID22: str
-    SCM_GRPRT: float
-    SCM_GIPRT: float
-    SCM_SCOST: float
-    SCM_RELDT: float
-    SCM_RRP_TYPE: str
-    SCM_HEUR_ID: str
-    SCM_PACKAGE_ID: str
-    SCM_SSPEN: float
-    SCM_GET_ALERTS: str
-    SCM_RES_NET_NAME: str
-    SCM_CONHAP: float
-    SCM_HUNIT: str
-    SCM_CONHAP_OUT: float
-    SCM_HUNIT_OUT: str
-    SCM_SHELF_LIFE_LOC: str
-    SCM_SHELF_LIFE_DUR: float
-    SCM_MATURITY_DUR: float
-    SCM_SHLF_LFE_REQ_MIN: float
-    SCM_SHLF_LFE_REQ_MAX: float
-    SCM_LSUOM: str
-    SCM_REORD_DUR: float
-    SCM_TARGET_DUR: float
-    SCM_TSTRID: str
-    SCM_STRA1: str
-    SCM_PEG_PAST_ALERT: float
-    SCM_PEG_FUTURE_ALERT: float
-    SCM_PEG_STRATEGY: str
-    SCM_PEG_WO_ALERT_FST: str
-    SCM_FIXPEG_PROD_SET: str
-    SCM_WHATBOM: str
-    SCM_RRP_SEL_GROUP: str
-    SCM_INTSRC_PROF: str
-    SCM_PRIO: int
-    SCM_MIN_PASS_AMOUNT: float
-    SCM_PROFID: str
-    SCM_GES_MNG_USE: str
-    SCM_GES_BST_USE: str
-    ESPPFLG: str
-    SCM_THRUPUT_TIME: datetime
-    SCM_TPOP: str
-    SCM_SAFTY_V: float
-    SCM_PPSAFTYSTK: float
-    SCM_PPSAFTYSTK_V: float
-    SCM_REPSAFTY: float
-    SCM_REPSAFTY_V: float
-    SCM_REORD_V: float
-    SCM_MAXSTOCK_V: float
-    SCM_SCOST_PRCNT: float
-    SCM_PROC_COST: float
-    SCM_NDCOSTWE: float
-    SCM_NDCOSTWA: float
-    SCM_CONINP: float
-    CONF_GMSYNC: str
-    SCM_IUNIT: str
-    SCM_SFT_LOCK: str
-    DUMMY_PLNT_INCL_EEW_PS: str
-    SAPMP_TOLPRPL: float = Field(alias="/SAPMP/TOLPRPL")
-    SAPMP_TOLPRMI: float = Field(alias="/SAPMP/TOLPRMI")
-    STTPEC_SERVALID: str = Field(alias="/STTPEC/SERVALID")
-    VSO_R_PKGRP: str = Field(alias="/VSO/R_PKGRP")
-    VSO_R_LANE_NUM: str = Field(alias="/VSO/R_LANE_NUM")
-    VSO_R_PAL_VEND: str = Field(alias="/VSO/R_PAL_VEND")
-    VSO_R_FORK_DIR: str = Field(alias="/VSO/R_FORK_DIR")
-    IUID_RELEVANT: str
-    IUID_TYPE: str
-    UID_IEA: str
-    DPCBT: str
+class Crtx(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: CRTX
+    Schema: SAPHANADB
+    """
 
-class Mard(BaseModel):
-    MANDT: Key[str]
-    MATNR: Key[str]
-    WERKS: Key[str]
-    LGORT: Key[str]
-    PSTAT: str
-    LVORM: str
-    LFGJA: str
-    LFMON: str
-    SPERR: str
-    LABST: float
-    UMLME: float
-    INSME: float
-    EINME: float
-    SPEME: float
-    RETME: float
-    VMLAB: float
-    VMUML: float
-    VMINS: float
-    VMEIN: float
-    VMSPE: float
-    VMRET: float
-    KZILL: str
-    KZILQ: str
-    KZILE: str
-    KZILS: str
-    KZVLL: str
-    KZVLQ: str
-    KZVLE: str
-    KZVLS: str
-    DISKZ: str
-    LSOBS: str
-    LMINB: float
-    LBSTF: float
-    HERKL: str
-    EXPPG: str
-    EXVER: str
-    LGPBE: str
-    KLABS: float
-    KINSM: float
-    KEINM: float
-    KSPEM: float
-    DLINL: str
-    PRCTL: str
-    ERSDA: str
-    VKLAB: float
-    VKUML: float
-    LWMKB: str
-    BSKRF: float
-    MDRUE: str
-    MDJIN: str
-    DUMMY_STL_INCL_EEW_PS: str
-    FSH_SALLOC_QTY_S: float
-    CWM_LABST: float = Field(alias="/CWM/LABST")
-    CWM_INSME: float = Field(alias="/CWM/INSME")
-    CWM_EINME: float = Field(alias="/CWM/EINME")
-    CWM_SPEME: float = Field(alias="/CWM/SPEME")
-    CWM_RETME: float = Field(alias="/CWM/RETME")
-    CWM_UMLME: float = Field(alias="/CWM/UMLME")
-    CWM_KLABS: float = Field(alias="/CWM/KLABS")
-    CWM_KINSM: float = Field(alias="/CWM/KINSM")
-    CWM_KEINM: float = Field(alias="/CWM/KEINM")
-    CWM_KSPEM: float = Field(alias="/CWM/KSPEM")
-    CWM_VMLAB: float = Field(alias="/CWM/VMLAB")
-    CWM_VMINS: float = Field(alias="/CWM/VMINS")
-    CWM_VMEIN: float = Field(alias="/CWM/VMEIN")
-    CWM_VMSPE: float = Field(alias="/CWM/VMSPE")
-    CWM_VMRET: float = Field(alias="/CWM/VMRET")
-    CWM_VMUML: float = Field(alias="/CWM/VMUML")
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    OBJTY: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    OBJID: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    SPRAS: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT_TEXT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM_TEXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTEXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTEXT_UP: Optional[SapNvarchar] = ""
 
-class Mast(BaseModel):
-    MANDT: Key[str]
-    MATNR: Key[str]
-    WERKS: Key[str]
-    STLAN: Key[str]
-    STLNR: Key[str]
-    STLAL: Key[str]
-    LOSVN: float
-    LOSBS: float
-    ANDAT: str
-    ANNAM: str
-    AEDAT: str
-    AENAM: str
-    CSLTY: str
-    MATERIAL_BOM_KEY: str
+class Dd01t(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: DD01T
+    Schema: SAPHANADB
+    """
 
-class Matdoc(BaseModel):
-    MANDT: str
-    KEY1: str
-    KEY2: str
-    KEY3: str
-    KEY4: str
-    KEY5: str
-    KEY6: str
-    RECORD_TYPE: str
-    HEADER_COUNTER: int
-    MATBF: str
-    WERKS: str
-    LGORT_SID: str
-    CHARG_SID: str
-    LIFNR_SID: str
-    MAT_KDAUF: str
-    MAT_KDPOS: str
-    MAT_PSPNR: str
-    KUNNR_SID: str
-    SOBKZ: str
-    LBBSA_SID: str
-    DISUB_OWNER_SID: str
-    RESOURCENAME_SID: str
-    BUKRS: str
-    CHARG_WHS_SG: str
-    MENGU: str
-    WERTU: str
-    VBOBJ_SG: str
-    KZBWS: str
-    BSTAUS_SG: str
-    BSTTYP_SG: str
-    KALNR: str
-    BERID: str
-    WAERS: str
-    DMBTR: float
-    BNBTR: float
-    BUALT: float
-    DMBUM: float
-    EXBWR: float
-    VKWRT: float
-    EXVKW: float
-    SALK3: float
-    VKWRA: float
-    J_1BEXBASE: float
-    STOCK_VKWRT: float
-    DMBTR_STOCK: float
-    DMBTR_CONS: float
-    MEINS: str
-    MENGE: float
-    LBKUM: float
-    STOCK_QTY: float
-    CONSUMPTION_QTY: float
-    ERFME: str
-    ERFMG: float
-    BPRME: str
-    BPMNG: float
-    BSTME: str
-    BSTMG: float
-    LSMEH: str
-    LSMNG: float
-    PBAMG: float
-    CURRENCY_A1: str
-    PRICE_A1: float
-    PRICE_SOURCE_A1: str
-    STOCK_VALUE_A1: float
-    CONS_VALUE_A1: float
-    CWM_MENGE: float = Field(alias="/CWM/MENGE")
-    CWM_MEINS: str = Field(alias="/CWM/MEINS")
-    CWM_ERFMG: float = Field(alias="/CWM/ERFMG")
-    CWM_ERFME: str = Field(alias="/CWM/ERFME")
-    CWM_STOCK_QTY: float = Field(alias="/CWM/STOCK_QTY")
-    CWM_CONSUMPTION_QTY: float = Field(alias="/CWM/CONSUMPTION_QTY")
-    CWM_MEINS_SID: str = Field(alias="/CWM/MEINS_SID")
-    UMMAB_CID: str
-    UMWRK_CID: str
-    LGORT_CID: str
-    CHARG_CID: str
-    LIFNR_CID: str
-    MAT_KDAUF_CID: str
-    MAT_KDPOS_CID: str
-    MAT_PSPNR_CID: str
-    KUNNR_CID: str
-    UMSOK_CID: str
-    LBBSA_CID: str
-    DISUB_OWNER_CID: str
-    RESOURCENAME_CID: str
-    UMBUK_CG: str
-    CHARG_WHS_CG: str
-    UMMEN_CG: str
-    UMWER_CG: str
-    VBOBJ_CG: str
-    UMKZBWS_CG: str
-    BSTAUS_CG: str
-    BSTTYP_CG: str
-    KALNR_CG: str
-    BUDAT: str
-    CPUDT: str
-    CPUTM: str
-    YEARDAY_BUDAT: str
-    YEARWEEK_BUDAT: str
-    YEARMONTH_BUDAT: str
-    YEARQUARTER_BUDAT: str
-    YEAR_BUDAT: str
-    QUARTER_BUDAT: str
-    MONTH_BUDAT: str
-    WEEK_BUDAT: str
-    DAY_BUDAT: str
-    WEEKDAY_BUDAT: str
-    BLDAT: str
-    AEDAT: str
-    SPE_BUDAT_UHR: str
-    SPE_BUDAT_ZONE: str
-    PERIV: str
-    GJAHR: str
-    GJPER: str
-    GJPER_CURR_PER: str
-    VFDAT: str
-    DABRBZ: str
-    DABRZ: str
-    HSDAT: str
-    MBLNR: str
-    MJAHR: str
-    ZEILE: str
-    LINE_ID: str
-    PARENT_ID: str
-    LINE_DEPTH: str
-    MAA_URZEI: str
-    KDAUF: str
-    KDPOS: str
-    KDEIN: str
-    EBELN: str
-    EBELP: str
-    LFBJA: str
-    LFBNR: str
-    LFPOS: str
-    SJAHR: str
-    SMBLN: str
-    SMBLP: str
-    AUFNR: str
-    ANLN1: str
-    ANLN2: str
-    BELNR: str
-    BUZEI: str
-    BELUM: str
-    BUZUM: str
-    RSNUM: str
-    RSPOS: str
-    TBNUM: str
-    TBPOS: str
-    UBNUM: str
-    TANUM: str
-    URZEI: str
-    XBLNR: str
-    VBELN_IM: str
-    VBELP_IM: str
-    LE_VBELN: str
-    SPE_LOGSYS: str
-    SPE_MDNUM_EWM: str
-    CANCELLED: str
-    CANCELLATION_TYPE: str
-    REVERSAL_MOVEMENT: str
-    SERVICE_DOC_TYPE: str
-    SERVICE_DOC_ID: str
-    SERVICE_DOC_ITEM_ID: str
-    EWM_LGNUM: str
-    EWM_GMDOC: str
-    EWM_LGPLA: str
-    XSTOR: str
-    BWART: str
-    XAUTO: str
-    MATNR: str
-    LGORT: str
-    CHARG: str
-    BWTAR: str
-    INSMK: str
-    ZUSCH: str
-    ZUSTD: str
-    LIFNR: str
-    KUNNR: str
-    PLPLA: str
-    SHKZG: str
-    SHKUM: str
-    ELIKZ: str
-    SGTXT: str
-    EQUNR: str
-    WEMPF: str
-    ABLAD: str
-    GSBER: str
-    KOKRS: str
-    PARGB: str
-    PARBU: str
-    KOSTL: str
-    PROJN: str
-    XSKST: str
-    XSAUF: str
-    XSPRO: str
-    XSERG: str
-    XRUEM: str
-    XRUEJ: str
-    KZEAR: str
-    KZSTR: str
-    UMMAT: str
-    UMCHA: str
-    UMLGO: str
-    UMZST: str
-    UMZUS: str
-    KZBEW: str
-    KZVBR: str
-    KZZUG: str
-    WEUNB: str
-    PALAN: float
-    LGNUM: str
-    LGTYP: str
-    LGPLA: str
-    BESTQ: str
-    BWLVS: str
-    XBLVS: str
-    VSCHN: str
-    NSCHN: str
-    DYPLA: str
-    TBPRI: str
-    WEANZ: str
-    GRUND: str
-    EVERS: str
-    EVERE: str
-    IMKEY: str
-    KSTRG: str
-    PAOBJNR: str
-    PRCTR: str
-    PS_PSP_PNR: str
-    NPLNR: str
-    AUFPL: str
-    APLZL: str
-    AUFPS: str
-    VPTNR: str
-    FIPOS: str
-    SAKTO: str
-    XWSBR: str
-    EMLIF: str
-    AKTNR: str
-    ZEKKN: str
-    CUOBJ_CH: str
-    PPRCTR: str
-    RSART: str
-    GEBER: str
-    FISTL: str
-    BUSTM: str
-    BUSTW: str
-    VPRSV: str
-    FKBER: str
-    XBEAU: str
-    QINSPST: str
-    MWSKZ: str
-    TXJCD: str
-    EMATN: str
-    J_1AGIRUPD: str
-    VKMWS: str
-    BERKZ: str
-    XWOFF: str
-    BEMOT: str
-    PRZNR: str
-    LLIEF: str
-    LSTAR: str
-    XOBEW: str
-    GRANT_NBR: str
-    ZUSTD_T156M: str
-    SPE_GTS_STOCK_TY: str
-    KBLNR: str
-    KBLPOS: str
-    XMACC: str
-    UMMAB: str
-    UMBAR: str
-    UMWRK: str
-    UMSOK: str
-    SGT_SCAT: str
-    SGT_UMSCAT: str
-    SGT_RCAT: str
-    DISUB_OWNER: str
-    COMPL_MARK: str
-    FZGLS_MARK: str
-    ETANP_MARK: str
-    POPUP_MARK: str
-    XSAUT: str
-    SERVICEPERFORMER: str
-    PERNR: str
-    KNTTP_GR: str
-    WORK_ITEM_ID: str
-    FBUDA: str
-    DUMMY_INCL_EEW_COBL: str
-    FSH_SEASON_YEAR: str
-    FSH_SEASON: str
-    FSH_COLLECTION: str
-    FSH_THEME: str
-    WRF_CHARSTC1: str
-    WRF_CHARSTC2: str
-    WRF_CHARSTC3: str
-    DUMMY_MATDOC_INCL_EEW_PS: str
-    OINAVNW: float
-    OICONDCOD: str
-    CONDI: str
-    ASS_PSPNR: str
-    BLART: str
-    BLAUM: str
-    TCODE: str
-    BKTXT: str
-    FRATH: float
-    FRBNR: str
-    WEVER: str
-    XABLN: str
-    AWSYS: str
-    BLA2D: str
-    BFWMS: str
-    VGART: str
-    USNAM: str
-    TCODE2: str
-    EXNUM: str
-    GTS_CUSREF_NO: str
-    FLS_RSTO: str
-    MSR_ACTIVE: str
-    XCOMPL: str
-    KNUMV: str
-    DATAAGING: str = Field(alias="_DATAAGING")
-    XPRINT: str
-    LMBMV: str
-    PABPM: float
-    XFMAT: str
-    KNBDR: str
-    NROFLABELS: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    DOMNAME: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    DDLANGUAGE: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    AS4LOCAL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    AS4VERS: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DDTEXT: Optional[SapNvarchar] = ""
 
-class Mbew(BaseModel):
-    MANDT: Key[str]
-    MATNR: Key[str]
-    BWKEY: Key[str]
-    BWTAR: Key[str]
-    LVORM: str
-    LBKUM: float
-    SALK3: float
-    VPRSV: str
-    VERPR: float
-    STPRS: float
-    PEINH: float
-    BKLAS: str
-    SALKV: float
-    VMKUM: float
-    VMSAL: float
-    VMVPR: str
-    VMVER: float
-    VMSTP: float
-    VMPEI: float
-    VMBKL: str
-    VMSAV: float
-    VJKUM: float
-    VJSAL: float
-    VJVPR: str
-    VJVER: float
-    VJSTP: float
-    VJPEI: float
-    VJBKL: str
-    VJSAV: float
-    LFGJA: str
-    LFMON: str
-    BWTTY: str
-    STPRV: float
-    LAEPR: str
-    ZKPRS: float
-    ZKDAT: str
-    TIMESTAMP: datetime
-    BWPRS: float
-    BWPRH: float
-    VJBWS: float
-    VJBWH: float
-    VVJSL: float
-    VVJLB: float
-    VVMLB: float
-    VVSAL: float
-    ZPLPR: float
-    ZPLP1: float
-    ZPLP2: float
-    ZPLP3: float
-    ZPLD1: str
-    ZPLD2: str
-    ZPLD3: str
-    PPERZ: str
-    PPERL: str
-    PPERV: str
-    KALKZ: str
-    KALKL: str
-    KALKV: str
-    KALSC: str
-    XLIFO: str
-    MYPOL: str
-    BWPH1: float
-    BWPS1: float
-    ABWKZ: str
-    PSTAT: str
-    KALN1: str
-    KALNR: str
-    BWVA1: str
-    BWVA2: str
-    BWVA3: str
-    VERS1: str
-    VERS2: str
-    VERS3: str
-    HRKFT: str
-    KOSGR: str
-    PPRDZ: str
-    PPRDL: str
-    PPRDV: str
-    PDATZ: str
-    PDATL: str
-    PDATV: str
-    EKALR: str
-    VPLPR: float
-    MLMAA: str
-    MLAST: str
-    LPLPR: float
-    VKSAL: float
-    HKMAT: str
-    SPERW: str
-    KZIWL: str
-    WLINL: str
-    ABCIW: str
-    BWSPA: float
-    LPLPX: float
-    VPLPX: float
-    FPLPX: float
-    LBWST: str
-    VBWST: str
-    FBWST: str
-    EKLAS: str
-    QKLAS: str
-    MTUSE: str
-    MTORG: str
-    OWNPR: str
-    XBEWM: str
-    BWPEI: float
-    MBRUE: str
-    OKLAS: str
-    DUMMY_VAL_INCL_EEW_PS: str
-    OIPPINV: str
+class Dd02l(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: DD02L
+    Schema: SAPHANADB
+    """
 
-class Mdma(BaseModel):
-    MANDT: Key[str]
-    MATNR: Key[str]
-    BERID: Key[str]
-    WERKS: str
-    DISPR: str
-    DISMM: str
-    DISPO: str
-    DISGR: str
-    MINBE: float
-    LFRHY: str
-    FXHOR: str
-    DISLS: str
-    RDPRF: str
-    BSTRF: float
-    BSTMI: float
-    BSTMA: float
-    MABST: float
-    TAKZT: float
-    AUSSS: float
-    SOBSL: str
-    LGPRO: str
-    LGFSB: str
-    MRPPP: str
-    EISBE: float
-    RWPRO: str
-    SHZET: str
-    BSTFE: float
-    LOSFX: float
-    LAGPR: str
-    LGRAD: float
-    PROPR: str
-    VRBMT: str
-    VRBDB: str
-    VRBDT: str
-    VRBFK: float
-    LOEKZ: str
-    SHPRO: str
-    AHDIS: str
-    AUTRU: str
-    PSTAT: str
-    KZKFK: str
-    SHFLG: str
-    APOKZ: str
-    PLIFZ: float
-    PLIFZX: str
-    AENAM: str
-    AEDAT: str
-    AEZEIT: str
-    SFTY_STK_METH: str
-    SCM_MATLOCID_GUID16: Optional[str] = 00000000000000000000000000000000
-    SCM_MATLOCID_GUID22: str
-    SCM_GRPRT: float
-    SCM_GIPRT: float
-    SCM_RRP_TYPE: str
-    SCM_HEUR_ID: str
-    SCM_PACKAGE_ID: str
-    SCM_CONHAP: float
-    SCM_HUNIT: str
-    SCM_CONHAP_OUT: float
-    SCM_HUNIT_OUT: str
-    SCM_RRP_SEL_GROUP: str
-    SCM_LSUOM: str
-    SCM_REORD_DUR: float
-    SCM_TARGET_DUR: float
-    SCM_TSTRID: str
-    SCM_THRUPUT_TIME: datetime
-    SCM_TPOP: str
-    SCM_SAFTY_V: float
-    SCM_PPSAFTYSTK: float
-    SCM_PPSAFTYSTK_V: float
-    SCM_REPSAFTY: float
-    SCM_REPSAFTY_V: float
-    SCM_REORD_V: float
-    SCM_MAXSTOCK_V: float
-    SCM_SCOST_PRCNT: float
-    SCM_PROC_COST: float
-    SCM_NDCOSTWE: float
-    SCM_NDCOSTWA: float
-    SCM_CONINP: float
-    SCM_IUNIT: str
-    SCM_SCOST: float
-    SCM_SSPEN: float
-    MAXDOS_PEN: float
-    MAXDOS_FLG: str
-    SAFTYSTOCK_METHOD: str
-    TARGET_STOCK_LEVEL_METH: str
-    AUTO_DET_SFTYSTK_METH: str
-    USE_PERIOD_FACTOR: str
-    PERIOD_FACTOR_VALUE: float
-    PERIOD_FACTOR_TDS: float
-    CONVH: float
-    SDM_VERSION: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    TABNAME: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    AS4LOCAL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    AS4VERS: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TABCLASS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SQLTAB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATMIN: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATMAX: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATAVG: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CLIDEP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUFFERED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COMPRFLAG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LANGDEP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ACTFLAG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APPLCLASS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUTHCLASS: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AS4USER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AS4DATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Order by field
+    AS4TIME: SapNvarchar
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MASTERLANG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAINFLAG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONTFLAG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RESERVETAB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GLOBALFLAG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROZPUFF: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VIEWCLASS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VIEWGRANT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MULTIPLEX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SHLPEXI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROXYTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXCLASS: Optional[SapNvarchar] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WRONGCL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALWAYSTRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALLDATAINCL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WITH_PARAMETERS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXVIEW_INCLUDED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KEYMAX_FEATURE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KEYLEN_FEATURE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TABLEN_FEATURE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NONTRP_INCLUDED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VIEWREF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VIEWREF_ERR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VIEWREF_POS_CHG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TBFUNC_INCLUDED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IS_GTT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SESSION_VAR_EX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FROM_ENTITY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PK_IS_INVHASH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USED_SESSION_VARS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABAP_LANGUAGE_VERSION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HDB_ONLY_ENTITY_INCLUDED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIELD_SUFFIX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QUOTA_MAX_FIELDS: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QUOTA_MAX_BYTES: Optional[SapNvarchar] = 0000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QUOTA_SHARE_PARTNER: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QUOTA_SHARE_CUSTOMER: Optional[SapNvarchar] = 000
 
-class Mkal(BaseModel):
-    MANDT: Key[str]
-    MATNR: Key[str]
-    WERKS: Key[str]
-    VERID: Key[str]
-    BDATU: str
-    ADATU: str
-    STLAL: str
-    STLAN: str
-    PLNTY: str
-    PLNNR: str
-    ALNAL: str
-    BESKZ: str
-    SOBSL: str
-    LOSGR: float
-    MDV01: str
-    MDV02: str
-    TEXT1: str
-    EWAHR: float
-    VERTO: str
-    SERKZ: str
-    BSTMI: float
-    BSTMA: float
-    RGEKZ: str
-    ALORT: str
-    PLTYG: str
-    PLNNG: str
-    ALNAG: str
-    PLTYM: str
-    PLNNM: str
-    ALNAM: str
-    CSPLT: str
-    MATKO: str
-    ELPRO: str
-    PRVBE: str
-    PRFG_F: str
-    PRDAT: str
-    MKSP: str
-    PRFG_R: str
-    PRFG_G: str
-    PRFG_S: str
-    UCMAT: str
-    VERSIND: str
-    DIFFPLANEXEMSTR: str
-    EWM_LGNUM: str
-    EWM_LGPLA: str
-    EXE_STLAL: str
-    EXE_STLAN: str
-    EXE_PLNTY: str
-    EXE_PLNNR: str
-    EXE_ALNAL: str
-    TSA_PRVBE: str
-    PNGUID: Optional[str] = 00000000000000000000000000000000
-    DUMMY_MKAL_INCL_EEW_PS: str
-    PPEGUID: Optional[str] = 00000000000000000000000000000000
+class Dd02t(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: DD02T
+    Schema: SAPHANADB
+    """
 
-class Mlan(BaseModel):
-    MANDT: Key[str]
-    MATNR: Key[str]
-    ALAND: Key[str]
-    TAXM1: str
-    TAXM2: str
-    TAXM3: str
-    TAXM4: str
-    TAXM5: str
-    TAXM6: str
-    TAXM7: str
-    TAXM8: str
-    TAXM9: str
-    TAXIM: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    TABNAME: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    DDLANGUAGE: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    AS4LOCAL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    AS4VERS: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DDTEXT: Optional[SapNvarchar] = ""
 
-class Mvke(BaseModel):
-    MANDT: Key[str]
-    MATNR: Key[str]
-    VKORG: Key[str]
-    VTWEG: Key[str]
-    LVORM: str
-    VERSG: str
-    BONUS: str
-    PROVG: str
-    SKTOF: str
-    VMSTA: str
-    VMSTD: str
-    AUMNG: float
-    LFMNG: float
-    EFMNG: float
-    SCMNG: float
-    SCHME: str
-    VRKME: str
-    MTPOS: str
-    DWERK: str
-    PRODH: str
-    PMATN: str
-    KONDM: str
-    KTGRM: str
-    MVGR1: str
-    MVGR2: str
-    MVGR3: str
-    MVGR4: str
-    MVGR5: str
-    IS_ENTLMNT_RLVT: str
-    SSTUF: str
-    PFLKS: str
-    LSTFL: str
-    LSTVZ: str
-    LSTAK: str
-    LDVFL: str
-    LDBFL: str
-    LDVZL: str
-    LDBZL: str
-    VDVFL: str
-    VDBFL: str
-    VDVZL: str
-    VDBZL: str
-    PRAT1: str
-    PRAT2: str
-    PRAT3: str
-    PRAT4: str
-    PRAT5: str
-    PRAT6: str
-    PRAT7: str
-    PRAT8: str
-    PRAT9: str
-    PRATA: str
-    RDPRF: str
-    MEGRU: str
-    LFMAX: float
-    RJART: str
-    PBIND: str
-    VAVME: str
-    MATKC: str
-    PVMSO: str
-    DUMMY_SALD_INCL_EEW_PS: str
-    BEV1_EMLGRP: str = Field(alias="/BEV1/EMLGRP")
-    BEV1_EMDRCKSPL: str = Field(alias="/BEV1/EMDRCKSPL")
-    BEV1_RPBEZME: str = Field(alias="/BEV1/RPBEZME")
-    BEV1_RPSNS: str = Field(alias="/BEV1/RPSNS")
-    BEV1_RPSFA: str = Field(alias="/BEV1/RPSFA")
-    BEV1_RPSKI: str = Field(alias="/BEV1/RPSKI")
-    BEV1_RPSCO: str = Field(alias="/BEV1/RPSCO")
-    BEV1_RPSSO: str = Field(alias="/BEV1/RPSSO")
-    NF_FLAG: str
-    CTR_TERM_DEF: str
-    CTR_TERM_ALT1: str
-    CTR_TERM_ALT2: str
-    CTR_TERM_UNIT: str
-    EXT_PERIOD_DEF: str
-    EXT_PERIOD_ALT1: str
-    EXT_PERIOD_ALT2: str
-    EXT_PERIOD_UNIT: str
-    PACKAGE_TYPE: str
-    PACKAGE_SIZE: str
-    PLGTP: str
+class Eban(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: EBAN
+    Schema: SAPHANADB
+    """
 
-class Pkhd(BaseModel):
-    MANDT: Key[str]
-    PKNUM: Key[str]
-    MATNR: str
-    WERKS: str
-    PRVBE: str
-    BEHAZ: str
-    BEHMG: float
-    VERID: str
-    SIGAZ: str
-    RGVER: str
-    PKOSA: str
-    PKSTE: str
-    BERKZ: str
-    LGNUM: str
-    LGTYP: str
-    LGPLA: str
-    NKDYN: str
-    PKSTF: str
-    PKSTU: str
-    LIFNR: str
-    EKORG: str
-    EBELN: str
-    EBELP: str
-    ANSWB: str
-    PKBHT: str
-    QUFKT: str
-    UMLGO: str
-    MEINS: str
-    RKSTA: str
-    KOSTL: str
-    VBPRN: str
-    VBQUE: str
-    CC_PRINT_QUEUE: str
-    PKDRS: str
-    PKUMW: str
-    PKADR: str
-    PKSFG: str
-    PKLOG: str
-    ALSMG: float
-    ABLAD: str
-    KCART: str
-    KCSAF: float
-    KCCON: int
-    PKRMG: float
-    PKFMG: float
-    KCPRF: str
-    KWBZD: float
-    KWBZM: float
-    VBELN: str
-    VBELP: str
-    QUPVB: str
-    PABPRF: str
-    PACKV: str
-    ANZLT: str
-    RKFORM: str
-    KBFORM: str
-    CC_PRINT_FORM: str
-    ZPUNKT: str
-    LCM_STATUS: str
-    CRE_DATE: str
-    RLS_DATE: str
-    RELEASE_TIME: datetime
-    OBS_DATE: str
-    LOCK_TIME: datetime
-    LASTCHANGE_DATETIME: datetime
-    LASTCHANGE_USER: str
-    PINTVD: float
-    JIT_ACTION_CONTROL: str
-    PARTIAL_GR_ALLOWED_IND: str
-    MAX_NUMBER_OPEN_CALLS: int
-    REPL_QTY_LOWER_TOLERANCE_LVL: float
-    SUPL_QTY_UPPER_TOLERANCE_LVL: float
-    SUPL_QTY_LOWER_TOLERANCE_LVL: float
-    JIT_STCK_TRANSFER_REPL_STRAT: str
-    JIT_EXT_PROC_REPL_STRAT: str
-    COMMUNICATION_GROUP: str
-    OFFSET_FROM_START_OF_PRODN: float
-    DUMMY_NJIT_CCYC_INCL_EEW_PS: str
-    DUMMY_KANBAN_CCYC_INCL_EEW_PS: str
-    PINTVM: float
-    KNFZD: float
-    KNFZM: float
-    KWTZD: float
-    KWTZM: float
-    KITZD: float
-    KITZM: float
-    KDMBUF: float
-    KSPBUF: float
-    NTREL: str
-    TRIGAZ: str
-    TRIGGR: str
-    CAPA_WRKCT: str
-    NLPLA: str
-    VLPLA: str
-    PRCTY: str
-    FAZUS: str
-    SAFETY_TIME_IN_DAYS: datetime
-    SAFETY_TIME_IN_MINUTES: datetime
-    PLNG_PROCEDURE: str
-    SUMRST2: str
-    SUMRST3: str
-    PLNG_HORIZON: float
-    MIN_STOCK: float
-    LOT_SIZING_PROC: str
-    SCHEDULING_TYPE: str
-    SEQRST2: str
-    JITSCPRF: str
-    JITOTOL: str
-    LGNUM_EWM: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    BANFN: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    BNFPO: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSAKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STATU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ESTKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRGKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRGZU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRGST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AFNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXZ01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EMATN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEDNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATKL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RESWK: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MENGE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEINS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BUMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BADAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LPEIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRGDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    WEBAZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PREIS: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PEINH: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNTTP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZVBR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KFLAG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VRTKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TWRKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEPOS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEUNB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REPOS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLIEF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKORG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VRTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KONNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTPNR: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZUGBA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QUNUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QUPOS: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISPO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BVDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    BATOL: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BVDRK: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBELN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBELP: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    BSMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    LIMIT_CONSUMPTION_VALUE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LBLNI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWTAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XOBLR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBAKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSNUM: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOBKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARSNR: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARSPS: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIXKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BMEIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REVLV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VORAB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PACKNO: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KANBA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BPUEB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUOBJ: Optional[SapNvarchar] = 000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRGGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRGRL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AKTNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHARG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMSOK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIPOS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FISTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GEBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZKFG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SATNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MNG02: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DAT01: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADRNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADRN2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EMLIF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LBLKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZBWS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WAERS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IDNLF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSFRG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MPROF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZFME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPRAS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TECHS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MFRPN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MFRNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EMNFR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORDN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORDP: Optional[SapNvarchar] = 00000
+    # SAP HANA type: DECIMAL | Forced nullable
+    PLIFZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BERID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UZEIT: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FKBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GRANT_NBR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEMORY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BANPR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    RLWRT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BLCKD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REVNO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BLCKT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BESWK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EPROFILE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EPREFDOC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EPREFITM: Optional[SapNvarchar] = 00000
+    # SAP HANA type: DECIMAL | Forced nullable
+    GMMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WRTKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RESLO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBLPOS: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRIO_URG: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRIO_REQ: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEMORYTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: INTEGER | Forced nullable
+    ANZSN: Optional[SapInteger] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MHDRZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IPRKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NODISP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SRM_CONTRACT_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SRM_CONTRACT_ITM: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUDGET_PD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ELDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXPERT_MODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CENTRAL_PURREQN_PROC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_CRM_REF_SO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_CRM_REF_ITEM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INDELEGATEAPPROVAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_EBAN_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STORENETWORKID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STORESUPPLIERID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CREATIONDATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Order by field
+    CREATIONTIME: SapNvarchar
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRODUCTTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERVICEPERFORMER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISEOPBLOCKED: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    EXT_REV_TMSTMP: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FMFGUS_KEY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STARTDATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ENDDATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTMATERIALFORPURG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTFIXEDSUPPLIERFORPURG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTDESIREDSUPPLIERFORPURG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTCONTRACTFORPURG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTCONTRACTITEMFORPURG: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTINFORECORDFORPURG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTPLANTFORPURG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTSTORAGELOCATIONFORPURG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTCOMPANYCODEFORPURG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTPURGORGFORPURG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTSOURCESYSTEM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXT_BE_SOURCE_SYS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXT_BE_PRCHANGEINDICATOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTDOCTYPEFORPURG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISCRREPLICATIONBEFOREAPPROVAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MMPUR_PR_CEN_REQN_APP_RPLD_PR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTAPPROVALSTATUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STAGINGFLDEXTAPPROVALSTATUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PURCHASEREQNITEMUNIQUEID: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Order by field
+    LASTCHANGEDATETIME: SapDecimal
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISONBEHALFCART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SDM_VERSION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAKTO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KOSTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    EXPECTED_VALUE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    LIMIT_AMOUNT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONTRACT_FOR_LIMIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DELIVERYADDRTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MWSKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    PFMTRANSDATAFOOTPRINTUUID: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HASTRADECOMPLIANCEISSUE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PURREQNDESCRIPTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISOUTLINE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARENT_ITEM_NO: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OUTLINE_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXLIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXSNR: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADVCODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STACODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BANFN_CS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BNFPO_CS: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ITEM_CS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BSMNG_SND: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NO_MARD_DATA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADMOI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADPRI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LPRIO: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADACN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDNS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_SOBKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_PSPNR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_KUNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_VBELN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_POSNR: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_OWNER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLDLOGSSUPPLYPROCESS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLDLOGSDELIVISHELDONSHORE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLDLOGSVERSION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SEASON_YEAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SEASON: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_COLLECTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_THEME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_VAS_REL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_VAS_PRNT_ID: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_TRANSACTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_ITEM_GROUP: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_ITEM: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IUID_RELEVANT: Optional[SapNvarchar] = ""
+    # SAP HANA type: INTEGER | Forced nullable
+    SC_SR_ITEM_KEY: Optional[SapInteger] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SC_CATALOGID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SC_CATALOGITEM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SC_REQUESTOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SC_AUTHOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_SCAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_RCAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WRF_CHARSTC1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WRF_CHARSTC2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WRF_CHARSTC3: Optional[SapNvarchar] = ""
 
-class Plaf(BaseModel):
-    MANDT: Key[str]
-    PLNUM: Key[str]
-    MATNR: str
-    PLWRK: str
-    PWWRK: str
-    PAART: str
-    BESKZ: str
-    SOBES: str
-    GSMNG: float
-    TLMNG: float
-    AVMNG: float
-    BDMNG: float
-    PSTTR: str
-    PEDTR: str
-    PERTR: str
-    WEBAZ: float
-    DISPO: str
-    UMSKZ: str
-    AUFFX: str
-    STLFX: str
-    KNTTP: str
-    KDAUF: str
-    KDPOS: str
-    KDEIN: str
-    PROJN: str
-    RSNUM: str
-    QUNUM: str
-    QUPOS: str
-    FLIEF: str
-    KONNR: str
-    KTPNR: str
-    EKORG: str
-    LGORT: str
-    NUMVR: str
-    KZVBR: str
-    SOBKZ: str
-    PSPEL: str
-    SERNR: str
-    PALTR: str
-    TECHS: str
-    STLAN: str
-    STALT: str
-    STSTA: str
-    AENNR: str
-    ARSNR: str
-    ARSPS: str
-    VERTO: str
-    VERID: str
-    AUFNR: str
-    TRART: str
-    PLGRP: str
-    TERST: str
-    TERED: str
-    BEDID: str
-    AUFPL: str
-    LINID: str
-    TRMKZ: str
-    TRMER: str
-    REDKZ: str
-    TRMHK: str
-    PLNNR: str
-    PLNAL: str
-    PLNTY: str
-    FRTHW: str
-    RGEKZ: str
-    MEINS: str
-    CUOBJ: str
-    REVLV: str
-    ABMNG: float
-    RATID: str
-    GROID: str
-    RATER: str
-    GROER: str
-    OBART: str
-    PLSCN: str
-    SBNUM: str
-    KBNKZ: str
-    KAPFX: str
-    SEQNR: str
-    PSTTI: str
-    PEDTI: str
-    MONKZ: str
-    PRNKZ: str
-    MDPBV: str
-    VFMNG: float
-    MDACH: str
-    MDACC: str
-    MDACD: str
-    MDACT: str
-    GSBTR: str
-    PLETX: str
-    PRSCH: str
-    LVSCH: str
-    KZAVC: str
-    VRPLA: str
-    PBDNR: str
-    AGREQ: str
-    UMREZ: float
-    UMREN: float
-    ERFMG: float
-    ERFME: str
-    RQNUM: str
-    KZBWS: str
-    WEMNG: float
-    WAMNG: float
-    EDGNO: str
-    LBLKZ: str
-    EMLIF: str
-    BERID: str
-    UBERI: str
-    EMATN: str
-    REMFL: str
-    PSTMP: float
-    PUSER: str
-    BADI: str
-    STAEX: str
-    RESLO: str
-    SRM_CONTRACT_ID: str
-    SRM_CONTRACT_ITM: str
-    ORG_REQ_DATE: str
-    PTEXT: str
-    DUMMY_PLAF_INCL_EEW_PS: str
-    MEDKZ: str
-    CNFQTY: float
-    SGT_SCAT: str
-    PLIFZ: float
-    BOM_VERSN: str
-    DAC_PP_COMPONENT: str
-    DAC_INDIRECT_ACCESS: str
-    DAC_CREATION_DATE: str
-    M_MRP: str
-    KUNNR: str
-    FLG_BUNDLE: str
-    FSH_MPLND_ORD: str
-    FSH_SEASON_YEAR: str
-    FSH_SEASON: str
-    FSH_COLLECTION: str
-    FSH_THEME: str
-    ATRKZ: str
-    DPS_HANDOVER_TIME: datetime
+class Ekkn(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: EKKN
+    Schema: SAPHANADB
+    """
 
-class Plko(BaseModel):
-    MANDT: Key[str]
-    PLNTY: Key[str]
-    PLNNR: Key[str]
-    PLNAL: Key[str]
-    ZAEHL: Key[str]
-    DATUV: str
-    TECHV: str
-    AENNR: str
-    LOEKZ: str
-    PARKZ: str
-    ANDAT: str
-    ANNAM: str
-    AEDAT: str
-    AENAM: str
-    VERWE: str
-    WERKS: str
-    STATU: str
-    PLNME: str
-    LOSVN: float
-    LOSBS: float
-    VAGRP: str
-    AESZN: str
-    KTEXT: str
-    TXTSP: str
-    ABDAT: str
-    ABANZ: float
-    PROFIDNETZ: str
-    KOKRS: str
-    QVEWERKS: str
-    QVEMENGE: str
-    QVEVERSION: str
-    QVEDATUM: str
-    QVEGRUPPE: str
-    QVECODE: str
-    QDYNREGEL: str
-    QDYNHEAD: str
-    QPRZIEHVER: str
-    QVERSNPRZV: str
-    QKZRASTER: str
-    QDYNSTRING: str
-    STRAT: str
-    PPOOL: str
-    ISTRU: str
-    IWERK: str
-    ANLZU: str
-    ARBID: str
-    EXTNUM: str
-    DELKZ: str
-    ARBTY: str
-    STUPR: str
-    CLNDR: str
-    PRTYP: str
-    REODAT: str
-    NETID: str
-    FLG_CHK: str
-    PSPNR: str
-    TTRAS: str
-    KZKFG: str
-    PLNNR_ALT: str
-    FLG_CAPO: str
-    STLTY: str
-    STLNR: str
-    STLAL: str
-    SLWBEZ: str
-    PPKZTLZU: str
-    CHRULE: str
-    CCOAA: str
-    ST_ARBID: str
-    MEINH: str
-    UMREZ: float
-    UMREN: float
-    BMSCH: float
-    ADPSP: str
-    VALID_TO: str
-    LOEKZ_INHERITED: str
-    DUMMY_PLKO_INCL_EEW_PS: str
-    MS_FLAG: str
-    CHANGEDDATETIME: datetime
-    TSTMP_BW: float
-    MES_ROUTINGID: str
-    VERSN: str
-    CRTYPE: str
-    EFFTYP: str
-    XHIERTL: str
-    TL_EXTID: str
-    AXON_DURATION: float
-    AXON_C1: str
-    AXON_UNIT: str
-    AXON_TLGROUP: str
-    AXON_GROUPCNTR: str
-    AXON_NONROUT: float
-    AXON_TLGROUP2: str
-    AXON_GROUPCNTR2: str
-    AXON_DEFECTTL: str
-    TBX_ATTRIBUTES: str
-    TASKLIST_VERSIONED: str
-    DEPENDENT_TASKLIST: str
-    CURRENT_DOCNO: str
-    CURRENT_DOCTYP: str
-    CURRENT_DOCVR: str
-    CURRENT_DOCTL: str
-    LINKED_TL_TYPE: str
-    LNKED_TL_MROTYPE: str
-    LINKED_TL_VERSION: str
-    LINKED_TL_COUNTER: str
-    LINKED_TL_GRPCOUNT: str
-    OBJNR: str
-    PROCESSED: str
-    PROCESSED_DL: str
-    ZZEVENT_CODE: str
-    ZZRESET_FLAG: str
-    ZZPEST_FLAG: str
-    ZZDOC_CREATION: str
-    ZZATNAM: str
-    ZZKATALOGART: str
-    ZZCODEGRUPPE: str
-    ZZCODE: str
-    ZZPEST_USAGE: str
-    ZZPEST_DURATION: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    EBELN: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    EBELP: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ZEKKN: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KFLAG: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MENGE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VPROZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    NETWR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAKTO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KOSTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROJN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VBELN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VBELP: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VETEN: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZBRB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANLN1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANLN2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEMPF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABLAD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KOKRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XBKST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XBAUF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XBPRO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EREKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KSTRG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAOBJNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRCTR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PS_PSP_PNR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NPLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUFPL: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IMKEY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APLZL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VPTNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIPOS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RECID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERVICE_DOC_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERVICE_DOC_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERVICE_DOC_ITEM_ID: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_INCL_EEW_COBL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FISTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GEBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FKBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DABRZ: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUFPL_ORD: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APLZL_ORD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MWSKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXJCD: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    NAVNW: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBLPOS: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LSTAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRZNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GRANT_NBR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUDGET_PD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FM_SPLIT_BATCH: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FM_SPLIT_BEGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AA_FINAL_IND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AA_FINAL_REASON: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    AA_FINAL_QTY: Optional[SapDecimal] = 0
+    # SAP HANA type: DOUBLE | Forced nullable
+    AA_FINAL_QTY_F: Optional[SapDouble] = 0
+    # SAP HANA type: DOUBLE | Forced nullable
+    MENGE_F: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FMFGUS_KEY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATAAGING: Optional[SapNvarchar] = Field(alias="_DATAAGING", default=00000000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EGRUP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VNAME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBLNR_CAB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBLPOS_CAB: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TCOBJNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATEOFSERVICE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NOTAXCORR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    DIFFOPTRATE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HASDIFFOPTRATE: Optional[SapNvarchar] = ""
 
-class Plmk(BaseModel):
-    MANDT: Key[str]
-    PLNTY: Key[str]
-    PLNNR: Key[str]
-    PLNKN: Key[str]
-    KZEINSTELL: Key[str]
-    MERKNR: Key[str]
-    ZAEHL: Key[str]
-    GUELTIGAB: str
-    SERNV: str
-    LOEKZ: str
-    PARKZ: str
-    AENDERGNR: str
-    ERSTELLER: str
-    ERSTELLDAT: str
-    AENDERER: str
-    AENDERDAT: str
-    STEUERKZ: str
-    QMTB_WERKS: str
-    PMETHODE: str
-    PMTVERSION: str
-    QPMK_REF: str
-    QPMK_ZAEHL: str
-    VERWMERKM: str
-    MKVERSION: str
-    MKVERSDAT: str
-    MERKGEW: str
-    PROBENR: str
-    PRUEFQUALI: str
-    TOLERANZSL: str
-    KURZTEXT: str
-    LTEXTKZ: str
-    LTEXTSPR: str
-    LTEXTEKZ: str
-    LTXTENTSPR: str
-    STELLEN: int
-    MASSEINHSW: str
-    SOLLWERT: float
-    SOLLWNI: str
-    TOLERANZOB: float
-    TOLOBNI: str
-    TOLERANZUN: float
-    TOLUNNI: str
-    KLASANZAHL: int
-    KLASBREITE: float
-    KLASBRNI: str
-    KLASMITTE: float
-    KLASMINI: str
-    GRENZEOB1: float
-    GRENZOB1NI: str
-    GRENZEUN1: float
-    GRENZUN1NI: str
-    GRENZEOB2: float
-    GRENZOB2NI: str
-    GRENZEUN2: float
-    GRENZUN2NI: str
-    PLAUSIOBEN: float
-    PLAUSIOBNI: str
-    PLAUSIUNTE: float
-    PLAUSIUNNI: str
-    TOLERWEIOB: float
-    TOLWOBNI: str
-    TOLERWEIUN: float
-    TOLWUNNI: str
-    TOLERWAB: str
-    TOLERWBIS: str
-    STICHPRVER: str
-    FAKPLANME: float
-    FAKPROBME: float
-    PROBEMGEH: str
-    PRUEFEINH: float
-    DYNKRIT: str
-    FORMELSL: str
-    FORMEL1: str
-    FORMEL2: str
-    CODEGR9U: str
-    CODE9U: str
-    CODEVR9U: str
-    CODEGR9O: str
-    CODE9O: str
-    CODEVR9O: str
-    KATAB1: str
-    KATALGART1: str
-    AUSWMENGE1: str
-    AUSWMGWRK1: str
-    AUSWVERS1: str
-    AUSWDAT1: str
-    KATAB2: str
-    KATALGART2: str
-    AUSWMENGE2: str
-    AUSWMGWRK2: str
-    AUSWVERS2: str
-    AUSWDAT2: str
-    KATAB3: str
-    KATALGART3: str
-    AUSWMENGE3: str
-    AUSWMGWRK3: str
-    AUSWVERS3: str
-    AUSWDAT3: str
-    KATAB4: str
-    KATALGART4: str
-    AUSWMENGE4: str
-    AUSWMGWRK4: str
-    AUSWVERS4: str
-    AUSWDAT4: str
-    KATAB5: str
-    KATALGART5: str
-    AUSWMENGE5: str
-    AUSWMGWRK5: str
-    AUSWVERS5: str
-    AUSWDAT5: str
-    DUMMY10: str
-    DUMMY20: str
-    DUMMY40: str
-    CHARACT_ID1: str
-    QERGDATH: str
-    EEANTVERF: str
-    QDYNREGEL: str
-    DYNMERKREF: str
-    PZLFH: str
-    CODEGRQUAL: str
-    CODEQUAL: str
-    SPCKRIT: str
-    INPPROC: str
-    RES_PLAN: str
-    CTRMETH: str
-    CHAORIG: str
-    CHAORIG_GUID: Optional[str] = 00000000000000000000000000000000
-    NO_INSPECTION: str
-    QP_CHAORIG_ID: str
-    CHARGROUP: str
-    CHARGROUP_CREF: str
-    DIVISIONINT: str
-    VALID_TO_ON_DB: str
-    VERSN: str
-    VERSN_SOURCE: str
-    VERSN_SOURCE_PLNKN: str
-    VERSN_SOURCE_MERKNR: str
-    DUMMY_PLMK_INCL_EEW_PS: str
-    CHAR_RELEVANCE: str
+class Ekko(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: EKKO
+    Schema: SAPHANADB
+    """
 
-class Plmz(BaseModel):
-    MANDT: Key[str]
-    PLNTY: Key[str]
-    PLNNR: Key[str]
-    ZUONR: Key[str]
-    ZAEHL: Key[str]
-    DATUV: str
-    TECHV: str
-    AENNR: str
-    LOEKZ: str
-    PARKZ: str
-    PLNAL: str
-    PLNFL: str
-    PLNKN: str
-    STLTY: str
-    STLNR: str
-    STLAL: str
-    STLKN: str
-    WERK_STL: str
-    ZUDIV: str
-    ZUMS1: float
-    ZUMS2: float
-    ZUMS3: float
-    ZUMEI: str
-    IMENG: float
-    IMEIN: str
-    ANDAT: str
-    ANNAM: str
-    AEDAT: str
-    AENAM: str
-    RGEKZ: str
-    STLST: str
-    STLWG: str
-    REFKN: str
-    GP_MATNR: str
-    GP_WERKS: str
-    GP_UVORN: str
-    GP_KRIT1: str
-    GP_FREET: str
-    AOBAR: str
-    ZEINH: str
-    DAUER: float
-    DMENG: float
-    KNTTP: str
-    FLGEX: str
-    VORAB: str
-    STRECKE: str
-    STLTY_W: str
-    STLNR_W: str
-    STLAL_W: str
-    KANTE: str
-    LGORT: str
-    DISP: str
-    PRODFLOWID: str
-    BEIKZ: str
-    ABLAD: str
-    WEMPF: str
-    VALID_TO: str
-    LOEKZ_INHERITED: str
-    VERSN: str
-    VERSN_SOURCE: str
-    VERSN_SOURCE_ZUONR: str
-    BOM_VERSN: str
-    BOM_VERSN_W: str
-    LOG_COMP: str
-    SERVICEDURATION: float
-    SERVICEDURATIONUNIT: str
-    OVERALLLIMITAMOUNT: float
-    EXPCTEDOVERALLLIMITAMOUNT: float
-    RECIPIENTLOCATIONCODE: str
-    PRODUCTTYPE: str
-    CURRENCY: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    EBELN: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUKRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSAKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STATU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Order by field
+    LASTCHANGEDATETIME: SapDecimal
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PINCR: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LPONR: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPRAS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZTERM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZBD1T: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZBD2T: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZBD3T: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZBD1P: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZBD2P: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKORG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WAERS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    WKURS: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUFIX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDATB: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWBDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANGDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BNDDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GWLDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANGNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IHRAN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IHREZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERKF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELF1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LLIEF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ACTIVE_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KONNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUTLF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEAKT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RESWK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LBLIF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO2: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    KTWRT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISTRIBUTIONTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SUBMI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNUMV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALSM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STAFO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXNUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UNSEZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOGSY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UPINC: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STAKO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRGGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRGSX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRGKE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRGZU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRGRL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LANDS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LPHIS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADRNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCEG_L: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCEG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABSGR: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KORNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEMORY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROCSTAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROCESS_INDICATOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    RLWRT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CR_STAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REVNO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCMPROC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REASON_CODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEMORYTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RETTP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    RETPC: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DPTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    DPPCT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    DPAMT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DPDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MSR_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HIERARCHY_EXISTS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GROUPING_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARENT_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    THRESHOLD_EXISTS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEGAL_CONTRACT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DESCRIPTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RELEASE_DATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HANDOVERLOC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SHIPCOND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCOV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO2_L: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO3_L: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    INCO2_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: VARBINARY | Nullable
+    INCO3_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: VARBINARY | Nullable
+    INCO4_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GRWCU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INTRA_REL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INTRA_EXCL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOTAL_STATUS_PCS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOTAL_STATUS_PMA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOTAL_STATUS_DG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOTAL_STATUS_SDS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QTN_ERLST_SUBMSN_DATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FOLLOWON_DOC_CAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FOLLOWON_DOC_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_EKKO_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTERNALSYSTEM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTERNALREFERENCEID: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    EXT_REV_TMSTMP: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISEOPBLOCKED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISAGED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORCE_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORCE_CNT: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RELOC_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RELOC_SEQ_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOURCE_LOGSYS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_TRANSACTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_ITEM_GROUP: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_VAS_LAST_ITEM: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_OS_STG_CHANGE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TMS_REF_UUID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_PAYMENTDEEMED: Optional[SapNvarchar] = Field(alias="/DMBE/PAYMENTDEEMED", default=00000000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_DEALNUMBER: Optional[SapNvarchar] = Field(alias="/DMBE/DEALNUMBER", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_EVGIDRENEWAL: Optional[SapNvarchar] = Field(alias="/DMBE/EVGIDRENEWAL", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_EVGIDCANCEL: Optional[SapNvarchar] = Field(alias="/DMBE/EVGIDCANCEL", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZAPCGK: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APCGK_EXTEND: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZBAS_DATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZADATTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZSTART_DAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    Z_DEV: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZINDANX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZLIMIT_DAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NUMERATOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HASHCAL_BDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HASHCAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NEGATIVE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HASHCAL_EXISTS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNOWN_INDEX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POSTAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VZSKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SNST_STATUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROCE: Optional[SapNvarchar] = 000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COMP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OUTR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DESP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DESP_DAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DESP_CARGO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARE_DAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARE_CARGO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PFM_CONTRACT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POHF_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQ_EINDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQ_WERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIXPO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKGRP_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERKS_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONTRACT_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSTYP_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIXPO_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KEY_ID_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUREL_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DELPER_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EINDT_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTSNR_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OTB_LEVEL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OTB_COND_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KEY_ID: Optional[SapNvarchar] = 0000000000000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    OTB_VALUE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OTB_CURR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    OTB_RES_VALUE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    OTB_SPEC_VALUE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPR_RSN_PROFILE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUDG_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OTB_STATUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OTB_REASON: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHECK_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CON_OTB_REQ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CON_PREBOOK_LEV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CON_DISTR_LEV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HAS_CATALOG_RELEVANT_ITEMS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZHDCONTRACT: Optional[SapNvarchar] = ""
 
-class Plpo(BaseModel):
-    MANDT: Key[str]
-    PLNTY: Key[str]
-    PLNNR: Key[str]
-    PLNKN: Key[str]
-    ZAEHL: Key[str]
-    DATUV: str
-    TECHV: str
-    AENNR: str
-    LOEKZ: str
-    PARKZ: str
-    ANDAT: str
-    ANNAM: str
-    AEDAT: str
-    AENAM: str
-    SUMNR: str
-    VORNR: str
-    STEUS: str
-    ARBID: str
-    OBJTY: str
-    WERKS: str
-    KTSCH: str
-    LTXA1: str
-    LTXA2: str
-    TXTSP: str
-    VPLTY: str
-    VPLNR: str
-    VPLAL: str
-    VPLFL: str
-    VINTV: float
-    MEINH: str
-    UMREN: float
-    UMREZ: float
-    BMSCH: float
-    ZMERH: float
-    ZEIER: str
-    LAR01: str
-    VGE01: str
-    VGW01: float
-    LAR02: str
-    VGE02: str
-    VGW02: float
-    LAR03: str
-    VGE03: str
-    VGW03: float
-    LAR04: str
-    VGE04: str
-    VGW04: float
-    LAR05: str
-    VGE05: str
-    VGW05: float
-    LAR06: str
-    VGE06: str
-    VGW06: float
-    ZERMA: str
-    ZGDAT: str
-    ZCODE: str
-    ZULNR: str
-    RSANZ: str
-    PDEST: str
-    LOANZ: float
-    LOART: str
-    QUALF: str
-    ANZMA: float
-    RFGRP: str
-    RFSCH: str
-    RASCH: str
-    AUFAK: float
-    LOGRP: str
-    UEMUS: str
-    UEKAN: str
-    FLIES: str
-    ZEIMU: str
-    ZMINU: float
-    MINWE: float
-    SPMUS: str
-    SPLIM: float
-    ZEIMB: str
-    ZMINB: float
-    ZEILM: str
-    ZLMAX: float
-    ZEILP: str
-    ZLPRO: float
-    ZEIWN: str
-    ZWNOR: float
-    ZEIWM: str
-    ZWMIN: float
-    ZEITN: str
-    ZTNOR: float
-    ZEITM: str
-    ZTMIN: float
-    ABLIPKZ: str
-    RSTRA: str
-    BZOFFB: str
-    OFFSTB: float
-    EHOFFB: str
-    BZOFFE: str
-    OFFSTE: float
-    EHOFFE: str
-    SORTL: str
-    LIFNR: str
-    PLIFZ: float
-    PREIS: float
-    PEINH: float
-    SAKTO: str
-    WAERS: str
-    INFNR: str
-    ESOKZ: str
-    EKORG: str
-    EKGRP: str
-    KZLGF: str
-    MATKL: str
-    DAUNO: float
-    DAUNE: str
-    DAUMI: float
-    DAUME: str
-    DDEHN: str
-    EINSA: str
-    EINSE: str
-    ARBEI: float
-    ARBEH: str
-    ANZZL: int
-    PRZNT: int
-    VERTL: str
-    MLSTN: str
-    PPRIO: str
-    BUKRS: str
-    SLWID: str
-    USR00: str
-    USR01: str
-    USR02: str
-    USR03: str
-    USR04: float
-    USE04: str
-    USR05: float
-    USE05: str
-    USR06: float
-    USE06: str
-    USR07: float
-    USE07: str
-    USR08: str
-    USR09: str
-    USR10: str
-    USR11: str
-    ANFKO: str
-    ANFKOKRS: str
-    KAPAR: str
-    INDET: str
-    LARNT: str
-    PRKST: float
-    QRASTERMNG: float
-    QRASTEREH: str
-    ANLZU: str
-    ISTRU: str
-    ISTTY: str
-    ISTNR: str
-    ISTKN: str
-    ISTPO: str
-    IUPOZ: str
-    EBORT: str
-    KALID: str
-    FRSP: str
-    VERTN: str
-    ZGR01: str
-    ZGR02: str
-    ZGR03: str
-    ZGR04: str
-    ZGR05: str
-    ZGR06: str
-    MDLID: str
-    RUZUS: str
-    BMEIH: str
-    BMVRG: float
-    CKSELKZ: str
-    KALKZ: str
-    NPRIO: str
-    PVZKN: str
-    PHFLG: str
-    PHSEQ: str
-    KNOBJ: str
-    ERFSICHT: str
-    PSPNR: str
-    QLOTYPE: str
-    QLOBJEKTID: str
-    QLKAPAR: str
-    QKZPRZEIT: str
-    QKZZTMG1: str
-    QKZPRMENG: str
-    QKZPRFREI: str
-    QRASTZEHT: str
-    QRASTZFAK: float
-    QRASTMENG: float
-    QPPKTABS: str
-    KRIT1: str
-    CLASSID: str
-    PACKNO: str
-    EBELN: str
-    EBELP: str
-    CAPOC: str
-    FLG_CAPTXT: str
-    CN_WEIGHT: float
-    QKZTLSBEST: str
-    AUFKT: float
-    DAFKT: float
-    RWFAK: float
-    AAUFG: str
-    VERDART: str
-    UAVO_AUFL: str
-    FRDLB: str
-    QPART: str
-    PRZ01: str
-    TAKT: str
-    OPRID: str
-    NVADD: str
-    EVGEW: float
-    RFPNT: str
-    FLG_TSK_GROUP: str
-    ADPSP: str
-    VALID_TO: str
-    LOEKZ_INHERITED: str
-    DUMMY_PLPO_INCL_EEW_PS: str
-    TPLNR: str
-    EQUNR: str
-    MES_OPERID: str
-    MES_STEPID: str
-    MANU_PROC: str
-    VERSN: str
-    VERSN_SOURCE: str
-    VERSN_SOURCE_PLNKN: str
-    VERSN_TRACK_GUID: Optional[str] = 00000000000000000000000000000000
-    FAV_GUID: str
-    FAV_VERSN: str
-    FAV_GUID_OLD: str
-    FAV_VERSN_OLD: str
-    CL_TYPE: str
-    EXECUTION_STAGE: str
-    SAPMP_MET_LRCH: str = Field(alias="/SAPMP/MET_LRCH")
-    SAPMP_MAX_FERTL: float = Field(alias="/SAPMP/MAX_FERTL")
-    SAPMP_FIX_AS_J: float = Field(alias="/SAPMP/FIX_AS_J")
-    SAPMP_FIX_AS_E: float = Field(alias="/SAPMP/FIX_AS_E")
-    SAPMP_FIX_AS_L: float = Field(alias="/SAPMP/FIX_AS_L")
-    SAPMP_ABL_ZAHL: str = Field(alias="/SAPMP/ABL_ZAHL")
-    SUBPLNAL: str
-    SUBPLNNR: str
-    SUBPLNTY: str
-    XEXCLTL: str
+class Ekpo(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: EKPO
+    Schema: SAPHANADB
+    """
 
-class Qmat(BaseModel):
-    MANDT: Key[str]
-    ART: Key[str]
-    MATNR: Key[str]
-    WERKS: Key[str]
-    PPL: str
-    SPEZUEBER: str
-    CONF: str
-    TLS: str
-    APP: str
-    MER: str
-    INSMK: str
-    AVE: str
-    STICHPRVER: str
-    DYNREGEL: str
-    SPROZ: float
-    HPZ: str
-    DYN: str
-    MPB: str
-    MST: str
-    EIN: str
-    MPDAU: float
-    CHG: str
-    QKZVERF: str
-    QPMAT: float
-    KZPRFKOST: str
-    AUFNR_CO: str
-    AKTIV: str
-    APA: str
-    AFR: str
-    MMA: str
-    FEH: str
-    PRFRQ: float
-    NKMPR: str
-    MS_FLAG: str
-    CHG_ORIG_17: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    EBELN: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    EBELP: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UNIQUEID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STATU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXZ01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EMATN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUKRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEDNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATKL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IDNLF: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    KTMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MENGE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEINS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BPRME: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BPUMZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BPUMN: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    UMREZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    UMREN: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    NETPR: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PEINH: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    NETWR: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BRTWR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AGDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    WEBAZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MWSKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXDAT_FROM: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAX_COUNTRY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BONUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INSMK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPINF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRSDR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCHPR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MAHNZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MAHN1: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MAHN2: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MAHN3: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    UEBTO: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UEBTK: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    UNTTO: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWTAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWTTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABSKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AGMEM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ELIKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EREKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNTTP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZVBR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VRTKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TWRKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEPOS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEUNB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REPOS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEBRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZABS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LABNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KONNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTPNR: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    ABFTZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ETFZ1: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ETFZ2: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZSTU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NOTKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LMEIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EVERS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZWERT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    NAVNW: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ABMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    EFFWR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XOBLR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADRNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKKOL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SKTOF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STAFO: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PLIFZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    NTGEW: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GEWEI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXJCD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ETDRK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOBKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARSNR: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARSPS: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INSNC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SSQSS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EAN11: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSTAE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REVLV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GEBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FISTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIPOS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KO_GSBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KO_PARGB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KO_PRCTR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KO_PPRCTR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEPRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BRGEW: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VOLUM: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VOLEH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VORAB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KOLIF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTSNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PACKNO: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FPLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    GNETWR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STAPO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UEBPO: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEWED: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EMLIF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LBLKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SATNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HANDOVERLOC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KANBA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADRN2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DELIVERY_ADDRESS_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUOBJ: Optional[SapNvarchar] = 000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XERSY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EILDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DRDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DRUHR: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DRUNR: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AKTNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABELN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABELP: Optional[SapNvarchar] = 00000
+    # SAP HANA type: DECIMAL | Forced nullable
+    ANZPU: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PUNEI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAISO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAISJ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBON2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBON3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBONF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MLMAA: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MHDRZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANFPS: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZKFG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USEQU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMSOK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BANFN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BNFPO: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MTART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UPTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UPVOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    KZWI1: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KZWI2: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KZWI3: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KZWI4: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KZWI5: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KZWI6: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SIKGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MFZHI: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    FFZHI: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RETPO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUREL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFRET: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MFRGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NRFHG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1BNBM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1BMATUSE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1BMATORG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1BOWNPRO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1BINDUST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABUEB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NLABD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NFABD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZBWS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BONBA: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FABKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOADINGPOINT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1AINDXP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1AIDATEP: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MPROF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EGLKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZTLF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZFME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RDPRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TECHS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHG_SRV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHG_FPLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MFRPN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MFRNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EMNFR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NOVET: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AFNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TZONRC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IPRKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEBRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BERID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XCONDITIONS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APOMS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CCOMP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GRANT_NBR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FKBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STATUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RESLO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBLPOS: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PS_PSP_PNR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KOSTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAKTO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEORA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SRV_BAS_COM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRIO_URG: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRIO_REQ: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EMPST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DIFF_INVOICE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TRMRISK_RELEVANT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CREATIONDATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Order by field
+    CREATIONTIME: SapNvarchar
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VCM_CHAIN_CATEGORY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_ABGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_CRM_SO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_CRM_SO_ITEM: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_CRM_REF_SO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_CRM_REF_ITEM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_CRM_FKREL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_CHNG_SYS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_INSMK_SRC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_CQ_CTRLTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_CQ_NOCQ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REASON_CODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    CQU_SAR: Optional[SapDecimal] = 0
+    # SAP HANA type: INTEGER | Forced nullable
+    ANZSN: Optional[SapInteger] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_EWM_DTC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXLIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXSNR: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EHTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    RETPC: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DPTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    DPPCT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    DPAMT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DPDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLS_RSTO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXT_RFX_NUMBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXT_RFX_ITEM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXT_RFX_SYSTEM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SRM_CONTRACT_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SRM_CONTRACT_ITM: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GOODS_COUNT_CORRECTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFEX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFEXPOS: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BLK_REASON_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BLK_REASON_TXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ITCONS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIXMG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WABWE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CMPL_DLV_ITM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO2_L: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO3_L: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    INCO2_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: VARBINARY | Nullable
+    INCO3_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: VARBINARY | Nullable
+    INCO4_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STAWN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISVCO: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    GRWRT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERVICEPERFORMER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRODUCTTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GR_BY_SES: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRICE_CHANGE_IN_SES_ALLOWED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REQUESTFORQUOTATION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REQUESTFORQUOTATIONITEM: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RENEGOTIATION_STATUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STATUS_PCS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STATUS_PMA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STATUS_DG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STATUS_SDS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTMATERIALFORPURG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROCMT_HUB_SOURCE_SYSTEM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    TARGET_VALUE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTERNALREFERENCEID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TC_AUT_DET: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MANUAL_TC_REASON: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FISCAL_INCENTIVE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAX_SUBJECT_ST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FISCAL_INCENTIVE_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SF_TXJCD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_EKPO_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    EXPECTED_VALUE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    LIMIT_AMOUNT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONTRACT_FOR_LIMIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ENH_DATE1: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ENH_DATE2: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    ENH_PERCENT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ENH_NUMC1: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATAAGING: Optional[SapNvarchar] = Field(alias="_DATAAGING", default=00000000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUPIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CIGIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MGOIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXS_BUSINESS_TRANSACTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXS_MATERIAL_USAGE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXS_USAGE_PURPOSE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_NEGEN_ITEM: Optional[SapNvarchar] = Field(alias="/BEV1/NEGEN_ITEM", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_NEDEPFREE: Optional[SapNvarchar] = Field(alias="/BEV1/NEDEPFREE", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_NESTRUCCAT: Optional[SapNvarchar] = Field(alias="/BEV1/NESTRUCCAT", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADVCODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUDGET_PD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXCPE: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FMFGUS_KEY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IUID_RELEVANT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MRPIND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_SCAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_RCAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TMS_REF_UUID: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    TMS_SRC_LOC_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: VARBINARY | Nullable
+    TMS_DES_LOC_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WRF_CHARSTC1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WRF_CHARSTC2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WRF_CHARSTC3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REFSITE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_OPTIONALITYKEY: Optional[SapNvarchar] = Field(alias="/DMBE/OPTIONALITYKEY", default=0000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_OPTIONALITYFOR: Optional[SapNvarchar] = Field(alias="/DMBE/OPTIONALITYFOR", default=0000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_CIMAX2: Optional[SapNvarchar] = Field(alias="/DMBE/CIMAX2", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_ITEM_TYPE: Optional[SapNvarchar] = Field(alias="/DMBE/ITEM_TYPE", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_EFFECTIVEDATEFROM: Optional[SapNvarchar] = Field(alias="/DMBE/EFFECTIVEDATEFROM", default=00000000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_EFFECTIVEDATETO: Optional[SapNvarchar] = Field(alias="/DMBE/EFFECTIVEDATETO", default=00000000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_OPTIONOF: Optional[SapNvarchar] = Field(alias="/DMBE/OPTIONOF", default=00000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_ACCOUNTING_TYPE: Optional[SapNvarchar] = Field(alias="/DMBE/ACCOUNTING_TYPE", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_FAS_CODE: Optional[SapNvarchar] = Field(alias="/DMBE/FAS_CODE", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_SCHEDULING_DESK: Optional[SapNvarchar] = Field(alias="/DMBE/SCHEDULING_DESK", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_COMPONENTFOR: Optional[SapNvarchar] = Field(alias="/DMBE/COMPONENTFOR", default=0000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_MIXEDPRODUCT: Optional[SapNvarchar] = Field(alias="/DMBE/MIXEDPRODUCT", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_POSTEDDATE: Optional[SapNvarchar] = Field(alias="/DMBE/POSTEDDATE", default=00000000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_DEAL_POSTED: Optional[SapNvarchar] = Field(alias="/DMBE/DEAL_POSTED", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_INVOICEUOM: Optional[SapNvarchar] = Field(alias="/DMBE/INVOICEUOM", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZAPCGK: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APCGK_EXTEND: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZBAS_DATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZADATTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZSTART_DAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    Z_DEV: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZINDANX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZLIMIT_DAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NUMERATOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HASHCAL_BDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HASHCAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NEGATIVE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HASHCAL_EXISTS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNOWN_INDEX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAPMP_GPOSE: Optional[SapNvarchar] = Field(alias="/SAPMP/GPOSE", default=00000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANGPN: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADMOI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADPRI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LPRIO: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADACN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AFPNR: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSARK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANGNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PNSTAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDNS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ASSIGNMENT_PRIORITY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARUN_GROUP_PRIO: Optional[SapNvarchar] = ""
+    # SAP HANA type: INTEGER | Forced nullable
+    ARUN_ORDER_PRIO: Optional[SapInteger] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERNP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_SOBKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_PSPNR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_KUNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_VBELN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_POSNR: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_OWNER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SEASON_YEAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SEASON: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_COLLECTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_THEME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_ATP_DATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_VAS_REL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_VAS_PRNT_ID: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_TRANSACTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_ITEM_GROUP: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_ITEM: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_GRID_COND_REC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_PSM_PFM_SPLIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    CNFM_QTY: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_PQR_UEPOS: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFM_DIVERSION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFM_SCC_INDICATOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STPAC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGBZO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGBZO_B: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDRNUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONSNUM: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BORGR_MISS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DEP_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BELNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBLPOS_CAB: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBLNR_COMP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBLPOS_COMP: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WBS_ELEMENT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFM_PSST_RULE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFM_PSST_GROUP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFM_REF_DOC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFM_REF_ITEM: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFM_REF_ACTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFM_REF_SLITEM: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REF_ITEM: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOURCE_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOURCE_KEY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PUT_BACK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POL_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONS_ORDER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IS_CATALOG_RELEVANT: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Forced nullable
+    PFMTRANSDATAFOOTPRINTUUID: Optional[SapVarbinary] = 00000000000000000000000000000000
 
-class Stko(BaseModel):
-    MANDT: Key[str]
-    STLTY: Key[str]
-    STLNR: Key[str]
-    STLAL: Key[str]
-    STKOZ: Key[str]
-    DATUV: str
-    TECHV: str
-    AENNR: str
-    LKENZ: str
-    LOEKZ: str
-    VGKZL: str
-    ANDAT: str
-    ANNAM: str
-    AEDAT: str
-    AENAM: str
-    BMEIN: str
-    BMENG: float
-    CADKZ: str
-    LABOR: str
-    LTXSP: str
-    STKTX: str
-    STLST: str
-    WRKAN: str
-    DVDAT: str
-    DVNAM: str
-    AEHLP: str
-    ALEKZ: str
-    GUIDX: Optional[str] = 00000000000000000000000000000000
-    VALID_TO: str
-    ECN_TO: str
-    BOM_VERSN: str
-    VERSNST: str
-    VERSNLASTIND: str
-    LASTCHANGEDATETIME: datetime
-    BOM_AIN_IND: str
-    BOM_PREV_VERSN: str
-    DUMMY_STKO_INCL_EEW_PS: str
+class Kna1(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: KNA1
+    Schema: SAPHANADB
+    """
 
-class Stpo(BaseModel):
-    MANDT: Key[str]
-    STLTY: Key[str]
-    STLNR: Key[str]
-    STLKN: Key[str]
-    STPOZ: Key[str]
-    DATUV: str
-    TECHV: str
-    AENNR: str
-    LKENZ: str
-    VGKNT: str
-    VGPZL: str
-    ANDAT: str
-    ANNAM: str
-    AEDAT: str
-    AENAM: str
-    IDNRK: str
-    PSWRK: str
-    POSTP: str
-    POSNR: str
-    SORTF: str
-    MEINS: str
-    MENGE: float
-    FMENG: str
-    AUSCH: float
-    AVOAU: float
-    NETAU: str
-    SCHGT: str
-    BEIKZ: str
-    ERSKZ: str
-    RVREL: str
-    SANFE: str
-    SANIN: str
-    SANKA: str
-    SANKO: str
-    SANVS: str
-    STKKZ: str
-    REKRI: str
-    REKRS: str
-    CADPO: str
-    NFMAT: str
-    NLFZT: float
-    VERTI: str
-    ALPOS: str
-    EWAHR: float
-    EKGRP: str
-    LIFZT: float
-    LIFNR: str
-    PREIS: float
-    PEINH: float
-    WAERS: str
-    SAKTO: str
-    ROANZ: float
-    ROMS1: float
-    ROMS2: float
-    ROMS3: float
-    ROMEI: str
-    ROMEN: float
-    RFORM: str
-    UPSKZ: str
-    VALKZ: str
-    LTXSP: str
-    POTX1: str
-    POTX2: str
-    OBJTY: str
-    MATKL: str
-    WEBAZ: float
-    DOKAR: str
-    DOKNR: str
-    DOKVR: str
-    DOKTL: str
-    CSSTR: float
-    CLASS: str
-    KLART: str
-    POTPR: str
-    AWAKZ: str
-    INSKZ: str
-    VCEKZ: str
-    VSTKZ: str
-    VACKZ: str
-    EKORG: str
-    CLOBK: str
-    CLMUL: str
-    CLALT: str
-    CVIEW: str
-    KNOBJ: str
-    LGORT: str
-    KZKUP: str
-    INTRM: str
-    TPEKZ: str
-    STVKN: str
-    DVDAT: str
-    DVNAM: str
-    DSPST: str
-    ALPST: str
-    ALPRF: str
-    ALPGR: str
-    KZNFP: str
-    NFGRP: str
-    NFEAG: str
-    KNDVB: str
-    KNDBZ: str
-    KSTTY: str
-    KSTNR: str
-    KSTKN: str
-    KSTPZ: str
-    CLSZU: str
-    KZCLB: str
-    AEHLP: str
-    PRVBE: str
-    NLFZV: float
-    NLFMV: str
-    IDPOS: str
-    IDHIS: str
-    IDVAR: str
-    ALEKZ: str
-    ITMID: str
-    GUID: str
-    ITSOB: str
-    RFPNT: str
-    GUIDX: Optional[str] = 00000000000000000000000000000000
-    SGT_CMKZ: str
-    SGT_CATV: str
-    VALID_TO: str
-    VALID_TO_RKEY: str
-    ECN_TO: str
-    ECN_TO_RKEY: str
-    ABLAD: str
-    WEMPF: str
-    STVKN_VERSN: str
-    LASTCHANGEDATETIME: datetime
-    PRELIMINARY_MATERIAL: str
-    SFWIND: str
-    DUMMY_STPO_INCL_EEW_PS: str
-    CUFACTOR: str
-    SAPMP_MET_LRCH: str = Field(alias="/SAPMP/MET_LRCH")
-    SAPMP_MAX_FERTL: float = Field(alias="/SAPMP/MAX_FERTL")
-    SAPMP_FIX_AS_J: float = Field(alias="/SAPMP/FIX_AS_J")
-    SAPMP_FIX_AS_E: float = Field(alias="/SAPMP/FIX_AS_E")
-    SAPMP_FIX_AS_L: float = Field(alias="/SAPMP/FIX_AS_L")
-    SAPMP_ABL_ZAHL: str = Field(alias="/SAPMP/ABL_ZAHL")
-    SAPMP_RUND_FAKT: float = Field(alias="/SAPMP/RUND_FAKT")
-    FSH_VMKZ: str
-    FSH_PGQR: str
-    FSH_PGQRRF: str
-    FSH_CRITICAL_COMP: str
-    FSH_CRITICAL_LEVEL: float
-    FUNCID: str
-    SERVICEDURATION: float
-    SERVICEDURATIONUNIT: str
-    PRODUCTTYPE: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    KUNNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAND1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ORT01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSTLZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REGIO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SORTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STRAS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELF1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELFX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XCPDK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADRNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MCOD1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MCOD2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MCOD3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANRED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUFSD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BAHNE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BAHNS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BBBNR: Optional[SapNvarchar] = 0000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BBSNR: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BRSCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUBKZ: Optional[SapNvarchar] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATLT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXABL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FAKSD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FISKN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNAZK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNRZA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KONZS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTOKD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUKLA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFSD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOCCO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEVM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NIELS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ORT02: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PFACH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSTL2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COUNC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CITYC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RPMKR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPERR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPRAS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCD1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCD2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STKZA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STKZU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELBX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELF2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELTX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELX1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LZONE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XZEMP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VBUND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCEG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DEAR1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DEAR2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DEAR3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DEAR4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DEAR5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GFORM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BRAN1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BRAN2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BRAN3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BRAN4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BRAN5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKONT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    UMSAT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMJAH: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UWAER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    JMZAH: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    JMJAH: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATR1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATR2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATR3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATR4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATR5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATR6: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATR7: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATR8: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATR9: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATR10: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STKZN: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    UMSA1: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXJCD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PERIV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABRVW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INSPBYDEBI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INSPATDEBI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTOCD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PFORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DTAMS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DTAWS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUEFL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HZUOR: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPERZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ETIKG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CIVVE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MILVE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDKG1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDKG2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDKG3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDKG4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDKG5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XKNZA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FITYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCDT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCD3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCD4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCD5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCD6: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XICMS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XXIPI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XSUBT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CFOPC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXLW1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXLW2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CCC01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CCC02: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CCC03: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CCC04: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BONDED_AREA_CONFIRM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DONATE_MARK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONSOLIDATE_INVOICE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALLOWANCE_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EINVOICE_MODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    B2C_INDICATOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CASSD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNURL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1KFREPRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1KFTBUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1KFTIND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONFS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UPDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UPTIM: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NODEL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DEAR6: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DELIVERY_DATE_RULE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CVP_XBLCK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SUFRAMA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RGDATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RIC: Optional[SapNvarchar] = 00000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RNE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RNEDATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CNAE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEGALNAT: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CRTN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ICMSTAXPAY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INDTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TDT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COMSIZE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DECREGPC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PH_BIZ_STYLE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAYTRSN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNA1_EEW_CUST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RULE_EXCLUSION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNA1_ADDR_EEW_CUST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR6: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR7: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR8: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR9: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR10: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XDCSET: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VSO_R_PALHGT: Optional[SapDecimal] = Field(alias="/VSO/R_PALHGT", default=0)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_PAL_UL: Optional[SapNvarchar] = Field(alias="/VSO/R_PAL_UL", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_PK_MAT: Optional[SapNvarchar] = Field(alias="/VSO/R_PK_MAT", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_MATPAL: Optional[SapNvarchar] = Field(alias="/VSO/R_MATPAL", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_I_NO_LYR: Optional[SapNvarchar] = Field(alias="/VSO/R_I_NO_LYR", default=00)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_ONE_MAT: Optional[SapNvarchar] = Field(alias="/VSO/R_ONE_MAT", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_ONE_SORT: Optional[SapNvarchar] = Field(alias="/VSO/R_ONE_SORT", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_ULD_SIDE: Optional[SapNvarchar] = Field(alias="/VSO/R_ULD_SIDE", default=0)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_LOAD_PREF: Optional[SapNvarchar] = Field(alias="/VSO/R_LOAD_PREF", default=0)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_DPOINT: Optional[SapNvarchar] = Field(alias="/VSO/R_DPOINT", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PMT_OFFICE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FEE_SCHEDULE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUNS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUNS4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAM_UE_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAM_EFT_IND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSOFG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSOIS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSON1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSON2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSON3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSOVN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSOTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSOHS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSOST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSOO1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSOO2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSOO3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSOO4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSOO5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IEXCD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IEXRN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IEXRG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IEXDI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IEXCO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1ICSTNO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1ILSTNO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IPANNO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IEXCICU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1ISERN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IPANREF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GST_TDS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GETYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GREFTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSPNR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COAUFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GAGEXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GAGINT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GAGDUMI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GAGSTDI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KOKRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KOSTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GABGLG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GABGVG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GABRART: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    J_3GSTDMON: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    J_3GSTDTAG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    J_3GTAGMON: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GZUGTAG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GMASCHB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GMEINSA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GKEINSA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GBLSPER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GKLEIVO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GCALID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GVMONAT: Optional[SapNvarchar] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GABRKEN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GLABRECH: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GAABRECH: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GZUTVHLG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GNEGMEN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GFRISTLO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GEMINBE: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GFMGUE: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GZUSCHUE: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GSCHPRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GINVSTA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAPCEM_DBER: Optional[SapNvarchar] = Field(alias="/SAPCEM/DBER", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAPCEM_KVMEQ: Optional[SapNvarchar] = Field(alias="/SAPCEM/KVMEQ", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CARRID: Optional[SapNvarchar] = ""
 
-class T681a(BaseModel):
-    KAPPL: Key[str]
+class Knvv(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: KNVV
+    Schema: SAPHANADB
+    """
 
-class T685h(BaseModel):
-    MANDT: Key[str]
-    KAPPL: Key[str]
-    KSCHL: Key[str]
-    CHSPL: str
-    CHANZ: str
-    CHASP: str
-    CHMDG: str
-    CHMVS: str
-    CHMAN: str
-    KZAME: str
-    CHDYN: str
-    CHCUA: str
-    CLINT_SEL: str
-    CLINT_SRT: str
-    CHVSK: str
-    CHVLL: str
-    CLASS_SEL: str
-    CLASS_SRT: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    KUNNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    VKORG: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    VTWEG: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    SPART: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEVM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUFSD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BZIRK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KONDA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AWAHR: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFSD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUTLF: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ANTLF: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZTLF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZAZU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHSPL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LPRIO: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EIKTO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSBED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FAKSD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MRNKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PERFK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PERRL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KVAKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    KVAWT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WAERS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KLABC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTGRD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZTERM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VWERK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VKGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VKBUR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KVGR1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KVGR2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KVGR3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KVGR4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KVGR5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BOKRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BOIDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KURST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRFRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRAT1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRAT2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRAT3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRAT4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRAT5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRAT6: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRAT7: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRAT8: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRAT9: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRATA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KABSS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KKBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CASSD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RDOFF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AGREL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    UEBTO: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    UNTTO: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UEBTK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PVKSM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PODKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PODTG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BLIND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CARRIER_NOTIF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CVP_XBLCK_V: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCOV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO2_L: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO3_L: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    INCO2_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: VARBINARY | Nullable
+    INCO3_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: VARBINARY | Nullable
+    INCO4_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNVV_EEW_CONTACT: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    STATUS_OBJ_GUID: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BILLPLAN_PROC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNVV_ADDR_EEW_CUST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_EMLGPFAND: Optional[SapNvarchar] = Field(alias="/BEV1/EMLGPFAND", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_EMLGFORTS: Optional[SapNvarchar] = Field(alias="/BEV1/EMLGFORTS", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1NBOESL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_KVGR6: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_KVGR7: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_KVGR8: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_KVGR9: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_KVGR10: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_GRREG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_RESGY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SC_CID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_VAS_DETC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_VAS_CG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_GRSGY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_FRATE: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_FRATE_AGG_LEVEL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_MSOCDC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_MSOPID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFM_PSST_RULE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFM_PSST_EXCLUDE: Optional[SapNvarchar] = ""
 
-class Tca01(BaseModel):
-    MANDT: Key[str]
-    PLNTY: Key[str]
-    PLNAW: str
-    MATKZ: str
-    BLDTY: str
-    OBJECT: str
-    NKNRI: str
-    NKNRE: str
-    FLG_OPRSOP: str
-    FLG_SEQ: str
-    FLG_QSS: str
-    FLG_AOB: str
-    FLG_UOBJ: str
-    FLG_EQUI: str
-    FLG_IFL: str
-    FLG_INST: str
-    SCREENTY: str
-    FLG_REF: str
-    FLG_PHAS: str
-    FLG_FEAT: str
-    FLG_DOC: str
-    FLG_PHYS: str
-    FLG_MST: str
-    FLG_CHK: str
-    PID_MAT: str
-    PID_PLN: str
-    FLG_STUELI: str
-    PID_AUN: str
-    FLG_GPOS: str
-    FLG_MKAL: str
-    FLG_ERF_OP: str
-    OPR_BLDGR: str
-    OPR_PANEL: str
-    FLG_CHK_RE: str
-    FLG_ARBEI: str
-    FLG_KALC: str
-    FLG_CHRULE: str
-    FLG_LK_CHK: str
-    FLG_MATCOM: str
+class Konp(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: KONP
+    Schema: SAPHANADB
+    """
 
-class Ztggppconwipmat(BaseModel):
-    MANDT: Key[str]
-    TOP_WERKS: Key[str]
-    MATNR_TOP_LEVEL: Key[str]
-    LOW_WERKS: Key[str]
-    MATNR_LOWER_LEVEL: Key[str]
-    MTART: str
-    RAW_MATRIAL: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    KNUMH: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    KOPOS: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KAPPL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KSCHL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNUMT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STFKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZBZG: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    KSTBM: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KONMS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    KSTBW: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KONWS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KRECH: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    KBETR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KONWA: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    KPEIN: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KMEIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRSCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    KUMZA: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KUMNE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEINS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MXWRT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    GKWRT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PKWRT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    FKWRT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    RSWRT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KWAEH: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    UKBAS: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZNEP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MWSK1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEVM_KO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZAEHK_IND: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BOMAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    KBRUE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KSPAE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BOSTA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNUMA_PI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNUMA_AG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNUMA_SQ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VALTG: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VALDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZTERM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANZAUF: Optional[SapNvarchar] = 00
+    # SAP HANA type: DECIMAL | Forced nullable
+    MIKBAS: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MXKBAS: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KOMXWRT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KLF_STG: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KLF_KAL: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VKKAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AKTNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNUMA_BO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MWSK2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERTT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERTN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VBEWA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MDFLG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KFRST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UASTA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CNDN_CHGREASON: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Forced nullable
+    CMMDTYPRCGCNDNFMLAUUID: Optional[SapVarbinary] = 00000000000000000000000000000000
 
-class Aufk(BaseModel):
-    MANDT: Key[str]
-    AUFNR: Key[str]
-    AUART: str
-    AUTYP: str
-    REFNR: str
-    ERNAM: str
-    ERDAT: str
-    AENAM: str
-    AEDAT: str
-    KTEXT: str
-    LTEXT: str
-    BUKRS: str
-    WERKS: str
-    GSBER: str
-    KOKRS: str
-    CCKEY: str
-    KOSTV: str
-    STORT: str
-    SOWRK: str
-    ASTKZ: str
-    WAERS: str
-    ASTNR: str
-    STDAT: str
-    ESTNR: str
-    PHAS0: str
-    PHAS1: str
-    PHAS2: str
-    PHAS3: str
-    PDAT1: str
-    PDAT2: str
-    PDAT3: str
-    IDAT1: str
-    IDAT2: str
-    IDAT3: str
-    OBJID: str
-    VOGRP: str
-    LOEKZ: str
-    PLGKZ: str
-    KVEWE: str
-    KAPPL: str
-    KALSM: str
-    ZSCHL: str
-    ABKRS: str
-    KSTAR: str
-    KOSTL: str
-    SAKNR: str
-    SETNM: str
-    CYCLE: str
-    SDATE: str
-    SEQNR: str
-    USER0: str
-    USER1: str
-    USER2: str
-    USER3: str
-    USER4: float
-    USER5: str
-    USER6: str
-    USER7: str
-    USER8: str
-    USER9: str
-    OBJNR: str
-    PRCTR: str
-    PSPEL: str
-    AWSLS: str
-    ABGSL: str
-    TXJCD: str
-    FUNC_AREA: str
-    SCOPE: str
-    PLINT: str
-    KDAUF: str
-    KDPOS: str
-    AUFEX: str
-    IVPRO: str
-    LOGSYSTEM: str
-    FLG_MLTPS: str
-    ABUKR: str
-    AKSTL: str
-    SIZECL: str
-    IZWEK: str
-    UMWKZ: str
-    KSTEMPF: str
-    ZSCHM: str
-    PKOSA: str
-    ANFAUFNR: str
-    PROCNR: str
-    PROTY: str
-    RSORD: str
-    BEMOT: str
-    ADRNRA: str
-    ERFZEIT: str
-    AEZEIT: str
-    CSTG_VRNT: str
-    COSTESTNR: str
-    VERAA_USER: str
-    EEW_AUFK_PS_DUMMY: str
-    VNAME: str
-    RECID: str
-    ETYPE: str
-    OTYPE: str
-    JV_JIBCL: str
-    JV_JIBSA: str
-    JV_OCO: str
-    CPD_UPDAT: float
-    CUM_INDCU: str = Field(alias="/CUM/INDCU")
-    CUM_CMNUM: str = Field(alias="/CUM/CMNUM")
-    CUM_AUEST: str = Field(alias="/CUM/AUEST")
-    CUM_DESNUM: str = Field(alias="/CUM/DESNUM")
-    AD01PROFNR: str
-    VAPLZ: str
-    WAWRK: str
-    FERC_IND: str
-    CLAIM_CONTROL: str
-    UPDATE_NEEDED: str
-    UPDATE_CONTROL: str
-    EB_POST: str
-    ORDER_PROC_MODE: str
-    AUFK_STATUS: int
-    EBW_KEY: str
+class Koth030(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: KOTH030
+    Schema: SAPHANADB
+    """
 
-class Ekko(BaseModel):
-    MANDT: Key[str]
-    EBELN: Key[str]
-    BUKRS: str
-    BSTYP: str
-    BSART: str
-    BSAKZ: str
-    LOEKZ: str
-    STATU: str
-    AEDAT: str
-    ERNAM: str
-    LASTCHANGEDATETIME: datetime
-    PINCR: str
-    LPONR: str
-    LIFNR: str
-    SPRAS: str
-    ZTERM: str
-    ZBD1T: float
-    ZBD2T: float
-    ZBD3T: float
-    ZBD1P: float
-    ZBD2P: float
-    EKORG: str
-    EKGRP: str
-    WAERS: str
-    WKURS: float
-    KUFIX: str
-    BEDAT: str
-    KDATB: str
-    KDATE: str
-    BWBDT: str
-    ANGDT: str
-    BNDDT: str
-    GWLDT: str
-    AUSNR: str
-    ANGNR: str
-    IHRAN: str
-    IHREZ: str
-    VERKF: str
-    TELF1: str
-    LLIEF: str
-    KUNNR: str
-    ACTIVE_ID: str
-    KONNR: str
-    ABGRU: str
-    AUTLF: str
-    WEAKT: str
-    RESWK: str
-    LBLIF: str
-    INCO1: str
-    INCO2: str
-    KTWRT: float
-    DISTRIBUTIONTYPE: str
-    SUBMI: str
-    KNUMV: str
-    KALSM: str
-    STAFO: str
-    LIFRE: str
-    EXNUM: str
-    UNSEZ: str
-    LOGSY: str
-    UPINC: str
-    STAKO: str
-    FRGGR: str
-    FRGSX: str
-    FRGKE: str
-    FRGZU: str
-    FRGRL: str
-    LANDS: str
-    LPHIS: str
-    ADRNR: str
-    STCEG_L: str
-    STCEG: str
-    ABSGR: str
-    ADDNR: str
-    KORNR: str
-    MEMORY: str
-    PROCSTAT: str
-    PROCESS_INDICATOR: str
-    RLWRT: float
-    CR_STAT: str
-    REVNO: str
-    SCMPROC: str
-    REASON_CODE: str
-    MEMORYTYPE: str
-    RETTP: str
-    RETPC: float
-    DPTYP: str
-    DPPCT: float
-    DPAMT: float
-    DPDAT: str
-    MSR_ID: str
-    HIERARCHY_EXISTS: str
-    GROUPING_ID: str
-    PARENT_ID: str
-    THRESHOLD_EXISTS: str
-    LEGAL_CONTRACT: str
-    DESCRIPTION: str
-    RELEASE_DATE: str
-    VSART: str
-    HANDOVERLOC: str
-    SHIPCOND: str
-    INCOV: str
-    INCO2_L: str
-    INCO3_L: str
-    INCO2_KEY: Optional[str] = 00000000000000000000000000000000
-    INCO3_KEY: Optional[str] = 00000000000000000000000000000000
-    INCO4_KEY: Optional[str] = 00000000000000000000000000000000
-    GRWCU: str
-    INTRA_REL: str
-    INTRA_EXCL: str
-    TOTAL_STATUS_PCS: str
-    TOTAL_STATUS_PMA: str
-    TOTAL_STATUS_DG: str
-    TOTAL_STATUS_SDS: str
-    QTN_ERLST_SUBMSN_DATE: str
-    FOLLOWON_DOC_CAT: str
-    FOLLOWON_DOC_TYPE: str
-    DUMMY_EKKO_INCL_EEW_PS: str
-    EXTERNALSYSTEM: str
-    EXTERNALREFERENCEID: str
-    EXT_REV_TMSTMP: float
-    ISEOPBLOCKED: str
-    ISAGED: str
-    FORCE_ID: str
-    FORCE_CNT: str
-    RELOC_ID: str
-    RELOC_SEQ_ID: str
-    SOURCE_LOGSYS: str
-    FSH_TRANSACTION: str
-    FSH_ITEM_GROUP: str
-    FSH_VAS_LAST_ITEM: str
-    FSH_OS_STG_CHANGE: str
-    TMS_REF_UUID: str
-    DMBE_PAYMENTDEEMED: str = Field(alias="/DMBE/PAYMENTDEEMED")
-    DMBE_DEALNUMBER: str = Field(alias="/DMBE/DEALNUMBER")
-    DMBE_EVGIDRENEWAL: str = Field(alias="/DMBE/EVGIDRENEWAL")
-    DMBE_EVGIDCANCEL: str = Field(alias="/DMBE/EVGIDCANCEL")
-    ZAPCGK: str
-    APCGK_EXTEND: str
-    ZBAS_DATE: str
-    ZADATTYP: str
-    ZSTART_DAT: str
-    Z_DEV: float
-    ZINDANX: str
-    ZLIMIT_DAT: str
-    NUMERATOR: str
-    HASHCAL_BDAT: str
-    HASHCAL: str
-    NEGATIVE: str
-    HASHCAL_EXISTS: str
-    KNOWN_INDEX: str
-    POSTAT: str
-    VZSKZ: str
-    FSH_SNST_STATUS: str
-    PROCE: str
-    CONC: str
-    CONT: str
-    COMP: str
-    OUTR: str
-    DESP: str
-    DESP_DAT: str
-    DESP_CARGO: str
-    PARE: str
-    PARE_DAT: str
-    PARE_CARGO: str
-    PFM_CONTRACT: str
-    POHF_TYPE: str
-    EQ_EINDT: str
-    EQ_WERKS: str
-    FIXPO: str
-    EKGRP_ALLOW: str
-    WERKS_ALLOW: str
-    CONTRACT_ALLOW: str
-    PSTYP_ALLOW: str
-    FIXPO_ALLOW: str
-    KEY_ID_ALLOW: str
-    AUREL_ALLOW: str
-    DELPER_ALLOW: str
-    EINDT_ALLOW: str
-    LTSNR_ALLOW: str
-    OTB_LEVEL: str
-    OTB_COND_TYPE: str
-    KEY_ID: str
-    OTB_VALUE: float
-    OTB_CURR: str
-    OTB_RES_VALUE: float
-    OTB_SPEC_VALUE: float
-    SPR_RSN_PROFILE: str
-    BUDG_TYPE: str
-    OTB_STATUS: str
-    OTB_REASON: str
-    CHECK_TYPE: str
-    CON_OTB_REQ: str
-    CON_PREBOOK_LEV: str
-    CON_DISTR_LEV: str
-    HAS_CATALOG_RELEVANT_ITEMS: str
-    ZHDCONTRACT: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    KAPPL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    KSCHL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    AUART: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    WERKS: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    MATNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    DATBI: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATAB: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNUMH: Optional[SapNvarchar] = ""
 
-class Ekpo(BaseModel):
-    MANDT: Key[str]
-    EBELN: Key[str]
-    EBELP: Key[str]
-    UNIQUEID: str
-    LOEKZ: str
-    STATU: str
-    AEDAT: str
-    TXZ01: str
-    MATNR: str
-    EMATN: str
-    BUKRS: str
-    WERKS: str
-    LGORT: str
-    BEDNR: str
-    MATKL: str
-    INFNR: str
-    IDNLF: str
-    KTMNG: float
-    MENGE: float
-    MEINS: str
-    BPRME: str
-    BPUMZ: float
-    BPUMN: float
-    UMREZ: float
-    UMREN: float
-    NETPR: float
-    PEINH: float
-    NETWR: float
-    BRTWR: float
-    AGDAT: str
-    WEBAZ: float
-    MWSKZ: str
-    TXDAT_FROM: str
-    TXDAT: str
-    TAX_COUNTRY: str
-    BONUS: str
-    INSMK: str
-    SPINF: str
-    PRSDR: str
-    SCHPR: str
-    MAHNZ: float
-    MAHN1: float
-    MAHN2: float
-    MAHN3: float
-    UEBTO: float
-    UEBTK: str
-    UNTTO: float
-    BWTAR: str
-    BWTTY: str
-    ABSKZ: str
-    AGMEM: str
-    ELIKZ: str
-    EREKZ: str
-    PSTYP: str
-    KNTTP: str
-    KZVBR: str
-    VRTKZ: str
-    TWRKZ: str
-    WEPOS: str
-    WEUNB: str
-    REPOS: str
-    WEBRE: str
-    KZABS: str
-    LABNR: str
-    KONNR: str
-    KTPNR: str
-    ABDAT: str
-    ABFTZ: float
-    ETFZ1: float
-    ETFZ2: float
-    KZSTU: str
-    NOTKZ: str
-    LMEIN: str
-    EVERS: str
-    ZWERT: float
-    NAVNW: float
-    ABMNG: float
-    PRDAT: str
-    BSTYP: str
-    EFFWR: float
-    XOBLR: str
-    KUNNR: str
-    ADRNR: str
-    EKKOL: str
-    SKTOF: str
-    STAFO: str
-    PLIFZ: float
-    NTGEW: float
-    GEWEI: str
-    TXJCD: str
-    ETDRK: str
-    SOBKZ: str
-    ARSNR: str
-    ARSPS: str
-    INSNC: str
-    SSQSS: str
-    ZGTYP: str
-    EAN11: str
-    BSTAE: str
-    REVLV: str
-    GEBER: str
-    FISTL: str
-    FIPOS: str
-    KO_GSBER: str
-    KO_PARGB: str
-    KO_PRCTR: str
-    KO_PPRCTR: str
-    MEPRF: str
-    BRGEW: float
-    VOLUM: float
-    VOLEH: str
-    INCO1: str
-    INCO2: str
-    VORAB: str
-    KOLIF: str
-    LTSNR: str
-    PACKNO: str
-    FPLNR: str
-    GNETWR: float
-    STAPO: str
-    UEBPO: str
-    LEWED: str
-    EMLIF: str
-    LBLKZ: str
-    SATNR: str
-    ATTYP: str
-    VSART: str
-    HANDOVERLOC: str
-    KANBA: str
-    ADRN2: str
-    DELIVERY_ADDRESS_TYPE: str
-    CUOBJ: str
-    XERSY: str
-    EILDT: str
-    DRDAT: str
-    DRUHR: str
-    DRUNR: str
-    AKTNR: str
-    ABELN: str
-    ABELP: str
-    ANZPU: float
-    PUNEI: str
-    SAISO: str
-    SAISJ: str
-    EBON2: str
-    EBON3: str
-    EBONF: str
-    MLMAA: str
-    MHDRZ: float
-    ANFNR: str
-    ANFPS: str
-    KZKFG: str
-    USEQU: str
-    UMSOK: str
-    BANFN: str
-    BNFPO: str
-    MTART: str
-    UPTYP: str
-    UPVOR: str
-    KZWI1: float
-    KZWI2: float
-    KZWI3: float
-    KZWI4: float
-    KZWI5: float
-    KZWI6: float
-    SIKGR: str
-    MFZHI: float
-    FFZHI: float
-    RETPO: str
-    AUREL: str
-    BSGRU: str
-    LFRET: str
-    MFRGR: str
-    NRFHG: str
-    J_1BNBM: str
-    J_1BMATUSE: str
-    J_1BMATORG: str
-    J_1BOWNPRO: str
-    J_1BINDUST: str
-    ABUEB: str
-    NLABD: str
-    NFABD: str
-    KZBWS: str
-    BONBA: float
-    FABKZ: str
-    LOADINGPOINT: str
-    J_1AINDXP: str
-    J_1AIDATEP: str
-    MPROF: str
-    EGLKZ: str
-    KZTLF: str
-    KZFME: str
-    RDPRF: str
-    TECHS: str
-    CHG_SRV: str
-    CHG_FPLNR: str
-    MFRPN: str
-    MFRNR: str
-    EMNFR: str
-    NOVET: str
-    AFNAM: str
-    TZONRC: str
-    IPRKZ: str
-    LEBRE: str
-    BERID: str
-    XCONDITIONS: str
-    APOMS: str
-    CCOMP: str
-    GRANT_NBR: str
-    FKBER: str
-    STATUS: str
-    RESLO: str
-    KBLNR: str
-    KBLPOS: str
-    PS_PSP_PNR: str
-    KOSTL: str
-    SAKTO: str
-    WEORA: str
-    SRV_BAS_COM: str
-    PRIO_URG: str
-    PRIO_REQ: str
-    EMPST: str
-    DIFF_INVOICE: str
-    TRMRISK_RELEVANT: str
-    CREATIONDATE: str
-    CREATIONTIME: datetime
-    VCM_CHAIN_CATEGORY: str
-    SPE_ABGRU: str
-    SPE_CRM_SO: str
-    SPE_CRM_SO_ITEM: str
-    SPE_CRM_REF_SO: str
-    SPE_CRM_REF_ITEM: str
-    SPE_CRM_FKREL: str
-    SPE_CHNG_SYS: str
-    SPE_INSMK_SRC: str
-    SPE_CQ_CTRLTYPE: str
-    SPE_CQ_NOCQ: str
-    REASON_CODE: str
-    CQU_SAR: float
-    ANZSN: int
-    SPE_EWM_DTC: str
-    EXLIN: str
-    EXSNR: str
-    EHTYP: str
-    RETPC: float
-    DPTYP: str
-    DPPCT: float
-    DPAMT: float
-    DPDAT: str
-    FLS_RSTO: str
-    EXT_RFX_NUMBER: str
-    EXT_RFX_ITEM: str
-    EXT_RFX_SYSTEM: str
-    SRM_CONTRACT_ID: str
-    SRM_CONTRACT_ITM: str
-    GOODS_COUNT_CORRECTION: str
-    LIFEX: str
-    LIFEXPOS: str
-    BLK_REASON_ID: str
-    BLK_REASON_TXT: str
-    ITCONS: str
-    FIXMG: str
-    WABWE: str
-    CMPL_DLV_ITM: str
-    INCO2_L: str
-    INCO3_L: str
-    INCO2_KEY: Optional[str] = 00000000000000000000000000000000
-    INCO3_KEY: Optional[str] = 00000000000000000000000000000000
-    INCO4_KEY: Optional[str] = 00000000000000000000000000000000
-    STAWN: str
-    ISVCO: str
-    GRWRT: float
-    SERVICEPERFORMER: str
-    PRODUCTTYPE: str
-    GR_BY_SES: str
-    PRICE_CHANGE_IN_SES_ALLOWED: str
-    REQUESTFORQUOTATION: str
-    REQUESTFORQUOTATIONITEM: str
-    RENEGOTIATION_STATUS: str
-    STATUS_PCS: str
-    STATUS_PMA: str
-    STATUS_DG: str
-    STATUS_SDS: str
-    EXTMATERIALFORPURG: str
-    PROCMT_HUB_SOURCE_SYSTEM: str
-    TARGET_VALUE: float
-    EXTERNALREFERENCEID: str
-    TC_AUT_DET: str
-    MANUAL_TC_REASON: str
-    FISCAL_INCENTIVE: str
-    TAX_SUBJECT_ST: str
-    FISCAL_INCENTIVE_ID: str
-    SF_TXJCD: str
-    DUMMY_EKPO_INCL_EEW_PS: str
-    EXPECTED_VALUE: float
-    LIMIT_AMOUNT: float
-    CONTRACT_FOR_LIMIT: str
-    ENH_DATE1: str
-    ENH_DATE2: str
-    ENH_PERCENT: float
-    ENH_NUMC1: str
-    DATAAGING: str = Field(alias="_DATAAGING")
-    CUPIT: str
-    CIGIT: str
-    MGOIT: str
-    TXS_BUSINESS_TRANSACTION: str
-    TXS_MATERIAL_USAGE: str
-    TXS_USAGE_PURPOSE: str
-    BEV1_NEGEN_ITEM: str = Field(alias="/BEV1/NEGEN_ITEM")
-    BEV1_NEDEPFREE: str = Field(alias="/BEV1/NEDEPFREE")
-    BEV1_NESTRUCCAT: str = Field(alias="/BEV1/NESTRUCCAT")
-    ADVCODE: str
-    BUDGET_PD: str
-    EXCPE: str
-    FMFGUS_KEY: str
-    IUID_RELEVANT: str
-    MRPIND: str
-    SGT_SCAT: str
-    SGT_RCAT: str
-    TMS_REF_UUID: str
-    TMS_SRC_LOC_KEY: Optional[str] = 00000000000000000000000000000000
-    TMS_DES_LOC_KEY: Optional[str] = 00000000000000000000000000000000
-    WRF_CHARSTC1: str
-    WRF_CHARSTC2: str
-    WRF_CHARSTC3: str
-    REFSITE: str
-    DMBE_OPTIONALITYKEY: str = Field(alias="/DMBE/OPTIONALITYKEY")
-    DMBE_OPTIONALITYFOR: str = Field(alias="/DMBE/OPTIONALITYFOR")
-    DMBE_CIMAX2: str = Field(alias="/DMBE/CIMAX2")
-    DMBE_ITEM_TYPE: str = Field(alias="/DMBE/ITEM_TYPE")
-    DMBE_EFFECTIVEDATEFROM: str = Field(alias="/DMBE/EFFECTIVEDATEFROM")
-    DMBE_EFFECTIVEDATETO: str = Field(alias="/DMBE/EFFECTIVEDATETO")
-    DMBE_OPTIONOF: str = Field(alias="/DMBE/OPTIONOF")
-    DMBE_ACCOUNTING_TYPE: str = Field(alias="/DMBE/ACCOUNTING_TYPE")
-    DMBE_FAS_CODE: str = Field(alias="/DMBE/FAS_CODE")
-    DMBE_SCHEDULING_DESK: str = Field(alias="/DMBE/SCHEDULING_DESK")
-    DMBE_COMPONENTFOR: str = Field(alias="/DMBE/COMPONENTFOR")
-    DMBE_MIXEDPRODUCT: str = Field(alias="/DMBE/MIXEDPRODUCT")
-    DMBE_POSTEDDATE: str = Field(alias="/DMBE/POSTEDDATE")
-    DMBE_DEAL_POSTED: str = Field(alias="/DMBE/DEAL_POSTED")
-    DMBE_INVOICEUOM: str = Field(alias="/DMBE/INVOICEUOM")
-    ZAPCGK: str
-    APCGK_EXTEND: str
-    ZBAS_DATE: str
-    ZADATTYP: str
-    ZSTART_DAT: str
-    Z_DEV: float
-    ZINDANX: str
-    ZLIMIT_DAT: str
-    NUMERATOR: str
-    HASHCAL_BDAT: str
-    HASHCAL: str
-    NEGATIVE: str
-    HASHCAL_EXISTS: str
-    KNOWN_INDEX: str
-    SAPMP_GPOSE: str = Field(alias="/SAPMP/GPOSE")
-    ANGPN: str
-    ADMOI: str
-    ADPRI: str
-    LPRIO: str
-    ADACN: str
-    AFPNR: str
-    BSARK: str
-    AUDAT: str
-    ANGNR: str
-    PNSTAT: str
-    ADDNS: str
-    ASSIGNMENT_PRIORITY: str
-    ARUN_GROUP_PRIO: str
-    ARUN_ORDER_PRIO: int
-    SERRU: str
-    SERNP: str
-    DISUB_SOBKZ: str
-    DISUB_PSPNR: str
-    DISUB_KUNNR: str
-    DISUB_VBELN: str
-    DISUB_POSNR: str
-    DISUB_OWNER: str
-    FSH_SEASON_YEAR: str
-    FSH_SEASON: str
-    FSH_COLLECTION: str
-    FSH_THEME: str
-    FSH_ATP_DATE: str
-    FSH_VAS_REL: str
-    FSH_VAS_PRNT_ID: str
-    FSH_TRANSACTION: str
-    FSH_ITEM_GROUP: str
-    FSH_ITEM: str
-    FSH_SS: str
-    FSH_GRID_COND_REC: str
-    FSH_PSM_PFM_SPLIT: str
-    CNFM_QTY: float
-    FSH_PQR_UEPOS: str
-    RFM_DIVERSION: str
-    RFM_SCC_INDICATOR: str
-    STPAC: str
-    LGBZO: str
-    LGBZO_B: str
-    ADDRNUM: str
-    CONSNUM: str
-    BORGR_MISS: str
-    DEP_ID: str
-    BELNR: str
-    KBLPOS_CAB: str
-    KBLNR_COMP: str
-    KBLPOS_COMP: str
-    WBS_ELEMENT: str
-    RFM_PSST_RULE: str
-    RFM_PSST_GROUP: str
-    RFM_REF_DOC: str
-    RFM_REF_ITEM: str
-    RFM_REF_ACTION: str
-    RFM_REF_SLITEM: str
-    REF_ITEM: str
-    SOURCE_ID: str
-    SOURCE_KEY: str
-    PUT_BACK: str
-    POL_ID: str
-    CONS_ORDER: str
-    IS_CATALOG_RELEVANT: str
-    PFMTRANSDATAFOOTPRINTUUID: str
+class Lfa1(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: LFA1
+    Schema: SAPHANADB
+    """
 
-class Equi(BaseModel):
-    MANDT: Key[str]
-    EQUNR: Key[str]
-    ERDAT: str
-    ERNAM: str
-    EQASP: str
-    AEDAT: str
-    AENAM: str
-    BEGRU: str
-    EQTYP: str
-    EQART: str
-    LVORM: str
-    INVNR: str
-    GROES: str
-    BRGEW: float
-    GEWEI: str
-    ANSDT: str
-    ANSWT: float
-    WAERS: str
-    ELIEF: str
-    GWLEN: str
-    GWLDT: str
-    WDBWT: float
-    HERST: str
-    HERLD: str
-    HZEIN: str
-    SERGE: str
-    TYPBZ: str
-    BAUJJ: str
-    BAUMM: str
-    APLKZ: str
-    AULDT: str
-    INBDT: str
-    GERNR: str
-    EQLFN: str
-    GWLDV: str
-    EQDAT: str
-    EQBER: str
-    EQNUM: str
-    OBJNR: str
-    EQSNR: str
-    CUOBJ: str
-    KRFKZ: str
-    KMATN: str
-    MATNR: str
-    SERNR: str
-    WERK: str
-    LAGER: str
-    CHARGE: str
-    KUNDE: str
-    WARPL: str
-    IMRC_POINT: str
-    REVLV: str
-    MGANR: str
-    BEGRUI: str
-    S_EQUI: str
-    S_SERIAL: str
-    S_KONFI: str
-    S_SALE: str
-    S_FHM: str
-    S_ELSE: str
-    S_ISU: str
-    S_EQBS: str
-    S_FLEET: str
-    BSTVP: str
-    SPARTE: str
-    HANDLE: str
-    TSEGTP: str
-    EMATN: str
-    ACT_CHANGE_AA: str
-    S_CC: str
-    DATLWB: str
-    UII: str
-    IUID_TYPE: str
-    UII_PLANT: str
-    CHANGEDDATETIME: datetime
-    ENDOFUSE: str
-    DUMMY_EQUI_INCL_EEW_PS: str
-    EQEXT_ACTIVE: str
-    EQUI_SRTYPE: str
-    EQUI_SNTYPE: str
-    EQLB_DUTY: str
-    EQLB_HIDE: str
-    J_3GDISPO: str
-    J_3GZDEQUI: str
-    J_3GEQART: str
-    J_3GKZMENG: str
-    J_3GKONDE: str
-    J_3GFIKTIV: str
-    J_3GBELTYP: str
-    MEINS: str
-    J_3GKZLADG: str
-    J_3GKZBERG: str
-    J_3GEIFR: str
-    J_3GVERMEIN: str
-    J_3GZULNR: str
-    SAPCEM_ABRECHVH: str = Field(alias="/SAPCEM/ABRECHVH")
-    SAPCEM_ABRECHLG: str = Field(alias="/SAPCEM/ABRECHLG")
-    SAPCEM_DISPOGR: str = Field(alias="/SAPCEM/DISPOGR")
-    EQUIPMENTOID: str
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    LIFNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAND1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NAME4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ORT01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ORT02: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PFACH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSTL2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSTLZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REGIO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SORTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STRAS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADRNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MCOD1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MCOD2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MCOD3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANRED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BAHNS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BBBNR: Optional[SapNvarchar] = 0000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BBSNR: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BRSCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUBKZ: Optional[SapNvarchar] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATLT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DTAMS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DTAWS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ESRNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KONZS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTOKK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LNRZA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEVM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPERR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPERM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPRAS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCD1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCD2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STKZA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STKZU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELBX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELF1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELF2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELFX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELTX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELX1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XCPDK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XZEMP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VBUND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FISKN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCEG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STKZN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPERQ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GBORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GBDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SEXKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KRAUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REVDB: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QSSYS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTOCK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PFORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTSNA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERKR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLKAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUEFL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXJCD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPERZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCACD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SFRGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LZONE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XLFZA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DLGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FITYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCDT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REGSS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ACTSS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCD3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCD4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCD5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCD6: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IPISP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAXBS: Optional[SapNvarchar] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROFS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STGDL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EMNFR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFURL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1KFREPRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1KFTBUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1KFTIND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONFS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UPDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UPTIM: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NODEL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QSSYSDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PODKZB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FISKU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STENR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CARRIER_CONF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MIN_COMP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TERM_LI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CRC_NUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CVP_XBLCK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEORA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RGDATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RIC: Optional[SapNvarchar] = 00000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RNE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RNEDATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CNAE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEGALNAT: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CRTN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ICMSTAXPAY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INDTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TDT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COMSIZE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DECREGPC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALLOWANCE_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAYTRSN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFA1_EEW_SUPP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR6: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR7: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR8: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR9: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATA_CTRLR10: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XDCSET: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_LFA1_ADDR_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    J_SC_CAPITAL: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_SC_CURRENCY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PMT_OFFICE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PPA_RELEVANT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAM_UE_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAM_EFT_IND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSOFG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSOIS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSON1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSON2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSON3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSOVN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSOTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSOHS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSOST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BORGR_DATUN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BORGR_YEAUN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AU_CARRYING_ENT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AU_IND_UNDER_18: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AU_PAYMENT_NOT_EXCEED_75: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AU_WHOLLY_INP_TAXED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AU_PARTNER_WITHOUT_GAIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AU_NOT_ENTITLED_ABN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AU_PAYMENT_EXEMPT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AU_PRIVATE_HOBBY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AU_DOMESTIC_NATURE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDR2_STREET: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDR2_HOUSE_NUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDR2_POST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDR2_CITY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDR2_COUNTRY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CATEG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARTNER_NAME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARTNER_UTR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STATUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VFNUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VFNID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CRN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FR_OCCUPATION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IEXCD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IEXRN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IEXRG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IEXDI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IEXCO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1ICSTNO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1ILSTNO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IPANNO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IEXCIVE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1ISSIST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IVTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IVENCRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1ISERN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IPANREF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IPANVALDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1I_CUSTOMS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1IDEDREF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VEN_CLASS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ENTPUB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ESCRIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DVALSS: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRMCSS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CODCAE: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSDIV: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SC_CAPITAL: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SC_CURRENCY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TRANSPORT_CHAIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Order by field
+    STAGING_TIME: SapDecimal
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCHEDULING_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SUBMI_RELEVANT: Optional[SapNvarchar] = ""
+
+class Lfm1(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: LFM1
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    LIFNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    EKORG: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPERM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEVM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFABC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WAERS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERKF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELF1: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MINBW: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZTERM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEBRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZABS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALSK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZAUT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXPVZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZOLLA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEPRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XERSY: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PLIFZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MRPPP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFRHY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIBES: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIPRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LISER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCOV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO2_L: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO3_L: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEORA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRFRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NRGEW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BOIND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BLIND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZRET: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SKRIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSTAE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RDPRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VENSL: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BOPNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XERSR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EIKTO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABUEB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAPRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AGREL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XNBWY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSBED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEBRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BOLRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMSAE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VENDOR_RMA_REQ: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    INCO2_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: VARBINARY | Nullable
+    INCO3_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: VARBINARY | Nullable
+    INCO4_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFM1_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1NBOESL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUBEL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VALID_PRO: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    HSCABS: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    HSCPE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    HSCMIN: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    HSCMAX: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SC_CID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_VAS_DETC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UPPRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ACTIVITY_PROFIL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TRANSPORT_CHAIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Order by field
+    STAGING_TIME: SapDecimal
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_LFM1_ADDR_INCL_EEW_PS: Optional[SapNvarchar] = ""
+
+class Lfm2(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: LFM2
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    LIFNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    EKORG: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    LTSNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    WERKS: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPERM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEVM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFABC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WAERS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERKF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELF1: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MINBW: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZTERM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEBRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZABS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALSK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZAUT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXPVZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZOLLA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEPRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XERSY: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PLIFZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MRPPP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFRHY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIBES: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIPRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LISER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCOV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO2_L: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO3_L: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEORA: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    INCO2_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: VARBINARY | Nullable
+    INCO3_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: VARBINARY | Nullable
+    INCO4_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISPO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BOIND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSTAE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RDPRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BOPNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XERSR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABUEB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAPRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XNBWY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEBRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BOLRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMSAE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UPPRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TRANSPORT_CHAIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Order by field
+    STAGING_TIME: SapDecimal
+
+class Makt(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: MAKT
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MATNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    SPRAS: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAKTX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAKTG: Optional[SapNvarchar] = ""
+
+class Mapl(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: MAPL
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MATNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    WERKS: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    PLNTY: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    PLNNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    PLNAL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ZKRIZ: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ZAEHL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATUV: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TECHV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SUCHFELD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VBELN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POSNR: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSPNR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VALID_TO: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ_INHERITED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSN_SOURCE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSN_SOURCE_ZKRIZ: Optional[SapNvarchar] = 0000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MS_OBJECT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MS_OBJTYPE: Optional[SapNvarchar] = ""
+
+class Mara(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: MARA
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    MATNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERSDA: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Order by field
+    CREATED_AT_TIME: SapNvarchar
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAEDA: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VPSTA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSTAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LVORM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MTART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MBRSH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATKL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BISMT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEINS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSTME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEINR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEIAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEIVR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEIFO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AESZN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BLATT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BLANZ: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FERTH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORMT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GROES: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WRKST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NORMT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LABOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKWSL: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BRGEW: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    NTGEW: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GEWEI: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VOLUM: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VOLEH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEHVO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RAUBE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TEMPB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TRAGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STOFF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EANNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    WESCH: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWVOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWSCL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAISO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ETIAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ETIFO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ENTAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EAN11: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NUMTP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    LAENG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BREIT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    HOEHE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEABM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRDHA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEKLK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CADKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QMPUR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ERGEW: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERGEI: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ERVOL: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERVOE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    GEWTO: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VOLTO: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VABME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZREV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZKFG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XCHPF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VHART: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    FUELG: Optional[SapDecimal] = 0
+    # SAP HANA type: SMALLINT | Forced nullable
+    STFAK: Optional[SapSmallInt] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAGRV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATAB: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIQDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAISJ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLGTP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MLGUT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTWG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SATNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZKUP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZNFM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PMATA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MSTAE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MSTAV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MSTDE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MSTDV: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAKLV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RBNRM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MHDRZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MHDHB: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MHDLP: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INHME: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    INHAL: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VPREH: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ETIAG: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    INHBR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CMETH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUOBF: Optional[SapNvarchar] = 000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZUMW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KOSCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPROF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NRFHG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MFRPN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MFRNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BMATN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MPROF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZWSM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAITY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROFL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IHIVI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ILOOS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERLV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZGVH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XGCHP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZEFF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COMPL: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IPRKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RDMHD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRZUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MTPOS_MARA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BFLME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATFI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CMREL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BBTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SLED_BBD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GTIN_VARIANT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GENNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RMATP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GDS_RELEVANT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEORA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HUTYP_DFLT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PILFERABLE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WHSTC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WHMATGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HNDLCODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HAZMAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HUTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TARE_VAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MAXC: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MAXC_TOL: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MAXL: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MAXB: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MAXH: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAXDIM_UOM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HERKL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MFRGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Order by field
+    QQTIME: SapDecimal
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QQTIMEUOM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERIAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PS_SMARTFORM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOGUNIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CWQREL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CWQPROC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CWQTOLGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADPROF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IPMIPPRODUCT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALLOW_PMAT_IGNO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEDIUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COMMODITY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANIMAL_ORIGIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TEXTILE_COMP_IND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAST_CHANGED_TIME: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATNR_EXTERNAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHML_CMPLNC_RLVNCE_IND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOGISTICAL_MAT_CATEGORY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SALES_MATERIAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IDENTIFICATION_TAG_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRODUCTOID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SDM_VERSION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_CSGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_COVSA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_STAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_SCOPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_REL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANP: Optional[SapNvarchar] = 000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSM_CODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_MG_AT1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_MG_AT2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_MG_AT3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SEALV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SEAIM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SC_MID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_PRD_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    SCM_MATID_GUID16: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_MATID_GUID22: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_MATURITY_DUR: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_SHLF_LFE_REQ_MIN: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_SHLF_LFE_REQ_MAX: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_PUOM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RMATP_PB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROD_SHAPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MO_PROFILE_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    OVERHANG_TRESH: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BRIDGE_TRESH: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BRIDGE_MAX_SLOPE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    HEIGHT_NONFLAT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HEIGHT_NONFLAT_UOM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_KITCOMP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_PROD_PAOOPT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_BOD_DEPLVL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_RESTRICT_INVBAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_DRP_GL_STOCK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_EXCL_EXPEDITE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NEWPROD_INDI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRD_STARTDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRD_ENDDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INV_PLN_MODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLAGCLASS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CWM_XCWMAT: Optional[SapNvarchar] = Field(alias="/CWM/XCWMAT", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CWM_VALUM: Optional[SapNvarchar] = Field(alias="/CWM/VALUM", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CWM_TOLGR: Optional[SapNvarchar] = Field(alias="/CWM/TOLGR", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CWM_TARA: Optional[SapNvarchar] = Field(alias="/CWM/TARA", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CWM_TARUM: Optional[SapNvarchar] = Field(alias="/CWM/TARUM", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_LULEINH: Optional[SapNvarchar] = Field(alias="/BEV1/LULEINH", default=00000000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_LULDEGRP: Optional[SapNvarchar] = Field(alias="/BEV1/LULDEGRP", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_NESTRUCCAT: Optional[SapNvarchar] = Field(alias="/BEV1/NESTRUCCAT", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DSD_SL_TOLTYP: Optional[SapNvarchar] = Field(alias="/DSD/SL_TOLTYP", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DSD_SV_CNT_GRP: Optional[SapNvarchar] = Field(alias="/DSD/SV_CNT_GRP", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DSD_VC_GROUP: Optional[SapNvarchar] = Field(alias="/DSD/VC_GROUP", default="")
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_KADU: Optional[SapDecimal] = Field(alias="/SAPMP/KADU", default=0)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAPMP_ABMEIN: Optional[SapNvarchar] = Field(alias="/SAPMP/ABMEIN", default="")
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_KADP: Optional[SapDecimal] = Field(alias="/SAPMP/KADP", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_BRAD: Optional[SapDecimal] = Field(alias="/SAPMP/BRAD", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_SPBI: Optional[SapDecimal] = Field(alias="/SAPMP/SPBI", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_TRAD: Optional[SapDecimal] = Field(alias="/SAPMP/TRAD", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_KEDU: Optional[SapDecimal] = Field(alias="/SAPMP/KEDU", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_SPTR: Optional[SapDecimal] = Field(alias="/SAPMP/SPTR", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_FBDK: Optional[SapDecimal] = Field(alias="/SAPMP/FBDK", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_FBHK: Optional[SapDecimal] = Field(alias="/SAPMP/FBHK", default=0)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAPMP_RILI: Optional[SapNvarchar] = Field(alias="/SAPMP/RILI", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAPMP_FBAK: Optional[SapNvarchar] = Field(alias="/SAPMP/FBAK", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAPMP_AHO: Optional[SapNvarchar] = Field(alias="/SAPMP/AHO", default=000)
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_MIFRR: Optional[SapDecimal] = Field(alias="/SAPMP/MIFRR", default=0)
+    # SAP HANA type: SMALLINT | Forced nullable
+    STTPEC_SERTYPE: Optional[SapSmallInt] = Field(alias="/STTPEC/SERTYPE", default=0)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STTPEC_SYNCACT: Optional[SapNvarchar] = Field(alias="/STTPEC/SYNCACT", default="")
+    # SAP HANA type: DECIMAL | Forced nullable
+    STTPEC_SYNCTIME: Optional[SapDecimal] = Field(alias="/STTPEC/SYNCTIME", default=0)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STTPEC_SYNCCHG: Optional[SapNvarchar] = Field(alias="/STTPEC/SYNCCHG", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STTPEC_COUNTRY_REF: Optional[SapNvarchar] = Field(alias="/STTPEC/COUNTRY_REF", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STTPEC_PRDCAT: Optional[SapNvarchar] = Field(alias="/STTPEC/PRDCAT", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_TILT_IND: Optional[SapNvarchar] = Field(alias="/VSO/R_TILT_IND", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_STACK_IND: Optional[SapNvarchar] = Field(alias="/VSO/R_STACK_IND", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_BOT_IND: Optional[SapNvarchar] = Field(alias="/VSO/R_BOT_IND", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_TOP_IND: Optional[SapNvarchar] = Field(alias="/VSO/R_TOP_IND", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_STACK_NO: Optional[SapNvarchar] = Field(alias="/VSO/R_STACK_NO", default=000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_PAL_IND: Optional[SapNvarchar] = Field(alias="/VSO/R_PAL_IND", default="")
+    # SAP HANA type: DECIMAL | Forced nullable
+    VSO_R_PAL_OVR_D: Optional[SapDecimal] = Field(alias="/VSO/R_PAL_OVR_D", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    VSO_R_PAL_OVR_W: Optional[SapDecimal] = Field(alias="/VSO/R_PAL_OVR_W", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    VSO_R_PAL_B_HT: Optional[SapDecimal] = Field(alias="/VSO/R_PAL_B_HT", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    VSO_R_PAL_MIN_H: Optional[SapDecimal] = Field(alias="/VSO/R_PAL_MIN_H", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    VSO_R_TOL_B_HT: Optional[SapDecimal] = Field(alias="/VSO/R_TOL_B_HT", default=0)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_NO_P_GVH: Optional[SapNvarchar] = Field(alias="/VSO/R_NO_P_GVH", default=00)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_QUAN_UNIT: Optional[SapNvarchar] = Field(alias="/VSO/R_QUAN_UNIT", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_KZGVH_IND: Optional[SapNvarchar] = Field(alias="/VSO/R_KZGVH_IND", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PACKCODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DG_PACK_STATUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SRV_DURA: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SRV_DURA_UOM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SRV_SERWI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SRV_ESCAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOM_CYCLE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOM_CYCLE_RULE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOM_TC_SCHEMA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOM_CTR_AUTORENEWAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MCOND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RETDELC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOGLEV_RETO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NSNID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ICFA: Optional[SapNvarchar] = ""
+    # SAP HANA type: BIGINT | Forced nullable
+    RIC_ID: Optional[SapBigInt] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DFS_SENSITIVITY_KEY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DFS_MFRP2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OVLPN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADSPC_SPC: Optional[SapNvarchar] = 0
+    # SAP HANA type: VARBINARY | Nullable
+    VARID: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MSBOOKPARTNO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOLERANCE_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DPCBT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XGRDT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IMATN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PICNUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSTAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COLOR_ATINN: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SIZE1_ATINN: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SIZE2_ATINN: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COLOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SIZE1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SIZE2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FREE_CHAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CARE_CODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BRAND_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIBER_CODE1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIBER_PART1: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIBER_CODE2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIBER_PART2: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIBER_CODE3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIBER_PART3: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIBER_CODE4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIBER_PART4: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIBER_CODE5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIBER_PART5: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FASHGRD: Optional[SapNvarchar] = ""
+
+class Marc(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: MARC
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    MATNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    WERKS: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSTAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LVORM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWTTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XCHAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MMSTA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MMSTD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAABC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZKRI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISPR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISMM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISPO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZDIE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PLIFZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    WEBAZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PERKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    AUSSS: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISLS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BESKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOBSL: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MINBE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    EISBE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BSTMI: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BSTMA: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BSTFE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BSTRF: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MABST: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    LOSFX: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SBDKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAGPR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALTSL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZAUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NFMAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZBED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MISKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FHORI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PFREI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FFREI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RGEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FEVOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BEARZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    RUEZT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    TRANZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BASMG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    DZEIT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MAXLZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LZEIH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZPRO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GPMKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    UEETO: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UEETK: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    UNETO: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    WZEIT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATPKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VZUSL: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HERBL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INSMK: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SPROZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    QUAZT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SSQSS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MPDAU: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZPPV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZDKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    WSTGH: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PRFRQ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NKMPR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    UMLMC: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LADGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XCHPF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USEQU: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    LGRAD: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUFTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLVAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBJID: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MTVFP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PERIV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZKFK: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VRVEZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VBAMG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VBEAZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIZYK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWSCL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KAUTB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KORDB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STAWN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HERKL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HERKR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXPME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MTVER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRCTR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    TRAME: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MRPPP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAUFT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FXHOR: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VRMOD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VINT1: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VINT2: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLAN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APLAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    LOSGR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOBSK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRTME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGPRO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    KAUSF: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QZGTP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QMATV: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    TAKZT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RWPRO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COPAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABCIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AWSLS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERNP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUOBJ: Optional[SapNvarchar] = 000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STDPD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SFEPR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XMCNG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QSSYS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFRHY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RDPRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VRBMT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VRBWK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VRBDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    VRBFK: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUTRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PREFE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRENC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRENO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PREND: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRENE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRENG: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ITARK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERVG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZKUP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STRGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUOBV: Optional[SapNvarchar] = 000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGFSB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCHGT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CCFIX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EPRIO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QMATA: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    RESVP: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UOMGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMRSL: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ABFAC: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SFCPF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SHFLG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SHZET: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MDACH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZECH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MFRGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SFTY_STK_METH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROFIL: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VKUMC: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VKTRW: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZAGL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FVIDK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FXPRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOGGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FPRFM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    GLGMG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VKGLG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INDUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MOWNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MOGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CASNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GPNUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STEUC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FABKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSPVB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DPLFS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DPLPU: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    DPLHO: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MINLS: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MAXLS: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    FIXLS: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    LTINC: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COMPL: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONVT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SHPRO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AHDIS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DIBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZPSP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OCMPF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APOKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MCRUE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFMON: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFGJA: Optional[SapNvarchar] = 0000
+    # SAP HANA type: DECIMAL | Forced nullable
+    EISLO: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NCOST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ROTATION_DATE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UCHKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UCMAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXCISE_TAX_RLVNCE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    TEMP_CTRL_MAX: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    TEMP_CTRL_MIN: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TEMP_UOM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    JITPRODNCONFPROFILE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BWESB: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_COVS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_STATC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_SCOPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_MRPSI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_PRCM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_CHINT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_STK_PRT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_DEFSC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_MRP_ATP_STATUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_MMSTD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_MG_ARUN_REQ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SEAIM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_VAR_GROUP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_KZECH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_CALENDAR_GROUP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARUN_FIX_BATCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PPSKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONS_PROCG: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Order by field
+    GI_PR_TIME: SapDecimal
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MULTIPLE_EKGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REF_SCHEMA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MIN_TROC: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAX_TROC: Optional[SapNvarchar] = 000
+    # SAP HANA type: DECIMAL | Forced nullable
+    TARGET_STOCK: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NF_FLAG: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_UMLMC: Optional[SapDecimal] = Field(alias="/CWM/UMLMC", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_TRAME: Optional[SapDecimal] = Field(alias="/CWM/TRAME", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_BWESB: Optional[SapDecimal] = Field(alias="/CWM/BWESB", default=0)
+    # SAP HANA type: VARBINARY | Nullable
+    SCM_MATLOCID_GUID16: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_MATLOCID_GUID22: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_GRPRT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_GIPRT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_SCOST: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_RELDT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_RRP_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_HEUR_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_PACKAGE_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_SSPEN: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_GET_ALERTS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_RES_NET_NAME: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_CONHAP: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_HUNIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_CONHAP_OUT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_HUNIT_OUT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_SHELF_LIFE_LOC: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_SHELF_LIFE_DUR: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_MATURITY_DUR: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_SHLF_LFE_REQ_MIN: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_SHLF_LFE_REQ_MAX: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_LSUOM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_REORD_DUR: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_TARGET_DUR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_TSTRID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_STRA1: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_PEG_PAST_ALERT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_PEG_FUTURE_ALERT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_PEG_STRATEGY: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_PEG_WO_ALERT_FST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_FIXPEG_PROD_SET: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_WHATBOM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_RRP_SEL_GROUP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_INTSRC_PROF: Optional[SapNvarchar] = ""
+    # SAP HANA type: SMALLINT | Forced nullable
+    SCM_PRIO: Optional[SapSmallInt] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_MIN_PASS_AMOUNT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_PROFID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_GES_MNG_USE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_GES_BST_USE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ESPPFLG: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Order by field
+    SCM_THRUPUT_TIME: SapDecimal
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_TPOP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_SAFTY_V: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_PPSAFTYSTK: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_PPSAFTYSTK_V: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_REPSAFTY: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_REPSAFTY_V: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_REORD_V: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_MAXSTOCK_V: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_SCOST_PRCNT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_PROC_COST: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_NDCOSTWE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_NDCOSTWA: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_CONINP: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONF_GMSYNC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_IUNIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_SFT_LOCK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_PLNT_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_TOLPRPL: Optional[SapDecimal] = Field(alias="/SAPMP/TOLPRPL", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_TOLPRMI: Optional[SapDecimal] = Field(alias="/SAPMP/TOLPRMI", default=0)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STTPEC_SERVALID: Optional[SapNvarchar] = Field(alias="/STTPEC/SERVALID", default=00000000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_PKGRP: Optional[SapNvarchar] = Field(alias="/VSO/R_PKGRP", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_LANE_NUM: Optional[SapNvarchar] = Field(alias="/VSO/R_LANE_NUM", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_PAL_VEND: Optional[SapNvarchar] = Field(alias="/VSO/R_PAL_VEND", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSO_R_FORK_DIR: Optional[SapNvarchar] = Field(alias="/VSO/R_FORK_DIR", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IUID_RELEVANT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IUID_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UID_IEA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DPCBT: Optional[SapNvarchar] = ""
+
+class Mard(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: MARD
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MATNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    WERKS: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    LGORT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSTAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LVORM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFGJA: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFMON: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPERR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    LABST: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    UMLME: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    INSME: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    EINME: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SPEME: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    RETME: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VMLAB: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VMUML: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VMINS: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VMEIN: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VMSPE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VMRET: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZILL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZILQ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZILE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZILS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZVLL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZVLQ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZVLE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZVLS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LSOBS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    LMINB: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    LBSTF: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HERKL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXPPG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXVER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGPBE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    KLABS: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KINSM: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KEINM: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KSPEM: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DLINL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRCTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERSDA: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    VKLAB: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VKUML: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LWMKB: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    BSKRF: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MDRUE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MDJIN: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_STL_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    FSH_SALLOC_QTY_S: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_LABST: Optional[SapDecimal] = Field(alias="/CWM/LABST", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_INSME: Optional[SapDecimal] = Field(alias="/CWM/INSME", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_EINME: Optional[SapDecimal] = Field(alias="/CWM/EINME", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_SPEME: Optional[SapDecimal] = Field(alias="/CWM/SPEME", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_RETME: Optional[SapDecimal] = Field(alias="/CWM/RETME", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_UMLME: Optional[SapDecimal] = Field(alias="/CWM/UMLME", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_KLABS: Optional[SapDecimal] = Field(alias="/CWM/KLABS", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_KINSM: Optional[SapDecimal] = Field(alias="/CWM/KINSM", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_KEINM: Optional[SapDecimal] = Field(alias="/CWM/KEINM", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_KSPEM: Optional[SapDecimal] = Field(alias="/CWM/KSPEM", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_VMLAB: Optional[SapDecimal] = Field(alias="/CWM/VMLAB", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_VMINS: Optional[SapDecimal] = Field(alias="/CWM/VMINS", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_VMEIN: Optional[SapDecimal] = Field(alias="/CWM/VMEIN", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_VMSPE: Optional[SapDecimal] = Field(alias="/CWM/VMSPE", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_VMRET: Optional[SapDecimal] = Field(alias="/CWM/VMRET", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_VMUML: Optional[SapDecimal] = Field(alias="/CWM/VMUML", default=0)
+
+class Mast(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: MAST
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MATNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    WERKS: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    STLAN: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    STLNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    STLAL: Key[SapNvarchar]
+    # SAP HANA type: DECIMAL | Forced nullable
+    LOSVN: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    LOSBS: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CSLTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATERIAL_BOM_KEY: Optional[SapNvarchar] = ""
+
+class Matdoc(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: MATDOC
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Order by field
+    MANDT: SapNvarchar
+    # SAP HANA type: VARBINARY | Order by field
+    KEY1: SapVarbinary
+    # SAP HANA type: VARBINARY | Forced nullable
+    KEY2: Optional[SapVarbinary] = 00000000
+    # SAP HANA type: VARBINARY | Forced nullable
+    KEY3: Optional[SapVarbinary] = 0000000000
+    # SAP HANA type: VARBINARY | Forced nullable
+    KEY4: Optional[SapVarbinary] = 00
+    # SAP HANA type: VARBINARY | Forced nullable
+    KEY5: Optional[SapVarbinary] = 00
+    # SAP HANA type: VARBINARY | Forced nullable
+    KEY6: Optional[SapVarbinary] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RECORD_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: INTEGER | Forced nullable
+    HEADER_COUNTER: Optional[SapInteger] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATBF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGORT_SID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHARG_SID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFNR_SID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAT_KDAUF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAT_KDPOS: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAT_PSPNR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUNNR_SID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOBKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LBBSA_SID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_OWNER_SID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RESOURCENAME_SID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUKRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHARG_WHS_SG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MENGU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERTU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VBOBJ_SG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZBWS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSTAUS_SG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSTTYP_SG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALNR: Optional[SapNvarchar] = 000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BERID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WAERS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    DMBTR: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BNBTR: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BUALT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    DMBUM: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    EXBWR: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VKWRT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    EXVKW: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SALK3: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VKWRA: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    J_1BEXBASE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    STOCK_VKWRT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    DMBTR_STOCK: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    DMBTR_CONS: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEINS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MENGE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    LBKUM: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    STOCK_QTY: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    CONSUMPTION_QTY: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERFME: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ERFMG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BPRME: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BPMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSTME: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BSTMG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LSMEH: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    LSMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PBAMG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CURRENCY_A1: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PRICE_A1: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRICE_SOURCE_A1: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    STOCK_VALUE_A1: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    CONS_VALUE_A1: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_MENGE: Optional[SapDecimal] = Field(alias="/CWM/MENGE", default=0)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CWM_MEINS: Optional[SapNvarchar] = Field(alias="/CWM/MEINS", default="")
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_ERFMG: Optional[SapDecimal] = Field(alias="/CWM/ERFMG", default=0)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CWM_ERFME: Optional[SapNvarchar] = Field(alias="/CWM/ERFME", default="")
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_STOCK_QTY: Optional[SapDecimal] = Field(alias="/CWM/STOCK_QTY", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    CWM_CONSUMPTION_QTY: Optional[SapDecimal] = Field(alias="/CWM/CONSUMPTION_QTY", default=0)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CWM_MEINS_SID: Optional[SapNvarchar] = Field(alias="/CWM/MEINS_SID", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMMAB_CID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMWRK_CID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGORT_CID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHARG_CID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFNR_CID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAT_KDAUF_CID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAT_KDPOS_CID: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAT_PSPNR_CID: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUNNR_CID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMSOK_CID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LBBSA_CID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_OWNER_CID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RESOURCENAME_CID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMBUK_CG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHARG_WHS_CG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMMEN_CG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMWER_CG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VBOBJ_CG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMKZBWS_CG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSTAUS_CG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSTTYP_CG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALNR_CG: Optional[SapNvarchar] = 000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CPUDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CPUTM: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    YEARDAY_BUDAT: Optional[SapNvarchar] = 0000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    YEARWEEK_BUDAT: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    YEARMONTH_BUDAT: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    YEARQUARTER_BUDAT: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    YEAR_BUDAT: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QUARTER_BUDAT: Optional[SapNvarchar] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MONTH_BUDAT: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEEK_BUDAT: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DAY_BUDAT: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEEKDAY_BUDAT: Optional[SapNvarchar] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BLDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_BUDAT_UHR: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_BUDAT_ZONE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PERIV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GJAHR: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GJPER: Optional[SapNvarchar] = 0000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GJPER_CURR_PER: Optional[SapNvarchar] = 0000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VFDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DABRBZ: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DABRZ: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HSDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MBLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MJAHR: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEILE: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LINE_ID: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARENT_ID: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LINE_DEPTH: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAA_URZEI: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDAUF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDPOS: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDEIN: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBELN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBELP: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFBJA: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFBNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFPOS: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SJAHR: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SMBLN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SMBLP: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANLN1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANLN2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BELNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUZEI: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BELUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUZUM: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSNUM: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSPOS: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TBNUM: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TBPOS: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UBNUM: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TANUM: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    URZEI: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XBLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VBELN_IM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VBELP_IM: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LE_VBELN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_LOGSYS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_MDNUM_EWM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CANCELLED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CANCELLATION_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REVERSAL_MOVEMENT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERVICE_DOC_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERVICE_DOC_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERVICE_DOC_ITEM_ID: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EWM_LGNUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EWM_GMDOC: Optional[SapNvarchar] = 000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EWM_LGPLA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XSTOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XAUTO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHARG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWTAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INSMK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZUSCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZUSTD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLPLA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SHKZG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SHKUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ELIKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGTXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQUNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEMPF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABLAD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KOKRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARGB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARBU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KOSTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROJN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XSKST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XSAUF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XSPRO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XSERG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XRUEM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XRUEJ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZEAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZSTR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMMAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMCHA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMLGO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMZST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMZUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZBEW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZVBR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZZUG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEUNB: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PALAN: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGNUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGPLA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BESTQ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWLVS: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XBLVS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSCHN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NSCHN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DYPLA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TBPRI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEANZ: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GRUND: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EVERS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EVERE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IMKEY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KSTRG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAOBJNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRCTR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PS_PSP_PNR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NPLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUFPL: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APLZL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUFPS: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VPTNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIPOS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAKTO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XWSBR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EMLIF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AKTNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEKKN: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUOBJ_CH: Optional[SapNvarchar] = 000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PPRCTR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GEBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FISTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUSTM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUSTW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VPRSV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FKBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XBEAU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QINSPST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MWSKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXJCD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EMATN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1AGIRUPD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VKMWS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BERKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XWOFF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEMOT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRZNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LLIEF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LSTAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XOBEW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GRANT_NBR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZUSTD_T156M: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_GTS_STOCK_TY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBLPOS: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XMACC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMMAB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMBAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMWRK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMSOK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_SCAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_UMSCAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_RCAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_OWNER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COMPL_MARK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FZGLS_MARK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ETANP_MARK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POPUP_MARK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XSAUT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERVICEPERFORMER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PERNR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNTTP_GR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WORK_ITEM_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FBUDA: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_INCL_EEW_COBL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SEASON_YEAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SEASON: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_COLLECTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_THEME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WRF_CHARSTC1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WRF_CHARSTC2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WRF_CHARSTC3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_MATDOC_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    OINAVNW: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OICONDCOD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONDI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ASS_PSPNR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BLART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BLAUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TCODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BKTXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    FRATH: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRBNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEVER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XABLN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AWSYS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BLA2D: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BFWMS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TCODE2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXNUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GTS_CUSREF_NO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLS_RSTO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MSR_ACTIVE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XCOMPL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNUMV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATAAGING: Optional[SapNvarchar] = Field(alias="_DATAAGING", default=00000000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XPRINT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LMBMV: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PABPM: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XFMAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNBDR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NROFLABELS: Optional[SapNvarchar] = 0000
+
+class Mbew(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: MBEW
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    MATNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    BWKEY: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    BWTAR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LVORM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    LBKUM: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SALK3: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VPRSV: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VERPR: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    STPRS: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PEINH: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BKLAS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SALKV: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VMKUM: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VMSAL: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VMVPR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VMVER: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VMSTP: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VMPEI: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VMBKL: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VMSAV: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VJKUM: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VJSAL: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VJVPR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VJVER: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VJSTP: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VJPEI: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VJBKL: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VJSAV: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFGJA: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFMON: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWTTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    STPRV: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAEPR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZKPRS: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZKDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Order by field
+    TIMESTAMP: SapDecimal
+    # SAP HANA type: DECIMAL | Forced nullable
+    BWPRS: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BWPRH: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VJBWS: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VJBWH: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VVJSL: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VVJLB: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VVMLB: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VVSAL: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZPLPR: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZPLP1: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZPLP2: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZPLP3: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZPLD1: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZPLD2: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZPLD3: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PPERZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PPERL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PPERV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALKL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALKV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALSC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XLIFO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MYPOL: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BWPH1: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BWPS1: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABWKZ: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSTAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALN1: Optional[SapNvarchar] = 000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALNR: Optional[SapNvarchar] = 000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWVA1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWVA2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWVA3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERS1: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERS2: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERS3: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HRKFT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KOSGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PPRDZ: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PPRDL: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PPRDV: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PDATZ: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PDATL: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PDATV: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKALR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VPLPR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MLMAA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MLAST: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    LPLPR: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VKSAL: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HKMAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPERW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZIWL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WLINL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABCIW: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BWSPA: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    LPLPX: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VPLPX: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    FPLPX: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LBWST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VBWST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FBWST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKLAS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QKLAS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MTUSE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MTORG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OWNPR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XBEWM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BWPEI: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MBRUE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OKLAS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_VAL_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OIPPINV: Optional[SapNvarchar] = ""
+
+class Mdma(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: MDMA
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    MATNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    BERID: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISPR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISMM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISPO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MINBE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFRHY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FXHOR: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISLS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RDPRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BSTRF: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BSTMI: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BSTMA: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MABST: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    TAKZT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    AUSSS: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOBSL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGPRO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGFSB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MRPPP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    EISBE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RWPRO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SHZET: Optional[SapNvarchar] = 00
+    # SAP HANA type: DECIMAL | Forced nullable
+    BSTFE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    LOSFX: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAGPR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    LGRAD: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROPR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VRBMT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VRBDB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VRBDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    VRBFK: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SHPRO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AHDIS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUTRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSTAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZKFK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SHFLG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APOKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PLIFZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLIFZX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEZEIT: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SFTY_STK_METH: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    SCM_MATLOCID_GUID16: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_MATLOCID_GUID22: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_GRPRT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_GIPRT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_RRP_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_HEUR_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_PACKAGE_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_CONHAP: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_HUNIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_CONHAP_OUT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_HUNIT_OUT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_RRP_SEL_GROUP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_LSUOM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_REORD_DUR: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_TARGET_DUR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_TSTRID: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Order by field
+    SCM_THRUPUT_TIME: SapDecimal
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_TPOP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_SAFTY_V: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_PPSAFTYSTK: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_PPSAFTYSTK_V: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_REPSAFTY: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_REPSAFTY_V: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_REORD_V: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_MAXSTOCK_V: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_SCOST_PRCNT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_PROC_COST: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_NDCOSTWE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_NDCOSTWA: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_CONINP: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCM_IUNIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_SCOST: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCM_SSPEN: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MAXDOS_PEN: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MAXDOS_FLG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAFTYSTOCK_METHOD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TARGET_STOCK_LEVEL_METH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUTO_DET_SFTYSTK_METH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USE_PERIOD_FACTOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PERIOD_FACTOR_VALUE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PERIOD_FACTOR_TDS: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    CONVH: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SDM_VERSION: Optional[SapNvarchar] = ""
+
+class Mkal(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: MKAL
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MATNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    WERKS: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    VERID: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BDATU: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADATU: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLAN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALNAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BESKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOBSL: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    LOSGR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MDV01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MDV02: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TEXT1: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    EWAHR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERTO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BSTMI: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BSTMA: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RGEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLTYG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNNG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALNAG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLTYM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNNM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CSPLT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATKO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ELPRO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRVBE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRFG_F: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MKSP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRFG_R: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRFG_G: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRFG_S: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UCMAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSIND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DIFFPLANEXEMSTR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EWM_LGNUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EWM_LGPLA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXE_STLAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXE_STLAN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXE_PLNTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXE_PLNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXE_ALNAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TSA_PRVBE: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    PNGUID: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_MKAL_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    PPEGUID: Optional[SapVarbinary] = 00000000000000000000000000000000
+
+class Mlan(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: MLAN
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MATNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ALAND: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAXM1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAXM2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAXM3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAXM4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAXM5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAXM6: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAXM7: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAXM8: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAXM9: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAXIM: Optional[SapNvarchar] = ""
+
+class Mvke(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: MVKE
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MATNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    VKORG: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    VTWEG: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LVORM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BONUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROVG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SKTOF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VMSTA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VMSTD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    AUMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    LFMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    EFMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SCMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCHME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VRKME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MTPOS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DWERK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRODH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PMATN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KONDM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTGRM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MVGR1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MVGR2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MVGR3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MVGR4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MVGR5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IS_ENTLMNT_RLVT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SSTUF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PFLKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LSTFL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LSTVZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LSTAK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LDVFL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LDBFL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LDVZL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LDBZL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VDVFL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VDBFL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VDVZL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VDBZL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRAT1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRAT2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRAT3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRAT4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRAT5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRAT6: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRAT7: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRAT8: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRAT9: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRATA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RDPRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    LFMAX: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RJART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PBIND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VAVME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATKC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PVMSO: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_SALD_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_EMLGRP: Optional[SapNvarchar] = Field(alias="/BEV1/EMLGRP", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_EMDRCKSPL: Optional[SapNvarchar] = Field(alias="/BEV1/EMDRCKSPL", default=0)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_RPBEZME: Optional[SapNvarchar] = Field(alias="/BEV1/RPBEZME", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_RPSNS: Optional[SapNvarchar] = Field(alias="/BEV1/RPSNS", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_RPSFA: Optional[SapNvarchar] = Field(alias="/BEV1/RPSFA", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_RPSKI: Optional[SapNvarchar] = Field(alias="/BEV1/RPSKI", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_RPSCO: Optional[SapNvarchar] = Field(alias="/BEV1/RPSCO", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_RPSSO: Optional[SapNvarchar] = Field(alias="/BEV1/RPSSO", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NF_FLAG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CTR_TERM_DEF: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CTR_TERM_ALT1: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CTR_TERM_ALT2: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CTR_TERM_UNIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXT_PERIOD_DEF: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXT_PERIOD_ALT1: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXT_PERIOD_ALT2: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXT_PERIOD_UNIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PACKAGE_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PACKAGE_SIZE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLGTP: Optional[SapNvarchar] = ""
+
+class Pkhd(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: PKHD
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    PKNUM: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRVBE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEHAZ: Optional[SapNvarchar] = 000
+    # SAP HANA type: DECIMAL | Forced nullable
+    BEHMG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SIGAZ: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RGVER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PKOSA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PKSTE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BERKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGNUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGPLA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NKDYN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PKSTF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PKSTU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKORG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBELN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBELP: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANSWB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PKBHT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QUFKT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMLGO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEINS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RKSTA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KOSTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VBPRN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VBQUE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CC_PRINT_QUEUE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PKDRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PKUMW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PKADR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PKSFG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PKLOG: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ALSMG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABLAD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KCART: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    KCSAF: Optional[SapDecimal] = 0
+    # SAP HANA type: SMALLINT | Forced nullable
+    KCCON: Optional[SapSmallInt] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PKRMG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PKFMG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KCPRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    KWBZD: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KWBZM: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VBELN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VBELP: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QUPVB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PABPRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PACKV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANZLT: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RKFORM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBFORM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CC_PRINT_FORM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZPUNKT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LCM_STATUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CRE_DATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RLS_DATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Order by field
+    RELEASE_TIME: SapNvarchar
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBS_DATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Order by field
+    LOCK_TIME: SapNvarchar
+    # SAP HANA type: DECIMAL | Forced nullable
+    LASTCHANGE_DATETIME: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LASTCHANGE_USER: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PINTVD: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    JIT_ACTION_CONTROL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARTIAL_GR_ALLOWED_IND: Optional[SapNvarchar] = ""
+    # SAP HANA type: INTEGER | Forced nullable
+    MAX_NUMBER_OPEN_CALLS: Optional[SapInteger] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    REPL_QTY_LOWER_TOLERANCE_LVL: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SUPL_QTY_UPPER_TOLERANCE_LVL: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SUPL_QTY_LOWER_TOLERANCE_LVL: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    JIT_STCK_TRANSFER_REPL_STRAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    JIT_EXT_PROC_REPL_STRAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COMMUNICATION_GROUP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    OFFSET_FROM_START_OF_PRODN: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_NJIT_CCYC_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_KANBAN_CCYC_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PINTVM: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KNFZD: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KNFZM: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KWTZD: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KWTZM: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KITZD: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KITZM: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KDMBUF: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KSPBUF: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NTREL: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TRIGAZ: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TRIGGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CAPA_WRKCT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NLPLA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VLPLA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRCTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FAZUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAFETY_TIME_IN_DAYS: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAFETY_TIME_IN_MINUTES: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNG_PROCEDURE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SUMRST2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SUMRST3: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PLNG_HORIZON: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MIN_STOCK: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOT_SIZING_PROC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCHEDULING_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SEQRST2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    JITSCPRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    JITOTOL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGNUM_EWM: Optional[SapNvarchar] = ""
+
+class Plaf(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: PLAF
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    PLNUM: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLWRK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PWWRK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PAART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BESKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOBES: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    GSMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    TLMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    AVMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BDMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSTTR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PEDTR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PERTR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    WEBAZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISPO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMSKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUFFX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLFX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNTTP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDAUF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDPOS: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDEIN: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROJN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSNUM: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QUNUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QUPOS: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLIEF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KONNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTPNR: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKORG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NUMVR: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZVBR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOBKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSPEL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PALTR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TECHS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLAN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STALT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STSTA: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARSNR: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARSPS: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERTO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TRART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TERST: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TERED: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEDID: Optional[SapNvarchar] = 000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUFPL: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LINID: Optional[SapNvarchar] = 000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TRMKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TRMER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REDKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TRMHK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRTHW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RGEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEINS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUOBJ: Optional[SapNvarchar] = 000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REVLV: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ABMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RATID: Optional[SapNvarchar] = 000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GROID: Optional[SapNvarchar] = 000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RATER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GROER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLSCN: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SBNUM: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBNKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KAPFX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SEQNR: Optional[SapNvarchar] = 00000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSTTI: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PEDTI: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MONKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRNKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MDPBV: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VFMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MDACH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MDACC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MDACD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MDACT: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSBTR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLETX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRSCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LVSCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZAVC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VRPLA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PBDNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AGREQ: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    UMREZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    UMREN: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ERFMG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERFME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RQNUM: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZBWS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    WEMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    WAMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EDGNO: Optional[SapNvarchar] = 00000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LBLKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EMLIF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BERID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UBERI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EMATN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REMFL: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PSTMP: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PUSER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BADI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STAEX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RESLO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SRM_CONTRACT_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SRM_CONTRACT_ITM: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ORG_REQ_DATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PTEXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_PLAF_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEDKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    CNFQTY: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_SCAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PLIFZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BOM_VERSN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DAC_PP_COMPONENT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DAC_INDIRECT_ACCESS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DAC_CREATION_DATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    M_MRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_BUNDLE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_MPLND_ORD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SEASON_YEAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SEASON: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_COLLECTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_THEME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATRKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Order by field
+    DPS_HANDOVER_TIME: SapDecimal
+
+class Plko(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: PLKO
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    PLNTY: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    PLNNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    PLNAL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ZAEHL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATUV: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TECHV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERWE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STATU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNME: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    LOSVN: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    LOSBS: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VAGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AESZN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTEXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXTSP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    ABANZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROFIDNETZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KOKRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QVEWERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QVEMENGE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QVEVERSION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QVEDATUM: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QVEGRUPPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QVECODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QDYNREGEL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QDYNHEAD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QPRZIEHVER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QVERSNPRZV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QKZRASTER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QDYNSTRING: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STRAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PPOOL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISTRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IWERK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANLZU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARBID: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTNUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DELKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARBTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STUPR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CLNDR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRTYP: Optional[SapNvarchar] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REODAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NETID: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_CHK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSPNR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TTRAS: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZKFG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNNR_ALT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_CAPO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SLWBEZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PPKZTLZU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHRULE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CCOAA: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ST_ARBID: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEINH: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    UMREZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    UMREN: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BMSCH: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADPSP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VALID_TO: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ_INHERITED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_PLKO_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MS_FLAG: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Order by field
+    CHANGEDDATETIME: SapDecimal
+    # SAP HANA type: DECIMAL | Forced nullable
+    TSTMP_BW: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MES_ROUTINGID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CRTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EFFTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XHIERTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TL_EXTID: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    AXON_DURATION: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AXON_C1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AXON_UNIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AXON_TLGROUP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AXON_GROUPCNTR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    AXON_NONROUT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AXON_TLGROUP2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AXON_GROUPCNTR2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AXON_DEFECTTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TBX_ATTRIBUTES: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TASKLIST_VERSIONED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DEPENDENT_TASKLIST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CURRENT_DOCNO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CURRENT_DOCTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CURRENT_DOCVR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CURRENT_DOCTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LINKED_TL_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LNKED_TL_MROTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LINKED_TL_VERSION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LINKED_TL_COUNTER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LINKED_TL_GRPCOUNT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBJNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROCESSED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROCESSED_DL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZZEVENT_CODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZZRESET_FLAG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZZPEST_FLAG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZZDOC_CREATION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZZATNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZZKATALOGART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZZCODEGRUPPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZZCODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZZPEST_USAGE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZZPEST_DURATION: Optional[SapNvarchar] = 000
+
+class Plmk(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: PLMK
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    PLNTY: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    PLNNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    PLNKN: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    KZEINSTELL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    MERKNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ZAEHL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GUELTIGAB: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERNV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENDERGNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERSTELLER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERSTELLDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENDERER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENDERDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STEUERKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QMTB_WERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PMETHODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PMTVERSION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QPMK_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QPMK_ZAEHL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERWMERKM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MKVERSION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MKVERSDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MERKGEW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROBENR: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRUEFQUALI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOLERANZSL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KURZTEXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTEXTKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTEXTSPR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTEXTEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTXTENTSPR: Optional[SapNvarchar] = ""
+    # SAP HANA type: SMALLINT | Forced nullable
+    STELLEN: Optional[SapSmallInt] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MASSEINHSW: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    SOLLWERT: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOLLWNI: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    TOLERANZOB: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOLOBNI: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    TOLERANZUN: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOLUNNI: Optional[SapNvarchar] = ""
+    # SAP HANA type: SMALLINT | Forced nullable
+    KLASANZAHL: Optional[SapSmallInt] = 0
+    # SAP HANA type: DOUBLE | Forced nullable
+    KLASBREITE: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KLASBRNI: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    KLASMITTE: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KLASMINI: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    GRENZEOB1: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GRENZOB1NI: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    GRENZEUN1: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GRENZUN1NI: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    GRENZEOB2: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GRENZOB2NI: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    GRENZEUN2: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GRENZUN2NI: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    PLAUSIOBEN: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLAUSIOBNI: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    PLAUSIUNTE: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLAUSIUNNI: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    TOLERWEIOB: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOLWOBNI: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    TOLERWEIUN: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOLWUNNI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOLERWAB: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOLERWBIS: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STICHPRVER: Optional[SapNvarchar] = ""
+    # SAP HANA type: DOUBLE | Forced nullable
+    FAKPLANME: Optional[SapDouble] = 0
+    # SAP HANA type: DOUBLE | Forced nullable
+    FAKPROBME: Optional[SapDouble] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROBEMGEH: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PRUEFEINH: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DYNKRIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORMELSL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORMEL1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORMEL2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CODEGR9U: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CODE9U: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CODEVR9U: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CODEGR9O: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CODE9O: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CODEVR9O: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATAB1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATALGART1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWMENGE1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWMGWRK1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWVERS1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWDAT1: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATAB2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATALGART2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWMENGE2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWMGWRK2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWVERS2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWDAT2: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATAB3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATALGART3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWMENGE3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWMGWRK3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWVERS3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWDAT3: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATAB4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATALGART4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWMENGE4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWMGWRK4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWVERS4: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWDAT4: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATAB5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KATALGART5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWMENGE5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWMGWRK5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWVERS5: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSWDAT5: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY10: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY20: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY40: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHARACT_ID1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QERGDATH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EEANTVERF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QDYNREGEL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DYNMERKREF: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PZLFH: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CODEGRQUAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CODEQUAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPCKRIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INPPROC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RES_PLAN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CTRMETH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHAORIG: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    CHAORIG_GUID: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NO_INSPECTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QP_CHAORIG_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHARGROUP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHARGROUP_CREF: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DIVISIONINT: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VALID_TO_ON_DB: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSN_SOURCE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSN_SOURCE_PLNKN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSN_SOURCE_MERKNR: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_PLMK_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHAR_RELEVANCE: Optional[SapNvarchar] = ""
+
+class Plmz(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: PLMZ
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    PLNTY: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    PLNNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ZUONR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ZAEHL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATUV: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TECHV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNFL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNKN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLKN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERK_STL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZUDIV: Optional[SapNvarchar] = 00000
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZUMS1: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZUMS2: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZUMS3: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZUMEI: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    IMENG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IMEIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RGEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLST: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLWG: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REFKN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GP_MATNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GP_WERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GP_UVORN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GP_KRIT1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GP_FREET: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AOBAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEINH: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    DAUER: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    DMENG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNTTP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLGEX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VORAB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STRECKE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLTY_W: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLNR_W: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLAL_W: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KANTE: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRODFLOWID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEIKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABLAD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEMPF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VALID_TO: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ_INHERITED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSN_SOURCE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSN_SOURCE_ZUONR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BOM_VERSN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BOM_VERSN_W: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOG_COMP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SERVICEDURATION: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERVICEDURATIONUNIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    OVERALLLIMITAMOUNT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    EXPCTEDOVERALLLIMITAMOUNT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RECIPIENTLOCATIONCODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRODUCTTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CURRENCY: Optional[SapNvarchar] = ""
+
+class Plpo(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: PLPO
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    PLNTY: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    PLNNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    PLNKN: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    ZAEHL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATUV: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TECHV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SUMNR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VORNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STEUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARBID: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBJTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTSCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTXA1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTXA2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXTSP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VPLTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VPLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VPLAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VPLFL: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VINTV: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEINH: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    UMREN: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    UMREZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BMSCH: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZMERH: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEIER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAR01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGE01: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VGW01: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAR02: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGE02: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VGW02: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAR03: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGE03: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VGW03: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAR04: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGE04: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VGW04: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAR05: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGE05: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VGW05: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAR06: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGE06: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    VGW06: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZERMA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGDAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZCODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZULNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSANZ: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PDEST: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    LOANZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QUALF: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ANZMA: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFSCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RASCH: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    AUFAK: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UEMUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UEKAN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLIES: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEIMU: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZMINU: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MINWE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPMUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SPLIM: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEIMB: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZMINB: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEILM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZLMAX: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEILP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZLPRO: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEIWN: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZWNOR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEIWM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZWMIN: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEITN: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZTNOR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZEITM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZTMIN: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABLIPKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSTRA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BZOFFB: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    OFFSTB: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EHOFFB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BZOFFE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    OFFSTE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EHOFFE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SORTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PLIFZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PREIS: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PEINH: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAKTO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WAERS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ESOKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKORG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZLGF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATKL: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    DAUNO: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DAUNE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    DAUMI: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DAUME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DDEHN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EINSA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EINSE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ARBEI: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARBEH: Optional[SapNvarchar] = ""
+    # SAP HANA type: SMALLINT | Forced nullable
+    ANZZL: Optional[SapSmallInt] = 0
+    # SAP HANA type: SMALLINT | Forced nullable
+    PRZNT: Optional[SapSmallInt] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MLSTN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PPRIO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUKRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SLWID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USR00: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USR01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USR02: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USR03: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    USR04: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USE04: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    USR05: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USE05: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    USR06: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USE06: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    USR07: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USE07: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USR08: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USR09: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USR10: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USR11: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANFKO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANFKOKRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KAPAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INDET: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LARNT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PRKST: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    QRASTERMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QRASTEREH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANLZU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISTRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISTTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISTNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISTKN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISTPO: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IUPOZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRSP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERTN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGR01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGR02: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGR03: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGR04: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGR05: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGR06: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MDLID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RUZUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BMEIH: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BMVRG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CKSELKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NPRIO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PVZKN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PHFLG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PHSEQ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNOBJ: Optional[SapNvarchar] = 000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERFSICHT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSPNR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QLOTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QLOBJEKTID: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QLKAPAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QKZPRZEIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QKZZTMG1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QKZPRMENG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QKZPRFREI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QRASTZEHT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    QRASTZFAK: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    QRASTMENG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QPPKTABS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KRIT1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CLASSID: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PACKNO: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBELN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBELP: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CAPOC: Optional[SapNvarchar] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_CAPTXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    CN_WEIGHT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QKZTLSBEST: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    AUFKT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    DAFKT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    RWFAK: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AAUFG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERDART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UAVO_AUFL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRDLB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QPART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRZ01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAKT: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OPRID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NVADD: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    EVGEW: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFPNT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_TSK_GROUP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADPSP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VALID_TO: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ_INHERITED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_PLPO_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TPLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQUNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MES_OPERID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MES_STEPID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MANU_PROC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSN_SOURCE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSN_SOURCE_PLNKN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: VARBINARY | Nullable
+    VERSN_TRACK_GUID: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FAV_GUID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FAV_VERSN: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FAV_GUID_OLD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FAV_VERSN_OLD: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CL_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXECUTION_STAGE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAPMP_MET_LRCH: Optional[SapNvarchar] = Field(alias="/SAPMP/MET_LRCH", default="")
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_MAX_FERTL: Optional[SapDecimal] = Field(alias="/SAPMP/MAX_FERTL", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_FIX_AS_J: Optional[SapDecimal] = Field(alias="/SAPMP/FIX_AS_J", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_FIX_AS_E: Optional[SapDecimal] = Field(alias="/SAPMP/FIX_AS_E", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_FIX_AS_L: Optional[SapDecimal] = Field(alias="/SAPMP/FIX_AS_L", default=0)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAPMP_ABL_ZAHL: Optional[SapNvarchar] = Field(alias="/SAPMP/ABL_ZAHL", default=000000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SUBPLNAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SUBPLNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SUBPLNTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XEXCLTL: Optional[SapNvarchar] = ""
+
+class Qmat(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: QMAT
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    ART: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    MATNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    WERKS: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PPL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPEZUEBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TLS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INSMK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AVE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STICHPRVER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DYNREGEL: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SPROZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HPZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DYN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MPB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MPDAU: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QKZVERF: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    QPMAT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZPRFKOST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUFNR_CO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AKTIV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AFR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MMA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FEH: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PRFRQ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NKMPR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MS_FLAG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHG_ORIG_17: Optional[SapNvarchar] = ""
+
+class Stko(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: STKO
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    STLTY: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    STLNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    STLAL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    STKOZ: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATUV: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TECHV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LKENZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGKZL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BMEIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BMENG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CADKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LABOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTXSP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STKTX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STLST: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WRKAN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DVDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DVNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEHLP: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    GUIDX: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VALID_TO: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ECN_TO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BOM_VERSN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSNST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERSNLASTIND: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Order by field
+    LASTCHANGEDATETIME: SapDecimal
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BOM_AIN_IND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BOM_PREV_VERSN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_STKO_INCL_EEW_PS: Optional[SapNvarchar] = ""
+
+class Stpo(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: STPO
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    STLTY: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    STLNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    STLKN: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    STPOZ: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATUV: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TECHV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LKENZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGKNT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VGPZL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IDNRK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSWRK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POSTP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POSNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SORTF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEINS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MENGE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FMENG: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    AUSCH: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    AVOAU: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NETAU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCHGT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEIKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERSKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RVREL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SANFE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SANIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SANKA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SANKO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SANVS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STKKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REKRI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REKRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CADPO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NFMAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    NLFZT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERTI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALPOS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    EWAHR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    LIFZT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PREIS: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PEINH: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WAERS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAKTO: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ROANZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ROMS1: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ROMS2: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ROMS3: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ROMEI: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ROMEN: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFORM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UPSKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VALKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTXSP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POTX1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POTX2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBJTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATKL: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    WEBAZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DOKAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DOKNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DOKVR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DOKTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    CSSTR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CLASS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KLART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POTPR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AWAKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INSKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VCEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSTKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VACKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKORG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CLOBK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CLMUL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CLALT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CVIEW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNOBJ: Optional[SapNvarchar] = 000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZKUP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INTRM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TPEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STVKN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DVDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DVNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DSPST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALPST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALPRF: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALPGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZNFP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NFGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NFEAG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNDVB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNDBZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KSTTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KSTNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KSTKN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KSTPZ: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CLSZU: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZCLB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEHLP: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRVBE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    NLFZV: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NLFMV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IDPOS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IDHIS: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IDVAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ALEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ITMID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GUID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ITSOB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFPNT: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    GUIDX: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_CMKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_CATV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VALID_TO: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VALID_TO_RKEY: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ECN_TO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ECN_TO_RKEY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABLAD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEMPF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STVKN_VERSN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Order by field
+    LASTCHANGEDATETIME: SapDecimal
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRELIMINARY_MATERIAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SFWIND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_STPO_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUFACTOR: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAPMP_MET_LRCH: Optional[SapNvarchar] = Field(alias="/SAPMP/MET_LRCH", default="")
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_MAX_FERTL: Optional[SapDecimal] = Field(alias="/SAPMP/MAX_FERTL", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_FIX_AS_J: Optional[SapDecimal] = Field(alias="/SAPMP/FIX_AS_J", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_FIX_AS_E: Optional[SapDecimal] = Field(alias="/SAPMP/FIX_AS_E", default=0)
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_FIX_AS_L: Optional[SapDecimal] = Field(alias="/SAPMP/FIX_AS_L", default=0)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAPMP_ABL_ZAHL: Optional[SapNvarchar] = Field(alias="/SAPMP/ABL_ZAHL", default=000000)
+    # SAP HANA type: DECIMAL | Forced nullable
+    SAPMP_RUND_FAKT: Optional[SapDecimal] = Field(alias="/SAPMP/RUND_FAKT", default=0)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_VMKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_PGQR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_PGQRRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_CRITICAL_COMP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    FSH_CRITICAL_LEVEL: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FUNCID: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    SERVICEDURATION: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERVICEDURATIONUNIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRODUCTTYPE: Optional[SapNvarchar] = ""
+
+class T681a(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: T681A
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    KAPPL: Key[SapNvarchar]
+
+class T685h(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: T685H
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    KAPPL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    KSCHL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHSPL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHANZ: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHASP: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHMDG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHMVS: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHMAN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZAME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHDYN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHCUA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CLINT_SEL: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CLINT_SRT: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHVSK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHVLL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CLASS_SEL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CLASS_SRT: Optional[SapNvarchar] = ""
+
+class Tca01(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: TCA01
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    PLNTY: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLNAW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BLDTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBJECT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NKNRI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NKNRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_OPRSOP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_SEQ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_QSS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_AOB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_UOBJ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_EQUI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_IFL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_INST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCREENTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_REF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_PHAS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_FEAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_DOC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_PHYS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_MST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_CHK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PID_MAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PID_PLN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_STUELI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PID_AUN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_GPOS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_MKAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_ERF_OP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OPR_BLDGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OPR_PANEL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_CHK_RE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_ARBEI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_KALC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_CHRULE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_LK_CHK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_MATCOM: Optional[SapNvarchar] = ""
+
+class Ztggppconwipmat(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: ZTGGPPCONWIPMAT
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    TOP_WERKS: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    MATNR_TOP_LEVEL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    LOW_WERKS: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    MATNR_LOWER_LEVEL: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MTART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RAW_MATRIAL: Optional[SapNvarchar] = ""
+
+class Aufk(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: AUFK
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    AUFNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUTYP: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTEXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTEXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUKRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GSBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KOKRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CCKEY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KOSTV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOWRK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ASTKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WAERS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ASTNR: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ESTNR: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PHAS0: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PHAS1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PHAS2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PHAS3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PDAT1: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PDAT2: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PDAT3: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IDAT1: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IDAT2: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IDAT3: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBJID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VOGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLGKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KVEWE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KAPPL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALSM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZSCHL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABKRS: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KSTAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KOSTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAKNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SETNM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CYCLE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SDATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SEQNR: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USER0: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USER1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USER2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USER3: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    USER4: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USER5: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USER6: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USER7: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USER8: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USER9: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBJNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRCTR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSPEL: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AWSLS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABGSL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXJCD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FUNC_AREA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCOPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PLINT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDAUF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDPOS: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUFEX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IVPRO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOGSYSTEM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLG_MLTPS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABUKR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AKSTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SIZECL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IZWEK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMWKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KSTEMPF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZSCHM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PKOSA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANFAUFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROCNR: Optional[SapNvarchar] = 000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RSORD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEMOT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADRNRA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERFZEIT: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEZEIT: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CSTG_VRNT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COSTESTNR: Optional[SapNvarchar] = 000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERAA_USER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EEW_AUFK_PS_DUMMY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VNAME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RECID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ETYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    JV_JIBCL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    JV_JIBSA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    JV_OCO: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    CPD_UPDAT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUM_INDCU: Optional[SapNvarchar] = Field(alias="/CUM/INDCU", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUM_CMNUM: Optional[SapNvarchar] = Field(alias="/CUM/CMNUM", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUM_AUEST: Optional[SapNvarchar] = Field(alias="/CUM/AUEST", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUM_DESNUM: Optional[SapNvarchar] = Field(alias="/CUM/DESNUM", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AD01PROFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VAPLZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WAWRK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FERC_IND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CLAIM_CONTROL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UPDATE_NEEDED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UPDATE_CONTROL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EB_POST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ORDER_PROC_MODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: SMALLINT | Forced nullable
+    AUFK_STATUS: Optional[SapSmallInt] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBW_KEY: Optional[SapNvarchar] = ""
+
+class Ekko(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: EKKO
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    EBELN: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUKRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSAKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STATU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Order by field
+    LASTCHANGEDATETIME: SapDecimal
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PINCR: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LPONR: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPRAS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZTERM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZBD1T: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZBD2T: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZBD3T: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZBD1P: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZBD2P: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKORG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKGRP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WAERS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    WKURS: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUFIX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDATB: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KDATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWBDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANGDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BNDDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GWLDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUSNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANGNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IHRAN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IHREZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VERKF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TELF1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LLIEF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ACTIVE_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KONNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUTLF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEAKT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RESWK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LBLIF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO2: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    KTWRT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISTRIBUTIONTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SUBMI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNUMV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KALSM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STAFO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXNUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UNSEZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOGSY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UPINC: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STAKO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRGGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRGSX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRGKE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRGZU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FRGRL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LANDS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LPHIS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADRNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCEG_L: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STCEG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABSGR: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KORNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEMORY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROCSTAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROCESS_INDICATOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    RLWRT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CR_STAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REVNO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCMPROC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REASON_CODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEMORYTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RETTP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    RETPC: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DPTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    DPPCT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    DPAMT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DPDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MSR_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HIERARCHY_EXISTS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GROUPING_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARENT_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    THRESHOLD_EXISTS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEGAL_CONTRACT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DESCRIPTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RELEASE_DATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HANDOVERLOC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SHIPCOND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCOV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO2_L: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO3_L: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    INCO2_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: VARBINARY | Nullable
+    INCO3_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: VARBINARY | Nullable
+    INCO4_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GRWCU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INTRA_REL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INTRA_EXCL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOTAL_STATUS_PCS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOTAL_STATUS_PMA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOTAL_STATUS_DG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TOTAL_STATUS_SDS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    QTN_ERLST_SUBMSN_DATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FOLLOWON_DOC_CAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FOLLOWON_DOC_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_EKKO_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTERNALSYSTEM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTERNALREFERENCEID: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    EXT_REV_TMSTMP: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISEOPBLOCKED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISAGED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORCE_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FORCE_CNT: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RELOC_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RELOC_SEQ_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOURCE_LOGSYS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_TRANSACTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_ITEM_GROUP: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_VAS_LAST_ITEM: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_OS_STG_CHANGE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TMS_REF_UUID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_PAYMENTDEEMED: Optional[SapNvarchar] = Field(alias="/DMBE/PAYMENTDEEMED", default=00000000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_DEALNUMBER: Optional[SapNvarchar] = Field(alias="/DMBE/DEALNUMBER", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_EVGIDRENEWAL: Optional[SapNvarchar] = Field(alias="/DMBE/EVGIDRENEWAL", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_EVGIDCANCEL: Optional[SapNvarchar] = Field(alias="/DMBE/EVGIDCANCEL", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZAPCGK: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APCGK_EXTEND: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZBAS_DATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZADATTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZSTART_DAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    Z_DEV: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZINDANX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZLIMIT_DAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NUMERATOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HASHCAL_BDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HASHCAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NEGATIVE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HASHCAL_EXISTS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNOWN_INDEX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POSTAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VZSKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SNST_STATUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROCE: Optional[SapNvarchar] = 000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    COMP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OUTR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DESP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DESP_DAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DESP_CARGO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARE_DAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PARE_CARGO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PFM_CONTRACT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POHF_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQ_EINDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQ_WERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIXPO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKGRP_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERKS_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONTRACT_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSTYP_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIXPO_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KEY_ID_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUREL_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DELPER_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EINDT_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTSNR_ALLOW: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OTB_LEVEL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OTB_COND_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KEY_ID: Optional[SapNvarchar] = 0000000000000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    OTB_VALUE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OTB_CURR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    OTB_RES_VALUE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    OTB_SPEC_VALUE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPR_RSN_PROFILE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUDG_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OTB_STATUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OTB_REASON: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHECK_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CON_OTB_REQ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CON_PREBOOK_LEV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CON_DISTR_LEV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HAS_CATALOG_RELEVANT_ITEMS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZHDCONTRACT: Optional[SapNvarchar] = ""
+
+class Ekpo(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: EKPO
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    EBELN: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    EBELP: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UNIQUEID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOEKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STATU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXZ01: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EMATN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUKRS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERKS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGORT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEDNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATKL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IDNLF: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    KTMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MENGE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEINS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BPRME: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BPUMZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BPUMN: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    UMREZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    UMREN: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    NETPR: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    PEINH: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    NETWR: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    BRTWR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AGDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    WEBAZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MWSKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXDAT_FROM: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAX_COUNTRY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BONUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INSMK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPINF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRSDR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SCHPR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MAHNZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MAHN1: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MAHN2: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    MAHN3: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    UEBTO: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UEBTK: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    UNTTO: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWTAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BWTTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABSKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AGMEM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ELIKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EREKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PSTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNTTP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZVBR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VRTKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TWRKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEPOS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEUNB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REPOS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEBRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZABS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LABNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KONNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KTPNR: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    ABFTZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ETFZ1: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ETFZ2: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZSTU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NOTKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LMEIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EVERS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    ZWERT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    NAVNW: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    ABMNG: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    EFFWR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XOBLR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADRNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EKKOL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SKTOF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STAFO: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    PLIFZ: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    NTGEW: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GEWEI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXJCD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ETDRK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOBKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARSNR: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARSPS: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INSNC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SSQSS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZGTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EAN11: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSTAE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REVLV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GEBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FISTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIPOS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KO_GSBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KO_PARGB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KO_PRCTR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KO_PPRCTR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEPRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BRGEW: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    VOLUM: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VOLEH: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VORAB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KOLIF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LTSNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PACKNO: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FPLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    GNETWR: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STAPO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UEBPO: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEWED: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EMLIF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LBLKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SATNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ATTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VSART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HANDOVERLOC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KANBA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADRN2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DELIVERY_ADDRESS_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUOBJ: Optional[SapNvarchar] = 000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XERSY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EILDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DRDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DRUHR: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DRUNR: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AKTNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABELN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABELP: Optional[SapNvarchar] = 00000
+    # SAP HANA type: DECIMAL | Forced nullable
+    ANZPU: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PUNEI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAISO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAISJ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBON2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBON3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EBONF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MLMAA: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MHDRZ: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANFNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANFPS: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZKFG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    USEQU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UMSOK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BANFN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BNFPO: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MTART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UPTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UPVOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    KZWI1: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KZWI2: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KZWI3: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KZWI4: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KZWI5: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    KZWI6: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SIKGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    MFZHI: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    FFZHI: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RETPO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUREL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LFRET: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MFRGR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NRFHG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1BNBM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1BMATUSE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1BMATORG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1BOWNPRO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1BINDUST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ABUEB: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NLABD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NFABD: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZBWS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BONBA: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FABKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LOADINGPOINT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1AINDXP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_1AIDATEP: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MPROF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EGLKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZTLF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KZFME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RDPRF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TECHS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHG_SRV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHG_FPLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MFRPN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MFRNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EMNFR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NOVET: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AFNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TZONRC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IPRKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LEBRE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BERID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    XCONDITIONS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APOMS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CCOMP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GRANT_NBR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FKBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STATUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RESLO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBLNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBLPOS: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PS_PSP_PNR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KOSTL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAKTO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WEORA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SRV_BAS_COM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRIO_URG: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRIO_REQ: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EMPST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DIFF_INVOICE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TRMRISK_RELEVANT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CREATIONDATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Order by field
+    CREATIONTIME: SapNvarchar
+    # SAP HANA type: NVARCHAR | Forced nullable
+    VCM_CHAIN_CATEGORY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_ABGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_CRM_SO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_CRM_SO_ITEM: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_CRM_REF_SO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_CRM_REF_ITEM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_CRM_FKREL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_CHNG_SYS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_INSMK_SRC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_CQ_CTRLTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_CQ_NOCQ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REASON_CODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    CQU_SAR: Optional[SapDecimal] = 0
+    # SAP HANA type: INTEGER | Forced nullable
+    ANZSN: Optional[SapInteger] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPE_EWM_DTC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXLIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXSNR: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EHTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    RETPC: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DPTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    DPPCT: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    DPAMT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DPDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FLS_RSTO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXT_RFX_NUMBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXT_RFX_ITEM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXT_RFX_SYSTEM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SRM_CONTRACT_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SRM_CONTRACT_ITM: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GOODS_COUNT_CORRECTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFEX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LIFEXPOS: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BLK_REASON_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BLK_REASON_TXT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ITCONS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FIXMG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WABWE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CMPL_DLV_ITM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO2_L: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INCO3_L: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    INCO2_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: VARBINARY | Nullable
+    INCO3_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: VARBINARY | Nullable
+    INCO4_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STAWN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ISVCO: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    GRWRT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERVICEPERFORMER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRODUCTTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GR_BY_SES: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PRICE_CHANGE_IN_SES_ALLOWED: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REQUESTFORQUOTATION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REQUESTFORQUOTATIONITEM: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RENEGOTIATION_STATUS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STATUS_PCS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STATUS_PMA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STATUS_DG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STATUS_SDS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTMATERIALFORPURG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PROCMT_HUB_SOURCE_SYSTEM: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    TARGET_VALUE: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXTERNALREFERENCEID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TC_AUT_DET: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MANUAL_TC_REASON: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FISCAL_INCENTIVE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TAX_SUBJECT_ST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FISCAL_INCENTIVE_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SF_TXJCD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_EKPO_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    EXPECTED_VALUE: Optional[SapDecimal] = 0
+    # SAP HANA type: DECIMAL | Forced nullable
+    LIMIT_AMOUNT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONTRACT_FOR_LIMIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ENH_DATE1: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ENH_DATE2: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    ENH_PERCENT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ENH_NUMC1: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATAAGING: Optional[SapNvarchar] = Field(alias="_DATAAGING", default=00000000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUPIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CIGIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MGOIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXS_BUSINESS_TRANSACTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXS_MATERIAL_USAGE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TXS_USAGE_PURPOSE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_NEGEN_ITEM: Optional[SapNvarchar] = Field(alias="/BEV1/NEGEN_ITEM", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_NEDEPFREE: Optional[SapNvarchar] = Field(alias="/BEV1/NEDEPFREE", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEV1_NESTRUCCAT: Optional[SapNvarchar] = Field(alias="/BEV1/NESTRUCCAT", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADVCODE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BUDGET_PD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EXCPE: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FMFGUS_KEY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IUID_RELEVANT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MRPIND: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_SCAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SGT_RCAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TMS_REF_UUID: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Nullable
+    TMS_SRC_LOC_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: VARBINARY | Nullable
+    TMS_DES_LOC_KEY: Optional[SapVarbinary] = 00000000000000000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WRF_CHARSTC1: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WRF_CHARSTC2: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WRF_CHARSTC3: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REFSITE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_OPTIONALITYKEY: Optional[SapNvarchar] = Field(alias="/DMBE/OPTIONALITYKEY", default=0000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_OPTIONALITYFOR: Optional[SapNvarchar] = Field(alias="/DMBE/OPTIONALITYFOR", default=0000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_CIMAX2: Optional[SapNvarchar] = Field(alias="/DMBE/CIMAX2", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_ITEM_TYPE: Optional[SapNvarchar] = Field(alias="/DMBE/ITEM_TYPE", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_EFFECTIVEDATEFROM: Optional[SapNvarchar] = Field(alias="/DMBE/EFFECTIVEDATEFROM", default=00000000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_EFFECTIVEDATETO: Optional[SapNvarchar] = Field(alias="/DMBE/EFFECTIVEDATETO", default=00000000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_OPTIONOF: Optional[SapNvarchar] = Field(alias="/DMBE/OPTIONOF", default=00000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_ACCOUNTING_TYPE: Optional[SapNvarchar] = Field(alias="/DMBE/ACCOUNTING_TYPE", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_FAS_CODE: Optional[SapNvarchar] = Field(alias="/DMBE/FAS_CODE", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_SCHEDULING_DESK: Optional[SapNvarchar] = Field(alias="/DMBE/SCHEDULING_DESK", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_COMPONENTFOR: Optional[SapNvarchar] = Field(alias="/DMBE/COMPONENTFOR", default=0000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_MIXEDPRODUCT: Optional[SapNvarchar] = Field(alias="/DMBE/MIXEDPRODUCT", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_POSTEDDATE: Optional[SapNvarchar] = Field(alias="/DMBE/POSTEDDATE", default=00000000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_DEAL_POSTED: Optional[SapNvarchar] = Field(alias="/DMBE/DEAL_POSTED", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DMBE_INVOICEUOM: Optional[SapNvarchar] = Field(alias="/DMBE/INVOICEUOM", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZAPCGK: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APCGK_EXTEND: Optional[SapNvarchar] = 0000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZBAS_DATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZADATTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZSTART_DAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    Z_DEV: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZINDANX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ZLIMIT_DAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NUMERATOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HASHCAL_BDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HASHCAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    NEGATIVE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HASHCAL_EXISTS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KNOWN_INDEX: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAPMP_GPOSE: Optional[SapNvarchar] = Field(alias="/SAPMP/GPOSE", default=00000)
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANGPN: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADMOI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADPRI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LPRIO: Optional[SapNvarchar] = 00
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADACN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AFPNR: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSARK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AUDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANGNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PNSTAT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDNS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ASSIGNMENT_PRIORITY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ARUN_GROUP_PRIO: Optional[SapNvarchar] = ""
+    # SAP HANA type: INTEGER | Forced nullable
+    ARUN_ORDER_PRIO: Optional[SapInteger] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERNP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_SOBKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_PSPNR: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_KUNNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_VBELN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_POSNR: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DISUB_OWNER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SEASON_YEAR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SEASON: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_COLLECTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_THEME: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_ATP_DATE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_VAS_REL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_VAS_PRNT_ID: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_TRANSACTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_ITEM_GROUP: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_ITEM: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_SS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_GRID_COND_REC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_PSM_PFM_SPLIT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    CNFM_QTY: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    FSH_PQR_UEPOS: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFM_DIVERSION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFM_SCC_INDICATOR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    STPAC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGBZO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LGBZO_B: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ADDRNUM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONSNUM: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BORGR_MISS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DEP_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BELNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBLPOS_CAB: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBLNR_COMP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KBLPOS_COMP: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WBS_ELEMENT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFM_PSST_RULE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFM_PSST_GROUP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFM_REF_DOC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFM_REF_ITEM: Optional[SapNvarchar] = 000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFM_REF_ACTION: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    RFM_REF_SLITEM: Optional[SapNvarchar] = 0000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REF_ITEM: Optional[SapNvarchar] = 00000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOURCE_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SOURCE_KEY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    PUT_BACK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    POL_ID: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CONS_ORDER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IS_CATALOG_RELEVANT: Optional[SapNvarchar] = ""
+    # SAP HANA type: VARBINARY | Forced nullable
+    PFMTRANSDATAFOOTPRINTUUID: Optional[SapVarbinary] = 00000000000000000000000000000000
+
+class Equi(SapHanaBaseModel):
+    """
+    Model for SAP HANA table: EQUI
+    Schema: SAPHANADB
+    """
+
+    # SAP HANA type: NVARCHAR | Primary key | Order by field
+    MANDT: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Primary key
+    EQUNR: Key[SapNvarchar]
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ERNAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQASP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AEDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AENAM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEGRU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LVORM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INVNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GROES: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Forced nullable
+    BRGEW: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GEWEI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ANSDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    ANSWT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WAERS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ELIEF: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GWLEN: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GWLDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: DECIMAL | Forced nullable
+    WDBWT: Optional[SapDecimal] = 0
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HERST: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HERLD: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HZEIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERGE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TYPBZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BAUJJ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BAUMM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    APLKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    AULDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    INBDT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GERNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQLFN: Optional[SapNvarchar] = 000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    GWLDV: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQDAT: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQBER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQNUM: Optional[SapNvarchar] = 000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    OBJNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQSNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CUOBJ: Optional[SapNvarchar] = 000000000000000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KRFKZ: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KMATN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MATNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SERNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WERK: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    LAGER: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    CHARGE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    KUNDE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    WARPL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IMRC_POINT: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    REVLV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MGANR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BEGRUI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    S_EQUI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    S_SERIAL: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    S_KONFI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    S_SALE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    S_FHM: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    S_ELSE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    S_ISU: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    S_EQBS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    S_FLEET: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    BSTVP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SPARTE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    HANDLE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    TSEGTP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EMATN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ACT_CHANGE_AA: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    S_CC: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DATLWB: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UII: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    IUID_TYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    UII_PLANT: Optional[SapNvarchar] = ""
+    # SAP HANA type: DECIMAL | Order by field
+    CHANGEDDATETIME: SapDecimal
+    # SAP HANA type: NVARCHAR | Forced nullable
+    ENDOFUSE: Optional[SapNvarchar] = 00000000
+    # SAP HANA type: NVARCHAR | Forced nullable
+    DUMMY_EQUI_INCL_EEW_PS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQEXT_ACTIVE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQUI_SRTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQUI_SNTYPE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQLB_DUTY: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQLB_HIDE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GDISPO: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GZDEQUI: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GEQART: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GKZMENG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GKONDE: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GFIKTIV: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GBELTYP: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    MEINS: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GKZLADG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GKZBERG: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GEIFR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GVERMEIN: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    J_3GZULNR: Optional[SapNvarchar] = ""
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAPCEM_ABRECHVH: Optional[SapNvarchar] = Field(alias="/SAPCEM/ABRECHVH", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAPCEM_ABRECHLG: Optional[SapNvarchar] = Field(alias="/SAPCEM/ABRECHLG", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    SAPCEM_DISPOGR: Optional[SapNvarchar] = Field(alias="/SAPCEM/DISPOGR", default="")
+    # SAP HANA type: NVARCHAR | Forced nullable
+    EQUIPMENTOID: Optional[SapNvarchar] = ""
 
 adrc = OlapTable[Adrc]("ADRC")
 adrv = OlapTable[Adrv]("ADRV")

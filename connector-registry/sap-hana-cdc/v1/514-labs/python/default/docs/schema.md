@@ -34,7 +34,9 @@ Each change event captured by the connector follows this schema:
 
 ## Database Schema
 
-The connector creates a change tracking table with the following structure:
+The connector creates several tables for CDC functionality:
+
+### Change Tracking Table
 
 ```sql
 CREATE TABLE {change_schema}.{change_table_name} (
@@ -48,6 +50,35 @@ CREATE TABLE {change_schema}.{change_table_name} (
     NEW_VALUES NCLOB
 );
 ```
+
+### Client Status Table
+
+```sql
+CREATE TABLE {cdc_schema}.CDC_CLIENT_CHANGES_STATUS (
+    CLIENT_ID VARCHAR(128) NOT NULL,
+    LAST_PROCESSED_TIMESTAMP TIMESTAMP,
+    LAST_PROCESSED_CHANGE_ID BIGINT,
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (CLIENT_ID)
+);
+```
+
+### Table Status Table
+
+```sql
+CREATE TABLE {cdc_schema}.CDC_TABLE_CHANGES_STATUS (
+    SCHEMA_NAME VARCHAR(128) NOT NULL,
+    TABLE_NAME VARCHAR(128) NOT NULL,
+    CLIENT_ID VARCHAR(128) NOT NULL,
+    STATUS VARCHAR(128) NOT NULL,
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (SCHEMA_NAME, TABLE_NAME, CLIENT_ID)
+);
+```
+
+The table status table tracks the processing status of tables for each client, supporting multi-client CDC scenarios. Each connector instance automatically uses its configured `client_id` for all table status operations.
 
 ## Data Types
 

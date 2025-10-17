@@ -13,9 +13,10 @@ Python-based Change Data Capture (CDC) connector for SAP HANA database with real
 
 ## Requirements
 
-- Python 3.10+
+- Python 3.8+
 - SAP HANA database access
-- Kafka cluster (for streaming output)
+- Elevated database privileges for CDC setup
+- ClickHouse database (for pipeline usage)
 
 ## Installation
 
@@ -27,19 +28,32 @@ pip install -e .
 
 1. **Configure Environment**
    ```bash
-   cp env.example .env
-   # Edit .env with your SAP HANA and Kafka settings
+   # Set environment variables
+   export SAP_HANA_HOST=your-hana-host
+   export SAP_HANA_PORT=30015
+   export SAP_HANA_USERNAME=your-username
+   export SAP_HANA_PASSWORD=your-password
+   export SAP_HANA_SOURCE_SCHEMA=your-schema
+   export SAP_HANA_TABLES=TABLE1,TABLE2
    ```
 
-2. **Run CDC Pipeline**
-   ```bash
-   sap-hana-cdc run --config config.yaml
+2. **Initialize CDC Infrastructure**
+   ```python
+   from sap_hana_cdc import SAPHanaCDCConnector, SAPHanaCDCConfig
+   
+   config = SAPHanaCDCConfig.from_env(prefix="SAP_HANA_")
+   connector = SAPHanaCDCConnector.build_from_config(config)
+   
+   # Initialize CDC (requires elevated privileges)
+   connector.init_cdc()
    ```
 
-3. **Monitor Changes**
-   ```bash
-   # Changes will be streamed to Kafka topic: sap-hana-cdc
-   kafka-console-consumer --bootstrap-server localhost:9092 --topic sap-hana-cdc
+3. **Process Changes**
+   ```python
+   # Get changes
+   changes = connector.get_changes(limit=100)
+   for change in changes.changes:
+       print(f"Table: {change.table_name}, Type: {change.change_type}")
    ```
 
 ## Configuration
@@ -50,15 +64,19 @@ See `docs/configuration.md` for detailed configuration options.
 
 The connector implements a CDC pattern with the following components:
 
-- **Extractor**: Monitors SAP HANA for changes using database triggers/logs
-- **Transformer**: Processes and normalizes change events
-- **Loader**: Streams changes to Kafka for downstream consumption
+- **Infrastructure**: Manages CDC tables and triggers in SAP HANA
+- **Reader**: Extracts change events from CDC tables
+- **Connector**: High-level interface orchestrating CDC operations
+- **Models**: Data structures for change events and configuration
 
-## APIs
+## Key Features
 
-- **CDC Stream**: Real-time change events via Kafka
-- **Health Check**: `GET /health` - Pipeline health status
-- **Metrics**: `GET /metrics` - Performance and throughput metrics
+- **Real-time Change Detection**: Captures INSERT, UPDATE, and DELETE operations
+- **Transaction-based Tracking**: Groups changes by transaction for consistency
+- **JSON Storage**: Stores change data in JSON format for easy processing
+- **Client Status Tracking**: Tracks processing status for multiple clients
+- **Table Status Management**: Manages table monitoring lifecycle
+- **Pruning Support**: Automatic cleanup of old change records
 
 ## Examples
 

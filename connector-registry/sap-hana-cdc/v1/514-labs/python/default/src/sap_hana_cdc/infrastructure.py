@@ -5,7 +5,7 @@ tables and triggers. Requires elevated database privileges.
 """
 
 import logging
-from typing import List
+from typing import Dict, List, Optional
 import re
 
 
@@ -37,7 +37,7 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
         """Set up complete CDC infrastructure for the given configuration."""
         self.create_change_table()
         self.create_client_status_table()
-        self.create_table_status_table()
+        self.initialize_client_status_table()
         # Setup triggers for monitored tables
         self.setup_table_triggers()
         
@@ -62,31 +62,26 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
         self._ensure_table_exists(self.CDC_CHANGES_TABLE, table_definition)
     
     def create_client_status_table(self) -> None:
-        """Create the status table for tracking client processing status."""
+        """Create the client status table for tracking table processing status."""
         table_definition = f"""
             CREATE TABLE <TABLENAME> (
                 CLIENT_ID VARCHAR(128) NOT NULL,
-                LAST_PROCESSED_TIMESTAMP TIMESTAMP,
-                LAST_PROCESSED_CHANGE_ID BIGINT,
-                CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY (CLIENT_ID)
-            )
-        """
-        
-        self._ensure_table_exists(self.CDC_CLIENT_CHANGES_STATUS_TABLE, table_definition)
-    
-    def create_table_status_table(self) -> None:
-        """Create the status table for tracking table processing status."""
-        table_definition = f"""
-            CREATE TABLE <TABLENAME> (
                 SCHEMA_NAME VARCHAR(128) NOT NULL,
                 TABLE_NAME VARCHAR(128) NOT NULL,
+                LAST_PROCESSED_CHANGE_ID BIGINT DEFAULT 0,
                 STATUS VARCHAR(128) NOT NULL,
-                PRIMARY KEY (SCHEMA_NAME, TABLE_NAME)
+                CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (CLIENT_ID, SCHEMA_NAME, TABLE_NAME, LAST_PROCESSED_CHANGE_ID)
             )
         """
-        self._ensure_table_exists(self.CDC_TABLE_CHANGES_STATUS_TABLE, table_definition)
+        self._ensure_table_exists(self.CDC_CLIENT_STATUS_TABLE, table_definition)
+
+    def initialize_client_status_table(self) -> None:
+        """Initialize the client status table."""
+        with self.connection.cursor() as cursor:
+            for table in self.config.tables:
+                self._update_table_status(cursor, table, TableStatus.NEW)
 
     def setup_table_triggers(self) -> None:
         """Set up triggers for the specified tables and change types."""
@@ -140,17 +135,22 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
 
     def _update_table_status(self, cursor: dbapi.Cursor, table_name: str, status: TableStatus) -> None:
         """Update the status of a table."""
-        table_status_table = self._get_table_status_table_name()
+        status_table = self.full_client_status_table_name
         if status == TableStatus.NEW:
-            cursor.execute(f"DELETE FROM {table_status_table} WHERE SCHEMA_NAME = ? AND TABLE_NAME = ?", (self.config.cdc_schema, table_name))
-            cursor.execute(f"INSERT INTO {table_status_table} (SCHEMA_NAME, TABLE_NAME, STATUS) VALUES (?, ?, ?)", (self.config.cdc_schema, table_name, status.value))
+            # Delete is there in case it already exists. 
+            self._remove_table_status(cursor, table_name)
+            cursor.execute(f"""
+                INSERT INTO {status_table} 
+                    (SCHEMA_NAME, TABLE_NAME, CLIENT_ID, STATUS, CREATED_AT, UPDATED_AT) 
+                VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+            """, (self.config.source_schema, table_name, self.config.client_id, status.value))
         else:
-            cursor.execute(f"UPDATE {table_status_table} SET STATUS = ? WHERE SCHEMA_NAME = ? AND TABLE_NAME = ?", (status.value, self.config.cdc_schema, table_name))
+            cursor.execute(f"UPDATE {status_table} SET STATUS = ?, UPDATED_AT = CURRENT_TIMESTAMP WHERE SCHEMA_NAME = ? AND TABLE_NAME = ? AND CLIENT_ID = ?", (status.value, self.config.cdc_schema, table_name, self.config.client_id))
 
     def _remove_table_status(self, cursor: dbapi.Cursor, table_name: str) -> None:
         """Remove the status of a table."""
-        table_status_table = self._get_table_status_table_name()
-        cursor.execute(f"DELETE FROM {table_status_table} WHERE SCHEMA_NAME = ? AND TABLE_NAME = ?", (self.config.cdc_schema, table_name))
+        table_status_table = self.full_client_status_table_name
+        cursor.execute(f"DELETE FROM {table_status_table} WHERE SCHEMA_NAME = ? AND TABLE_NAME = ? AND CLIENT_ID = ?", (self.config.source_schema, table_name, self.config.client_id))
 
 
     def cleanup_cdc_infrastructure(self) -> None:
@@ -165,7 +165,7 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
                 self._cleanup_table_cdc(cursor, table_name)
             
             # Drop status table
-            tables_to_drop = [self._get_client_status_table_name(), self._get_table_status_table_name(), self._get_change_table_name()]
+            tables_to_drop = [self.full_client_status_table_name, self.full_changes_table_name]
             for table_name in tables_to_drop:
                 try:
                     cursor.execute(f"DROP TABLE {table_name}")
@@ -174,13 +174,7 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
                     logger.warning(f"Could not drop status table: {e}")
         
         logger.info("CDC infrastructure cleanup completed")
-    
 
-    def get_newly_added_tables(self) -> List[str]:
-        """Get list of tables that have been added."""
-        with self.connection.cursor() as cursor:
-            cursor.execute(f"SELECT TABLE_NAME FROM {self._get_table_status_table_name()} WHERE STATUS = ?", (TableStatus.NEW.value,))
-            return [row[0] for row in cursor.fetchall()]
 
     def _table_exists(self, schema_name: str, table_name: str) -> bool:
         """Check if a table exists in the specified schema."""
@@ -239,7 +233,7 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
         if self._check_trigger_exists(cursor, table_name, trigger_type):
             return False
         
-        change_table = self._get_change_table_name()
+        change_table = self.full_changes_table_name
 
         try:
             quoted_table_name = f'"{table_name}"'
@@ -330,7 +324,7 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
         """Drop a trigger."""
         trigger_name = self._get_trigger_name(table_name, trigger_type)
         try:
-            cursor.execute(f"DROP TRIGGER {trigger_name}")
+            cursor.execute(f"DROP TRIGGER {self.config.source_schema}.{trigger_name}")
             logger.info(f"Dropped trigger {trigger_name}")
         except Exception as e:
             logger.warning(f"Could not drop trigger {trigger_name}: {e}")

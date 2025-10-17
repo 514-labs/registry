@@ -8,20 +8,24 @@ This document describes all configuration options available for the SAP HANA CDC
 
 - **host**: SAP HANA server hostname or IP address
 - **port**: SAP HANA server port (default: 30015)
-- **user**: Database username
+- **user**: Database username (default: "SYSTEM")
 - **password**: Database password
-- **schema**: Default schema name
+- **source_schema**: Source schema name (default: "SAPHANADB")
+- **cdc_schema**: CDC schema name (default: "SAPHANADB")
 
 ### Example
 
 ```python
-sap_hana_config = {
-    "host": "hana-server.company.com",
-    "port": 30015,
-    "user": "cdc_user",
-    "password": "secure_password",
-    "schema": "PRODUCTION"
-}
+from sap_hana_cdc import SAPHanaCDCConfig
+
+config = SAPHanaCDCConfig(
+    host="hana-server.company.com",
+    port=30015,
+    user="cdc_user",
+    password="secure_password",
+    source_schema="PRODUCTION",
+    cdc_schema="PRODUCTION"
+)
 ```
 
 ## CDC Configuration
@@ -31,69 +35,76 @@ sap_hana_config = {
 - **tables**: List of tables to monitor
   - Use `["*"]` to monitor all tables in the schema
   - Specify table names: `["CUSTOMERS", "ORDERS", "PRODUCTS"]`
-- **exclude_tables**: Tables to exclude from monitoring
-  - Useful when using wildcard selection: `["SYSTEM_TABLES", "TEMP_TABLES"]`
+  - Default: `[]` (empty list)
 
-### Change Types
+### Client Configuration
 
-- **change_types**: Types of changes to capture
-  - `["INSERT"]` - Only new records
-  - `["UPDATE"]` - Only record modifications  
-  - `["DELETE"]` - Only record deletions
-  - `["INSERT", "UPDATE", "DELETE"]` - All changes (default)
+- **client_id**: Unique identifier for this CDC client
+  - Default: `"default_client"`
+  - Used for tracking processing status
 
-### Storage Configuration
+### Environment Variables
 
-- **change_table_name**: Name of the table to store change events
-  - Default: `"cdc_changes"`
-- **change_schema**: Schema for the change table
-  - If `None`, uses the same schema as SAP HANA config
+The connector supports configuration via environment variables with the `SAP_HANA_` prefix:
+
+```bash
+SAP_HANA_HOST=hana-server.company.com
+SAP_HANA_PORT=30015
+SAP_HANA_USERNAME=cdc_user
+SAP_HANA_PASSWORD=secure_password
+SAP_HANA_CLIENT_ID=my_client
+SAP_HANA_TABLES=CUSTOMERS,ORDERS,PRODUCTS
+SAP_HANA_SOURCE_SCHEMA=PRODUCTION
+SAP_HANA_CDC_SCHEMA=PRODUCTION
+```
 
 ### Example
 
 ```python
-cdc_config = {
-    "tables": ["CUSTOMERS", "ORDERS"],
-    "exclude_tables": [],
-    "change_types": ["INSERT", "UPDATE", "DELETE"],
-    "change_table_name": "cdc_changes",
-    "change_schema": None
-}
+from sap_hana_cdc import SAPHanaCDCConfig
+
+config = SAPHanaCDCConfig(
+    host="hana-server.company.com",
+    port=30015,
+    user="cdc_user",
+    password="secure_password",
+    client_id="my_client",
+    tables=["CUSTOMERS", "ORDERS"],
+    source_schema="PRODUCTION",
+    cdc_schema="PRODUCTION"
+)
+```
+
+## Using Environment Variables
+
+You can also use the `from_env()` method to load configuration from environment variables:
+
+```python
+from sap_hana_cdc import SAPHanaCDCConfig, SAPHanaCDCConnector
+
+# Load from environment variables with SAP_HANA_ prefix
+config = SAPHanaCDCConfig.from_env(prefix="SAP_HANA_")
+connector = SAPHanaCDCConnector.build_from_config(config)
 ```
 
 ## Complete Configuration Example
 
 ```python
-config = {
-    "sap_hana": {
-        "host": "hana-server.company.com",
-        "port": 30015,
-        "user": "cdc_user",
-        "password": "secure_password",
-        "schema": "PRODUCTION"
-    },
-    "cdc": {
-        "tables": ["*"],
-        "exclude_tables": ["SYSTEM_TABLES", "TEMP_TABLES"],
-        "change_types": ["INSERT", "UPDATE", "DELETE"],
-        "change_table_name": "cdc_changes",
-        "change_schema": None
-    }
-}
-```
+from sap_hana_cdc import SAPHanaCDCConfig, SAPHanaCDCConnector
 
-## Environment Variables
+config = SAPHanaCDCConfig(
+    host="hana-server.company.com",
+    port=30015,
+    user="cdc_user",
+    password="secure_password",
+    client_id="my_client",
+    tables=["CUSTOMERS", "ORDERS"],
+    source_schema="PRODUCTION",
+    cdc_schema="PRODUCTION"
+)
 
-You can also configure the connector using environment variables:
-
-```bash
-export SAP_HANA_HOST="hana-server.company.com"
-export SAP_HANA_PORT="30015"
-export SAP_HANA_USER="cdc_user"
-export SAP_HANA_PASSWORD="secure_password"
-export SAP_HANA_SCHEMA="PRODUCTION"
-export CDC_TABLES="CUSTOMERS,ORDERS"
-export CDC_CHANGE_TABLE="cdc_changes"
+# Build connector from config
+connector = SAPHanaCDCConnector.build_from_config(config)
 ```
 
 ## Security Considerations

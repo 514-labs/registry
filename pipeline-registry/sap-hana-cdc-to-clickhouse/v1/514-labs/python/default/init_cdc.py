@@ -1,7 +1,7 @@
 import argparse
 import logging
 from dotenv import load_dotenv
-from moose_lib_extras import introspect_hana_database, generate_moose_models, HanaIntrospector
+from moose_lib_extras import introspect_hana_database, generate_moose_models, MooseModelConfig
 from sap_hana_cdc import SAPHanaCDCConfig, SAPHanaCDCConnector
 
 MODEL_PATH = "app/ingest/cdc.py"
@@ -20,6 +20,7 @@ parser.add_argument("--tables-from-file", type=str, default=None, help="File con
 parser.add_argument("--recreate-cdc-tables", action="store_true", default=False, help="Re-create CDC tables and triggers (drops and recreates them)")
 parser.add_argument("--recreate-moose-models", action="store_true", default=False, help="Only generate Moose models, do not initialize CDC tables/triggers")
 parser.add_argument("--init-cdc", action="store_true", default=False, help="Initialize CDC tables and triggers")
+parser.add_argument("--drop-cdc", action="store_true", default=False, help="Drop CDC tables and triggers")
 
 def validate_table_args(args):
     if not args.tables and not args.table_from_file:
@@ -49,12 +50,20 @@ connector = SAPHanaCDCConnector.build_from_config(config=config)
 
 if args.recreate_moose_models:
     tables_metadata = introspect_hana_database(connector.connection, table_names, config.source_schema)
-    generate_moose_models(tables_metadata, MODEL_PATH)
+    
+    config = MooseModelConfig(
+        force_all_fields_nullable=True
+    )
+
+    generate_moose_models(tables_metadata, MODEL_PATH, config)
     print(f"Generated Moose models for {len(tables_metadata)} tables in '{MODEL_PATH}'.")
 
 if args.init_cdc or args.recreate_cdc_tables:
-    connector.init_cdc(args.recreate_cdc_tables)
+    connector.init_cdc()
     print(f"Initialized CDC tables and triggers.")
 
-if not (args.recreate_moose_models or args.init_cdc or args.recreate_cdc_tables):
-    parser.error("You must specify either --recreate-moose-models or --recreate-cdc-tables or --init-cdc")
+if args.drop_cdc:
+    connector.cleanup_cdc_infrastructure()
+    print(f"Dropped CDC tables and triggers.")
+elif not (args.recreate_moose_models or args.init_cdc or args.recreate_cdc_tables):
+        parser.error("You must specify either --recreate-moose-models or --recreate-cdc-tables or --init-cdc")

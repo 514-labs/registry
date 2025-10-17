@@ -2,4 +2,5 @@
 from app.ingest.cdc import *
 import app.apis.cdc_status as cdc_status_api
 #from app.workflows.generator import ingest_workflow, ingest_task
+from app.workflows import cdc
 # from app.workflows.cdc_status import cdc_status_workflow, cdc_status_task

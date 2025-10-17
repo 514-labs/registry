@@ -6,7 +6,7 @@ from typing import List, Optional, Dict, Set, Any, Callable
 from datetime import datetime
 
 from .config import SAPHanaCDCConfig
-from .models import BatchChange, PruneResult
+from .models import BatchChange, PruneResult, TableStatus
 from .infrastructure import SAPHanaCDCInfrastructure
 from .reader import SAPHanaCDCReader
 
@@ -58,20 +58,20 @@ class SAPHanaCDCConnector:
         
         logger.info("CDC initialization completed")
     
-    def get_changes(self, limit: int = 1000, auto_update_client_status: bool = True) -> BatchChange:
+    def get_changes(self, limit: int = 1000) -> BatchChange:
         """Get changes from the CDC system.
         
         This method requires regular database privileges and can be called
         multiple times to process changes incrementally.
         """
-        return self.reader.get_changes(limit, auto_update_client_status)
+        return self.reader.get_changes(limit)
     
-    def update_client_status(self, change_event) -> None:
+    def update_client_status(self, batch: BatchChange) -> None:
         """Update client processing status.
         
         This method requires regular database privileges.
         """
-        self.reader.update_client_status(change_event)
+        self.reader.update_client_status(batch)
     
     def get_current_monitored_tables(self) -> Dict[str, Set[str]]:
         """Get currently monitored tables and their enabled change types.
@@ -94,16 +94,8 @@ class SAPHanaCDCConnector:
         """
         return self.reader.get_all_table_rows(table_name, page_size)
     
-    def get_newly_added_tables(self) -> List[str]:
-        """Get newly added tables.
-        
-        This method requires regular database privileges.
-        """
-        return self.infrastructure.get_newly_added_tables()
-    
-    def set_table_status_active(self, table_name: str) -> None:
-        """Update the status of a table."""
-        self.infrastructure.set_table_status_active(table_name)
+    def get_client_status(self) -> List[tuple[str, str, str]]:
+        return self.reader.get_client_status()
     
     def cleanup_cdc_infrastructure(self) -> None:
         """Remove all CDC infrastructure.

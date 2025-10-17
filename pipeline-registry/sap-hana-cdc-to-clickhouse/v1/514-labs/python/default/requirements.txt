@@ -13,7 +13,7 @@ kafka-python-ng==2.2.2
 lz4==4.4.4
 moose-cli==0.6.103
 moose-lib==0.6.103
-py-moose-lib-extras
+#py-moose-lib-extras
 nexus-rpc==1.1.0
 protobuf==6.32.1
 pycparser==2.23

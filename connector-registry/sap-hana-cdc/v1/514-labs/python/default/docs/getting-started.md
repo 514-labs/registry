@@ -22,43 +22,56 @@ This guide will help you set up and start using the SAP HANA CDC connector.
 
 ## Basic Configuration
 
-Create a configuration file or set environment variables:
+Create a configuration using the `SAPHanaCDCConfig` class or set environment variables:
 
 ```python
-config = {
-    "sap_hana": {
-        "host": "your-hana-host",
-        "port": 30015,
-        "user": "your-username", 
-        "password": "your-password",
-        "schema": "your-schema"
-    },
-    "cdc": {
-        "tables": ["*"],  # Monitor all tables, or specify specific table names
-        "exclude_tables": ["system_tables"],  # Tables to exclude
-        "change_types": ["INSERT", "UPDATE", "DELETE"],
-        "change_table_name": "cdc_changes",
-        "change_schema": None  # Uses same schema as SAP HANA config if None
-    }
-}
+from sap_hana_cdc import SAPHanaCDCConfig
+
+config = SAPHanaCDCConfig(
+    host="your-hana-host",
+    port=30015,
+    user="your-username", 
+    password="your-password",
+    source_schema="your-schema",
+    cdc_schema="your-schema",
+    tables=["TABLE1", "TABLE2"],  # Monitor specific tables, or ["*"] for all
+    client_id="my_client"
+)
+```
+
+Or use environment variables:
+```bash
+export SAP_HANA_HOST=your-hana-host
+export SAP_HANA_PORT=30015
+export SAP_HANA_USERNAME=your-username
+export SAP_HANA_PASSWORD=your-password
+export SAP_HANA_SOURCE_SCHEMA=your-schema
+export SAP_HANA_CDC_SCHEMA=your-schema
+export SAP_HANA_TABLES=TABLE1,TABLE2
+export SAP_HANA_CLIENT_ID=my_client
 ```
 
 ## Basic Usage
 
 ```python
-from sap_hana_cdc import Client
+from sap_hana_cdc import SAPHanaCDCConnector, SAPHanaCDCConfig
 
-# Initialize client
-client = Client(config)
+# Initialize connector
+config = SAPHanaCDCConfig(
+    host="your-hana-host",
+    port=30015,
+    user="your-username",
+    password="your-password",
+    source_schema="your-schema",
+    tables=["CUSTOMERS", "ORDERS"]  # or ["*"] for all tables
+)
+connector = SAPHanaCDCConnector.build_from_config(config)
 
-# Connect to database
-client.connect()
-
-# Initialize CDC infrastructure
-client.init_cdc()
+# Initialize CDC infrastructure (requires elevated privileges)
+connector.init_cdc()
 
 # Get recent changes
-changes = client.get_changes(limit=100)
+changes = connector.get_changes(limit=100)
 for change in changes.changes:
     print(f"Table: {change.table_name}")
     print(f"Type: {change.change_type}")
@@ -67,9 +80,6 @@ for change in changes.changes:
         print(f"New values: {change.new_values}")
     if change.old_values:
         print(f"Old values: {change.old_values}")
-
-# Disconnect when done
-client.disconnect()
 ```
 
 ## Next Steps

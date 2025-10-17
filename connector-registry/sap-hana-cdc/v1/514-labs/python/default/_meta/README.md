@@ -20,24 +20,25 @@ A high-performance, real-time Change Data Capture (CDC) connector for SAP HANA d
 
 2. Configure your SAP HANA connection:
    ```python
-   from sap_hana_cdc import Client
+   from sap_hana_cdc import SAPHanaCDCConnector, SAPHanaCDCConfig
    
-   client = Client({
-       "host": "your-hana-host",
-       "port": 30015,
-       "user": "your-username",
-       "password": "your-password",
-       "schema": "your-schema"
-   })
+   config = SAPHanaCDCConfig(
+       host="your-hana-host",
+       port=30015,
+       user="your-username",
+       password="your-password",
+       source_schema="your-schema"
+   )
+   connector = SAPHanaCDCConnector.build_from_config(config)
    ```
 
 3. Start capturing changes:
    ```python
-   client.connect()
-   client.init_cdc()
+   # Initialize CDC infrastructure (requires elevated privileges)
+   connector.init_cdc()
    
    # Get recent changes
-   changes = client.get_changes(limit=100)
+   changes = connector.get_changes(limit=100)
    for change in changes.changes:
        print(f"Table: {change.table_name}, Type: {change.change_type}")
    ```

@@ -9,7 +9,7 @@ from .connector import SAPHanaCDCConnector
 from .infrastructure import SAPHanaCDCInfrastructure
 from .reader import SAPHanaCDCReader
 from .config import SAPHanaCDCConfig
-from .models import ChangeEvent, BatchChange, PruneResult
+from .models import ChangeEvent, BatchChange, PruneResult, TableStatus
 
 __all__ = [
     "SAPHanaCDCConnector",
@@ -19,4 +19,5 @@ __all__ = [
     "ChangeEvent",
     "BatchChange",
     "PruneResult",
+    "TableStatus",
 ]
