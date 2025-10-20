@@ -74,12 +74,13 @@ class SAPHanaCDCReader(SAPHanaCDCBase):
                         AND (
                             (tst.LAST_PROCESSED_CHANGE_ID > 0 AND ct.CHANGE_ID > tst.LAST_PROCESSED_CHANGE_ID) 
                         OR 
-                            (tst.LAST_PROCESSED_CHANGE_ID = 0 AND ct.CHANGE_TIMESTAMP > tst.UPDATED_AT)
+                            (tst.LAST_PROCESSED_CHANGE_ID = 0 AND ct.CHANGE_TIMESTAMP > )
                         )
                     ORDER BY CHANGE_TIMESTAMP ASC 
                     LIMIT ?
                 """
 
+                print(query)
                 cursor.execute(query, (client_id, TableStatus.ACTIVE.value, limit))
                 changes = []
                 for row in cursor.fetchall():
@@ -288,6 +289,8 @@ class SAPHanaCDCReader(SAPHanaCDCBase):
                         now = datetime.now()
                         time_diff = now - max_timestamp
                         lag_seconds = time_diff.total_seconds()
+                    elif lag_seconds < 0:
+                        lag_seconds = 0
                 elif max_timestamp and not last_client_update:
                     # Client has never processed any changes, so lag is from max timestamp to now
                     now = datetime.now()
