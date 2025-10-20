@@ -10,6 +10,7 @@ export type ConnectorRootMeta = {
   description?: string;
   homepage?: string;
   registryUrl?: string;
+  license?: string;
 };
 
 export type ProviderMeta = {
