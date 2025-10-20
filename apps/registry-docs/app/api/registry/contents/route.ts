@@ -6,8 +6,6 @@ import { join } from "path";
 // the entire connector/pipeline registry into the serverless function.
 // The data is generated at build time by scripts/generate-registry-data.mjs
 
-export const dynamic = "force-static";
-
 export async function GET() {
   try {
     // Read the pre-generated JSON file
@@ -15,7 +13,12 @@ export async function GET() {
     const fileContents = await readFile(filePath, "utf-8");
     const data = JSON.parse(fileContents);
 
-    return NextResponse.json(data);
+    // Cache the response since the data is static and pre-generated
+    return NextResponse.json(data, {
+      headers: {
+        'Cache-Control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400'
+      }
+    });
   } catch (error) {
     console.error("Failed to read registry contents:", error);
     return NextResponse.json(
