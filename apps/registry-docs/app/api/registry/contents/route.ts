@@ -1,138 +1,24 @@
 import { NextResponse } from "next/server";
-import { basename, dirname } from "path";
-import { listConnectors } from "@workspace/registry/connectors";
-import { listPipelines } from "@workspace/registry/pipelines";
+import { readFile } from "fs/promises";
+import { join } from "path";
 
-export const dynamic = "force-static";
+// This endpoint now serves pre-generated static data to avoid bundling
+// the entire connector/pipeline registry into the serverless function.
+// The data is generated at build time by scripts/generate-registry-data.mjs
 
 export async function GET() {
-  // Get all connectors and pipelines
-  const connectors = listConnectors();
-  const pipelines = listPipelines();
+  try {
+    // Read the pre-generated JSON file
+    const filePath = join(process.cwd(), "public", "registry-contents.json");
+    const fileContents = await readFile(filePath, "utf-8");
+    const data = JSON.parse(fileContents);
 
-  const connectorItems = connectors.flatMap((c) =>
-    c.providers.flatMap((provider) =>
-      provider.implementations
-        .map((impl) => {
-          const version = basename(dirname(provider.path));
-          const category = provider.meta?.category ?? c.root.meta?.category;
-          const itemTags = provider.meta?.tags ?? c.root.meta?.tags ?? [];
-          const description =
-            provider.meta?.description ?? c.root.meta?.description ?? "";
-          const homepage = provider.meta?.homepage ?? c.root.meta?.homepage;
-          const license = provider.meta?.license;
-          const languages = provider.meta?.languages;
-          const capabilities = provider.meta?.capabilities;
-          const maintainers = provider.meta?.maintainers ?? [];
-          const authorType = provider.meta?.authorType;
-          const issues = provider.meta?.issues;
-          const itemAuthor = provider.meta?.author ?? provider.authorId;
-
-          const providerBaseUrl =
-            provider.meta?.registryUrl ??
-            c.root.meta?.registryUrl ??
-            `https://github.com/514-labs/registry/tree/main/connector-registry/${c.connectorId}/${version}/${provider.authorId}`;
-
-          const githubUrl =
-            impl.implementation === "default"
-              ? `${providerBaseUrl}/${impl.language}`
-              : `${providerBaseUrl}/${impl.language}/${impl.implementation}`;
-
-          return {
-            type: "connector" as const,
-            id: c.connectorId,
-            name: c.root.meta?.name ?? provider.meta?.name ?? c.connectorId,
-            version,
-            author: itemAuthor,
-            authorId: provider.authorId,
-            language: impl.language,
-            implementation: impl.implementation,
-            category,
-            tags: itemTags,
-            description,
-            homepage,
-            license,
-            languages,
-            capabilities,
-            maintainers,
-            authorType,
-            issues,
-            githubUrl,
-            providerGithubUrl: providerBaseUrl,
-            // Additional API-specific fields
-            apiPaths: {
-              scaffold: `/api/connectors/scaffolds/${impl.language}`,
-            },
-          };
-        })
-        .filter(Boolean)
-    )
-  );
-
-  const pipelineItems = pipelines.flatMap((p) =>
-    p.providers.flatMap((provider) =>
-      provider.implementations
-        .map((impl) => {
-          const version = basename(dirname(provider.path));
-          const itemTags = provider.meta?.tags ?? p.root.meta?.tags ?? [];
-          const description =
-            provider.meta?.description ?? p.root.meta?.description ?? "";
-          const homepage = p.root.meta?.homepage;
-          const maintainers = provider.meta?.maintainers ?? [];
-          const authorType = provider.meta?.authorType;
-          const itemAuthor = provider.meta?.author ?? provider.authorId;
-
-          const providerBaseUrl =
-            p.root.meta?.registryUrl ??
-            `https://github.com/514-labs/registry/tree/main/pipeline-registry/${p.pipelineId}/${version}/${provider.authorId}`;
-
-          const githubUrl =
-            impl.implementation === "default"
-              ? `${providerBaseUrl}/${impl.language}`
-              : `${providerBaseUrl}/${impl.language}/${impl.implementation}`;
-
-          return {
-            type: "pipeline" as const,
-            id: p.pipelineId,
-            name: p.root.meta?.name ?? provider.meta?.name ?? p.pipelineId,
-            version,
-            author: itemAuthor,
-            authorId: provider.authorId,
-            language: impl.language,
-            implementation: impl.implementation,
-            tags: itemTags,
-            description,
-            homepage,
-            maintainers,
-            authorType,
-            githubUrl,
-            providerGithubUrl: providerBaseUrl,
-            // Pipeline-specific fields
-            schedule: provider.meta?.schedule,
-            source: provider.meta?.source,
-            destination: provider.meta?.destination,
-            systems: provider.meta?.systems,
-            transformations: provider.meta?.transformations,
-            lineage: provider.meta?.lineage,
-            // Additional API-specific fields
-            apiPaths: {
-              scaffold: `/api/pipelines/scaffolds/${impl.language}`,
-            },
-          };
-        })
-        .filter(Boolean)
-    )
-  );
-
-  const items = [...connectorItems, ...pipelineItems];
-
-  // Build response with metadata
-  const response = {
-    total: items.length,
-    connectors: connectorItems.length,
-    pipelines: pipelineItems.length,
-    items,
-  };
-
-  return NextResponse.json(response);
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error("Failed to read registry contents:", error);
+    return NextResponse.json(
+      { error: "Failed to load registry contents" },
+      { status: 500 }
+    );
+  }
 }
