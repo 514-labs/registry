@@ -18,6 +18,12 @@ class TableStatus(StrEnum):
     ACTIVE = auto()
 
 @dataclass
+class ClientTableStatus:
+    schema_name: str
+    table_name: str
+    status: TableStatus
+
+@dataclass
 class ChangeEvent:
     """Represents a single database change event."""
     

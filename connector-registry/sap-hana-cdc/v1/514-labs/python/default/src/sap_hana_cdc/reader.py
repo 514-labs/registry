@@ -12,7 +12,7 @@ from typing import Dict, List, Optional, Set, Any, Iterator
 from hdbcli import dbapi
 
 from .config import SAPHanaCDCConfig
-from .models import BatchChange, ChangeEvent, TableStatus, TriggerType, PruneResult
+from .models import BatchChange, ChangeEvent, ClientTableStatus, TableStatus, TriggerType, PruneResult
 from .base import SAPHanaCDCBase
 
 logger = logging.getLogger(__name__)
@@ -104,7 +104,7 @@ class SAPHanaCDCReader(SAPHanaCDCBase):
             raise
     
 
-    def get_client_status(self) -> List[tuple[str, str, str]]:
+    def get_client_status(self) -> List[ClientTableStatus]:
         """Get the client's processing status.
         
         Returns:
@@ -124,7 +124,7 @@ class SAPHanaCDCReader(SAPHanaCDCBase):
                 results = []
                 for row in cursor.fetchall():
                     schema_name, table_name, status = row
-                    results.append((schema_name, table_name, status))
+                    results.append(ClientTableStatus(schema_name=schema_name, table_name=table_name, status=TableStatus[status.upper()]))
                 
                 logger.info(f"Retrieved status for {len(results)} tables for client {client_id}")
                 return results
@@ -171,15 +171,16 @@ class SAPHanaCDCReader(SAPHanaCDCBase):
             logger.error(f"Error updating client status for {client_id}: {e}")
             raise
 
-    def get_all_table_rows(self, table_name: str, page_size: int = 1000) -> Iterator[Dict[str, Any]]:
-        """Get all rows from a given table with transparent pagination.
+    def get_all_table_rows(self, table_name: str, page_size: int = 1000, offset: int = 0) -> List[Dict[str, Any]]:
+        """Get a page of rows from a given table.
         
         Args:
             table_name: Name of the table to read from
             page_size: Number of rows to fetch per page (default: 1000)
+            offset: Number of rows to skip (default: 0)
             
-        Yields:
-            Dict[str, Any]: Dictionary representing a single row with column names as keys
+        Returns:
+            List[Dict[str, Any]]: List of dictionaries representing rows with column names as keys
         """
         schema_name = self.config.source_schema
         full_table_name = f"{schema_name}.{table_name}"
@@ -197,44 +198,34 @@ class SAPHanaCDCReader(SAPHanaCDCBase):
                 columns_info = cursor.fetchall()
                 if not columns_info:
                     logger.warning(f"Table {full_table_name} not found or has no columns")
-                    return
+                    return []
                 
                 column_names = [col[0] for col in columns_info]
-                logger.info(f"Reading all rows from {full_table_name}")
+                logger.info(f"Reading page of rows from {full_table_name} (offset: {offset}, page_size: {page_size})")
             
-            # Now iterate through all rows with pagination
-            offset = 0
-            while True:
-                with self.connection.cursor() as cursor:
-                    query = f"""
-                        SELECT * FROM {full_table_name}
-                        ORDER BY 1
-                        LIMIT ? OFFSET ?
-                    """
-                    
-                    cursor.execute(query, (page_size, offset))
-                    rows = cursor.fetchall()
-                    
-                    if not rows:
-                        # No more rows to fetch
-                        break
-                    
-                    # Convert rows to dictionaries
-                    for row in rows:
-                        row_dict = {}
-                        for i, value in enumerate(row):
-                            if i < len(column_names):
-                                row_dict[column_names[i]] = value
-                        yield row_dict
-                    
-                    # If we got fewer rows than page_size, we've reached the end
-                    if len(rows) < page_size:
-                        break
-                    
-                    offset += page_size
-                    
-            logger.info(f"Finished reading all rows from {full_table_name}")
-            
+            # Get the requested page of rows
+            with self.connection.cursor() as cursor:
+                query = f"""
+                    SELECT * FROM {full_table_name}
+                    ORDER BY 1
+                    LIMIT ? OFFSET ?
+                """
+                
+                cursor.execute(query, (page_size, offset))
+                rows = cursor.fetchall()
+                
+                # Convert rows to dictionaries
+                result = []
+                for row in rows:
+                    row_dict = {}
+                    for i, value in enumerate(row):
+                        if i < len(column_names):
+                            row_dict[column_names[i]] = value
+                    result.append(row_dict)
+                
+                logger.debug(f"Retrieved {len(result)} rows from {full_table_name}")
+                return result
+                
         except Exception as e:
             logger.error(f"Error reading rows from {full_table_name}: {e}")
             raise
@@ -278,7 +269,7 @@ class SAPHanaCDCReader(SAPHanaCDCBase):
                 
                 # Get last client update timestamp
                 cursor.execute(f"""
-                    SELECT MAX(UPDATED_AT) 
+                    SELECT MAX(UPDATED_AT)
                     FROM {status_table} 
                     WHERE CLIENT_ID = ?
                 """, (client_id,))

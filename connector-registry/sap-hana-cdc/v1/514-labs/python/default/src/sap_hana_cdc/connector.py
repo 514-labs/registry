@@ -6,7 +6,7 @@ from typing import List, Optional, Dict, Set, Any, Callable
 from datetime import datetime
 
 from .config import SAPHanaCDCConfig
-from .models import BatchChange, PruneResult, TableStatus
+from .models import BatchChange, ClientTableStatus, PruneResult, TableStatus
 from .infrastructure import SAPHanaCDCInfrastructure
 from .reader import SAPHanaCDCReader
 
@@ -80,7 +80,7 @@ class SAPHanaCDCConnector:
         """
         return self.reader.get_current_monitored_tables()
     
-    def get_all_table_rows(self, table_name: str, page_size: int = 1000):
+    def get_all_table_rows(self, table_name: str, page_size: int = 1000, offset: int = 0):
         """Get all rows from a given table with transparent pagination.
         
         This method requires regular database privileges.
@@ -92,9 +92,9 @@ class SAPHanaCDCConnector:
         Yields:
             Dict[str, Any]: Dictionary representing a single row with column names as keys
         """
-        return self.reader.get_all_table_rows(table_name, page_size)
+        return self.reader.get_all_table_rows(table_name, page_size, offset)
     
-    def get_client_status(self) -> List[tuple[str, str, str]]:
+    def get_client_status(self) -> List[ClientTableStatus]:
         return self.reader.get_client_status()
     
     def cleanup_cdc_infrastructure(self) -> None:
