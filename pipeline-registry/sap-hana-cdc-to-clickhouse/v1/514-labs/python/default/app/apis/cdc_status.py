@@ -4,34 +4,23 @@
 from moose_lib import MooseClient, Api, MooseCache, Query, and_
 from sap_hana_cdc import SAPHanaCDCConnector
 from pydantic import BaseModel, Field
-from typing import Optional, Literal
+from typing import Optional
+import logging
+import argparse
+import sys
+import json
 
 from datetime import datetime, timezone
 from dotenv import load_dotenv
 load_dotenv()
+
+logger = logging.getLogger(__name__)
+
 # Query params are defined as Pydantic models and are validated automatically
 class QueryParams(BaseModel):
-    order_by: Optional[Literal["total_rows", "rows_with_text", "max_text_length", "total_text_length"]] = Field(
-        default="total_rows",
-        description="Must be one of: total_rows, rows_with_text, max_text_length, total_text_length"
-    )
-    limit: Optional[int] = Field(
-        default=5,
-        gt=0,
-        le=100,
-        description="Must be between 1 and 100"
-    )
-    start_day: Optional[int] = Field(
-        default=1,
-        gt=0,
-        le=31,
-        description="Must be between 1 and 31"
-    )
-    end_day: Optional[int] = Field(
-        default=31,
-        gt=0,
-        le=31,
-        description="Must be between 1 and 31"
+    client_id: Optional[str] = Field(
+        default=None,
+        description="Client ID to get CDC status for. If not provided, uses the connector's default client_id"
     )
 
 class QueryResult(BaseModel):
@@ -41,9 +30,38 @@ class QueryResult(BaseModel):
     last_client_update: Optional[str] = None
     
 def run(client: MooseClient, params: QueryParams):
-
-    connector = SAPHanaCDCConnector.build_from_env()
-    return QueryResult(**connector.get_status(connector.config.client_id))
+    """Get CDC status for a specific client.
+    
+    Args:
+        client: MooseClient instance
+        params: Query parameters containing optional client_id
+        
+    Returns:
+        QueryResult: CDC status information
+    """
+    try:
+        connector = SAPHanaCDCConnector.build_from_env()
+        
+        # Use provided client_id or fall back to connector's default
+        client_id = params.client_id or connector.config.client_id
+        
+        if not client_id:
+            raise ValueError("No client_id provided and connector has no default client_id")
+        
+        status_data = connector.get_status(client_id)
+        return QueryResult(**status_data)
+        
+    except Exception as e:
+        logger.error(f"Error getting CDC status: {e}")
+        raise
 
 
 cdc_status = Api[QueryParams, QueryResult](name="cdc_status", query_function=run)
+
+if __name__ == "__main__":
+    import json
+    mock_client = MooseClient(None)
+    params = QueryParams()
+    result = run(mock_client, params)
+    print(json.dumps(result.model_dump(), indent=2))
+
