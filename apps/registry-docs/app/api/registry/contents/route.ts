@@ -6,6 +6,8 @@ import { join } from "path";
 // the entire connector/pipeline registry into the serverless function.
 // The data is generated at build time by scripts/generate-registry-data.mjs
 
+export const dynamic = "force-static";
+
 export async function GET() {
   try {
     // Read the pre-generated JSON file
