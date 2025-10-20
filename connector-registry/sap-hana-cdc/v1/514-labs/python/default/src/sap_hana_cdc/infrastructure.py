@@ -145,7 +145,10 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
                 VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
             """, (self.config.source_schema, table_name, self.config.client_id, status.value))
         else:
-            cursor.execute(f"UPDATE {status_table} SET STATUS = ?, UPDATED_AT = CURRENT_TIMESTAMP WHERE SCHEMA_NAME = ? AND TABLE_NAME = ? AND CLIENT_ID = ?", (status.value, self.config.cdc_schema, table_name, self.config.client_id))
+            cursor.execute(
+                f"UPDATE {status_table} SET STATUS = ?, UPDATED_AT = CURRENT_TIMESTAMP WHERE SCHEMA_NAME = ? AND TABLE_NAME = ? AND CLIENT_ID = ?",
+                (status.value, self.config.source_schema, table_name, self.config.client_id)
+            )
 
     def _remove_table_status(self, cursor: dbapi.Cursor, table_name: str) -> None:
         """Remove the status of a table."""
