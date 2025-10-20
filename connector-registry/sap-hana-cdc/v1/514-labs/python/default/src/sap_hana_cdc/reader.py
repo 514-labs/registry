@@ -324,10 +324,11 @@ class SAPHanaCDCReader(SAPHanaCDCBase):
         try:
             with self.connection.cursor() as cursor:
                 # Delete entries in a single query using database server timestamp
+                # SAP HANA uses ADD_DAYS function instead of INTERVAL
                 cursor.execute(f"""
                     DELETE FROM {change_table} 
-                    WHERE CHANGE_TIMESTAMP < CURRENT_TIMESTAMP - INTERVAL ? DAY
-                """, (older_than_days,))
+                    WHERE CHANGE_TIMESTAMP < ADD_DAYS(CURRENT_TIMESTAMP, -{older_than_days})
+                """)
                 
                 entries_deleted = cursor.rowcount
                 

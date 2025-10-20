@@ -82,3 +82,6 @@ prune_workflow = Workflow(
         schedule="@daily"  # Run once a day at midnight
     )
 )
+
+if __name__ == "__main__":
+    prune_database_task(None)
