@@ -8,9 +8,8 @@ from dotenv import load_dotenv
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 from app.ingest import cdc as cdc_module
-from sap_hana_cdc import SAPHanaCDCConnector, SAPHanaCDCConfig
+from sap_hana_cdc import SAPHanaCDCConnector, SAPHanaCDCConfig, TableStatus
 from app.workflows.lib.changes_inserter import BatchChangeInserter
-from app.workflows.lib.data_converter import convert_row_data
 
 load_dotenv()
 sap_config = SAPHanaCDCConfig.from_env(prefix="SAP_HANA_")
@@ -23,22 +22,18 @@ def initial_load_task(ctx: TaskContext[None]) -> None:
     connector = get_connector()
     inserter = BatchChangeInserter()
     client_status = connector.get_client_status()
-    for table_name, table_status in client_status.items():
-        print(f"Initial loading table: {table_name}")
-        chunk_size = 100000
-        rows_iterator = connector.get_all_table_rows(table_name, page_size=chunk_size)
-        while True:
-            chunk = []
-            try:
-                for _ in range(chunk_size):
-                    chunk.append(next(rows_iterator))
-            except StopIteration:
-                pass
-            if not chunk:
-                break
-            result = inserter.insert_table_data(table_name, chunk)
-            print(f"Insert result (chunk): {result}")
-        print(f"Insert result: {result}")
+    for table_status in client_status:
+        if table_status.status == TableStatus.NEW:
+            print(f"Initial loading table: {table_status.table_name}")
+            chunk_size = 100000
+            offset = 0
+            while True:
+                rows = connector.get_all_table_rows(table_status.table_name, page_size=chunk_size, offset=offset)
+                if not rows:
+                    break
+                result = inserter.insert_table_data(table_status.table_name, rows)
+                offset += len(rows)
+            connector.infrastructure.set_table_status_active(table_status.table_name)
 
 
 def sync_changes_task(ctx: TaskContext[None]) -> None:
