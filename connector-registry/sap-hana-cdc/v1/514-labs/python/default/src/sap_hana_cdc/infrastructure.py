@@ -336,3 +336,14 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
         """Clean up CDC infrastructure for a table (triggers)."""
         for trigger_type in TriggerType:
             self._drop_trigger(cursor, table_name, trigger_type)
+
+    def reset_cdc_status(self) -> None:
+        """Reset CDC status for all tables."""
+        table_status_table = self.full_client_status_table_name
+        with self.connection.cursor() as cursor:
+            cursor.execute(f"DELETE FROM {table_status_table} WHERE CLIENT_ID = ?", (self.config.client_id,))
+            logger.info("CDC status reset completed")
+            # For each table in the config, set the status to NEW
+            for table in self.config.tables:
+                self._update_table_status(cursor, table, TableStatus.NEW)
+                logger.info(f"Set status to NEW for table {table}")

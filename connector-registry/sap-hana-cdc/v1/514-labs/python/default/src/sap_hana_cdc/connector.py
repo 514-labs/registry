@@ -66,6 +66,10 @@ class SAPHanaCDCConnector:
         """
         return self.reader.get_changes(limit)
     
+    def reset_cdc_status(self) -> None:
+        """Reset CDC status for all tables."""
+        self.infrastructure.reset_cdc_status()
+    
     def update_client_status(self, batch: BatchChange) -> None:
         """Update client processing status.
         

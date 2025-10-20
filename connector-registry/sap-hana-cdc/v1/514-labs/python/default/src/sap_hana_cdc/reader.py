@@ -74,12 +74,12 @@ class SAPHanaCDCReader(SAPHanaCDCBase):
                         AND (
                             (tst.LAST_PROCESSED_CHANGE_ID > 0 AND ct.CHANGE_ID > tst.LAST_PROCESSED_CHANGE_ID) 
                         OR 
-                            (tst.LAST_PROCESSED_CHANGE_ID = 0 AND tst.UPDATED_AT > ct.CHANGE_TIMESTAMP)
+                            (tst.LAST_PROCESSED_CHANGE_ID = 0 AND ct.CHANGE_TIMESTAMP > tst.UPDATED_AT)
                         )
                     ORDER BY CHANGE_TIMESTAMP ASC 
                     LIMIT ?
                 """
-                
+
                 cursor.execute(query, (client_id, TableStatus.ACTIVE.value, limit))
                 changes = []
                 for row in cursor.fetchall():

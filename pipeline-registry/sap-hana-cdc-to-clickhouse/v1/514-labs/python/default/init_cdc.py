@@ -19,6 +19,7 @@ parser.add_argument("--tables", type=str, default=None, help="Specific tables to
 parser.add_argument("--tables-from-file", type=str, default=None, help="File containing tables to introspect (default: all)")
 parser.add_argument("--recreate-cdc-tables", action="store_true", default=False, help="Re-create CDC tables and triggers (drops and recreates them)")
 parser.add_argument("--recreate-moose-models", action="store_true", default=False, help="Only generate Moose models, do not initialize CDC tables/triggers")
+parser.add_argument("--reset-cdc-status", action="store_true", default=False, help="Reset CDC status for all tables")
 parser.add_argument("--init-cdc", action="store_true", default=False, help="Initialize CDC tables and triggers")
 parser.add_argument("--drop-cdc", action="store_true", default=False, help="Drop CDC tables and triggers")
 
@@ -65,5 +66,8 @@ if args.init_cdc or args.recreate_cdc_tables:
 if args.drop_cdc:
     connector.cleanup_cdc_infrastructure()
     print(f"Dropped CDC tables and triggers.")
+elif args.reset_cdc_status:
+    connector.reset_cdc_status()
+    print(f"Reset CDC status for all tables.")
 elif not (args.recreate_moose_models or args.init_cdc or args.recreate_cdc_tables):
         parser.error("You must specify either --recreate-moose-models or --recreate-cdc-tables or --init-cdc")

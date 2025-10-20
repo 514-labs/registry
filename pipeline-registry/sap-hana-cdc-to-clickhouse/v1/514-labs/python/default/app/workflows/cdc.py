@@ -31,7 +31,7 @@ def initial_load_task(ctx: TaskContext[None]) -> None:
                 rows = connector.get_all_table_rows(table_status.table_name, page_size=chunk_size, offset=offset)
                 if not rows:
                     break
-                result = inserter.insert_table_data(table_status.table_name, rows)
+                inserter.insert_table_data(table_status.table_name, rows)
                 offset += len(rows)
             connector.infrastructure.set_table_status_active(table_status.table_name)
 
@@ -41,6 +41,7 @@ def sync_changes_task(ctx: TaskContext[None]) -> None:
     batch = connector.get_changes()
     
     if batch:
+        print(f"Batch: {batch}")
         inserter = BatchChangeInserter()
         inserter.insert(batch.changes)
         connector.update_client_status(batch)
