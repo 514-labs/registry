@@ -1,12 +1,38 @@
 # Getting Started with Google Analytics GA4 Connector
 
+This package provides a Google Analytics GA4 v4 connector. It exposes a simple lifecycle and typed domain methods for common analytics data.
+
 ## Prerequisites
 
 - Node.js >= 20
 - A Google Cloud Project with Google Analytics Data API enabled
 - Access to a Google Analytics 4 property
 
-## Step 1: Enable the Google Analytics Data API
+## Install
+
+### 1. Navigate to your project
+
+Go to the root directory of your project.
+
+### 2. Run the installer
+
+Run the installer with a destination folder where the connector code will reside.
+
+```bash
+bash -i <(curl https://registry.514.ai/install.sh) --dest app/connectors/google-analytics google-analytics v4 514-labs typescript default
+```
+
+### 3. Install dependencies
+
+From your project's root directory:
+
+```bash
+pnpm install
+```
+
+## Set Up Authentication
+
+### Enable the Google Analytics Data API
 
 1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
 2. Create a new project or select an existing one
@@ -14,15 +40,15 @@
 4. Search for "Google Analytics Data API"
 5. Click on it and press **Enable**
 
-## Step 2: Set Up Authentication
+### Choose Authentication Method
 
-The connector supports three authentication methods. Choose the one that best fits your use case:
+The connector supports three authentication methods. Choose the one that best fits your use case.
 
-### Option A: Service Account (Recommended for Server-to-Server)
+#### Option A: Service Account (Recommended for Server-to-Server)
 
 This is the recommended approach for production applications and server-side integrations.
 
-#### Steps:
+##### Steps:
 1. In Google Cloud Console, go to **IAM & Admin > Service Accounts**
 2. Click **Create Service Account**
 3. Give it a name (e.g., "ga4-connector") and click **Create**
@@ -33,7 +59,7 @@ This is the recommended approach for production applications and server-side int
 8. Choose **JSON** format and click **Create**
 9. The JSON key file will be downloaded to your computer
 
-#### Grant Access to Google Analytics:
+##### Grant Access to Google Analytics:
 1. Go to your [Google Analytics account](https://analytics.google.com/)
 2. Navigate to **Admin** (bottom left)
 3. In the **Property** column, click **Property Access Management**
@@ -42,13 +68,13 @@ This is the recommended approach for production applications and server-side int
 6. Grant at least **Viewer** permissions
 7. Click **Add**
 
-#### Find Your Property ID:
+##### Find Your Property ID:
 1. In Google Analytics, go to **Admin**
 2. Make sure you have the correct property selected
 3. Click on **Property Settings**
 4. Your Property ID is displayed at the top (format: 123456789)
 
-#### Configure Environment Variables:
+##### Configure Environment Variables:
 Create a `.env` file in the connector directory:
 
 ```bash
@@ -63,11 +89,11 @@ GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYour private key here\n-----END
 GOOGLE_PROPERTY_ID=123456789
 ```
 
-### Option B: OAuth 2.0 (For User-Based Access)
+#### Option B: OAuth 2.0 (For User-Based Access)
 
 Use this method when you need to access analytics on behalf of a user.
 
-#### Steps:
+##### Steps:
 1. In Google Cloud Console, go to **APIs & Services > Credentials**
 2. Click **Create Credentials > OAuth client ID**
 3. If prompted, configure the OAuth consent screen first
@@ -75,7 +101,7 @@ Use this method when you need to access analytics on behalf of a user.
 5. Give it a name and click **Create**
 6. Download the client ID and client secret
 
-#### Get a Refresh Token:
+##### Get a Refresh Token:
 Use the [Google OAuth 2.0 Playground](https://developers.google.com/oauthplayground/) or implement the OAuth flow in your application.
 
 1. Go to OAuth 2.0 Playground
@@ -88,7 +114,7 @@ Use the [Google OAuth 2.0 Playground](https://developers.google.com/oauthplaygro
 8. In Step 2, click "Exchange authorization code for tokens"
 9. Copy the refresh token
 
-#### Configure Environment Variables:
+##### Configure Environment Variables:
 ```bash
 GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=your-client-secret
@@ -96,29 +122,23 @@ GOOGLE_REFRESH_TOKEN=your-refresh-token
 GOOGLE_PROPERTY_ID=123456789
 ```
 
-### Option C: API Key (Limited Functionality)
+#### Option C: API Key (Limited Functionality)
 
 Note: API keys have limited functionality with Google Analytics Data API. Service Account or OAuth is strongly recommended.
 
-#### Steps:
+##### Steps:
 1. In Google Cloud Console, go to **APIs & Services > Credentials**
 2. Click **Create Credentials > API Key**
 3. Copy the generated API key
 4. (Recommended) Click **Restrict Key** and limit it to Google Analytics Data API
 
-#### Configure Environment Variables:
+##### Configure Environment Variables:
 ```bash
 GOOGLE_API_KEY=your-api-key-here
 GOOGLE_PROPERTY_ID=123456789
 ```
 
-## Step 3: Install Dependencies
-
-```bash
-pnpm -F @514labs/connector-google-analytics install
-```
-
-## Step 4: Basic Usage
+## Usage
 
 ### Using Service Account Authentication:
 
@@ -179,7 +199,7 @@ conn.initialize({
 })
 ```
 
-## Step 5: Run the Example
+### Running the Example
 
 The connector includes a basic example file. Update it with your credentials:
 
