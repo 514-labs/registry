@@ -1,0 +1,8 @@
+{
+  "identifier": "google-analytics",
+  "name": "google-analytics",
+  "author": "514labs",
+  "version": "ga4",
+  "language": "typescript",
+  "implementations": ["default"]
+}

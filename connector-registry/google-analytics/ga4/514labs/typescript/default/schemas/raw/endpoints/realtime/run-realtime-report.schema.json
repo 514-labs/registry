@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Run Realtime Report",
+  "description": "Returns realtime event data from the last 30 minutes",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "dimensions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Realtime dimension (e.g., 'country', 'deviceCategory')"
+              }
+            }
+          }
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Realtime metric (e.g., 'activeUsers', 'screenPageViews')"
+              }
+            }
+          }
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Maximum number of rows"
+        },
+        "minuteRanges": {
+          "type": "array",
+          "description": "Minute ranges for data (0-30 minutes ago)",
+          "items": {
+            "type": "object",
+            "properties": {
+              "startMinutesAgo": {
+                "type": "integer"
+              },
+              "endMinutesAgo": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "dimensionHeaders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "metricHeaders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "rowCount": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

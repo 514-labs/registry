@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "identifier": "google-analytics",
+  "name": "google-analytics",
+  "category": "api",
+  "tags": [],
+  "description": "",
+  "homepage": ""
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "List Audience Exports",
+  "description": "Lists all audience exports for a property",
+  "type": "object",
+  "properties": {
+    "response": {
+      "type": "object",
+      "properties": {
+        "audienceExports": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Resource name"
+              },
+              "audience": {
+                "type": "string",
+                "description": "Audience resource name"
+              },
+              "audienceDisplayName": {
+                "type": "string",
+                "description": "Display name of the audience"
+              },
+              "dimensions": {
+                "type": "array",
+                "description": "Dimensions included in export",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "state": {
+                "type": "string",
+                "enum": ["STATE_UNSPECIFIED", "CREATING", "ACTIVE", "FAILED"],
+                "description": "Export state"
+              },
+              "rowCount": {
+                "type": "integer",
+                "description": "Number of rows in export"
+              },
+              "percentageCompleted": {
+                "type": "number",
+                "description": "Percentage complete (0-100)"
+              }
+            }
+          }
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "Token for next page of results"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,382 @@
+{
+  "total": 10,
+  "connectors": 7,
+  "pipelines": 3,
+  "items": [
+    {
+      "type": "connector",
+      "id": "dutchie",
+      "name": "Dutchie",
+      "version": "v001",
+      "author": "514-labs",
+      "authorId": "514-labs",
+      "language": "typescript",
+      "implementation": "open-api",
+      "category": "api",
+      "tags": [],
+      "description": "Dutchie POS data connector.",
+      "homepage": "https://api.pos.dutchie.com/swagger/index.html",
+      "languages": [
+        "typescript"
+      ],
+      "capabilities": {
+        "extract": true,
+        "transform": false,
+        "load": false
+      },
+      "maintainers": [],
+      "issues": {
+        "typescript": {
+          "open-api": "https://github.com/514-labs/registry/issues/89"
+        }
+      },
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/dutchie/v001/514-labs/typescript/open-api",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/dutchie/v001/514-labs",
+      "apiPaths": {
+        "scaffold": "/api/connectors/scaffolds/typescript"
+      }
+    },
+    {
+      "type": "connector",
+      "id": "google-ads",
+      "name": "google-ads",
+      "version": "v1",
+      "author": "514-labs",
+      "authorId": "514-labs",
+      "language": "typescript",
+      "implementation": "default",
+      "category": "api",
+      "tags": [],
+      "description": "",
+      "homepage": "",
+      "languages": [
+        "typescript"
+      ],
+      "capabilities": {
+        "extract": true,
+        "transform": false,
+        "load": false
+      },
+      "maintainers": [],
+      "issues": {
+        "typescript": {
+          "default": "https://github.com/514-labs/registry/issues/117"
+        }
+      },
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/google-ads/v1/514-labs/typescript",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/google-ads/v1/514-labs",
+      "apiPaths": {
+        "scaffold": "/api/connectors/scaffolds/typescript"
+      }
+    },
+    {
+      "type": "connector",
+      "id": "google-analytics",
+      "name": "google-analytics",
+      "version": "ga4",
+      "author": "514labs",
+      "authorId": "514labs",
+      "language": "typescript",
+      "implementation": "default",
+      "category": "api",
+      "tags": [],
+      "description": "",
+      "homepage": "",
+      "languages": [
+        "typescript"
+      ],
+      "capabilities": {
+        "extract": true,
+        "transform": false,
+        "load": false
+      },
+      "maintainers": [],
+      "issues": {
+        "typescript": {
+          "default": ""
+        }
+      },
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/google-analytics/ga4/514labs/typescript",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/google-analytics/ga4/514labs",
+      "apiPaths": {
+        "scaffold": "/api/connectors/scaffolds/typescript"
+      }
+    },
+    {
+      "type": "connector",
+      "id": "hubspot",
+      "name": "HubSpot",
+      "version": "v3",
+      "author": "514-labs",
+      "authorId": "514-labs",
+      "language": "typescript",
+      "implementation": "data-api",
+      "category": "api",
+      "tags": [],
+      "description": "Pull your up-to-date HubSpot CRM data into your data warehouse.",
+      "homepage": "https://developers.hubspot.com/docs/reference/api",
+      "languages": [
+        "typescript"
+      ],
+      "capabilities": {
+        "extract": true,
+        "transform": false,
+        "load": false
+      },
+      "maintainers": [],
+      "issues": {
+        "typescript": {
+          "data-api": "https://github.com/514-labs/registry/issues/26"
+        }
+      },
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/hubspot/v3/514-labs/typescript/data-api",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/hubspot/v3/514-labs",
+      "apiPaths": {
+        "scaffold": "/api/connectors/scaffolds/typescript"
+      }
+    },
+    {
+      "type": "connector",
+      "id": "meta-ads",
+      "name": "Meta Ads",
+      "version": "v1",
+      "author": "514-labs",
+      "authorId": "514-labs",
+      "language": "typescript",
+      "implementation": "default",
+      "category": "api",
+      "tags": [],
+      "description": "Extract campaign data, ad sets, ads, and insights from Meta Ads (Facebook Ads) using the Facebook Graph API",
+      "homepage": "https://developers.facebook.com/docs/graph-api/",
+      "languages": [
+        "typescript"
+      ],
+      "capabilities": {
+        "extract": true,
+        "transform": false,
+        "load": false
+      },
+      "maintainers": [],
+      "issues": {
+        "typescript": {
+          "default": "https://github.com/514-labs/registry/issues/80"
+        }
+      },
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/meta-ads/v1/514-labs/typescript",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/meta-ads/v1/514-labs",
+      "apiPaths": {
+        "scaffold": "/api/connectors/scaffolds/typescript"
+      }
+    },
+    {
+      "type": "connector",
+      "id": "meta-ads-new",
+      "name": "meta-ads-new",
+      "version": "v1",
+      "author": "514-labs",
+      "authorId": "514-labs",
+      "language": "typescript",
+      "implementation": "default",
+      "category": "api",
+      "tags": [],
+      "description": "",
+      "homepage": "",
+      "languages": [
+        "typescript"
+      ],
+      "capabilities": {
+        "extract": true,
+        "transform": false,
+        "load": false
+      },
+      "maintainers": [],
+      "issues": {
+        "typescript": {
+          "default": "https://github.com/514-labs/registry/issues/118"
+        }
+      },
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/meta-ads-new/v1/514-labs/typescript",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/meta-ads-new/v1/514-labs",
+      "apiPaths": {
+        "scaffold": "/api/connectors/scaffolds/typescript"
+      }
+    },
+    {
+      "type": "connector",
+      "id": "shopify",
+      "name": "shopify",
+      "version": "v1",
+      "author": "514-labs",
+      "authorId": "514-labs",
+      "language": "typescript",
+      "implementation": "default",
+      "category": "api",
+      "tags": [],
+      "description": "",
+      "homepage": "",
+      "languages": [
+        "typescript"
+      ],
+      "capabilities": {
+        "extract": true,
+        "transform": false,
+        "load": false
+      },
+      "maintainers": [],
+      "issues": {
+        "typescript": {
+          "default": "https://github.com/514-labs/registry/issues/119"
+        }
+      },
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/shopify/v1/514-labs/typescript",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/shopify/v1/514-labs",
+      "apiPaths": {
+        "scaffold": "/api/connectors/scaffolds/typescript"
+      }
+    },
+    {
+      "type": "pipeline",
+      "id": "dutchie-to-clickhouse",
+      "name": "dutchie-to-clickhouse",
+      "version": "v001",
+      "author": "514-labs",
+      "authorId": "514-labs",
+      "language": "typescript",
+      "implementation": "open-api",
+      "tags": [
+        "dutchie",
+        "clickhouse",
+        "etl"
+      ],
+      "description": "Ingest Dutchie objects and load into ClickHouse",
+      "homepage": "",
+      "maintainers": [],
+      "authorType": "organization",
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/pipeline-dutchie-to-clickhouse/typescript/open-api",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/pipeline-dutchie-to-clickhouse",
+      "schedule": {
+        "cron": "0 * * * *",
+        "timezone": "UTC"
+      },
+      "source": {
+        "type": "connector",
+        "connector": {
+          "name": "dutchie",
+          "version": "v001",
+          "author": "514-labs"
+        },
+        "stream": "objects"
+      },
+      "destination": {
+        "system": "clickhouse",
+        "database": "analytics",
+        "table": "dutchie_objects"
+      },
+      "systems": [],
+      "transformations": [],
+      "lineage": {
+        "nodes": [],
+        "edges": []
+      },
+      "apiPaths": {
+        "scaffold": "/api/pipelines/scaffolds/typescript"
+      }
+    },
+    {
+      "type": "pipeline",
+      "id": "google-analytics-to-clickhouse",
+      "name": "Google Analytics to ClickHouse",
+      "version": "v1",
+      "author": "514-labs",
+      "authorId": "514-labs",
+      "language": "typescript",
+      "implementation": "default",
+      "tags": [
+        "ga4",
+        "clickhouse",
+        "etl"
+      ],
+      "description": "Ingest GA4 events and load into ClickHouse",
+      "homepage": "",
+      "maintainers": [],
+      "authorType": "organization",
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/google-analytics-to-clickhouse/typescript",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/google-analytics-to-clickhouse",
+      "schedule": {
+        "cron": "0 * * * *",
+        "timezone": "UTC"
+      },
+      "source": {
+        "type": "connector",
+        "connector": {
+          "name": "google-analytics",
+          "version": "v4",
+          "author": "514-labs"
+        },
+        "stream": "events"
+      },
+      "destination": {
+        "system": "clickhouse",
+        "database": "analytics",
+        "table": "events"
+      },
+      "systems": [],
+      "transformations": [],
+      "lineage": {
+        "nodes": [],
+        "edges": []
+      },
+      "apiPaths": {
+        "scaffold": "/api/pipelines/scaffolds/typescript"
+      }
+    },
+    {
+      "type": "pipeline",
+      "id": "hubspot-to-clickhouse",
+      "name": "hubspot-to-clickhouse",
+      "version": "v3",
+      "author": "514-labs",
+      "authorId": "514-labs",
+      "language": "typescript",
+      "implementation": "default",
+      "tags": [
+        "hubspot",
+        "clickhouse",
+        "etl"
+      ],
+      "description": "Ingest HubSpot objects and load into ClickHouse",
+      "homepage": "",
+      "maintainers": [],
+      "authorType": "organization",
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/hubspot-to-clickhouse/typescript",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/hubspot-to-clickhouse",
+      "schedule": {
+        "cron": "0 * * * *",
+        "timezone": "UTC"
+      },
+      "source": {
+        "type": "connector",
+        "connector": {
+          "name": "hubspot",
+          "version": "v3",
+          "author": "514-labs"
+        },
+        "stream": "objects"
+      },
+      "destination": {
+        "system": "clickhouse",
+        "database": "analytics",
+        "table": "hubspot_objects"
+      },
+      "systems": [],
+      "transformations": [],
+      "lineage": {
+        "nodes": [],
+        "edges": []
+      },
+      "apiPaths": {
+        "scaffold": "/api/pipelines/scaffolds/typescript"
+      }
+    }
+  ]
+}

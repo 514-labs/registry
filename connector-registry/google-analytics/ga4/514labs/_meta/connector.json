@@ -1,0 +1,22 @@
+{
+  "name": "google-analytics",
+  "author": "514labs",
+  "version": "ga4",
+  "languages": [
+    "typescript"
+  ],
+  "category": "api",
+  "capabilities": {
+    "extract": true,
+    "transform": false,
+    "load": false
+  },
+  "source": {
+    "type": "api",
+    "spec": "",
+    "homepage": ""
+  },
+  "tags": [],
+  "maintainers": [],
+  "issues": { "typescript": { "default": "" } }
+}
