@@ -18,8 +18,10 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/connectors/**/*": ["../../connector-registry/**/*"],
     "/pipelines/**/*": ["../../pipeline-registry/**/*"],
-    "/api/discover/connectors/**/*": ["../../connector-registry/**/_meta/"],
-    "/api/discover/pipelines/**/*": ["../../pipeline-registry/**/_meta/"],
+  },
+  // Explicitly exclude registries from API routes since they only read from public/ directory
+  outputFileTracingExcludes: {
+    "/api/**/*": ["../../connector-registry/**/*", "../../pipeline-registry/**/*"],
   },
   env: {
     GITHUB_PAT: process.env.GITHUB_PAT,

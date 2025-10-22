@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { readFile } from "fs/promises";
+import { readFile, readdir } from "fs/promises";
 import { join } from "path";
-import { listConnectorIds } from "@workspace/registry/connectors";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -11,7 +10,12 @@ type Params = {
 };
 
 export async function generateStaticParams(): Promise<Params[]> {
-  const connectorIds = listConnectorIds();
+  // Read connector IDs from the generated JSON files instead of importing from registry
+  const apiConnectorsDir = join(process.cwd(), "public", "api", "connectors");
+  const files = await readdir(apiConnectorsDir);
+  const connectorIds = files
+    .filter(f => f.endsWith('.json'))
+    .map(f => f.replace('.json', ''));
   return connectorIds.map((id) => ({ id }));
 }
 

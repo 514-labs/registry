@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { readFile } from "fs/promises";
+import { readFile, readdir } from "fs/promises";
 import { join } from "path";
-import { readConnector, listConnectorIds } from "@workspace/registry/connectors";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -15,23 +14,52 @@ type Params = {
 };
 
 export async function generateStaticParams(): Promise<Params[]> {
+  // Read params from the generated JSON file structure instead of importing from registry
   const params: Params[] = [];
-  for (const id of listConnectorIds()) {
-    const conn = readConnector(id);
-    if (!conn) continue;
-    for (const provider of conn.providers) {
-      const version = provider.path.split("/").slice(-2)[0];
-      for (const impl of provider.implementations) {
-        params.push({
-          id,
-          version,
-          creator: provider.authorId,
-          language: impl.language,
-          implementation: impl.implementation ?? "default",
-        });
+  const apiConnectorsDir = join(process.cwd(), "public", "api", "connectors");
+
+  const connectorDirs = await readdir(apiConnectorsDir, { withFileTypes: true });
+
+  for (const connectorDir of connectorDirs) {
+    if (!connectorDir.isDirectory()) continue;
+
+    const connectorPath = join(apiConnectorsDir, connectorDir.name);
+    const versionDirs = await readdir(connectorPath, { withFileTypes: true });
+
+    for (const versionDir of versionDirs) {
+      if (!versionDir.isDirectory()) continue;
+
+      const versionPath = join(connectorPath, versionDir.name);
+      const creatorDirs = await readdir(versionPath, { withFileTypes: true });
+
+      for (const creatorDir of creatorDirs) {
+        if (!creatorDir.isDirectory()) continue;
+
+        const creatorPath = join(versionPath, creatorDir.name);
+        const languageDirs = await readdir(creatorPath, { withFileTypes: true });
+
+        for (const languageDir of languageDirs) {
+          if (!languageDir.isDirectory()) continue;
+
+          const languagePath = join(creatorPath, languageDir.name);
+          const implFiles = await readdir(languagePath);
+
+          for (const implFile of implFiles) {
+            if (!implFile.endsWith('.json')) continue;
+
+            params.push({
+              id: connectorDir.name,
+              version: versionDir.name,
+              creator: creatorDir.name,
+              language: languageDir.name,
+              implementation: implFile.replace('.json', ''),
+            });
+          }
+        }
       }
     }
   }
+
   return params;
 }
 
