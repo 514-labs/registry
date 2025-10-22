@@ -39,3 +39,4 @@ next-env.d.ts
 /public/api/
 /public/registry.json
 /public/registry-contents.json
+/public/scaffolds/

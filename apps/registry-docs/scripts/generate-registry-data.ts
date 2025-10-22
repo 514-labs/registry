@@ -1,11 +1,13 @@
-import { writeFileSync, mkdirSync, existsSync, readdirSync, readFileSync, statSync } from "fs";
+import { writeFileSync, mkdirSync, existsSync, readdirSync, readFileSync, statSync, copyFileSync } from "fs";
 import { join, basename, dirname } from "path";
 import { fileURLToPath } from "url";
 import { dirname as pathDirname } from "path";
-import { listConnectors } from "@workspace/registry/connectors";
-import { listPipelines } from "@workspace/registry/pipelines";
+import { listConnectors, getConnectorsRegistryPath } from "@workspace/registry/connectors";
+import { listPipelines, getPipelinesRegistryPath } from "@workspace/registry/pipelines";
 import { getIssuePositiveReactionsCountFromMeta } from "@workspace/registry";
 import { getSchemaDiagramInputs } from "../src/schema/processing";
+import { buildDiscoverConnectors } from "../lib/connector-discover";
+import { buildDiscoverPipelines } from "../lib/pipeline-discover";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = pathDirname(__filename);
@@ -439,12 +441,62 @@ for (const connector of connectors) {
 
 console.log(`✓ Generated ${implementationCount} implementation detail files`);
 
+// ===== 5. Copy scaffold files to public directory =====
+
+const connectorsScaffoldDir = join(getConnectorsRegistryPath(), "_scaffold");
+const pipelinesScaffoldDir = join(getPipelinesRegistryPath(), "_scaffold");
+const publicScaffoldsDir = join(__dirname, "..", "public", "scaffolds");
+
+ensureDir(join(publicScaffoldsDir, "connectors"));
+ensureDir(join(publicScaffoldsDir, "pipelines"));
+
+let scaffoldCount = 0;
+
+// Copy connector scaffolds
+if (existsSync(connectorsScaffoldDir)) {
+  const scaffoldFiles = readdirSync(connectorsScaffoldDir).filter(f => f.endsWith('.json'));
+  for (const file of scaffoldFiles) {
+    const sourcePath = join(connectorsScaffoldDir, file);
+    const destPath = join(publicScaffoldsDir, "connectors", file);
+    copyFileSync(sourcePath, destPath);
+    scaffoldCount++;
+  }
+}
+
+// Copy pipeline scaffolds
+if (existsSync(pipelinesScaffoldDir)) {
+  const scaffoldFiles = readdirSync(pipelinesScaffoldDir).filter(f => f.endsWith('.json'));
+  for (const file of scaffoldFiles) {
+    const sourcePath = join(pipelinesScaffoldDir, file);
+    const destPath = join(publicScaffoldsDir, "pipelines", file);
+    copyFileSync(sourcePath, destPath);
+    scaffoldCount++;
+  }
+}
+
+console.log(`✓ Copied ${scaffoldCount} scaffold files`);
+
+// ===== 6. Generate discover API responses =====
+
+const discoverConnectors = await buildDiscoverConnectors();
+const discoverConnectorsPath = join(__dirname, "..", "public", "api", "discover", "connectors.json");
+writeJson(discoverConnectorsPath, discoverConnectors);
+console.log(`✓ Generated discover connectors response (${discoverConnectors.length} items)`);
+
+const discoverPipelines = await buildDiscoverPipelines();
+const discoverPipelinesPath = join(__dirname, "..", "public", "api", "discover", "pipelines.json");
+writeJson(discoverPipelinesPath, discoverPipelines);
+console.log(`✓ Generated discover pipelines response (${discoverPipelines.length} items)`);
+
 // ===== Summary =====
 console.log("\n✅ Registry data generation complete!");
 console.log(`   - registry-contents.json: ${registryContents.total} items`);
 console.log(`   - registry.json: ${allItems.length} items`);
 console.log(`   - ${connectorOverviewCount} connector overview files`);
 console.log(`   - ${implementationCount} implementation detail files`);
+console.log(`   - ${scaffoldCount} scaffold files`);
+console.log(`   - ${discoverConnectors.length} discover connectors`);
+console.log(`   - ${discoverPipelines.length} discover pipelines`);
 }
 
 // Run the async function
