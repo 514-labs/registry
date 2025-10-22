@@ -47,7 +47,7 @@
       "implementation": "default",
       "category": "api",
       "tags": [],
-      "description": "",
+      "description": "Connector for Google Ads advertising platform data extraction and reporting",
       "homepage": "",
       "languages": [
         "typescript"
@@ -73,14 +73,14 @@
       "type": "connector",
       "id": "google-analytics",
       "name": "google-analytics",
-      "version": "ga4",
-      "author": "514labs",
-      "authorId": "514labs",
+      "version": "v4",
+      "author": "514-labs",
+      "authorId": "514-labs",
       "language": "typescript",
       "implementation": "default",
       "category": "api",
       "tags": [],
-      "description": "",
+      "description": "Connector for Google Analytics data extraction and analysis",
       "homepage": "",
       "languages": [
         "typescript"
@@ -93,11 +93,11 @@
       "maintainers": [],
       "issues": {
         "typescript": {
-          "default": ""
+          "default": "https://github.com/514-labs/registry/issues"
         }
       },
-      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/google-analytics/ga4/514labs/typescript",
-      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/google-analytics/ga4/514labs",
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/google-analytics/v4/514-labs/typescript",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/google-analytics/v4/514-labs",
       "apiPaths": {
         "scaffold": "/api/connectors/scaffolds/typescript"
       }
@@ -179,7 +179,7 @@
       "implementation": "default",
       "category": "api",
       "tags": [],
-      "description": "",
+      "description": "Connector for Meta (Facebook) Ads platform data extraction and advertising insights",
       "homepage": "",
       "languages": [
         "typescript"
@@ -212,7 +212,7 @@
       "implementation": "default",
       "category": "api",
       "tags": [],
-      "description": "",
+      "description": "Connector for Shopify e-commerce platform data extraction and analytics",
       "homepage": "",
       "languages": [
         "typescript"
