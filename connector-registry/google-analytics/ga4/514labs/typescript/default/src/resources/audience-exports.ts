@@ -58,7 +58,7 @@ export const createResource = (send: SendFn) => ({
       path: `/properties/${propertyId}/audienceExports`,
       body: request,
     })
-    return response as AudienceExport
+    return response.data as AudienceExport
   },
 
   /**
@@ -71,7 +71,7 @@ export const createResource = (send: SendFn) => ({
       method: 'GET',
       path: `/${name}`,
     })
-    return response as AudienceExport
+    return response.data as AudienceExport
   },
 
   /**
@@ -91,7 +91,7 @@ export const createResource = (send: SendFn) => ({
       path: `/properties/${propertyId}/audienceExports`,
       query: queryParams,
     })
-    return response as ListAudienceExportsResponse
+    return response.data as ListAudienceExportsResponse
   },
 
   /**
@@ -106,6 +106,6 @@ export const createResource = (send: SendFn) => ({
       path: `/${name}:query`,
       body: request,
     })
-    return response as QueryAudienceExportResponse
+    return response.data as QueryAudienceExportResponse
   },
 })

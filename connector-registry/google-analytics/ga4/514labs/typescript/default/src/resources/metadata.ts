@@ -61,7 +61,7 @@ export const createResource = (send: SendFn) => ({
       method: 'GET',
       path: `/properties/${propertyId}/metadata`,
     })
-    return response as GetMetadataResponse
+    return response.data as GetMetadataResponse
   },
 
   /**
@@ -76,6 +76,6 @@ export const createResource = (send: SendFn) => ({
       path: `/properties/${propertyId}:checkCompatibility`,
       body: request,
     })
-    return response as CheckCompatibilityResponse
+    return response.data as CheckCompatibilityResponse
   },
 })

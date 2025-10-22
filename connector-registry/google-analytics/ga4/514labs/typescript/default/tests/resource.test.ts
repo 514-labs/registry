@@ -3,13 +3,37 @@
 import nock from 'nock'
 import { createConnector } from '../src'
 
-it('getAll yields chunks and respects maxItems', async () => {
-  const BASE = 'https://api.example.com'
-  const data = Array.from({ length: 5 }, (_, i) => ({ id: i + 1 }))
-  nock(BASE).get('/reports').reply(200, data)
+it('runReport returns report data with rows', async () => {
+  const BASE = 'https://analyticsdata.googleapis.com/v1beta'
+  const propertyId = '123456789'
+  const mockResponse = {
+    dimensionHeaders: [{ name: 'date' }],
+    metricHeaders: [{ name: 'activeUsers', type: 'TYPE_INTEGER' }],
+    rows: [
+      { dimensionValues: [{ value: '20240101' }], metricValues: [{ value: '100' }] },
+      { dimensionValues: [{ value: '20240102' }], metricValues: [{ value: '150' }] }
+    ],
+    rowCount: 2
+  }
+
+  nock(BASE)
+    .post(`/properties/${propertyId}:runReport`)
+    .reply(200, mockResponse)
+
   const conn = createConnector()
-  conn.initialize({ baseUrl: BASE, auth: { type: 'bearer', bearer: { token: 't' } } })
-  const pages: Array<ReadonlyArray<unknown>> = []
-  for await (const page of (conn as any).reports.getAll({ pageSize: 2, maxItems: 4 })) pages.push(page)
-  expect(pages.map(p => p.length)).toEqual([2, 2])
+  conn.initialize({
+    baseUrl: BASE,
+    auth: { type: 'bearer', bearer: { token: 'test-token' } }
+  })
+
+  const result = await conn.reports.runReport(propertyId, {
+    dateRanges: [{ startDate: '2024-01-01', endDate: '2024-01-02' }],
+    dimensions: [{ name: 'date' }],
+    metrics: [{ name: 'activeUsers' }]
+  })
+
+  expect(result.rows).toHaveLength(2)
+  expect(result.rowCount).toBe(2)
+  expect(result.dimensionHeaders?.[0].name).toBe('date')
+  expect(result.metricHeaders?.[0].name).toBe('activeUsers')
 })

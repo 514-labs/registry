@@ -145,7 +145,7 @@ export const createResource = (send: SendFn) => ({
       path: `/properties/${propertyId}:runReport`,
       body: request,
     })
-    return response as RunReportResponse
+    return response.data as RunReportResponse
   },
 
   /**
@@ -160,7 +160,7 @@ export const createResource = (send: SendFn) => ({
       path: `/properties/${propertyId}:runPivotReport`,
       body: request,
     })
-    return response as RunPivotReportResponse
+    return response.data as RunPivotReportResponse
   },
 
   /**
@@ -175,7 +175,7 @@ export const createResource = (send: SendFn) => ({
       path: `/properties/${propertyId}:batchRunReports`,
       body: request,
     })
-    return response as unknown as BatchRunReportsResponse
+    return response.data as BatchRunReportsResponse
   },
 
   /**
@@ -190,6 +190,6 @@ export const createResource = (send: SendFn) => ({
       path: `/properties/${propertyId}:batchRunPivotReports`,
       body: request,
     })
-    return response as unknown as BatchRunPivotReportsResponse
+    return response.data as BatchRunPivotReportsResponse
   },
 })

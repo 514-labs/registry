@@ -42,6 +42,6 @@ export const createResource = (send: SendFn) => ({
       path: `/properties/${propertyId}:runRealtimeReport`,
       body: request,
     })
-    return response as RunRealtimeReportResponse
+    return response.data as RunRealtimeReportResponse
   },
 })
