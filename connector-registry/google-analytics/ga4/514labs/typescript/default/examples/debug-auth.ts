@@ -32,8 +32,8 @@ async function debugAuth() {
   })
 
   console.log('Credentials loaded:')
-  console.log('  Email:', process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL)
-  console.log('  Property ID:', process.env.GOOGLE_PROPERTY_ID)
+  console.log('  Email configured:', !!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL)
+  console.log('  Property ID configured:', !!process.env.GOOGLE_PROPERTY_ID)
   console.log('  Private Key length:', process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n').length)
   console.log('  Private Key format check:', process.env.GOOGLE_PRIVATE_KEY?.includes('BEGIN PRIVATE KEY'))
   console.log('')

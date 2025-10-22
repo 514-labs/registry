@@ -4,6 +4,6 @@
   "name": "google-analytics",
   "category": "api",
   "tags": [],
-  "description": "",
+  "description": "Connector for Google Analytics data extraction and analysis",
   "homepage": ""
 }
