@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { existsSync, readFileSync } from "fs";
+import { readFile } from "fs/promises";
 import { join } from "path";
-import { getPipelinesRegistryPath } from "@workspace/registry/pipelines";
 
 // Helper function to extract the structure from the {implementation} node level down
 function extractImplementationStructure(
@@ -61,20 +60,10 @@ export async function GET(
     );
   }
 
-  // Get the scaffold file path
-  const registryPath = getPipelinesRegistryPath();
-  const scaffoldPath = join(registryPath, "_scaffold", `${language}.json`);
-
-  if (!existsSync(scaffoldPath)) {
-    return NextResponse.json(
-      { error: `Scaffold for language '${language}' not found` },
-      { status: 404 }
-    );
-  }
-
   try {
-    // Read and parse the scaffold file
-    const scaffoldContent = readFileSync(scaffoldPath, "utf-8");
+    // Read the pre-copied scaffold file from public directory
+    const scaffoldPath = join(process.cwd(), "public", "scaffolds", "pipelines", `${language}.json`);
+    const scaffoldContent = await readFile(scaffoldPath, "utf-8");
     const scaffold = JSON.parse(scaffoldContent);
 
     // Extract the structure from the {implementation} node level down
@@ -98,12 +87,16 @@ export async function GET(
       structure: implementationStructure,
     };
 
-    return NextResponse.json(response);
+    return NextResponse.json(response, {
+      headers: {
+        'Cache-Control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400'
+      }
+    });
   } catch (error) {
     console.error(`Error reading scaffold for ${language}:`, error);
     return NextResponse.json(
       { error: "Failed to read scaffold file" },
-      { status: 500 }
+      { status: 404 }
     );
   }
 }

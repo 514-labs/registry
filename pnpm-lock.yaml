@@ -20,6 +20,9 @@ importers:
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
+      tsx:
+        specifier: 4.20.6
+        version: 4.20.6
       turbo:
         specifier: ^2.5.4
         version: 2.5.8
@@ -188,6 +191,65 @@ importers:
         specifier: ^9.6.1
         version: 9.7.2(typescript@5.8.3)
 
+  connector-registry/google-ads/v1/514-labs/typescript/default:
+    dependencies:
+      '@connector-factory/core':
+        specifier: workspace:*
+        version: link:../../../../../../packages/core
+    devDependencies:
+      '@types/jest':
+        specifier: ^29.5.12
+        version: 29.5.14
+      '@types/node':
+        specifier: ^20.11.30
+        version: 20.16.13
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.16.13)(ts-node@10.9.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(@types/node@20.16.13)(typescript@5.8.3))
+      nock:
+        specifier: ^13.5.0
+        version: 13.5.6
+      ts-jest:
+        specifier: ^29.1.2
+        version: 29.4.4(@babel/core@7.24.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@20.16.13)(ts-node@10.9.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(@types/node@20.16.13)(typescript@5.8.3)))(typescript@5.8.3)
+      typescript:
+        specifier: ^5.4.0
+        version: 5.8.3
+
+  connector-registry/google-analytics/v4/514-labs/typescript/default:
+    dependencies:
+      '@connector-factory/core':
+        specifier: workspace:*
+        version: link:../../../../../../packages/core
+      '@types/jsonwebtoken':
+        specifier: ^9.0.10
+        version: 9.0.10
+      dotenv:
+        specifier: ^16.6.1
+        version: 16.6.1
+      jsonwebtoken:
+        specifier: ^9.0.2
+        version: 9.0.2
+    devDependencies:
+      '@types/jest':
+        specifier: ^29.5.12
+        version: 29.5.14
+      '@types/node':
+        specifier: ^20.11.30
+        version: 20.16.13
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.16.13)(ts-node@10.9.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(@types/node@20.16.13)(typescript@5.8.3))
+      nock:
+        specifier: ^13.5.0
+        version: 13.5.6
+      ts-jest:
+        specifier: ^29.1.2
+        version: 29.4.4(@babel/core@7.24.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@20.16.13)(ts-node@10.9.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(@types/node@20.16.13)(typescript@5.8.3)))(typescript@5.8.3)
+      typescript:
+        specifier: ^5.4.0
+        version: 5.8.3
+
   connector-registry/hubspot/v3/514-labs/typescript/data-api:
     dependencies:
       '@connector-factory/core':
@@ -202,6 +264,34 @@ importers:
       zod:
         specifier: ^3.25.8
         version: 3.25.76
+    devDependencies:
+      '@types/jest':
+        specifier: ^29.5.14
+        version: 29.5.14
+      '@types/node':
+        specifier: ^20.14.12
+        version: 20.16.13
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.16.13)(ts-node@10.9.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(@types/node@20.16.13)(typescript@5.8.3))
+      nock:
+        specifier: ^13.5.4
+        version: 13.5.6
+      ts-jest:
+        specifier: 29.1.2
+        version: 29.1.2(@babel/core@7.24.5)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.5))(jest@29.7.0(@types/node@20.16.13)(ts-node@10.9.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(@types/node@20.16.13)(typescript@5.8.3)))(typescript@5.8.3)
+      tsx:
+        specifier: ^4.19.2
+        version: 4.20.6
+      typescript:
+        specifier: ^5.6.3
+        version: 5.8.3
+
+  connector-registry/meta-ads-new/v1/514-labs/typescript/default:
+    dependencies:
+      '@connector-factory/core':
+        specifier: workspace:*
+        version: link:../../../../../../packages/core
     devDependencies:
       '@types/jest':
         specifier: ^29.5.14
@@ -251,6 +341,34 @@ importers:
         version: 4.20.6
       typescript:
         specifier: ^5.6.3
+        version: 5.8.3
+
+  connector-registry/shopify/v1/514-labs/typescript/default:
+    dependencies:
+      '@connector-factory/core':
+        specifier: workspace:*
+        version: link:../../../../../../packages/core
+    devDependencies:
+      '@types/jest':
+        specifier: ^29.5.12
+        version: 29.5.14
+      '@types/node':
+        specifier: ^20.11.30
+        version: 20.16.13
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.16.13)(ts-node@10.9.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(@types/node@20.16.13)(typescript@5.8.3))
+      nock:
+        specifier: ^13.5.0
+        version: 13.5.6
+      ts-jest:
+        specifier: ^29.1.2
+        version: 29.4.4(@babel/core@7.24.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@20.16.13)(ts-node@10.9.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(@types/node@20.16.13)(typescript@5.8.3)))(typescript@5.8.3)
+      tsx:
+        specifier: ^4.20.4
+        version: 4.20.6
+      typescript:
+        specifier: ^5.4.0
         version: 5.8.3
 
   examples/quickstart:
@@ -374,7 +492,7 @@ importers:
     dependencies:
       '@514labs/moose-lib':
         specifier: latest
-        version: 0.6.103(@swc/core@1.10.15(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(@types/node@22.18.8)(ts-patch@3.3.0)(typia@9.7.2(typescript@5.8.3))
+        version: 0.6.149(@swc/core@1.10.15(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(@types/node@22.18.8)(ts-patch@3.3.0)(typia@9.7.2(typescript@5.8.3))
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -687,7 +805,7 @@ importers:
     dependencies:
       '@514labs/moose-lib':
         specifier: latest
-        version: 0.6.103(@swc/core@1.10.15(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(@types/node@22.18.8)(ts-patch@3.3.0)(typia@9.7.2(typescript@5.8.3))
+        version: 0.6.149(@swc/core@1.10.15(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(@types/node@22.18.8)(ts-patch@3.3.0)(typia@9.7.2(typescript@5.8.3))
       dotenv:
         specifier: ^16.4.5
         version: 16.6.1
@@ -697,7 +815,7 @@ importers:
     devDependencies:
       '@514labs/moose-cli':
         specifier: latest
-        version: 0.6.103
+        version: 0.6.149
       tsup:
         specifier: ^8.0.0
         version: 8.5.0(@swc/core@1.10.15(@swc/helpers@0.5.15))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
@@ -738,8 +856,8 @@ importers:
 
 packages:
 
-  '@514labs/moose-cli-darwin-arm64@0.6.103':
-    resolution: {integrity: sha512-+GBH09GDYpfAA7ufEwQTwAjmAkv41C3ZDY0uV3XpQbV2gF2916uTQMPZAFSJMcpErM0r9t+CCg5/FL7omva2Kw==}
+  '@514labs/moose-cli-darwin-arm64@0.6.149':
+    resolution: {integrity: sha512-Ws3+z8DCXmQVP8a0JpQ0GZ6NHgEBCN7sJ3o0F4X34tq/HfTAKlRqko8eC2f1tR5mHkiDHgPt1WvfeI+BLWyahg==}
     cpu: [arm64]
     os: [darwin]
 
@@ -748,8 +866,8 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
-  '@514labs/moose-cli-darwin-x64@0.6.103':
-    resolution: {integrity: sha512-u55jc5sRmEFt9PME3gfVDMzRkFYvJ47A6A2BPV/74VUCnMO/N/sAm/6Q0Nc2Ct7qFPbi/BVbfZut88XkG/tJbw==}
+  '@514labs/moose-cli-darwin-x64@0.6.149':
+    resolution: {integrity: sha512-vnzDJY6dxRJmCwp+Pxz/Elskf7e5WrFmpJMVnIO1qCt1nlLPj+d960gFL2FRigoxmJqOskc3GnILyyuWzsAr0g==}
     cpu: [x64]
     os: [darwin]
 
@@ -758,8 +876,8 @@ packages:
     cpu: [x64]
     os: [darwin]
 
-  '@514labs/moose-cli-linux-arm64@0.6.103':
-    resolution: {integrity: sha512-230b90BvudSBoY7nqHhjoqP7u8mPsiMZ/LWHsLP5n88uM8mHUoFzXSlyQWcpgT87KLbg9ESANL0BQHwYq/5VJw==}
+  '@514labs/moose-cli-linux-arm64@0.6.149':
+    resolution: {integrity: sha512-yG5GuKeDKCPI2RIiktiRd6t05FLsElcjvK4k/1/yaIsJQ+jnYMVh/OYtuYaFuf3JfLm3IjG1dgK1yPLIlYxlFg==}
     cpu: [arm64]
     os: [linux]
 
@@ -768,8 +886,8 @@ packages:
     cpu: [arm64]
     os: [linux]
 
-  '@514labs/moose-cli-linux-x64@0.6.103':
-    resolution: {integrity: sha512-SXajf6A8EJXCiUIB2AMoNvw9qaPrlRfmU3TRUsQDCW7v1MB4Sr1Q3kcHDm1eQNg3/FikLox5oPv5huMY2rHyBw==}
+  '@514labs/moose-cli-linux-x64@0.6.149':
+    resolution: {integrity: sha512-UGP6U26YE2QMS/g8Xa4BbBnkf1ZIDE2Mny0MbGrGqukhRyEWqEVv3p+fR9G0ACPTcTfWmEZAjDJntcv1Fm8Ijw==}
     cpu: [x64]
     os: [linux]
 
@@ -778,16 +896,16 @@ packages:
     cpu: [x64]
     os: [linux]
 
-  '@514labs/moose-cli@0.6.103':
-    resolution: {integrity: sha512-Ziro8KPKltOZhEkGHYtISgjVM7vsERun5QTThMyzC6FheBlhiM3a8JA5TYWa5snn7yl5wW1Z8NhMdqqAalqcVg==}
+  '@514labs/moose-cli@0.6.149':
+    resolution: {integrity: sha512-l5GQFXBU6p8hSdKo6ztpHLvqeCfW3cGqg87OvId1MFiwPserjKsGWM60qsr17PKF5xKHaJqkdMNtf8qUGFZdMA==}
     hasBin: true
 
   '@514labs/moose-cli@0.6.83':
     resolution: {integrity: sha512-BncHQxb4gtbUApJ+KC1A6fcbF2cxyi1InLCdPkQk4uN7xDl9VVfKMXTR48BRGAoo3x2nz7tc6tVkLx5KprTIUA==}
     hasBin: true
 
-  '@514labs/moose-lib@0.6.103':
-    resolution: {integrity: sha512-yK+zgawsT7juANCTLrqkG7L2xlrj7uxwCRSFwWphK3I1yAPMMAqy/LBG2QpWJ+OnPRWjnlELZRfpQY0x90crzQ==}
+  '@514labs/moose-lib@0.6.149':
+    resolution: {integrity: sha512-4gHSHk1zscbI0cGPVHwJaBf1Eh19plLFfV4ZBCQ/jqGctC9ipMTNFHm18E35HTki+ZMAmJVsDiRhRpkfZr/r7g==}
     hasBin: true
     peerDependencies:
       ts-patch: ^3.3.0
@@ -1747,6 +1865,9 @@ packages:
     engines: {node: '>=10.0'}
     peerDependencies:
       tslib: '2'
+
+  '@kafkajs/confluent-schema-registry@3.9.0':
+    resolution: {integrity: sha512-QiwinzNVlHPvylFCSiKBcTDxNDp9/xDj7ZWTxlsel5h4hwLxMLjnuJUcW/LhzNPPi/V4Vfa4Yq0uv30CYGtRnA==}
 
   '@mapbox/node-pre-gyp@1.0.11':
     resolution: {integrity: sha512-Yhlar6v9WQgUp/He7BdgzOz8lqMQ8sU+jkCq7Wx8Myc5YFJLbEe7lgui/V7G1qB1DJykHSGwreceSaD60Y0PUQ==}
@@ -3282,6 +3403,9 @@ packages:
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
 
+  '@types/jsonwebtoken@9.0.10':
+    resolution: {integrity: sha512-asx5hIG9Qmf/1oStypjanR7iKTv0gXQ1Ov/jfrX6kS/EO0OFni8orbmGCn0672NHR3kXHwpAwR+B368ZGN/2rA==}
+
   '@types/lodash@4.17.20':
     resolution: {integrity: sha512-H3MHACvFUEiujabxhaI/ImO6gUrd8oOurg7LQtS7mbwIXA/cUqWrvBsaeJ23aZEPk1TAYkurjfMbSELfoCXlGA==}
 
@@ -3557,6 +3681,9 @@ packages:
   ajv@6.12.6:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}
 
+  ajv@7.2.4:
+    resolution: {integrity: sha512-nBeQgg/ZZA3u3SYxyaDvpvDtgZ/EZPF547ARgZBrG9Bhu1vKDwAIjtIf+sDtJUKa2zOcEbmRLBRSyMraS/Oy1A==}
+
   ajv@8.17.1:
     resolution: {integrity: sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==}
 
@@ -3718,6 +3845,10 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
+  avsc@5.7.9:
+    resolution: {integrity: sha512-yOA4wFeI7ET3v32Di/sUybQ+ttP20JHSW3mxLuNGeO0uD6PPcvLrIQXSvy/rhJOWU5JrYh7U4OHplWMmtAtjMg==}
+    engines: {node: '>=0.11'}
+
   axe-core@4.10.3:
     resolution: {integrity: sha512-Xm7bpRXnDSX2YE2YFfBk2FnF0ep6tmG7xPh8iHee8MIcrgq762Nkce856dYtJYLkuIoYZvGfTs/PbZhideTcEg==}
     engines: {node: '>=4'}
@@ -3800,6 +3931,9 @@ packages:
 
   bser@2.1.1:
     resolution: {integrity: sha512-gQxTNE/GAfIIrmHLUE3oJyp5FO6HRBfhjnw4/wMmA63ZGDJnWBmgY/lyQBpnDUkGmAhbSe39tx2d/iTOAfglwQ==}
+
+  buffer-equal-constant-time@1.0.1:
+    resolution: {integrity: sha512-zRpUiDwd/xk6ADqPMATG8vc9VPrkck7T07OIx0gnjmJAnHnTVXNQG3vfvWNuiZIkwu9KrKdA1iJKfsfTVxE6NA==}
 
   buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
@@ -4399,6 +4533,9 @@ packages:
 
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
+
+  ecdsa-sig-formatter@1.0.11:
+    resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
 
   electron-to-chromium@1.5.230:
     resolution: {integrity: sha512-A6A6Fd3+gMdaed9wX83CvHYJb4UuapPD5X5SLq72VZJzxHSY0/LUweGXRWmQlh2ln7KV7iw7jnwXK7dlPoOnHQ==}
@@ -5739,9 +5876,19 @@ packages:
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
 
+  jsonwebtoken@9.0.2:
+    resolution: {integrity: sha512-PRp66vJ865SSqOlgqS8hujT5U4AOgMfhrwYIuIhfKaoSCZcirrmASQr8CX7cUg+RMih+hgznrjp99o+W4pJLHQ==}
+    engines: {node: '>=12', npm: '>=6'}
+
   jsx-ast-utils@3.3.5:
     resolution: {integrity: sha512-ZZow9HBI5O6EPgSJLUb8n2NKgmVWTwCvHGwFuJlMjvLFqlGG6pjirPhtdsseaLZjSibD8eegzmYpUZwoIlj2cQ==}
     engines: {node: '>=4.0'}
+
+  jwa@1.4.2:
+    resolution: {integrity: sha512-eeH5JO+21J78qMvTIDdBXidBd6nG2kZjg5Ohz/1fpa28Z4CcsWUzJ1ZZyFq/3z3N17aZy+ZuBoHljASbL1WfOw==}
+
+  jws@3.2.2:
+    resolution: {integrity: sha512-YHlZCB6lMTllWDtSPHz/ZXTsi8S00usEV6v1tjq8tOUZzw7DpSDWVXjXDre6ed1w/pd495ODpHZYSdkRTsa0HA==}
 
   kafkajs@2.2.4:
     resolution: {integrity: sha512-j/YeapB1vfPT2iOIUn/vxdyKEuhuY2PxMBvf5JWux6iSaukAccrMtXEY/Lb7OvavDhOWME589bpLrEdnVHjfjA==}
@@ -5875,11 +6022,32 @@ packages:
     resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
     deprecated: This package is deprecated. Use the optional chaining (?.) operator instead.
 
+  lodash.includes@4.3.0:
+    resolution: {integrity: sha512-W3Bx6mdkRTGtlJISOvVD/lbqjTlPPUDTMnlXZFnVwi9NKJ6tiAk6LVdlhZMm17VZisqhKcgzpO5Wz91PCt5b0w==}
+
+  lodash.isboolean@3.0.3:
+    resolution: {integrity: sha512-Bz5mupy2SVbPHURB98VAcw+aHh4vRV5IPNhILUCsOzRmsTmSQ17jIuqopAentWoehktxGd9e/hbIXq980/1QJg==}
+
+  lodash.isinteger@4.0.4:
+    resolution: {integrity: sha512-DBwtEWN2caHQ9/imiNeEA5ys1JoRtRfY3d7V9wkqtbycnAmTvRRmbHKDV4a0EYc678/dia0jrte4tjYwVBaZUA==}
+
+  lodash.isnumber@3.0.3:
+    resolution: {integrity: sha512-QYqzpfwO3/CWf3XP+Z+tkQsfaLL/EnUlXWVkIk5FUPc4sBdTehEqZONuyRt2P67PXAk+NXmTBcc97zw9t1FQrw==}
+
+  lodash.isplainobject@4.0.6:
+    resolution: {integrity: sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==}
+
+  lodash.isstring@4.0.1:
+    resolution: {integrity: sha512-0wJxfxH1wgO3GrbuP+dTTk7op+6L41QCXbGINEmD+ny/G/eCqGzxyCsh7159S+mgDDcoarnBw6PC1PS5+wUGgw==}
+
   lodash.memoize@4.1.2:
     resolution: {integrity: sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==}
 
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
+
+  lodash.once@4.1.1:
+    resolution: {integrity: sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==}
 
   lodash.sortby@4.7.0:
     resolution: {integrity: sha512-HDWXG8isMntAyRF5vZ7xKuEvOhT4AhlRt/3czTSjvGUxjYCBVRQY48ViDHyfYz9VIoBkW4TMGQNapx+l3RUwdA==}
@@ -5958,6 +6126,9 @@ packages:
 
   makeerror@1.0.12:
     resolution: {integrity: sha512-JmqCvUhmt43madlpFzG4BQzG2Z3m6tvQDNKdClZnO3VbIudJYmxsT0FNJMeiB2+JTSlTQTSbU8QdesVmwJcmLg==}
+
+  mappersmith@2.46.1:
+    resolution: {integrity: sha512-Ac9UGnHmf5rNtbOxe/SmEwtFPmb2/ronEwQbWcS6uA6nXxGPyr+dhPpTmzCTmZosdc8reFdeSqOy+khEkCFogA==}
 
   markdown-extensions@2.0.0:
     resolution: {integrity: sha512-o5vL7aDWatOTX8LzaS1WMoaoxIiLRQJuIKKe2wAw6IeULDHaqbiqiggmx+pKvZDb1Sj+pE46Sn1T7lCqfFtg1Q==}
@@ -8187,36 +8358,36 @@ packages:
 
 snapshots:
 
-  '@514labs/moose-cli-darwin-arm64@0.6.103':
+  '@514labs/moose-cli-darwin-arm64@0.6.149':
     optional: true
 
   '@514labs/moose-cli-darwin-arm64@0.6.83':
     optional: true
 
-  '@514labs/moose-cli-darwin-x64@0.6.103':
+  '@514labs/moose-cli-darwin-x64@0.6.149':
     optional: true
 
   '@514labs/moose-cli-darwin-x64@0.6.83':
     optional: true
 
-  '@514labs/moose-cli-linux-arm64@0.6.103':
+  '@514labs/moose-cli-linux-arm64@0.6.149':
     optional: true
 
   '@514labs/moose-cli-linux-arm64@0.6.83':
     optional: true
 
-  '@514labs/moose-cli-linux-x64@0.6.103':
+  '@514labs/moose-cli-linux-x64@0.6.149':
     optional: true
 
   '@514labs/moose-cli-linux-x64@0.6.83':
     optional: true
 
-  '@514labs/moose-cli@0.6.103':
+  '@514labs/moose-cli@0.6.149':
     optionalDependencies:
-      '@514labs/moose-cli-darwin-arm64': 0.6.103
-      '@514labs/moose-cli-darwin-x64': 0.6.103
-      '@514labs/moose-cli-linux-arm64': 0.6.103
-      '@514labs/moose-cli-linux-x64': 0.6.103
+      '@514labs/moose-cli-darwin-arm64': 0.6.149
+      '@514labs/moose-cli-darwin-x64': 0.6.149
+      '@514labs/moose-cli-linux-arm64': 0.6.149
+      '@514labs/moose-cli-linux-x64': 0.6.149
 
   '@514labs/moose-cli@0.6.83':
     optionalDependencies:
@@ -8225,11 +8396,12 @@ snapshots:
       '@514labs/moose-cli-linux-arm64': 0.6.83
       '@514labs/moose-cli-linux-x64': 0.6.83
 
-  '@514labs/moose-lib@0.6.103(@swc/core@1.10.15(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(@types/node@22.18.8)(ts-patch@3.3.0)(typia@9.7.2(typescript@5.8.3))':
+  '@514labs/moose-lib@0.6.149(@swc/core@1.10.15(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(@types/node@22.18.8)(ts-patch@3.3.0)(typia@9.7.2(typescript@5.8.3))':
     dependencies:
       '@clickhouse/client': 1.8.1
       '@clickhouse/client-web': 1.5.0
       '@confluentinc/kafka-javascript': 1.5.0
+      '@kafkajs/confluent-schema-registry': 3.9.0
       '@temporalio/activity': 1.11.7
       '@temporalio/client': 1.11.7
       '@temporalio/common': 1.11.7
@@ -8239,7 +8411,6 @@ snapshots:
       csv-parse: 5.5.6
       fastq: 1.17.1
       jose: 5.9.2
-      pretty-ms: 9.2.0
       redis: 4.7.1
       toml: 3.0.0
       ts-node: 10.9.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(@types/node@22.18.8)(typescript@5.9.3)
@@ -8730,11 +8901,6 @@ snapshots:
       eslint: 8.57.1
       eslint-visitor-keys: 3.4.3
 
-  '@eslint-community/eslint-utils@4.4.0(eslint@9.19.0(jiti@2.6.1))':
-    dependencies:
-      eslint: 9.19.0(jiti@2.6.1)
-      eslint-visitor-keys: 3.4.3
-
   '@eslint-community/eslint-utils@4.9.0(eslint@8.57.1)':
     dependencies:
       eslint: 8.57.1
@@ -8750,7 +8916,7 @@ snapshots:
   '@eslint/config-array@0.19.1':
     dependencies:
       '@eslint/object-schema': 2.1.5
-      debug: 4.3.7
+      debug: 4.4.3
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -9221,6 +9387,13 @@ snapshots:
     dependencies:
       tslib: 2.6.2
 
+  '@kafkajs/confluent-schema-registry@3.9.0':
+    dependencies:
+      ajv: 7.2.4
+      avsc: 5.7.9
+      mappersmith: 2.46.1
+      protobufjs: 7.4.0
+
   '@mapbox/node-pre-gyp@1.0.11':
     dependencies:
       detect-libc: 2.0.3
@@ -9230,7 +9403,7 @@ snapshots:
       nopt: 5.0.0
       npmlog: 5.0.1
       rimraf: 3.0.2
-      semver: 7.7.0
+      semver: 7.7.2
       tar: 6.2.1
     transitivePeerDependencies:
       - encoding
@@ -10619,7 +10792,7 @@ snapshots:
       js-yaml: 4.1.0
       ora: 4.1.1
       rimraf: 3.0.2
-      semver: 7.7.0
+      semver: 7.7.2
       update-check: 1.5.4
 
   '@types/acorn@4.0.6':
@@ -10830,6 +11003,11 @@ snapshots:
   '@types/json-schema@7.0.15': {}
 
   '@types/json5@0.0.29': {}
+
+  '@types/jsonwebtoken@9.0.10':
+    dependencies:
+      '@types/ms': 0.7.34
+      '@types/node': 20.16.13
 
   '@types/lodash@4.17.20': {}
 
@@ -11221,7 +11399,7 @@ snapshots:
 
   acorn-globals@7.0.1:
     dependencies:
-      acorn: 8.14.0
+      acorn: 8.15.0
       acorn-walk: 8.3.2
     optional: true
 
@@ -11261,6 +11439,13 @@ snapshots:
       fast-deep-equal: 3.1.3
       fast-json-stable-stringify: 2.1.0
       json-schema-traverse: 0.4.1
+      uri-js: 4.4.1
+
+  ajv@7.2.4:
+    dependencies:
+      fast-deep-equal: 3.1.3
+      json-schema-traverse: 1.0.0
+      require-from-string: 2.0.2
       uri-js: 4.4.1
 
   ajv@8.17.1:
@@ -11461,6 +11646,8 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.0.0
 
+  avsc@5.7.9: {}
+
   axe-core@4.10.3: {}
 
   axobject-query@4.1.0: {}
@@ -11572,6 +11759,8 @@ snapshots:
   bser@2.1.1:
     dependencies:
       node-int64: 0.4.0
+
+  buffer-equal-constant-time@1.0.1: {}
 
   buffer-from@1.1.2: {}
 
@@ -12147,6 +12336,10 @@ snapshots:
 
   eastasianwidth@0.2.0: {}
 
+  ecdsa-sig-formatter@1.0.11:
+    dependencies:
+      safe-buffer: 5.2.1
+
   electron-to-chromium@1.5.230: {}
 
   electron-to-chromium@1.5.41: {}
@@ -12449,7 +12642,7 @@ snapshots:
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@8.45.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.45.0(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1))(eslint@8.57.1)
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.45.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.1)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.45.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@8.45.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.45.0(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@8.57.1)
       eslint-plugin-react: 7.37.5(eslint@8.57.1)
       eslint-plugin-react-hooks: 5.2.0(eslint@8.57.1)
@@ -12477,7 +12670,7 @@ snapshots:
       enhanced-resolve: 5.17.1
       eslint: 8.57.1
       eslint-module-utils: 2.8.1(@typescript-eslint/parser@8.45.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@8.45.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.45.0(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1)
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.45.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.1)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.45.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@8.45.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.45.0(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.5
       is-core-module: 2.13.1
@@ -12510,7 +12703,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.45.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.1):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.45.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@8.45.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.45.0(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -12650,7 +12843,7 @@ snapshots:
 
   eslint@9.19.0(jiti@2.6.1):
     dependencies:
-      '@eslint-community/eslint-utils': 4.4.0(eslint@9.19.0(jiti@2.6.1))
+      '@eslint-community/eslint-utils': 4.9.0(eslint@9.19.0(jiti@2.6.1))
       '@eslint-community/regexpp': 4.12.1
       '@eslint/config-array': 0.19.1
       '@eslint/core': 0.10.0
@@ -12660,15 +12853,15 @@ snapshots:
       '@humanfs/node': 0.16.6
       '@humanwhocodes/module-importer': 1.0.1
       '@humanwhocodes/retry': 0.4.1
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.8
       '@types/json-schema': 7.0.15
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.6
-      debug: 4.3.7
+      debug: 4.4.3
       escape-string-regexp: 4.0.0
       eslint-scope: 8.2.0
-      eslint-visitor-keys: 4.2.0
+      eslint-visitor-keys: 4.2.1
       espree: 10.3.0
       esquery: 1.5.0
       esutils: 2.0.3
@@ -13285,7 +13478,7 @@ snapshots:
     dependencies:
       '@tootallnate/once': 2.0.0
       agent-base: 6.0.2
-      debug: 4.3.7
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
     optional: true
@@ -13658,7 +13851,7 @@ snapshots:
       '@babel/parser': 7.24.5
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.2
-      semver: 7.7.0
+      semver: 7.7.2
     transitivePeerDependencies:
       - supports-color
 
@@ -13957,7 +14150,7 @@ snapshots:
       jest-util: 29.7.0
       natural-compare: 1.4.0
       pretty-format: 29.7.0
-      semver: 7.7.0
+      semver: 7.7.2
     transitivePeerDependencies:
       - supports-color
 
@@ -14039,7 +14232,7 @@ snapshots:
   jsdom@20.0.3:
     dependencies:
       abab: 2.0.6
-      acorn: 8.14.0
+      acorn: 8.15.0
       acorn-globals: 7.0.1
       cssom: 0.5.0
       cssstyle: 2.3.0
@@ -14108,12 +14301,36 @@ snapshots:
     optionalDependencies:
       graceful-fs: 4.2.11
 
+  jsonwebtoken@9.0.2:
+    dependencies:
+      jws: 3.2.2
+      lodash.includes: 4.3.0
+      lodash.isboolean: 3.0.3
+      lodash.isinteger: 4.0.4
+      lodash.isnumber: 3.0.3
+      lodash.isplainobject: 4.0.6
+      lodash.isstring: 4.0.1
+      lodash.once: 4.1.1
+      ms: 2.1.3
+      semver: 7.7.2
+
   jsx-ast-utils@3.3.5:
     dependencies:
       array-includes: 3.1.8
       array.prototype.flat: 1.3.2
       object.assign: 4.1.5
       object.values: 1.2.1
+
+  jwa@1.4.2:
+    dependencies:
+      buffer-equal-constant-time: 1.0.1
+      ecdsa-sig-formatter: 1.0.11
+      safe-buffer: 5.2.1
+
+  jws@3.2.2:
+    dependencies:
+      jwa: 1.4.2
+      safe-buffer: 5.2.1
 
   kafkajs@2.2.4: {}
 
@@ -14210,9 +14427,23 @@ snapshots:
 
   lodash.get@4.4.2: {}
 
+  lodash.includes@4.3.0: {}
+
+  lodash.isboolean@3.0.3: {}
+
+  lodash.isinteger@4.0.4: {}
+
+  lodash.isnumber@3.0.3: {}
+
+  lodash.isplainobject@4.0.6: {}
+
+  lodash.isstring@4.0.1: {}
+
   lodash.memoize@4.1.2: {}
 
   lodash.merge@4.6.2: {}
+
+  lodash.once@4.1.1: {}
 
   lodash.sortby@4.7.0: {}
 
@@ -14275,13 +14506,15 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.7.0
+      semver: 7.7.2
 
   make-error@1.3.6: {}
 
   makeerror@1.0.12:
     dependencies:
       tmpl: 1.0.5
+
+  mappersmith@2.46.1: {}
 
   markdown-extensions@2.0.0: {}
 
@@ -16254,7 +16487,7 @@ snapshots:
       json5: 2.2.3
       lodash.memoize: 4.1.2
       make-error: 1.3.6
-      semver: 7.7.0
+      semver: 7.7.2
       typescript: 5.8.3
       yargs-parser: 21.1.1
     optionalDependencies:

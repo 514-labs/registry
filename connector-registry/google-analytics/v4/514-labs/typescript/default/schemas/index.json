@@ -1,0 +1,54 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/schema-index.schema.json",
+  "version": "0.1.0",
+  "datasets": [
+    {
+      "name": "reports.runReport",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/endpoints/reports/run-report.schema.json",
+      "doc": "raw/endpoints/reports/run-report.md",
+      "metadata": {
+        "category": "Reports",
+        "apiMethod": "POST",
+        "description": "Standard analytics reports with dimensions and metrics"
+      }
+    },
+    {
+      "name": "realtime.runRealtimeReport",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/endpoints/realtime/run-realtime-report.schema.json",
+      "doc": "raw/endpoints/realtime/run-realtime-report.md",
+      "metadata": {
+        "category": "Realtime",
+        "apiMethod": "POST",
+        "description": "Real-time analytics data from the last 30 minutes"
+      }
+    },
+    {
+      "name": "metadata.getMetadata",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/endpoints/metadata/get-metadata.schema.json",
+      "doc": "raw/endpoints/metadata/get-metadata.md",
+      "metadata": {
+        "category": "Metadata",
+        "apiMethod": "GET",
+        "description": "Available dimensions and metrics metadata"
+      }
+    },
+    {
+      "name": "audienceExports.list",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/endpoints/audience-exports/list.schema.json",
+      "doc": "raw/endpoints/audience-exports/list.md",
+      "metadata": {
+        "category": "Audience Exports",
+        "apiMethod": "GET",
+        "description": "List and manage audience exports"
+      }
+    }
+  ]
+}
