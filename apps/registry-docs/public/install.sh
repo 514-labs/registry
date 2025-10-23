@@ -57,7 +57,12 @@ trap cleanup EXIT INT TERM
 set_registry_url() {
   # Only set if not explicitly provided via environment variable at script start
   if [ -z "${REGISTRY_JSON_URL}" ]; then
-    REGISTRY_JSON_URL="https://registry.514.ai/registry.json"
+    # Try to detect if running against localhost dev server
+    if curl -s --connect-timeout 1 http://localhost:3000/registry.json >/dev/null 2>&1; then
+      REGISTRY_JSON_URL="http://localhost:3000/registry.json"
+    else
+      REGISTRY_JSON_URL="https://registry.514.ai/registry.json"
+    fi
   fi
 }
 

@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Get Metadata",
+  "description": "Returns metadata for all available dimensions and metrics",
+  "type": "object",
+  "properties": {
+    "response": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Resource name"
+        },
+        "dimensions": {
+          "type": "array",
+          "description": "Available dimension metadata",
+          "items": {
+            "type": "object",
+            "properties": {
+              "apiName": {
+                "type": "string",
+                "description": "API name used in requests"
+              },
+              "uiName": {
+                "type": "string",
+                "description": "Display name in UI"
+              },
+              "description": {
+                "type": "string",
+                "description": "Dimension description"
+              },
+              "customDefinition": {
+                "type": "boolean",
+                "description": "Whether this is a custom dimension"
+              },
+              "category": {
+                "type": "string",
+                "description": "Category grouping"
+              }
+            }
+          }
+        },
+        "metrics": {
+          "type": "array",
+          "description": "Available metric metadata",
+          "items": {
+            "type": "object",
+            "properties": {
+              "apiName": {
+                "type": "string",
+                "description": "API name used in requests"
+              },
+              "uiName": {
+                "type": "string",
+                "description": "Display name in UI"
+              },
+              "description": {
+                "type": "string",
+                "description": "Metric description"
+              },
+              "type": {
+                "type": "string",
+                "description": "Data type",
+                "enum": ["TYPE_INTEGER", "TYPE_FLOAT", "TYPE_CURRENCY", "TYPE_SECONDS"]
+              },
+              "customDefinition": {
+                "type": "boolean",
+                "description": "Whether this is a custom metric"
+              },
+              "category": {
+                "type": "string",
+                "description": "Category grouping"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

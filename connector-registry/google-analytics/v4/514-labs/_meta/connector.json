@@ -1,0 +1,22 @@
+{
+  "name": "google-analytics",
+  "author": "514-labs",
+  "version": "v4",
+  "languages": [
+    "typescript"
+  ],
+  "category": "api",
+  "capabilities": {
+    "extract": true,
+    "transform": false,
+    "load": false
+  },
+  "source": {
+    "type": "api",
+    "spec": "https://developers.google.com/analytics/devguides/reporting/data/v1",
+    "homepage": "https://developers.google.com/analytics"
+  },
+  "tags": [],
+  "maintainers": [],
+  "issues": { "typescript": { "default": "https://github.com/514-labs/registry/issues" } }
+}
