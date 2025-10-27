@@ -9,6 +9,7 @@ yarn-error.log*
 
 # Editor
 .vscode
+!pipeline-registry/**/.vscode
 
 # Generated types
 /generated-types

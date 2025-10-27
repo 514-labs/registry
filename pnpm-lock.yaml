@@ -191,31 +191,6 @@ importers:
         specifier: ^9.6.1
         version: 9.7.2(typescript@5.8.3)
 
-  connector-registry/google-ads/v1/514-labs/typescript/default:
-    dependencies:
-      '@connector-factory/core':
-        specifier: workspace:*
-        version: link:../../../../../../packages/core
-    devDependencies:
-      '@types/jest':
-        specifier: ^29.5.12
-        version: 29.5.14
-      '@types/node':
-        specifier: ^20.11.30
-        version: 20.16.13
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.16.13)(ts-node@10.9.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(@types/node@20.16.13)(typescript@5.8.3))
-      nock:
-        specifier: ^13.5.0
-        version: 13.5.6
-      ts-jest:
-        specifier: ^29.1.2
-        version: 29.4.4(@babel/core@7.24.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@20.16.13)(ts-node@10.9.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(@types/node@20.16.13)(typescript@5.8.3)))(typescript@5.8.3)
-      typescript:
-        specifier: ^5.4.0
-        version: 5.8.3
-
   connector-registry/google-analytics/v4/514-labs/typescript/default:
     dependencies:
       '@connector-factory/core':
@@ -287,34 +262,6 @@ importers:
         specifier: ^5.6.3
         version: 5.8.3
 
-  connector-registry/meta-ads-new/v1/514-labs/typescript/default:
-    dependencies:
-      '@connector-factory/core':
-        specifier: workspace:*
-        version: link:../../../../../../packages/core
-    devDependencies:
-      '@types/jest':
-        specifier: ^29.5.14
-        version: 29.5.14
-      '@types/node':
-        specifier: ^20.14.12
-        version: 20.16.13
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.16.13)(ts-node@10.9.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(@types/node@20.16.13)(typescript@5.8.3))
-      nock:
-        specifier: ^13.5.4
-        version: 13.5.6
-      ts-jest:
-        specifier: 29.1.2
-        version: 29.1.2(@babel/core@7.24.5)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.5))(jest@29.7.0(@types/node@20.16.13)(ts-node@10.9.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(@types/node@20.16.13)(typescript@5.8.3)))(typescript@5.8.3)
-      tsx:
-        specifier: ^4.19.2
-        version: 4.20.6
-      typescript:
-        specifier: ^5.6.3
-        version: 5.8.3
-
   connector-registry/meta-ads/v1/514-labs/typescript/default:
     dependencies:
       '@connector-factory/core':
@@ -341,34 +288,6 @@ importers:
         version: 4.20.6
       typescript:
         specifier: ^5.6.3
-        version: 5.8.3
-
-  connector-registry/shopify/v1/514-labs/typescript/default:
-    dependencies:
-      '@connector-factory/core':
-        specifier: workspace:*
-        version: link:../../../../../../packages/core
-    devDependencies:
-      '@types/jest':
-        specifier: ^29.5.12
-        version: 29.5.14
-      '@types/node':
-        specifier: ^20.11.30
-        version: 20.16.13
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.16.13)(ts-node@10.9.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(@types/node@20.16.13)(typescript@5.8.3))
-      nock:
-        specifier: ^13.5.0
-        version: 13.5.6
-      ts-jest:
-        specifier: ^29.1.2
-        version: 29.4.4(@babel/core@7.24.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.5))(jest-util@29.7.0)(jest@29.7.0(@types/node@20.16.13)(ts-node@10.9.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(@types/node@20.16.13)(typescript@5.8.3)))(typescript@5.8.3)
-      tsx:
-        specifier: ^4.20.4
-        version: 4.20.6
-      typescript:
-        specifier: ^5.4.0
         version: 5.8.3
 
   examples/quickstart:
@@ -773,8 +692,8 @@ importers:
   pipeline-registry/dutchie-to-clickhouse/v001/514-labs/typescript/open-api:
     dependencies:
       '@514labs/moose-lib':
-        specifier: 0.6.83
-        version: 0.6.83(@swc/core@1.10.15(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(@types/node@20.16.13)(ts-patch@3.3.0)(typia@9.7.2(typescript@5.9.3))
+        specifier: 0.6.157
+        version: 0.6.157(@swc/core@1.10.15(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(@types/node@20.16.13)(ts-patch@3.3.0)(typia@9.7.2(typescript@5.9.3))
       ts-patch:
         specifier: ^3.3.0
         version: 3.3.0
@@ -783,8 +702,8 @@ importers:
         version: 9.7.2(typescript@5.9.3)
     devDependencies:
       '@514labs/moose-cli':
-        specifier: 0.6.83
-        version: 0.6.83
+        specifier: 0.6.157
+        version: 0.6.157
       '@types/node':
         specifier: ^20.12.12
         version: 20.16.13
@@ -861,8 +780,8 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
-  '@514labs/moose-cli-darwin-arm64@0.6.83':
-    resolution: {integrity: sha512-uWiarlb3Z4bcMEJLFoUsYUJIFs2M51p+t91TunHA45pfSp47pMCdKQ6OpLSCu9+9qtpAQgW4JGeZi5ZnEv78wQ==}
+  '@514labs/moose-cli-darwin-arm64@0.6.157':
+    resolution: {integrity: sha512-w+avQaSOsHYERPOetu4BG0BdmpOPlBaqa+8dnzllsxTQYGmiOCrWSzOXem4zSDrvua/jY/n78FTKg85LzaVWmg==}
     cpu: [arm64]
     os: [darwin]
 
@@ -871,8 +790,8 @@ packages:
     cpu: [x64]
     os: [darwin]
 
-  '@514labs/moose-cli-darwin-x64@0.6.83':
-    resolution: {integrity: sha512-7p72bdbG8iYsiOYujSPMmYwnHpFi1bLuo7dPWE9g/N1vj2h/fxwAQfPn2ZH7Raul9Fy/auz2xMoPVKCe9Bum/g==}
+  '@514labs/moose-cli-darwin-x64@0.6.157':
+    resolution: {integrity: sha512-dtTJQmvHc2VpIny33cS0JAsTjK2Wi2Z7lXNHfvZ544kR60r3hWnAKhJFNlnpI1f9aAumeGhef0pt4ftwKxZ5RA==}
     cpu: [x64]
     os: [darwin]
 
@@ -881,8 +800,8 @@ packages:
     cpu: [arm64]
     os: [linux]
 
-  '@514labs/moose-cli-linux-arm64@0.6.83':
-    resolution: {integrity: sha512-iRLITtmUpVuBoM9blEG6/VWh5R1TAZOSf0GUZY10svAD95TQVe1HkohGBMI6wFZiHU8IV1n6otote02YSoundg==}
+  '@514labs/moose-cli-linux-arm64@0.6.157':
+    resolution: {integrity: sha512-SyCi3eA+z1XtQen4dzYBhGCkBnNow2bkH/GKtwrSMC/l2+K1Ok9O20/TohYR8bFJewoYtimhCnzIEETmBlPjFA==}
     cpu: [arm64]
     os: [linux]
 
@@ -891,8 +810,8 @@ packages:
     cpu: [x64]
     os: [linux]
 
-  '@514labs/moose-cli-linux-x64@0.6.83':
-    resolution: {integrity: sha512-+VTROp7Vb9UggjnlveJMv8VMmLVCQYAVO4pr+AnNt/rIFf7VlzYTohwB4p1TJNsoWR7X76baMMeNL8Xbvo6ZTQ==}
+  '@514labs/moose-cli-linux-x64@0.6.157':
+    resolution: {integrity: sha512-7JQKXzjqa2nLwGWq3wgAwIs9QN7LeJt3pkj344R37fHU76qku22GKETKDVHtlV+aJaT2PJgH7A851GRgHbGZVA==}
     cpu: [x64]
     os: [linux]
 
@@ -900,8 +819,8 @@ packages:
     resolution: {integrity: sha512-l5GQFXBU6p8hSdKo6ztpHLvqeCfW3cGqg87OvId1MFiwPserjKsGWM60qsr17PKF5xKHaJqkdMNtf8qUGFZdMA==}
     hasBin: true
 
-  '@514labs/moose-cli@0.6.83':
-    resolution: {integrity: sha512-BncHQxb4gtbUApJ+KC1A6fcbF2cxyi1InLCdPkQk4uN7xDl9VVfKMXTR48BRGAoo3x2nz7tc6tVkLx5KprTIUA==}
+  '@514labs/moose-cli@0.6.157':
+    resolution: {integrity: sha512-TD+27FEb3HrEeNdonIadEV1jqlfgCIISGyorbTlw5JB+wyJHKOSCC7jc/GTr8lChFdQ9P/qpUGzZQO8GWcFBdA==}
     hasBin: true
 
   '@514labs/moose-lib@0.6.149':
@@ -911,8 +830,8 @@ packages:
       ts-patch: ^3.3.0
       typia: ^9.6.1
 
-  '@514labs/moose-lib@0.6.83':
-    resolution: {integrity: sha512-ONLhmQZ+J9b4Kmacn5syMrYG17+E6QTNBk+YMHW5XJqUtROLdt0x6xM8ei3QZl80Pv+10zORjF3LgbJzMpyxTA==}
+  '@514labs/moose-lib@0.6.157':
+    resolution: {integrity: sha512-QfnT+2rjVXHmqmshqHTOLKs0ftMEKGuO+rkB/O1Yv0OLt6rbLc++IQCysCc+RWDNBtNjrtcmgAC9mGnrsx9tXw==}
     hasBin: true
     peerDependencies:
       ts-patch: ^3.3.0
@@ -5890,10 +5809,6 @@ packages:
   jws@3.2.2:
     resolution: {integrity: sha512-YHlZCB6lMTllWDtSPHz/ZXTsi8S00usEV6v1tjq8tOUZzw7DpSDWVXjXDre6ed1w/pd495ODpHZYSdkRTsa0HA==}
 
-  kafkajs@2.2.4:
-    resolution: {integrity: sha512-j/YeapB1vfPT2iOIUn/vxdyKEuhuY2PxMBvf5JWux6iSaukAccrMtXEY/Lb7OvavDhOWME589bpLrEdnVHjfjA==}
-    engines: {node: '>=14.0.0'}
-
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
@@ -6679,10 +6594,6 @@ packages:
     resolution: {integrity: sha512-ayCKvm/phCGxOkYRSCM82iDwct8/EonSEgCSxWxD7ve6jHggsFl4fZVQBPRNgQoKiuV/odhFrGzQXZwbifC8Rg==}
     engines: {node: '>=8'}
 
-  parse-ms@4.0.0:
-    resolution: {integrity: sha512-TXfryirbmq34y8QBwgqCVLi+8oA3oWx2eAnSn62ITyEhEYaWRlVZ2DvMM9eZbMs/RfxPu/PK/aBLyGj4IrqMHw==}
-    engines: {node: '>=18'}
-
   parse5@7.1.2:
     resolution: {integrity: sha512-Czj1WaSVpaoj0wbhMzLmWD69anp2WH7FXMB9n1Sy8/ZFF9jolSQVMu1Ij5WIyGmcBmhk7EOndpO4mIpihVqAXw==}
 
@@ -6821,10 +6732,6 @@ packages:
   pretty-format@29.7.0:
     resolution: {integrity: sha512-Pdlw/oPxN+aXdmM9R00JVC9WVFoCLTKJvDVLgmJ+qAffBMxsV85l/Lu7sNx4zSzPyoL2euImuEwHhOXdEgNFZQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-
-  pretty-ms@9.2.0:
-    resolution: {integrity: sha512-4yf0QO/sllf/1zbZWYnvWw3NxCQwLXKzIj0G849LSufP15BXKM0rbD2Z3wVnkMfjdn/CB0Dpp444gYAACdsplg==}
-    engines: {node: '>=18'}
 
   prompts@2.4.2:
     resolution: {integrity: sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q==}
@@ -8361,25 +8268,25 @@ snapshots:
   '@514labs/moose-cli-darwin-arm64@0.6.149':
     optional: true
 
-  '@514labs/moose-cli-darwin-arm64@0.6.83':
+  '@514labs/moose-cli-darwin-arm64@0.6.157':
     optional: true
 
   '@514labs/moose-cli-darwin-x64@0.6.149':
     optional: true
 
-  '@514labs/moose-cli-darwin-x64@0.6.83':
+  '@514labs/moose-cli-darwin-x64@0.6.157':
     optional: true
 
   '@514labs/moose-cli-linux-arm64@0.6.149':
     optional: true
 
-  '@514labs/moose-cli-linux-arm64@0.6.83':
+  '@514labs/moose-cli-linux-arm64@0.6.157':
     optional: true
 
   '@514labs/moose-cli-linux-x64@0.6.149':
     optional: true
 
-  '@514labs/moose-cli-linux-x64@0.6.83':
+  '@514labs/moose-cli-linux-x64@0.6.157':
     optional: true
 
   '@514labs/moose-cli@0.6.149':
@@ -8389,12 +8296,12 @@ snapshots:
       '@514labs/moose-cli-linux-arm64': 0.6.149
       '@514labs/moose-cli-linux-x64': 0.6.149
 
-  '@514labs/moose-cli@0.6.83':
+  '@514labs/moose-cli@0.6.157':
     optionalDependencies:
-      '@514labs/moose-cli-darwin-arm64': 0.6.83
-      '@514labs/moose-cli-darwin-x64': 0.6.83
-      '@514labs/moose-cli-linux-arm64': 0.6.83
-      '@514labs/moose-cli-linux-x64': 0.6.83
+      '@514labs/moose-cli-darwin-arm64': 0.6.157
+      '@514labs/moose-cli-darwin-x64': 0.6.157
+      '@514labs/moose-cli-linux-arm64': 0.6.157
+      '@514labs/moose-cli-linux-x64': 0.6.157
 
   '@514labs/moose-lib@0.6.149(@swc/core@1.10.15(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(@types/node@22.18.8)(ts-patch@3.3.0)(typia@9.7.2(typescript@5.8.3))':
     dependencies:
@@ -8429,10 +8336,12 @@ snapshots:
       - uglify-js
       - webpack-cli
 
-  '@514labs/moose-lib@0.6.83(@swc/core@1.10.15(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(@types/node@20.16.13)(ts-patch@3.3.0)(typia@9.7.2(typescript@5.9.3))':
+  '@514labs/moose-lib@0.6.157(@swc/core@1.10.15(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(@types/node@20.16.13)(ts-patch@3.3.0)(typia@9.7.2(typescript@5.9.3))':
     dependencies:
       '@clickhouse/client': 1.8.1
       '@clickhouse/client-web': 1.5.0
+      '@confluentinc/kafka-javascript': 1.5.0
+      '@kafkajs/confluent-schema-registry': 3.9.0
       '@temporalio/activity': 1.11.7
       '@temporalio/client': 1.11.7
       '@temporalio/common': 1.11.7
@@ -8442,8 +8351,6 @@ snapshots:
       csv-parse: 5.5.6
       fastq: 1.17.1
       jose: 5.9.2
-      kafkajs: 2.2.4
-      pretty-ms: 9.2.0
       redis: 4.7.1
       toml: 3.0.0
       ts-node: 10.9.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(@types/node@20.16.13)(typescript@5.9.3)
@@ -8456,7 +8363,9 @@ snapshots:
       - '@swc/helpers'
       - '@swc/wasm'
       - '@types/node'
+      - encoding
       - esbuild
+      - supports-color
       - uglify-js
       - webpack-cli
 
@@ -9396,7 +9305,7 @@ snapshots:
 
   '@mapbox/node-pre-gyp@1.0.11':
     dependencies:
-      detect-libc: 2.0.3
+      detect-libc: 2.1.2
       https-proxy-agent: 5.0.1
       make-dir: 3.1.0
       node-fetch: 2.7.0
@@ -11415,7 +11324,7 @@ snapshots:
 
   agent-base@6.0.2:
     dependencies:
-      debug: 4.3.7
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
@@ -13493,7 +13402,7 @@ snapshots:
   https-proxy-agent@5.0.1:
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.7
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
@@ -14331,8 +14240,6 @@ snapshots:
     dependencies:
       jwa: 1.4.2
       safe-buffer: 5.2.1
-
-  kafkajs@2.2.4: {}
 
   keyv@4.5.4:
     dependencies:
@@ -15370,8 +15277,6 @@ snapshots:
       json-parse-even-better-errors: 2.3.1
       lines-and-columns: 1.2.4
 
-  parse-ms@4.0.0: {}
-
   parse5@7.1.2:
     dependencies:
       entities: 4.5.0
@@ -15486,10 +15391,6 @@ snapshots:
       '@jest/schemas': 29.6.3
       ansi-styles: 5.2.0
       react-is: 18.3.1
-
-  pretty-ms@9.2.0:
-    dependencies:
-      parse-ms: 4.0.0
 
   prompts@2.4.2:
     dependencies:

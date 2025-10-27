@@ -17,7 +17,7 @@ export const BrandPipeline = new IngestPipeline<BrandWithKey>("Brand", {
     orderByFields: ["brandId"]
   },
   stream: true,
-  ingest: true,
+  ingestApi: true,
   deadLetterQueue: false,
 });
 
@@ -32,6 +32,6 @@ export const DiscountPipeline = new IngestPipeline<DiscountWithKey>("Discount", 
     orderByFields: ["id"]
   },
   stream: true,
-  ingest: true,
+  ingestApi: true,
   deadLetterQueue: false,
 });
