@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "identifier": "google-ads",
+  "name": "google-ads",
+  "category": "api",
+  "tags": [],
+  "description": "Connector for Google Ads advertising platform data extraction and reporting",
+  "homepage": ""
+}

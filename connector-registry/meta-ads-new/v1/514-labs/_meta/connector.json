@@ -1,0 +1,26 @@
+{
+  "name": "meta-ads-new",
+  "author": "514-labs",
+  "version": "v1",
+  "languages": [
+    "typescript"
+  ],
+  "category": "api",
+  "capabilities": {
+    "extract": true,
+    "transform": false,
+    "load": false
+  },
+  "source": {
+    "type": "api",
+    "spec": "https://developers.facebook.com/docs/marketing-api",
+    "homepage": "https://www.facebook.com/business/ads"
+  },
+  "tags": [],
+  "maintainers": [],
+  "issues": {
+    "typescript": {
+      "default": "https://github.com/514-labs/registry/issues/118"
+    }
+  }
+}

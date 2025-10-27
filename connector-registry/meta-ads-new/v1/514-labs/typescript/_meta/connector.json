@@ -1,0 +1,8 @@
+{
+  "identifier": "meta-ads-new",
+  "name": "meta-ads-new",
+  "author": "514-labs",
+  "version": "v1",
+  "language": "typescript",
+  "implementations": ["default"]
+}

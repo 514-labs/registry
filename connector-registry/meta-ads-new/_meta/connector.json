@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "identifier": "meta-ads-new",
+  "name": "meta-ads-new",
+  "category": "api",
+  "tags": [],
+  "description": "Connector for Meta (Facebook) Ads platform data extraction and advertising insights",
+  "homepage": ""
+}

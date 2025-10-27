@@ -1,0 +1,27 @@
+language = "typescript"
+description = "TypeScript connector for google-ads"
+post_install_print = """
+🚀 Next steps to get your google-ads connector running:
+
+📂 Go to your connector directory:
+    $ cd 
+
+📦 Install dependencies:
+    $ npm install
+
+🔧 Build the connector:
+    $ npm run build
+
+🧪 Run tests:
+    $ npm test
+
+📖 Next, check out the documentation:
+    • Review docs/getting-started.md for configuration details
+    • See examples/ for usage examples
+    • Update src/connector.ts with your API implementation
+
+🔗 Integration options:
+    • Add to your project: import { createConnector } from '@workspace/google-ads'
+    • Use with pipelines: Configure as a source in your pipeline setup
+    • Standalone usage: Check examples/basic-usage.ts
+"""

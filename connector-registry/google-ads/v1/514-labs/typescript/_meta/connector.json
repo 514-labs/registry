@@ -1,0 +1,8 @@
+{
+  "identifier": "google-ads",
+  "name": "google-ads",
+  "author": "514-labs",
+  "version": "v1",
+  "language": "typescript",
+  "implementations": ["default"]
+}

@@ -1,0 +1,26 @@
+{
+  "name": "shopify",
+  "author": "514-labs",
+  "version": "v1",
+  "languages": [
+    "typescript"
+  ],
+  "category": "api",
+  "capabilities": {
+    "extract": true,
+    "transform": false,
+    "load": false
+  },
+  "source": {
+    "type": "api",
+    "spec": "https://shopify.dev/docs/api/admin-rest",
+    "homepage": "https://www.shopify.com"
+  },
+  "tags": [],
+  "maintainers": [],
+  "issues": {
+    "typescript": {
+      "default": "https://github.com/514-labs/registry/issues/119"
+    }
+  }
+}
