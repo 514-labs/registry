@@ -29,6 +29,11 @@
     "node": ">=20"
   },
   "pnpm": {
+    "pnpm": {
+      "onlyBuiltDependencies": [
+        "@confluentinc/kafka-javascript"
+      ]
+    },
     "overrides": {
       "@connector-factory/core": "workspace:*"
     }
