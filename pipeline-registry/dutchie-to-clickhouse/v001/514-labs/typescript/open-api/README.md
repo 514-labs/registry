@@ -36,3 +36,6 @@ curl -X POST "http://localhost:4000/workflows/getDiscounts/trigger"
 ```bash
 pnpm moose --help
 ```
+
+## Anonymized Data
+This pipeline anonymizes data by default. Set `DUTCHIE_ANONYMIZE=false` to disable.
