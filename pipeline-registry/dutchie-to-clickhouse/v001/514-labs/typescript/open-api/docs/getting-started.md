@@ -39,5 +39,9 @@ pnpm dev
 
 ## Trigger a data sync
 ```bash
-curl -X POST "http://localhost:4000/workflows/testdutchie/trigger"
+curl -X POST "http://localhost:4000/workflows/getBrands/trigger"
+```
+
+```bash
+curl -X POST "http://localhost:4000/workflows/getDiscounts/trigger"
 ```
