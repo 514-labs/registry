@@ -1,0 +1,10 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/pipeline-root.schema.json",
+  "name": "sap-hana-cdc-to-clickhouse",
+  "title": "SAP HANA CDC to ClickHouse",
+  "tags": ["sap-hana", "cdc", "clickhouse", "real-time"],
+  "description": "Real-time Change Data Capture pipeline from SAP HANA to ClickHouse.",
+  "homepage": "",
+  "registryUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/sap-hana-cdc-to-clickhouse"
+}
+
