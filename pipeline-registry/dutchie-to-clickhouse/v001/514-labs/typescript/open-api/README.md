@@ -25,10 +25,17 @@ pnpm dev
 
 4) Run a moose workflow to sync data
 ```bash
-curl -X POST "http://localhost:4000/workflows/testdutchie/trigger"
+curl -X POST "http://localhost:4000/workflows/getBrands/trigger"
+```
+
+```bash
+curl -X POST "http://localhost:4000/workflows/getDiscounts/trigger"
 ```
 
 5) Explore other moose commands
 ```bash
 pnpm moose --help
 ```
+
+## Anonymized Data
+This pipeline anonymizes data by default. Set `DUTCHIE_ANONYMIZE=false` to disable.
