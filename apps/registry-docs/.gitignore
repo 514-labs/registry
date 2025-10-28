@@ -34,3 +34,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# generated registry data (built at build time)
+/public/api/
+/public/registry.json
+/public/registry-contents.json
+/public/scaffolds/

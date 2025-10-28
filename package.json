@@ -21,13 +21,17 @@
     "eslint": "^8.57.1",
     "prettier": "^3.6.2",
     "turbo": "^2.5.4",
-    "typescript": "5.8.3"
+    "typescript": "5.8.3",
+    "tsx": "4.20.6"
   },
   "packageManager": "pnpm@9.9.0",
   "engines": {
     "node": ">=20"
   },
   "pnpm": {
+    "onlyBuiltDependencies": [
+      "@confluentinc/kafka-javascript"
+    ],
     "overrides": {
       "@connector-factory/core": "workspace:*"
     }

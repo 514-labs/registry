@@ -6,12 +6,12 @@ export function buildAdImagesDomain(sendFn: SendFn) {
   const factory = createDomainFactory<AdImage>("/{ad_account_id}/adimages", sendFn);
 
   return {
-    listAdImages: factory.list,
-    streamAdImages: factory.stream,
-    getAdImages: factory.getAll,
+    list: factory.list,
+    stream: factory.stream,
+    getAll: factory.getAll,
 
-    // Custom implementation for getAdImage since it uses 'hash' instead of 'id'
-    async getAdImage(params: { adAccountId: string; hash: string; fields?: string[] }): Promise<HttpResponseEnvelope<AdImage>> {
+    // Custom implementation for get since it uses 'hash' instead of 'id'
+    async get(params: { adAccountId: string; hash: string; fields?: string[] }): Promise<HttpResponseEnvelope<AdImage>> {
       const { adAccountId, hash, fields } = params;
       const query: Record<string, any> = {};
 
