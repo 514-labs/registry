@@ -38,6 +38,60 @@ function randomInt(min: number, max: number): number {
 }
 
 /**
+ * Fictional cannabis brand names for anonymization
+ */
+const CANNABIS_BRAND_NAMES = [
+  'Green Valley Farms',
+  'Pacific Coast Botanicals',
+  'Mountain Peak Cannabis',
+  'Desert Bloom Collective',
+  'Northern Lights Co.',
+  'Golden State Gardens',
+  'Emerald Triangle Farms',
+  'Sunset Valley Organics',
+  'Alpine Wellness',
+  'Coastal Green',
+  'Terra Verde Cannabis',
+  'Blue Sky Botanicals',
+  'Silver Leaf Farms',
+  'Redwood Reserve',
+  'High Desert Harvest',
+  'Valley View Cannabis',
+  'Summit Peak Extracts',
+  'Evergreen Farms',
+  'Crystal Creek Cannabis',
+  'Wildflower Wellness',
+  'Pine Ridge Botanicals',
+  'Cascade Mountain Farms',
+  'Horizon Gardens',
+  'Riverstone Cannabis',
+  'Meadow Creek Collective',
+  'Skyline Organics',
+  'Oakwood Farms',
+  'Highland Hemp Co.',
+  'Lakeside Botanicals',
+  'Canyon Verde',
+  'Windmill Gardens',
+  'Harvest Moon Farms',
+  'Sunrise Wellness',
+  'Maple Grove Cannabis',
+  'Thunder Ridge Farms',
+  'Solstice Gardens',
+  'Moonlight Meadows',
+  'Cedar Valley Organics',
+  'Willow Creek Farms',
+  'Aurora Botanicals',
+];
+
+/**
+ * Get a deterministic but random-looking brand name based on an ID
+ */
+function getAnonymousBrandName(brandId: number): string {
+  const index = brandId % CANNABIS_BRAND_NAMES.length;
+  return CANNABIS_BRAND_NAMES[index];
+}
+
+/**
  * Anonymize a single discount record
  */
 export function anonymizeDiscount(discount: DiscountWithKey): DiscountWithKey {
@@ -132,12 +186,12 @@ export function anonymizeBrand(brand: BrandWithKey): BrandWithKey {
     ...brand,
     brandId: brand.brandId,
     
-    // Anonymize brand name
-    brandName: brand.brandName ? `Anonymized Brand ${brand.brandId}` : undefined,
+    // Anonymize brand name with realistic cannabis brand
+    brandName: brand.brandName ? getAnonymousBrandName(brand.brandId) : undefined,
     
     // Anonymize catalog brand ID
     brandCatalogBrandId: brand.brandCatalogBrandId 
-      ? `ANON-CATALOG-${brand.brandId}` 
+      ? `CAT-${brand.brandId.toString().padStart(6, '0')}` 
       : undefined,
   };
 }
