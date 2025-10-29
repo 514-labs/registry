@@ -24,7 +24,7 @@
     "@workspace/registry": "workspace:*",
     "@workspace/models": "workspace:*",
     "@workspace/ui": "workspace:*",
-    "next-auth": "^5.0.0-beta.25",
+    "next-auth": "^5.0.0-beta.30",
     "zod": "^3.25.76",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
