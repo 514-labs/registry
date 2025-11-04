@@ -262,7 +262,7 @@
                             {
                               "type": "file",
                               "name": "client.py",
-                              "template": "class Client:\n    def __init__(self, config: dict):\n        self.config = config\n    \n    def ping(self) -> bool:\n        return True\n"
+                              "template": "# TODO: Implement HTTP client with auth (headers/tokens), retries, and error handling.\n# TODO: Expose resource factories via methods (e.g., def {resource}(self): return create_resource(send)).\nclass Client:\n    def __init__(self, config: dict):\n        self.config = config\n    \n    def ping(self) -> bool:\n        return True\n"
                             },
                             {
                               "type": "dir",
@@ -303,7 +303,7 @@
                                 {
                                   "type": "file",
                                   "name": "model.py",
-                                  "template": "from typing import Any, TypedDict\n\nclass Model(TypedDict, total=False):\n    # Define your resource model fields\n    any_field: Any\n"
+                                  "template": "# TODO: Replace with generated types (OpenAPI/JSON Schema) or concrete TypedDicts.\nfrom typing import Any, TypedDict\n\nclass Model(TypedDict, total=False):\n    # Define your resource model fields\n    any_field: Any\n"
                                 }
                               ]
                             }
