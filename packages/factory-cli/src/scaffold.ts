@@ -122,7 +122,54 @@ async function applyStructure(
           relPath
         );
     } else if (node.type === "file") {
-      const content = replaceTemplatePlaceholders(node.template ?? "", vars);
+      let content = replaceTemplatePlaceholders(node.template ?? "", vars);
+      // Add TODO markers to key implementation files to guide users
+      const relUnix = relPath;
+      if (relUnix.endsWith("/src/client/connector.ts")) {
+        const header = [
+          "/**",
+          " * CONNECTOR IMPLEMENTATION GUIDE",
+          " * See CONNECTOR_GUIDE.md in the root of this connector for step-by-step instructions.",
+          " *",
+          " * Quick checklist:",
+          " * [ ] Phase 3: Configure authentication (update ConnectorConfig type & init method below)",
+          " * [ ] Phase 4: Implement pagination in src/lib/paginate.ts (offset/cursor/page)",
+          " * [ ] Phase 5: Implement resources in src/resources/",
+          " * [ ] Phase 6: Add schemas to schemas/raw/json/",
+          " * [ ] Phase 7: Update .env.example and README.md",
+          " * [ ] Phase 8: Write tests in tests/",
+          " * [ ] Phase 9: Build and test (pnpm run build && pnpm test)",
+          " *",
+          " * Reference connectors:",
+          " * - Simple API key: connector-registry/socrata/",
+          " * - OAuth2: connector-registry/meta-ads/",
+          " */",
+          "",
+          "// TODO: Update ConnectorConfig type with your API's required fields (apiKey, domain, etc.)",
+          "// TODO: Implement init() method to transform your config to CoreConfig",
+          "// TODO: Add resource getters at the bottom of this file (get yourResource() { ... })",
+          "",
+        ].join("\n");
+        content = header + content;
+      }
+      if (relUnix.endsWith("/src/resources/" + vars.resource + ".ts")) {
+        const header = [
+          "// TODO: Replace Model with your resource type (see CONNECTOR_GUIDE.md Phase 5)",
+          "// TODO: Implement pagination using paginateOffset/paginateCursor from '../lib/paginate'",
+          "// TODO: Map your API's query parameters in buildListQuery",
+          "",
+        ].join("\n");
+        content = header + content;
+      }
+      if (relUnix.endsWith("/src/lib/paginate.ts")) {
+        const header = [
+          "// TODO: Implement pagination for your API (see CONNECTOR_GUIDE.md Phase 4)",
+          "// TODO: Choose pattern: offset-based, cursor-based, or page-number-based",
+          "// TODO: Update query parameters to match your API ($limit/$offset, cursor, page/per_page, etc.)",
+          "",
+        ].join("\n");
+        content = header + content;
+      }
       log.push(kleur.green(`write ${relPath}`));
       if (!dryRun) await writeFile(currentPath, content);
     }
