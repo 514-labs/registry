@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Geocoding Data",
+  "description": "Geocoding data from OpenWeatherMap API",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "name": { 
+        "type": "string", 
+        "description": "Name of the found location" 
+      },
+      "local_names": {
+        "type": "object",
+        "description": "Name of the location in different languages",
+        "additionalProperties": { "type": "string" }
+      },
+      "lat": { 
+        "type": "number", 
+        "description": "Latitude of the found location" 
+      },
+      "lon": { 
+        "type": "number", 
+        "description": "Longitude of the found location" 
+      },
+      "country": { 
+        "type": "string", 
+        "description": "Country code of the found location" 
+      },
+      "state": { 
+        "type": "string", 
+        "description": "State of the found location (where available)" 
+      }
+    },
+    "required": ["name", "lat", "lon", "country"]
+  }
+}

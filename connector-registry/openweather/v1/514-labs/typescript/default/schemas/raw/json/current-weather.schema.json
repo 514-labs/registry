@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Current Weather Data",
+  "description": "Current weather data from OpenWeatherMap API",
+  "type": "object",
+  "properties": {
+    "coord": {
+      "type": "object",
+      "properties": {
+        "lon": { "type": "number", "description": "Longitude" },
+        "lat": { "type": "number", "description": "Latitude" }
+      },
+      "required": ["lon", "lat"]
+    },
+    "weather": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "description": "Weather condition id" },
+          "main": { "type": "string", "description": "Group of weather parameters (Rain, Snow, Clear, etc.)" },
+          "description": { "type": "string", "description": "Weather condition description" },
+          "icon": { "type": "string", "description": "Weather icon id" }
+        }
+      }
+    },
+    "base": { "type": "string", "description": "Internal parameter" },
+    "main": {
+      "type": "object",
+      "properties": {
+        "temp": { "type": "number", "description": "Temperature" },
+        "feels_like": { "type": "number", "description": "Temperature feels like" },
+        "temp_min": { "type": "number", "description": "Minimum temperature" },
+        "temp_max": { "type": "number", "description": "Maximum temperature" },
+        "pressure": { "type": "number", "description": "Atmospheric pressure (hPa)" },
+        "humidity": { "type": "number", "description": "Humidity %" },
+        "sea_level": { "type": "number", "description": "Atmospheric pressure at sea level (hPa)" },
+        "grnd_level": { "type": "number", "description": "Atmospheric pressure at ground level (hPa)" }
+      }
+    },
+    "visibility": { "type": "number", "description": "Visibility in meters" },
+    "wind": {
+      "type": "object",
+      "properties": {
+        "speed": { "type": "number", "description": "Wind speed" },
+        "deg": { "type": "number", "description": "Wind direction in degrees" },
+        "gust": { "type": "number", "description": "Wind gust" }
+      }
+    },
+    "clouds": {
+      "type": "object",
+      "properties": {
+        "all": { "type": "number", "description": "Cloudiness %" }
+      }
+    },
+    "rain": {
+      "type": "object",
+      "properties": {
+        "1h": { "type": "number", "description": "Rain volume for last 1 hour (mm)" },
+        "3h": { "type": "number", "description": "Rain volume for last 3 hours (mm)" }
+      }
+    },
+    "snow": {
+      "type": "object",
+      "properties": {
+        "1h": { "type": "number", "description": "Snow volume for last 1 hour (mm)" },
+        "3h": { "type": "number", "description": "Snow volume for last 3 hours (mm)" }
+      }
+    },
+    "dt": { "type": "integer", "description": "Time of data calculation, unix, UTC" },
+    "sys": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "integer" },
+        "id": { "type": "integer" },
+        "country": { "type": "string", "description": "Country code (GB, JP, etc.)" },
+        "sunrise": { "type": "integer", "description": "Sunrise time, unix, UTC" },
+        "sunset": { "type": "integer", "description": "Sunset time, unix, UTC" }
+      }
+    },
+    "timezone": { "type": "integer", "description": "Shift in seconds from UTC" },
+    "id": { "type": "integer", "description": "City ID" },
+    "name": { "type": "string", "description": "City name" },
+    "cod": { "type": "integer", "description": "Internal parameter" }
+  },
+  "required": ["coord", "weather", "main", "dt", "sys", "name"]
+}
