@@ -49,12 +49,6 @@ export class Connector extends ApiConnectorBase {
     this.defaultUnits = userConfig.units || 'standard'
     this.defaultLang = userConfig.lang
 
-    const coreConfig: CoreConfig = {
-      baseUrl: userConfig.baseUrl || 'https://api.openweathermap.org',
-      userAgent: 'openweather-connector',
-      auth: { type: 'bearer', bearer: { token: '' } }, // We use query params for auth
-    }
-
     const apiKeyHook: Hook = {
       name: 'openweather-auth',
       execute: async (ctx) => {
@@ -78,16 +72,19 @@ export class Connector extends ApiConnectorBase {
       }
     }
 
-    const configWithAuth: CoreConfig = {
-      ...coreConfig,
+    const coreConfig: CoreConfig = {
+      baseUrl: userConfig.baseUrl || 'https://api.openweathermap.org',
+      userAgent: 'openweather-connector',
+      // Auth is handled via query params in the beforeRequest hook
+      auth: { type: 'bearer', bearer: { token: '' } },
       hooks: {
         beforeRequest: [apiKeyHook]
       }
     }
 
-    super.initialize(configWithAuth as any, (cfg: any) => cfg)
+    super.initialize(coreConfig as any, (cfg: any) => cfg)
 
-    // Set up logging/metrics as before
+    // Set up logging/metrics
     const cfg = (this as any).config as ConnectorConfig
     const existing = cfg.hooks ?? {} as Partial<Record<'beforeRequest'|'afterResponse'|'onError'|'onRetry', Hook[]>>
 
@@ -115,37 +112,6 @@ export class Connector extends ApiConnectorBase {
     }
 
     return this
-  }
-
-  initialize(userConfig: ConnectorConfig) {
-    const withDefaults = (u: ConnectorConfig): ConnectorConfig => ({ userAgent: u.userAgent ?? 'openweather', ...u })
-    super.initialize(withDefaults(userConfig) as any, (cfg: any) => cfg)
-
-    const cfg = (this as any).config as ConnectorConfig
-    const existing = cfg.hooks ?? {} as Partial<Record<'beforeRequest'|'afterResponse'|'onError'|'onRetry', Hook[]>>
-
-    if (userConfig.logging?.enabled) {
-      const logging = createLoggingHooks({ level: userConfig.logging.level, includeQueryParams: userConfig.logging.includeQueryParams, includeHeaders: userConfig.logging.includeHeaders, includeBody: userConfig.logging.includeBody, logger: userConfig.logging.logger as any })
-      cfg.hooks = {
-        beforeRequest: [...(existing.beforeRequest ?? []), ...(logging.beforeRequest ?? [])],
-        afterResponse: [...(existing.afterResponse ?? []), ...(logging.afterResponse ?? [])],
-        onError: [...(existing.onError ?? []), ...(logging.onError ?? [])],
-        onRetry: [...(existing.onRetry ?? []), ...(logging.onRetry ?? [])],
-      }
-    }
-
-    if (userConfig.metrics?.enabled) {
-      const sink = new InMemoryMetricsSink()
-      const metrics = createMetricsHooks(sink)
-      const curr = cfg.hooks ?? {}
-      cfg.hooks = {
-        beforeRequest: [...(curr.beforeRequest ?? []), ...(metrics.beforeRequest ?? [])],
-        afterResponse: [...(curr.afterResponse ?? []), ...(metrics.afterResponse ?? [])],
-        onError: [...(curr.onError ?? []), ...(metrics.onError ?? [])],
-        onRetry: [...(curr.onRetry ?? []), ...(metrics.onRetry ?? [])],
-      }
-      ;(this as any)._metricsSink = sink
-    }
   }
 
   private get sendLite() { return async (args: any) => (this as any).request(args) }
