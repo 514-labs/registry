@@ -45,17 +45,16 @@ export class Connector extends ApiConnectorBase {
 
     // Add hook to inject API key into query params
     const apiKeyHook = {
-      execute: (ctx: any) => {
-        if (!ctx.request.query) {
-          ctx.request.query = {}
+      execute: async (ctx: any) => {
+        const url = new URL(ctx.request.url)
+        url.searchParams.set('appid', this.apiKey)
+        if (this.defaultUnits && !url.searchParams.has('units')) {
+          url.searchParams.set('units', this.defaultUnits)
         }
-        ctx.request.query.appid = this.apiKey
-        if (this.defaultUnits && !ctx.request.query.units) {
-          ctx.request.query.units = this.defaultUnits
+        if (this.defaultLang && !url.searchParams.has('lang')) {
+          url.searchParams.set('lang', this.defaultLang)
         }
-        if (this.defaultLang && !ctx.request.query.lang) {
-          ctx.request.query.lang = this.defaultLang
-        }
+        ctx.modifyRequest({ url: url.toString() })
       }
     }
 
