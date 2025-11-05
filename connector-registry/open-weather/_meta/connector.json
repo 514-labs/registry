@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "identifier": "open-weather",
+  "name": "open-weather",
+  "category": "api",
+  "tags": [],
+  "description": "",
+  "homepage": ""
+}
