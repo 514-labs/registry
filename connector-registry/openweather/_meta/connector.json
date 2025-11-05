@@ -1,9 +1,9 @@
 {
   "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
   "identifier": "openweather",
-  "name": "openweather",
+  "name": "Open Weather",
   "category": "api",
-  "tags": [],
-  "description": "",
-  "homepage": ""
+  "tags": ["weather", "forecast", "climate", "meteorology"],
+  "description": "Access current weather data, 5-day forecasts, air pollution data, and geocoding from OpenWeatherMap API",
+  "homepage": "https://openweathermap.org"
 }
