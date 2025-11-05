@@ -1,0 +1,8 @@
+{
+  "identifier": "ads-b-dot-lol",
+  "name": "ads-b-dot-lol",
+  "author": "514-labs",
+  "version": "v1",
+  "language": "typescript",
+  "implementations": ["default"]
+}
