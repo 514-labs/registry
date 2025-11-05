@@ -1,0 +1,144 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Aircraft",
+  "description": "Real-time aircraft tracking data from ADS-B transponders",
+  "type": "object",
+  "properties": {
+    "icao": {
+      "type": "string",
+      "description": "ICAO 24-bit aircraft address in hexadecimal format"
+    },
+    "r": {
+      "type": "string",
+      "description": "Aircraft registration (tail number)"
+    },
+    "t": {
+      "type": "string",
+      "description": "Aircraft type code"
+    },
+    "flight": {
+      "type": "string",
+      "description": "Flight number or callsign"
+    },
+    "lat": {
+      "type": "number",
+      "description": "Latitude in decimal degrees"
+    },
+    "lon": {
+      "type": "number",
+      "description": "Longitude in decimal degrees"
+    },
+    "alt_baro": {
+      "type": "number",
+      "description": "Barometric altitude in feet"
+    },
+    "alt_geom": {
+      "type": "number",
+      "description": "Geometric (GPS) altitude in feet"
+    },
+    "gs": {
+      "type": "number",
+      "description": "Ground speed in knots"
+    },
+    "track": {
+      "type": "number",
+      "description": "True track/heading in degrees (0-360)"
+    },
+    "ias": {
+      "type": "number",
+      "description": "Indicated airspeed in knots"
+    },
+    "tas": {
+      "type": "number",
+      "description": "True airspeed in knots"
+    },
+    "mach": {
+      "type": "number",
+      "description": "Mach number"
+    },
+    "roll": {
+      "type": "number",
+      "description": "Roll angle in degrees"
+    },
+    "mag_heading": {
+      "type": "number",
+      "description": "Magnetic heading in degrees"
+    },
+    "true_heading": {
+      "type": "number",
+      "description": "True heading in degrees"
+    },
+    "baro_rate": {
+      "type": "number",
+      "description": "Barometric vertical rate in feet per minute"
+    },
+    "geom_rate": {
+      "type": "number",
+      "description": "Geometric vertical rate in feet per minute"
+    },
+    "squawk": {
+      "type": "string",
+      "description": "Transponder squawk code (4 digits)"
+    },
+    "emergency": {
+      "type": "string",
+      "description": "Emergency/priority status",
+      "enum": ["none", "general", "lifeguard", "minfuel", "nordo", "unlawful", "downed"]
+    },
+    "category": {
+      "type": "string",
+      "description": "Aircraft category (e.g., A1-A7 for different aircraft sizes)"
+    },
+    "nav_altitude_mcp": {
+      "type": "number",
+      "description": "Selected altitude from the Mode Control Panel"
+    },
+    "nav_altitude_fms": {
+      "type": "number",
+      "description": "Selected altitude from the Flight Management System"
+    },
+    "nav_qnh": {
+      "type": "number",
+      "description": "Altimeter setting (QNH) in millibars"
+    },
+    "nav_heading": {
+      "type": "number",
+      "description": "Selected heading"
+    },
+    "nav_modes": {
+      "type": "array",
+      "description": "Active navigation modes",
+      "items": {
+        "type": "string"
+      }
+    },
+    "seen_pos": {
+      "type": "number",
+      "description": "Seconds since position was last updated"
+    },
+    "seen": {
+      "type": "number",
+      "description": "Seconds since last message was received"
+    },
+    "version": {
+      "type": "number",
+      "description": "ADS-B version (0, 1, or 2)"
+    },
+    "nic": {
+      "type": "number",
+      "description": "Navigation Integrity Category"
+    },
+    "rc": {
+      "type": "number",
+      "description": "Radius of Containment in meters"
+    },
+    "messages": {
+      "type": "number",
+      "description": "Total number of messages received from this aircraft"
+    },
+    "rssi": {
+      "type": "number",
+      "description": "Received Signal Strength Indicator in dBFS"
+    }
+  }
+}

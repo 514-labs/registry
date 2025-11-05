@@ -1,0 +1,22 @@
+{
+  "name": "ads-b-dot-lol",
+  "author": "514-labs",
+  "version": "v1",
+  "languages": [
+    "typescript"
+  ],
+  "category": "api",
+  "capabilities": {
+    "extract": true,
+    "transform": false,
+    "load": false
+  },
+  "source": {
+    "type": "api",
+    "spec": "",
+    "homepage": "https://api.adsb.lol/docs"
+  },
+  "tags": ["events", "telemetry", "aviation"],
+  "maintainers": [],
+  "issues": { "typescript": { "default": "" } }
+}
