@@ -45,7 +45,7 @@ export class Connector extends ApiConnectorBase {
 
     // Add hook to inject API key into query params
     const apiKeyHook = {
-      execute: async (ctx: any) => {
+      execute: (ctx: any) => {
         if (!ctx.request.query) {
           ctx.request.query = {}
         }
