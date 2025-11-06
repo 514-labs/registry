@@ -1,6 +1,3 @@
-// TODO: Replace Model with your resource type (see CONNECTOR_GUIDE.md Phase 5)
-// TODO: Implement pagination using paginateOffset/paginateCursor from '../lib/paginate'
-// TODO: Map your API's query parameters in buildListQuery
 import type { SendFn } from '../lib/paginate'
 
 /**
