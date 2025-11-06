@@ -13,10 +13,10 @@
   },
   "source": {
     "type": "api",
-    "spec": "",
-    "homepage": ""
+    "spec": "https://openweathermap.org/api",
+    "homepage": "https://openweathermap.org"
   },
-  "tags": [],
+  "tags": ["Weather"],
   "maintainers": [],
   "issues": { "typescript": { "default": "" } }
 }
