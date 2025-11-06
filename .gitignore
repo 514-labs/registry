@@ -20,3 +20,8 @@ scratch*
 *.pf_fragment
 *.pf_index
 *.pf_meta
+
+# Scaffold artifacts - these belong in specific directories, not root
+/Dockerfile
+/moose.config.toml
+/project.toml
