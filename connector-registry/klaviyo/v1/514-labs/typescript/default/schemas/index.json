@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/schema-index.schema.json",
+  "version": "0.1.0",
+  "datasets": [
+    {
+      "name": "profiles",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/json/profiles.schema.json",
+      "doc": "raw/json/profiles.md"
+    },
+    {
+      "name": "lists",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/json/lists.schema.json",
+      "doc": "raw/json/lists.md"
+    },
+    {
+      "name": "campaigns",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/json/campaigns.schema.json",
+      "doc": "raw/json/campaigns.md"
+    }
+  ]
+}

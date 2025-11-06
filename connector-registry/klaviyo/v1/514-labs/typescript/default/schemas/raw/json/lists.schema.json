@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Klaviyo List",
+  "description": "A list is a group of profiles used for targeting and segmentation in Klaviyo campaigns.",
+  "type": "object",
+  "required": ["type", "id", "attributes"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "list",
+      "description": "Resource type identifier"
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the list"
+    },
+    "attributes": {
+      "type": "object",
+      "required": ["name"],
+      "description": "List attributes",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the list"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the list was created"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the list was last updated"
+        }
+      }
+    },
+    "links": {
+      "type": "object",
+      "description": "Related links",
+      "properties": {
+        "self": {
+          "type": "string",
+          "format": "uri",
+          "description": "Link to this resource"
+        }
+      }
+    }
+  }
+}

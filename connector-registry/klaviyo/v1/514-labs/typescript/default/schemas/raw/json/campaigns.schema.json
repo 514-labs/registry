@@ -1,0 +1,139 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Klaviyo Campaign",
+  "description": "A campaign represents an email marketing campaign in Klaviyo.",
+  "type": "object",
+  "required": ["type", "id", "attributes"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "campaign",
+      "description": "Resource type identifier"
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the campaign"
+    },
+    "attributes": {
+      "type": "object",
+      "required": ["name"],
+      "description": "Campaign attributes",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the campaign"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "scheduled", "sending", "sent", "canceled"],
+          "description": "Current status of the campaign"
+        },
+        "archived": {
+          "type": "boolean",
+          "description": "Whether the campaign is archived"
+        },
+        "audiences": {
+          "type": "object",
+          "description": "Target audiences",
+          "properties": {
+            "included": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of included audience IDs"
+            },
+            "excluded": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of excluded audience IDs"
+            }
+          }
+        },
+        "send_strategy": {
+          "type": "object",
+          "description": "Send strategy configuration",
+          "properties": {
+            "method": {
+              "type": "string",
+              "description": "Send method"
+            },
+            "options_static": {
+              "type": "object",
+              "properties": {
+                "datetime": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Scheduled send time"
+                },
+                "is_local": {
+                  "type": "boolean",
+                  "description": "Whether to send at local time"
+                },
+                "send_past_recipients_immediately": {
+                  "type": "boolean",
+                  "description": "Send to past recipients immediately"
+                }
+              }
+            }
+          }
+        },
+        "tracking_options": {
+          "type": "object",
+          "description": "Tracking options",
+          "properties": {
+            "is_add_utm": {
+              "type": "boolean",
+              "description": "Whether to add UTM parameters"
+            },
+            "utm_params": {
+              "type": "array",
+              "description": "UTM parameters"
+            },
+            "is_tracking_clicks": {
+              "type": "boolean",
+              "description": "Whether to track clicks"
+            },
+            "is_tracking_opens": {
+              "type": "boolean",
+              "description": "Whether to track opens"
+            }
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the campaign was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the campaign was last updated"
+        },
+        "scheduled_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the campaign is scheduled to send"
+        },
+        "send_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the campaign was sent"
+        }
+      }
+    },
+    "links": {
+      "type": "object",
+      "description": "Related links",
+      "properties": {
+        "self": {
+          "type": "string",
+          "format": "uri",
+          "description": "Link to this resource"
+        }
+      }
+    }
+  }
+}
