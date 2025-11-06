@@ -39,8 +39,6 @@ export class Connector extends ApiConnectorBase {
     }
 
     super.initialize(coreConfig, (cfg) => cfg)
-    
-    return this
 
     const cfg = (this as any).config as CoreConfig & ShopifyConnectorConfig
     const existing = cfg.hooks ?? {} as Partial<Record<'beforeRequest' | 'afterResponse' | 'onError' | 'onRetry', Hook[]>>
@@ -73,6 +71,8 @@ export class Connector extends ApiConnectorBase {
       }
       ;(this as any)._metricsSink = sink
     }
+    
+    return this
   }
 
   private get sendLite() {
