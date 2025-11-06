@@ -13,10 +13,10 @@
   },
   "source": {
     "type": "api",
-    "spec": "",
-    "homepage": ""
+    "spec": "OpenWeatherMap API v2.5 and v3.0",
+    "homepage": "https://openweathermap.org"
   },
-  "tags": [],
-  "maintainers": [],
+  "tags": ["Weather", "Climate", "Forecast", "Geocoding", "Air Quality"],
+  "maintainers": ["514-labs"],
   "issues": { "typescript": { "default": "" } }
 }
