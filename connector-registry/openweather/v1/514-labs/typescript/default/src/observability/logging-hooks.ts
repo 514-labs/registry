@@ -17,7 +17,7 @@ function safeUrl(raw?: string, includeQuery = false): { url?: string; query?: Re
   if (!raw) return {}
   try {
     const isPathOnly = raw.startsWith('/')
-    const u = new URL(isPathOnly ? `https://dummy$` : raw)
+    const u = new URL(isPathOnly ? `https://dummy${raw}` : raw)
     if (!includeQuery) {
       return { url: isPathOnly ? u.pathname : u.toString() }
     }

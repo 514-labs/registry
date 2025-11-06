@@ -35,13 +35,15 @@ export class Connector extends ApiConnectorBase {
   init(userConfig: OpenWeatherConnectorConfig) {
     const baseUrl = userConfig.baseUrl ?? 'https://api.openweathermap.org'
     
+    // OpenWeather uses API key in query params, not in auth headers
+    // We set a minimal bearer config to satisfy the core config requirements
     const coreConfig: CoreConfig = {
       baseUrl,
       userAgent: 'openweather-connector',
       defaultHeaders: {},
       auth: {
         type: 'bearer',
-        bearer: { token: '' } // Not used, API key is in query params
+        bearer: { token: 'unused' }
       },
     }
 
