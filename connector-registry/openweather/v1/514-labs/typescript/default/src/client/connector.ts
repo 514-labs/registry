@@ -59,7 +59,7 @@ export class Connector extends ApiConnectorBase {
     // Add hook to inject API key into query params
     const apiKeyHook: Hook = {
       name: 'openweather:apikey',
-      execute: (ctx) => {
+      execute: (ctx: any) => {
         if (ctx.type === 'beforeRequest' && ctx.request) {
           // Add appid to query params
           const url = new URL(ctx.request.url || ctx.request.path || '', coreConfig.baseUrl)
