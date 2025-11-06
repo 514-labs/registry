@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/schema-index.schema.json",
+  "version": "0.1.0",
+  "datasets": [
+    {
+      "name": "weather",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/json/weather.schema.json",
+      "doc": "raw/json/weather.md"
+    },
+    {
+      "name": "forecast",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/json/forecast.schema.json",
+      "doc": "raw/json/forecast.md"
+    },
+    {
+      "name": "air-pollution",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/json/air-pollution.schema.json",
+      "doc": "raw/json/air-pollution.md"
+    },
+    {
+      "name": "geocoding",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/json/geocoding.schema.json",
+      "doc": "raw/json/geocoding.md"
+    }
+  ]
+}
+

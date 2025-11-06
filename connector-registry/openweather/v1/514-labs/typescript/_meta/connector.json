@@ -1,0 +1,8 @@
+{
+  "identifier": "openweather",
+  "name": "openweather",
+  "author": "514-labs",
+  "version": "v1",
+  "language": "typescript",
+  "implementations": ["default"]
+}

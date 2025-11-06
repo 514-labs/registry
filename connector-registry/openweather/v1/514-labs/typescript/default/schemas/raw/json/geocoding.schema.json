@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Geocoding Location",
+  "description": "Geographic location data from geocoding API",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the location"
+    },
+    "local_names": {
+      "type": "object",
+      "description": "Name of the location in different languages",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "lat": {
+      "type": "number",
+      "description": "Geographical coordinates, latitude"
+    },
+    "lon": {
+      "type": "number",
+      "description": "Geographical coordinates, longitude"
+    },
+    "country": {
+      "type": "string",
+      "description": "Country code (GB, US, etc.)"
+    },
+    "state": {
+      "type": "string",
+      "description": "State or region (if available)"
+    }
+  },
+  "required": ["name", "lat", "lon", "country"]
+}
