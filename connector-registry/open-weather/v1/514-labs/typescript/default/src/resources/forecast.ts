@@ -1,75 +1,45 @@
 import type { SendFn } from '../lib/paginate'
+import type { WeatherCondition, MainWeatherData, Wind, Clouds, Rain, Snow } from './current-weather'
 
-export interface WeatherCondition {
+export interface ForecastItem {
+  dt: number
+  main: MainWeatherData
+  weather: WeatherCondition[]
+  clouds: Clouds
+  wind: Wind
+  visibility: number
+  pop: number
+  rain?: Rain
+  snow?: Snow
+  sys: {
+    pod: string
+  }
+  dt_txt: string
+}
+
+export interface City {
   id: number
-  main: string
-  description: string
-  icon: string
-}
-
-export interface MainWeatherData {
-  temp: number
-  feels_like: number
-  temp_min: number
-  temp_max: number
-  pressure: number
-  humidity: number
-  sea_level?: number
-  grnd_level?: number
-}
-
-export interface Wind {
-  speed: number
-  deg: number
-  gust?: number
-}
-
-export interface Clouds {
-  all: number
-}
-
-export interface Rain {
-  '1h'?: number
-  '3h'?: number
-}
-
-export interface Snow {
-  '1h'?: number
-  '3h'?: number
-}
-
-export interface Sys {
-  type?: number
-  id?: number
+  name: string
+  coord: {
+    lat: number
+    lon: number
+  }
   country: string
+  population: number
+  timezone: number
   sunrise: number
   sunset: number
 }
 
-export interface Coord {
-  lon: number
-  lat: number
+export interface ForecastResponse {
+  cod: string
+  message: number
+  cnt: number
+  list: ForecastItem[]
+  city: City
 }
 
-export interface CurrentWeather {
-  coord: Coord
-  weather: WeatherCondition[]
-  base: string
-  main: MainWeatherData
-  visibility: number
-  wind: Wind
-  clouds: Clouds
-  rain?: Rain
-  snow?: Snow
-  dt: number
-  sys: Sys
-  timezone: number
-  id: number
-  name: string
-  cod: number
-}
-
-export interface GetCurrentWeatherParams {
+export interface GetForecastParams {
   /** City name, state code (US only), and country code divided by comma. Example: "London,UK" */
   q?: string
   /** Latitude */
@@ -80,6 +50,8 @@ export interface GetCurrentWeatherParams {
   id?: number
   /** Zip/post code and country code divided by comma. Example: "94040,US" */
   zip?: string
+  /** Number of timestamps to return (max 96 for 5-day forecast) */
+  cnt?: number
   /** Units of measurement. standard, metric or imperial */
   units?: 'standard' | 'metric' | 'imperial'
   /** Language for output */
@@ -88,15 +60,17 @@ export interface GetCurrentWeatherParams {
 
 export const createResource = (send: SendFn, defaultUnits: string, defaultLang: string) => ({
   /**
-   * Get current weather data for a location
+   * Get 5-day weather forecast with 3-hour step
    * @param params - Location and format parameters
-   * @returns Current weather data
+   * @returns 5-day forecast data
    */
-  async getCurrent(params: GetCurrentWeatherParams): Promise<CurrentWeather> {
+  async get5Day(params: GetForecastParams): Promise<ForecastResponse> {
     const query: Record<string, any> = {
       units: params.units ?? defaultUnits,
       lang: params.lang ?? defaultLang,
     }
+
+    if (params.cnt) query.cnt = params.cnt
 
     // Add location parameter (only one should be provided)
     if (params.q) query.q = params.q
@@ -111,9 +85,9 @@ export const createResource = (send: SendFn, defaultUnits: string, defaultLang: 
 
     const response = await send({
       method: 'GET',
-      path: '/data/2.5/weather',
+      path: '/data/2.5/forecast',
       query,
     })
-    return response.data as CurrentWeather
+    return response.data as ForecastResponse
   },
 })
