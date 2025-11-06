@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/schema-index.schema.json",
+  "version": "0.1.0",
+  "datasets": [
+    {
+      "name": "products",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/json/products.schema.json",
+      "doc": "raw/json/products.md"
+    },
+    {
+      "name": "orders",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/json/orders.schema.json",
+      "doc": "raw/json/orders.md"
+    },
+    {
+      "name": "customers",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/json/customers.schema.json",
+      "doc": "raw/json/customers.md"
+    }
+  ]
+}
