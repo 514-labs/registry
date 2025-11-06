@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "identifier": "oweather3",
+  "name": "oweather3",
+  "category": "api",
+  "tags": [],
+  "description": "",
+  "homepage": ""
+}

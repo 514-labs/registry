@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Air Pollution",
+  "description": "Air pollution data including Air Quality Index and concentrations of pollutants",
+  "type": "object",
+  "properties": {
+    "coord": {
+      "type": "object",
+      "properties": {
+        "lon": {
+          "type": "number",
+          "description": "Longitude"
+        },
+        "lat": {
+          "type": "number",
+          "description": "Latitude"
+        }
+      },
+      "required": ["lon", "lat"]
+    },
+    "list": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "dt": {
+            "type": "number",
+            "description": "Date and time, Unix, UTC"
+          },
+          "main": {
+            "type": "object",
+            "properties": {
+              "aqi": {
+                "type": "number",
+                "description": "Air Quality Index. 1 = Good, 2 = Fair, 3 = Moderate, 4 = Poor, 5 = Very Poor",
+                "minimum": 1,
+                "maximum": 5
+              }
+            },
+            "required": ["aqi"]
+          },
+          "components": {
+            "type": "object",
+            "description": "Concentrations of pollutants",
+            "properties": {
+              "co": {
+                "type": "number",
+                "description": "Сoncentration of CO (Carbon monoxide), μg/m3"
+              },
+              "no": {
+                "type": "number",
+                "description": "Сoncentration of NO (Nitrogen monoxide), μg/m3"
+              },
+              "no2": {
+                "type": "number",
+                "description": "Сoncentration of NO2 (Nitrogen dioxide), μg/m3"
+              },
+              "o3": {
+                "type": "number",
+                "description": "Сoncentration of O3 (Ozone), μg/m3"
+              },
+              "so2": {
+                "type": "number",
+                "description": "Сoncentration of SO2 (Sulphur dioxide), μg/m3"
+              },
+              "pm2_5": {
+                "type": "number",
+                "description": "Сoncentration of PM2.5 (Fine particles matter), μg/m3"
+              },
+              "pm10": {
+                "type": "number",
+                "description": "Сoncentration of PM10 (Coarse particulate matter), μg/m3"
+              },
+              "nh3": {
+                "type": "number",
+                "description": "Сoncentration of NH3 (Ammonia), μg/m3"
+              }
+            },
+            "required": ["co", "no", "no2", "o3", "so2", "pm2_5", "pm10", "nh3"]
+          }
+        },
+        "required": ["dt", "main", "components"]
+      }
+    }
+  },
+  "required": ["coord", "list"]
+}
