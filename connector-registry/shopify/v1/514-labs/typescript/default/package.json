@@ -12,7 +12,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@connector-factory/core": "^0.1.0"
+    "@connector-factory/core": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.4.0",
