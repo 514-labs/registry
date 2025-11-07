@@ -1,5 +1,5 @@
 {
-  "name": "openweather",
+  "name": "OpenWeather",
   "author": "514-labs",
   "version": "v1",
   "languages": [
@@ -13,10 +13,10 @@
   },
   "source": {
     "type": "api",
-    "spec": "",
-    "homepage": ""
+    "spec": "https://openweathermap.org/api",
+    "homepage": "https://openweathermap.org"
   },
-  "tags": [],
+  "tags": ["weather", "forecast", "air-quality", "geocoding"],
   "maintainers": [],
   "issues": { "typescript": { "default": "" } }
 }
