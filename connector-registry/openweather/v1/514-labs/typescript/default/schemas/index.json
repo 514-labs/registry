@@ -3,39 +3,32 @@
   "version": "0.1.0",
   "datasets": [
     {
-      "name": "events",
+      "name": "current-weather",
       "stage": "raw",
       "kind": "endpoints",
-      "path": "raw/endpoints/events.schema.json",
-      "doc": "raw/endpoints/events.md"
+      "path": "raw/json/current-weather.schema.json",
+      "doc": "raw/json/current-weather.md"
     },
     {
-      "name": "events",
-      "stage": "extracted",
-      "kind": "endpoints",
-      "path": "extracted/endpoints/events.schema.json",
-      "doc": "extracted/endpoints/events.md"
-    }
-  ],
-  "_examples": {
-    "_comment": "Below are examples of how to use nested folders. Copy and modify these patterns:",
-    "endpoint_example": {
-      "name": "users.create",
+      "name": "forecast",
       "stage": "raw",
       "kind": "endpoints",
-      "path": "raw/endpoints/endpoints/users/create.schema.json",
-      "doc": "raw/endpoints/endpoints/users/create.md",
-      "metadata": {
-        "category": "endpoint",
-        "apiMethod": "POST"
-      }
+      "path": "raw/json/forecast.schema.json",
+      "doc": "raw/json/forecast.md"
     },
-    "nested_organization_example": {
-      "name": "reports.analytics",
+    {
+      "name": "air-pollution",
       "stage": "raw",
       "kind": "endpoints",
-      "path": "raw/endpoints/endpoints/reports/analytics.schema.json",
-      "doc": "raw/endpoints/endpoints/reports/analytics.md"
+      "path": "raw/json/air-pollution.schema.json",
+      "doc": "raw/json/air-pollution.md"
+    },
+    {
+      "name": "geocoding",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/json/geocoding.schema.json",
+      "doc": "raw/json/geocoding.md"
     }
-  }
+  ]
 }
