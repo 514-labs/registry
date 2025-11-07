@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Geocoding Location",
+  "description": "Geographic location data from geocoding API",
+  "type": "object",
+  "required": ["name", "lat", "lon", "country"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the found location"
+    },
+    "local_names": {
+      "type": "object",
+      "description": "Location names in different languages",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "lat": {
+      "type": "number",
+      "description": "Geographical coordinates of the found location (latitude)",
+      "minimum": -90,
+      "maximum": 90
+    },
+    "lon": {
+      "type": "number",
+      "description": "Geographical coordinates of the found location (longitude)",
+      "minimum": -180,
+      "maximum": 180
+    },
+    "country": {
+      "type": "string",
+      "description": "Country of the found location (ISO 3166 country code)",
+      "minLength": 2,
+      "maxLength": 2
+    },
+    "state": {
+      "type": "string",
+      "description": "State of the found location (where available, e.g., for USA)"
+    }
+  }
+}

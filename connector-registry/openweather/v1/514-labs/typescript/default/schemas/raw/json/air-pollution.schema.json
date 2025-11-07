@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Air Pollution Data",
+  "description": "Air pollution data including Air Quality Index and pollutant concentrations",
+  "type": "object",
+  "required": ["coord", "list"],
+  "properties": {
+    "coord": {
+      "type": "object",
+      "description": "Geographic coordinates",
+      "properties": {
+        "lon": { "type": "number", "description": "Longitude" },
+        "lat": { "type": "number", "description": "Latitude" }
+      },
+      "required": ["lon", "lat"]
+    },
+    "list": {
+      "type": "array",
+      "description": "Air pollution data points",
+      "items": {
+        "type": "object",
+        "required": ["dt", "main", "components"],
+        "properties": {
+          "dt": {
+            "type": "integer",
+            "description": "Time of data calculation (Unix, UTC)"
+          },
+          "main": {
+            "type": "object",
+            "description": "Air Quality Index",
+            "required": ["aqi"],
+            "properties": {
+              "aqi": {
+                "type": "integer",
+                "description": "Air Quality Index: 1=Good, 2=Fair, 3=Moderate, 4=Poor, 5=Very Poor",
+                "minimum": 1,
+                "maximum": 5
+              }
+            }
+          },
+          "components": {
+            "type": "object",
+            "description": "Pollutant concentrations in μg/m³",
+            "required": ["co", "no", "no2", "o3", "so2", "pm2_5", "pm10", "nh3"],
+            "properties": {
+              "co": {
+                "type": "number",
+                "description": "Carbon monoxide concentration (μg/m³)"
+              },
+              "no": {
+                "type": "number",
+                "description": "Nitrogen monoxide concentration (μg/m³)"
+              },
+              "no2": {
+                "type": "number",
+                "description": "Nitrogen dioxide concentration (μg/m³)"
+              },
+              "o3": {
+                "type": "number",
+                "description": "Ozone concentration (μg/m³)"
+              },
+              "so2": {
+                "type": "number",
+                "description": "Sulphur dioxide concentration (μg/m³)"
+              },
+              "pm2_5": {
+                "type": "number",
+                "description": "Fine particles matter (< 2.5 μm) concentration (μg/m³)"
+              },
+              "pm10": {
+                "type": "number",
+                "description": "Coarse particulate matter (< 10 μm) concentration (μg/m³)"
+              },
+              "nh3": {
+                "type": "number",
+                "description": "Ammonia concentration (μg/m³)"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

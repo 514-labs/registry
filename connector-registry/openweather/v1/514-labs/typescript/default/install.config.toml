@@ -1,0 +1,32 @@
+language = "typescript"
+description = "TypeScript connector for openweather"
+post_install_print = """
+🚀 Next steps to get your openweather connector running:
+
+📖 IMPORTANT: Read the implementation guide first!
+    $ cat CONNECTOR_GUIDE.md
+    Or open: connector-registry/_scaffold/CONNECTOR_IMPLEMENTATION_GUIDE.md
+
+📂 Go to your connector directory:
+    $ cd 
+
+📦 Install dependencies:
+    $ npm install
+
+🔧 Build the connector:
+    $ npm run build
+
+🧪 Run tests:
+    $ npm test
+
+📋 Follow the checklist in CONNECTOR_GUIDE.md:
+    Phase 3: Configure authentication in src/client/connector.ts
+    Phase 4: Implement pagination in src/lib/paginate.ts
+    Phase 5: Implement resources in src/resources/
+    Phase 6-10: Add schemas, docs, tests
+
+💡 Reference connectors for examples:
+    • connector-registry/socrata/ (simple API key + offset pagination)
+    • connector-registry/meta-ads/ (OAuth2 + cursor pagination)
+    • connector-registry/google-analytics/ (service account auth)
+"""
