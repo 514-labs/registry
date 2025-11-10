@@ -1,0 +1,44 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/pipeline.schema.json",
+  "name": "shopify-pipeline",
+  "author": "514-labs",
+  "authorType": "organization",
+  "version": "v2025-07",
+  "description": "Pull Shopify data via connector and ingest into Moose dev server.",
+  "tags": [
+    "shopify",
+    "moose",
+    "etl"
+  ],
+  "schedule": {
+    "cron": "0 * * * *",
+    "timezone": "UTC"
+  },
+  "source": {
+    "type": "connector",
+    "connector": {
+      "name": "shopify",
+      "version": "v2025-07",
+      "author": "514-labs"
+    },
+    "stream": "inventory"
+  },
+  "systems": [
+    { "id": "stage_fs", "type": "filesystem", "label": "Local stage (JSONL)", "path": "./python/default/data/stage" },
+    { "id": "moose_dev", "type": "http", "label": "Moose dev server" }
+  ],
+  "transformations": [
+    { "id": "extract_transform", "type": "python", "inputs": ["source"], "outputs": ["stage_fs"], "script": "scripts/etl_to_stage.py" },
+    { "id": "load", "type": "python", "inputs": ["stage_fs"], "outputs": ["moose_dev"], "script": "scripts/load_from_stage.py" }
+  ],
+  "destination": {
+    "system": "moose",
+    "database": "",
+    "table": "shopify_inventory_levels"
+  },
+  "lineage": {
+    "nodes": [],
+    "edges": []
+  },
+  "maintainers": []
+}
