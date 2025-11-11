@@ -30,7 +30,7 @@ Or view online: [Connector Implementation Guide](../../../../../../_scaffold/CON
 - [ ] Test with API to verify it works
 
 ### Phase 5: Implement Resources
-- [ ] Define resource types in `src/resources/accounts.ts`
+- [ ] Define resource types in `src/resources/products.ts`
 - [ ] Implement list/get/create methods as needed
 - [ ] Add resource getters to connector class
 

@@ -1,6 +1,10 @@
 # Apex Trading Connector
 
-TypeScript connector for the Apex Trading API.
+TypeScript connector for the Apex Trading wholesale cannabis platform API.
+
+## Overview
+
+Apex Trading is a wholesale cannabis trading platform. This connector provides access to products, batches, orders, companies, and buyers data.
 
 ## Installation
 
@@ -17,37 +21,28 @@ const connector = createConnector()
 
 connector.initialize({
   apiKey: process.env.APEX_API_KEY!,
-  apiSecret: process.env.APEX_API_SECRET,
-  apiPassphrase: process.env.APEX_API_PASSPHRASE,
-  environment: 'production', // or 'testnet'
   logging: { enabled: true, level: 'info' },
   metrics: { enabled: true },
 })
 
-// List products
-for await (const page of connector.products.list()) {
+// List products with incremental sync
+for await (const page of connector.products.list({ 
+  updated_at_from: '2024-01-01T00:00:00Z',
+  pageSize: 100 
+})) {
   console.log('Products:', page)
 }
 
-// Get account balance
-const balance = await connector.accounts.getBalance()
-console.log('Balance:', balance)
-
-// List orders
-for await (const page of connector.orders.list({ symbol: 'BTC-USDT' })) {
+// List receiving orders
+for await (const page of connector.orders.receiving({ 
+  status: 'confirmed' 
+})) {
   console.log('Orders:', page)
 }
 
-// Create an order
-const order = await connector.orders.create({
-  symbol: 'BTC-USDT',
-  side: 'BUY',
-  type: 'LIMIT',
-  quantity: '0.001',
-  price: '50000',
-  timeInForce: 'GTC',
-})
-console.log('Order created:', order)
+// Get company details
+const company = await connector.companies.get('company-id')
+console.log('Company:', company)
 ```
 
 ## Configuration
@@ -56,19 +51,50 @@ console.log('Order created:', order)
 - `apiKey`: Your Apex Trading API key
 
 ### Optional
-- `apiSecret`: Your API secret (required for some operations)
-- `apiPassphrase`: Your API passphrase (required for some operations)
-- `baseUrl`: Custom API base URL
-- `environment`: 'production' or 'testnet' (default: 'production')
+- `baseUrl`: Custom API base URL (default: https://api-docs.apextrading.com)
 - `logging`: Logging configuration
 - `metrics`: Metrics collection configuration
 
 ## Available Resources
 
-- **accounts**: Account management and balance information
-- **orders**: Order creation, listing, and management
-- **trades**: Trade history and information
-- **products**: Market products, tickers, and order book data
+- **products**: Product catalog with cannabis products
+- **batches**: Product batches with tracking and test results
+- **orders**: Orders (receiving, shipping, transporter)
+- **companies**: Trading companies (distributors, retailers, etc.)
+- **buyers**: Buyer information and purchase history
+
+## API Features
+
+### Incremental Sync
+
+Products and batches support incremental sync using `updated_at_from`:
+
+```typescript
+// Get products updated since last sync
+for await (const page of connector.products.list({ 
+  updated_at_from: lastSyncTime 
+})) {
+  // Process updated products
+}
+```
+
+### Order Types
+
+Access different order types:
+
+```typescript
+// Receiving orders
+for await (const page of connector.orders.receiving()) { }
+
+// Shipping orders
+for await (const page of connector.orders.shipping()) { }
+
+// Transporter orders
+for await (const page of connector.orders.transporter()) { }
+
+// All orders
+for await (const page of connector.orders.list()) { }
+```
 
 ## API Rate Limits
 

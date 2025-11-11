@@ -1,41 +1,36 @@
 import { paginateOffset } from '../lib/paginate'
 import type { SendFn } from '../lib/paginate'
 
+export type OrderType = 'receiving' | 'shipping' | 'transporter'
+
 export interface Order {
   id: string
-  clientOrderId?: string
-  accountId: string
-  symbol: string
-  side: 'BUY' | 'SELL'
-  type: 'LIMIT' | 'MARKET' | 'STOP_LIMIT' | 'STOP_MARKET'
-  price?: string
-  quantity: string
-  filledQuantity: string
-  status: 'NEW' | 'PARTIALLY_FILLED' | 'FILLED' | 'CANCELED' | 'REJECTED' | 'EXPIRED'
-  timeInForce?: 'GTC' | 'IOC' | 'FOK'
-  createdAt: string
-  updatedAt: string
+  type: OrderType
+  order_number: string
+  company_id: string
+  buyer_id?: string
+  status: 'pending' | 'confirmed' | 'in_transit' | 'delivered' | 'cancelled'
+  items: Array<{
+    product_id: string
+    batch_id?: string
+    quantity: number
+    unit_price: number
+  }>
+  total_amount: number
+  created_at: string
+  updated_at: string
+  delivery_date?: string
 }
 
 export interface ListOrdersParams {
-  symbol?: string
-  status?: 'NEW' | 'PARTIALLY_FILLED' | 'FILLED' | 'CANCELED' | 'REJECTED' | 'EXPIRED'
-  side?: 'BUY' | 'SELL'
-  startTime?: string
-  endTime?: string
+  type?: OrderType
+  status?: string
+  company_id?: string
+  buyer_id?: string
+  start_date?: string
+  end_date?: string
   pageSize?: number
   maxItems?: number
-}
-
-export interface CreateOrderParams {
-  symbol: string
-  side: 'BUY' | 'SELL'
-  type: 'LIMIT' | 'MARKET' | 'STOP_LIMIT' | 'STOP_MARKET'
-  quantity: string
-  price?: string
-  stopPrice?: string
-  timeInForce?: 'GTC' | 'IOC' | 'FOK'
-  clientOrderId?: string
 }
 
 export const createResource = (send: SendFn) => ({
@@ -51,36 +46,46 @@ export const createResource = (send: SendFn) => ({
     })
   },
 
-  async get(orderId: string): Promise<Order> {
+  async *receiving(params?: Omit<ListOrdersParams, 'type'>) {
+    const { pageSize, maxItems, ...filters } = params ?? {}
+
+    yield* paginateOffset<Order>({
+      send,
+      path: '/receiving-orders',
+      query: filters,
+      pageSize,
+      maxItems,
+    })
+  },
+
+  async *shipping(params?: Omit<ListOrdersParams, 'type'>) {
+    const { pageSize, maxItems, ...filters } = params ?? {}
+
+    yield* paginateOffset<Order>({
+      send,
+      path: '/shipping-orders',
+      query: filters,
+      pageSize,
+      maxItems,
+    })
+  },
+
+  async *transporter(params?: Omit<ListOrdersParams, 'type'>) {
+    const { pageSize, maxItems, ...filters } = params ?? {}
+
+    yield* paginateOffset<Order>({
+      send,
+      path: '/transporter-orders',
+      query: filters,
+      pageSize,
+      maxItems,
+    })
+  },
+
+  async get(id: string): Promise<Order> {
     const response = await send<Order>({
       method: 'GET',
-      path: `/orders/${orderId}`,
-    })
-    return response.data
-  },
-
-  async create(params: CreateOrderParams): Promise<Order> {
-    const response = await send<Order>({
-      method: 'POST',
-      path: '/orders',
-      body: params,
-    })
-    return response.data
-  },
-
-  async cancel(orderId: string): Promise<Order> {
-    const response = await send<Order>({
-      method: 'DELETE',
-      path: `/orders/${orderId}`,
-    })
-    return response.data
-  },
-
-  async cancelAll(symbol?: string): Promise<{ canceledCount: number }> {
-    const response = await send<{ canceledCount: number }>({
-      method: 'DELETE',
-      path: '/orders',
-      query: symbol ? { symbol } : undefined,
+      path: `/orders/${id}`,
     })
     return response.data
   },

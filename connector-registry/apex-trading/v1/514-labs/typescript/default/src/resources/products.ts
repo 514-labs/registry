@@ -1,106 +1,50 @@
-import { paginateOffset } from '../lib/paginate'
+import { paginateIncremental, paginateOffset } from '../lib/paginate'
 import type { SendFn } from '../lib/paginate'
 
 export interface Product {
   id: string
-  symbol: string
-  baseAsset: string
-  quoteAsset: string
-  status: 'TRADING' | 'HALT' | 'BREAK'
-  baseAssetPrecision: number
-  quoteAssetPrecision: number
-  minPrice: string
-  maxPrice: string
-  tickSize: string
-  minQuantity: string
-  maxQuantity: string
-  stepSize: string
-  minNotional: string
+  name: string
+  description?: string
+  category?: string
+  brand?: string
+  strain?: string
+  thc_content?: number
+  cbd_content?: number
+  unit_price?: number
+  unit_of_measure?: string
+  available_quantity?: number
+  created_at: string
+  updated_at: string
 }
 
 export interface ListProductsParams {
-  symbol?: string
-  status?: 'TRADING' | 'HALT' | 'BREAK'
+  updated_at_from?: string  // For incremental sync
+  category?: string
+  brand?: string
+  strain?: string
   pageSize?: number
   maxItems?: number
 }
 
-export interface Ticker {
-  symbol: string
-  lastPrice: string
-  priceChange: string
-  priceChangePercent: string
-  volume: string
-  quoteVolume: string
-  openPrice: string
-  highPrice: string
-  lowPrice: string
-  timestamp: string
-}
-
-export interface OrderBook {
-  symbol: string
-  bids: Array<[string, string]>  // [price, quantity]
-  asks: Array<[string, string]>  // [price, quantity]
-  timestamp: string
-}
-
-export interface PublicTrade {
-  id: string
-  price: string
-  quantity: string
-  timestamp: string
-  isBuyerMaker: boolean
-}
-
 export const createResource = (send: SendFn) => ({
   async *list(params?: ListProductsParams) {
-    const { pageSize, maxItems, ...filters } = params ?? {}
+    const { pageSize, maxItems, updated_at_from, ...filters } = params ?? {}
 
-    yield* paginateOffset<Product>({
+    yield* paginateIncremental<Product>({
       send,
       path: '/products',
       query: filters,
+      updatedAtFrom: updated_at_from,
       pageSize,
       maxItems,
     })
   },
 
-  async get(symbol: string): Promise<Product> {
+  async get(id: string): Promise<Product> {
     const response = await send<Product>({
       method: 'GET',
-      path: `/products/${symbol}`,
+      path: `/products/${id}`,
     })
     return response.data
-  },
-
-  async getTicker(symbol: string): Promise<Ticker> {
-    const response = await send<Ticker>({
-      method: 'GET',
-      path: '/ticker',
-      query: { symbol },
-    })
-    return response.data
-  },
-
-  async getOrderBook(symbol: string, limit?: number): Promise<OrderBook> {
-    const response = await send<OrderBook>({
-      method: 'GET',
-      path: '/depth',
-      query: { symbol, limit },
-    })
-    return response.data
-  },
-
-  async *getRecentTrades(symbol: string, limit?: number) {
-    const response = await send<PublicTrade[]>({
-      method: 'GET',
-      path: '/trades',
-      query: { symbol, limit },
-    })
-    
-    const trades = Array.isArray(response.data) ? response.data : []
-    yield trades
   },
 })
-

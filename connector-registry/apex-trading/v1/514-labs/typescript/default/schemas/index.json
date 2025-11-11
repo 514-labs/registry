@@ -3,33 +3,39 @@
   "version": "0.1.0",
   "datasets": [
     {
-      "name": "accounts",
+      "name": "events",
       "stage": "raw",
       "kind": "endpoints",
-      "path": "raw/json/accounts.schema.json",
-      "doc": "raw/json/accounts.md"
+      "path": "raw/endpoints/events.schema.json",
+      "doc": "raw/endpoints/events.md"
     },
     {
-      "name": "orders",
-      "stage": "raw",
+      "name": "events",
+      "stage": "extracted",
       "kind": "endpoints",
-      "path": "raw/json/orders.schema.json",
-      "doc": "raw/json/orders.md"
-    },
-    {
-      "name": "trades",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/json/trades.schema.json",
-      "doc": "raw/json/trades.md"
-    },
-    {
-      "name": "products",
-      "stage": "raw",
-      "kind": "endpoints",
-      "path": "raw/json/products.schema.json",
-      "doc": "raw/json/products.md"
+      "path": "extracted/endpoints/events.schema.json",
+      "doc": "extracted/endpoints/events.md"
     }
-  ]
+  ],
+  "_examples": {
+    "_comment": "Below are examples of how to use nested folders. Copy and modify these patterns:",
+    "endpoint_example": {
+      "name": "users.create",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/endpoints/endpoints/users/create.schema.json",
+      "doc": "raw/endpoints/endpoints/users/create.md",
+      "metadata": {
+        "category": "endpoint",
+        "apiMethod": "POST"
+      }
+    },
+    "nested_organization_example": {
+      "name": "reports.analytics",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/endpoints/endpoints/reports/analytics.schema.json",
+      "doc": "raw/endpoints/endpoints/reports/analytics.md"
+    }
+  }
 }
-
