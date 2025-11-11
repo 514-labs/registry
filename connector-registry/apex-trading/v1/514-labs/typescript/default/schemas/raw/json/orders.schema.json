@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Order",
+  "description": "Apex Trading order",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique order identifier"
+    },
+    "clientOrderId": {
+      "type": "string",
+      "description": "Client-specified order identifier"
+    },
+    "accountId": {
+      "type": "string",
+      "description": "Account ID"
+    },
+    "symbol": {
+      "type": "string",
+      "description": "Trading pair symbol (e.g., BTC-USDT)"
+    },
+    "side": {
+      "type": "string",
+      "enum": ["BUY", "SELL"],
+      "description": "Order side"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["LIMIT", "MARKET", "STOP_LIMIT", "STOP_MARKET"],
+      "description": "Order type"
+    },
+    "price": {
+      "type": "string",
+      "description": "Order price (for limit orders)"
+    },
+    "quantity": {
+      "type": "string",
+      "description": "Order quantity"
+    },
+    "filledQuantity": {
+      "type": "string",
+      "description": "Quantity filled"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["NEW", "PARTIALLY_FILLED", "FILLED", "CANCELED", "REJECTED", "EXPIRED"],
+      "description": "Order status"
+    },
+    "timeInForce": {
+      "type": "string",
+      "enum": ["GTC", "IOC", "FOK"],
+      "description": "Time in force"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Order creation timestamp"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Order last update timestamp"
+    }
+  },
+  "required": ["id", "accountId", "symbol", "side", "type", "quantity", "filledQuantity", "status"]
+}

@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Account",
+  "description": "Apex Trading account information",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique account identifier"
+    },
+    "userId": {
+      "type": "string",
+      "description": "User ID associated with the account"
+    },
+    "balance": {
+      "type": "string",
+      "description": "Total account balance"
+    },
+    "availableBalance": {
+      "type": "string",
+      "description": "Available balance for trading"
+    },
+    "lockedBalance": {
+      "type": "string",
+      "description": "Balance locked in open orders"
+    },
+    "equity": {
+      "type": "string",
+      "description": "Account equity"
+    },
+    "totalMargin": {
+      "type": "string",
+      "description": "Total margin used"
+    },
+    "freeMargin": {
+      "type": "string",
+      "description": "Free margin available"
+    },
+    "unrealizedPnl": {
+      "type": "string",
+      "description": "Unrealized profit and loss"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Account creation timestamp"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Account last update timestamp"
+    }
+  },
+  "required": ["id", "userId", "balance", "availableBalance", "lockedBalance"]
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Trade",
+  "description": "Apex Trading trade execution",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique trade identifier"
+    },
+    "orderId": {
+      "type": "string",
+      "description": "Order ID associated with this trade"
+    },
+    "symbol": {
+      "type": "string",
+      "description": "Trading pair symbol (e.g., BTC-USDT)"
+    },
+    "side": {
+      "type": "string",
+      "enum": ["BUY", "SELL"],
+      "description": "Trade side"
+    },
+    "price": {
+      "type": "string",
+      "description": "Trade execution price"
+    },
+    "quantity": {
+      "type": "string",
+      "description": "Trade quantity"
+    },
+    "fee": {
+      "type": "string",
+      "description": "Trading fee"
+    },
+    "feeAsset": {
+      "type": "string",
+      "description": "Asset used for fee payment"
+    },
+    "isMaker": {
+      "type": "boolean",
+      "description": "Whether this trade was a maker trade"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Trade execution timestamp"
+    }
+  },
+  "required": ["id", "orderId", "symbol", "side", "price", "quantity", "fee", "feeAsset", "isMaker"]
+}
