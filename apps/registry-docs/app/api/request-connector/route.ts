@@ -141,7 +141,81 @@ export async function POST(req: NextRequest) {
         { status: 502 }
       );
     }
-    const data = (await res.json()) as { html_url?: string };
+    const data = (await res.json()) as { html_url?: string; node_id?: string };
+
+    // Auto-assign Copilot connector-implementer agent
+    if (data.node_id) {
+      try {
+        // Step 1: Get Copilot's actor ID using correct GraphQL syntax
+        const actorQuery = `
+          query {
+            repository(owner: "${owner}", name: "${repo}") {
+              suggestedActors(loginNames: "copilot", capabilities: [CAN_BE_ASSIGNED], first: 100) {
+                nodes {
+                  login
+                  __typename
+                  ... on Bot {
+                    id
+                  }
+                }
+              }
+            }
+          }
+        `;
+
+        const actorRes = await fetch("https://api.github.com/graphql", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ query: actorQuery }),
+        });
+
+        const actorData = await actorRes.json();
+        const suggestedActors = actorData?.data?.repository?.suggestedActors?.nodes || [];
+        const copilotActor = suggestedActors.find(
+          (actor: any) => actor.login === "copilot" || actor.login === "copilot-swe-agent"
+        );
+
+        // Step 2: Assign Copilot to the issue
+        if (copilotActor?.id) {
+          const assignMutation = `
+            mutation {
+              replaceActorsForAssignable(input: {
+                assignableId: "${data.node_id}"
+                actorIds: ["${copilotActor.id}"]
+              }) {
+                assignable {
+                  ... on Issue {
+                    number
+                    title
+                    assignees(first: 10) {
+                      nodes {
+                        login
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          `;
+
+          await fetch("https://api.github.com/graphql", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query: assignMutation }),
+          });
+        }
+      } catch (assignErr) {
+        // Don't fail the whole request if assignment fails
+        console.error("Failed to assign Copilot agent:", assignErr);
+      }
+    }
+
     return Response.json({ ok: true, issueUrl: data.html_url });
   } catch (err) {
     return Response.json(
