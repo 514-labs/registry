@@ -1,0 +1,20 @@
+{
+  "name": "woooo-test",
+  "author": "514-labs",
+  "version": "v1",
+  "languages": ["typescript"],
+  "category": "api",
+  "capabilities": {
+    "extract": true,
+    "transform": false,
+    "load": false
+  },
+  "source": {
+    "type": "api",
+    "spec": "https://openweathermap.org",
+    "homepage": "https://openweathermap.org"
+  },
+  "tags": ["yooo"],
+  "maintainers": [],
+  "issues": { "typescript": { "default": "https://github.com/514-labs/registry/issues" } }
+}

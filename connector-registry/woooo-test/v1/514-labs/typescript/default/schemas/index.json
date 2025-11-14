@@ -1,0 +1,13 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/schema-index.schema.json",
+  "version": "0.1.0",
+  "datasets": [
+    {
+      "name": "test-resource",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/json/test-resource.schema.json",
+      "doc": "raw/json/test-resource.md"
+    }
+  ]
+}
