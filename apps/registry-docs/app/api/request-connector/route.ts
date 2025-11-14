@@ -150,7 +150,7 @@ export async function POST(req: NextRequest) {
         const actorQuery = `
           query {
             repository(owner: "${owner}", name: "${repo}") {
-              suggestedActors(loginNames: "copilot", capabilities: [CAN_BE_ASSIGNED], first: 100) {
+              suggestedActors(loginNames: "copilot-swe-agent", capabilities: [CAN_BE_ASSIGNED], first: 100) {
                 nodes {
                   login
                   __typename
@@ -175,7 +175,7 @@ export async function POST(req: NextRequest) {
         const actorData = await actorRes.json();
         const suggestedActors = actorData?.data?.repository?.suggestedActors?.nodes || [];
         const copilotActor = suggestedActors.find(
-          (actor: any) => actor.login === "copilot" || actor.login === "copilot-swe-agent"
+          (actor: any) => actor.login === "copilot-swe-agent"
         );
 
         // Step 2: Assign Copilot to the issue
