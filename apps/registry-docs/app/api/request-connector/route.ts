@@ -146,11 +146,11 @@ export async function POST(req: NextRequest) {
     // Auto-assign Copilot connector-implementer agent
     if (data.node_id) {
       try {
-        // Step 1: Get Copilot's actor ID using correct GraphQL syntax
+        // Step 1: Get Copilot's actor ID using correct GraphQL syntax with variables to prevent injection
         const actorQuery = `
-          query {
-            repository(owner: "${owner}", name: "${repo}") {
-              suggestedActors(loginNames: "copilot-swe-agent", capabilities: [CAN_BE_ASSIGNED], first: 100) {
+          query($owner: String!, $repo: String!) {
+            repository(owner: $owner, name: $repo) {
+              suggestedActors(loginNames: "copilot", capabilities: [CAN_BE_ASSIGNED], first: 100) {
                 nodes {
                   login
                   __typename
@@ -169,7 +169,10 @@ export async function POST(req: NextRequest) {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ query: actorQuery }),
+          body: JSON.stringify({
+            query: actorQuery,
+            variables: { owner, repo },
+          }),
         });
 
         const actorData = await actorRes.json();
@@ -181,10 +184,10 @@ export async function POST(req: NextRequest) {
         // Step 2: Assign Copilot to the issue
         if (copilotActor?.id) {
           const assignMutation = `
-            mutation {
+            mutation($assignableId: ID!, $actorIds: [ID!]!) {
               replaceActorsForAssignable(input: {
-                assignableId: "${data.node_id}"
-                actorIds: ["${copilotActor.id}"]
+                assignableId: $assignableId
+                actorIds: $actorIds
               }) {
                 assignable {
                   ... on Issue {
@@ -207,7 +210,13 @@ export async function POST(req: NextRequest) {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ query: assignMutation }),
+            body: JSON.stringify({
+              query: assignMutation,
+              variables: {
+                assignableId: data.node_id,
+                actorIds: [copilotActor.id],
+              },
+            }),
           });
         }
       } catch (assignErr) {
