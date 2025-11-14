@@ -1,0 +1,8 @@
+{
+  "identifier": "this-is-a-test",
+  "name": "this-is-a-test",
+  "author": "514-labs",
+  "version": "v1",
+  "language": "typescript",
+  "implementations": ["default"]
+}

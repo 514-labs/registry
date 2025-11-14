@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "identifier": "this-is-a-test",
+  "name": "DFSFSDFSDF",
+  "category": "api",
+  "tags": ["DSDFSF"],
+  "description": "FSDFSDFSDFSFSDFSDFSDF",
+  "homepage": "https://openweathermap.org"
+}
