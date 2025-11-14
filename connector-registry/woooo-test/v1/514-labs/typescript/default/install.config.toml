@@ -1,0 +1,9 @@
+language = "typescript"
+description = "Minimal test connector - do not use in production"
+post_install_print = """
+⚠️  WARNING: This is a test connector - do not use in production
+
+This is a minimal stub connector created for testing purposes only.
+
+📖 For more information, see README.md
+"""

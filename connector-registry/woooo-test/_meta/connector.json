@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "identifier": "woooo-test",
+  "name": "wooo test",
+  "category": "api",
+  "tags": ["yooo"],
+  "description": "This is a test connector dont do anything",
+  "homepage": "https://openweathermap.org"
+}
