@@ -1,0 +1,22 @@
+{
+  "name": "apex-trading",
+  "author": "514-labs",
+  "version": "v1",
+  "languages": [
+    "typescript"
+  ],
+  "category": "api",
+  "capabilities": {
+    "extract": true,
+    "transform": false,
+    "load": false
+  },
+  "source": {
+    "type": "api",
+    "spec": "",
+    "homepage": ""
+  },
+  "tags": [],
+  "maintainers": [],
+  "issues": { "typescript": { "default": "" } }
+}
