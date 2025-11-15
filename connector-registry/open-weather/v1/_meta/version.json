@@ -1,0 +1,7 @@
+{
+  "name": "open-weather",
+  "version": "v1",
+  "status": "stable",
+  "releasedAt": "2024-11-06",
+  "notes": "Initial release of OpenWeather connector with support for current weather, forecasts, geocoding, and air pollution data"
+}

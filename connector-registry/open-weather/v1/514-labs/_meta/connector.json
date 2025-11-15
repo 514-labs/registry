@@ -1,0 +1,22 @@
+{
+  "name": "open-weather",
+  "author": "514-labs",
+  "version": "v1",
+  "languages": [
+    "typescript"
+  ],
+  "category": "api",
+  "capabilities": {
+    "extract": true,
+    "transform": false,
+    "load": false
+  },
+  "source": {
+    "type": "api",
+    "spec": "OpenWeatherMap API v2.5 and v3.0",
+    "homepage": "https://openweathermap.org"
+  },
+  "tags": ["Weather", "Climate", "Forecast", "Geocoding", "Air Quality"],
+  "maintainers": ["514-labs"],
+  "issues": { "typescript": { "default": "" } }
+}

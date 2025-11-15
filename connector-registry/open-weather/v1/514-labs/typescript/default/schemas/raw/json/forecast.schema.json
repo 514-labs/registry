@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "5-Day Weather Forecast",
+  "description": "5-day weather forecast with data every 3 hours",
+  "type": "object",
+  "properties": {
+    "cod": { "type": "string", "description": "Internal parameter" },
+    "message": { "type": "number", "description": "Internal parameter" },
+    "cnt": { "type": "number", "description": "Number of forecast items returned" },
+    "list": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "dt": { "type": "number", "description": "Time of data forecasted, unix, UTC" },
+          "main": {
+            "type": "object",
+            "properties": {
+              "temp": { "type": "number" },
+              "feels_like": { "type": "number" },
+              "temp_min": { "type": "number" },
+              "temp_max": { "type": "number" },
+              "pressure": { "type": "number" },
+              "humidity": { "type": "number" }
+            }
+          },
+          "weather": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "number" },
+                "main": { "type": "string" },
+                "description": { "type": "string" },
+                "icon": { "type": "string" }
+              }
+            }
+          },
+          "clouds": {
+            "type": "object",
+            "properties": {
+              "all": { "type": "number", "description": "Cloudiness, %" }
+            }
+          },
+          "wind": {
+            "type": "object",
+            "properties": {
+              "speed": { "type": "number" },
+              "deg": { "type": "number" },
+              "gust": { "type": "number" }
+            }
+          },
+          "visibility": { "type": "number", "description": "Average visibility, metres" },
+          "pop": { "type": "number", "description": "Probability of precipitation" },
+          "sys": {
+            "type": "object",
+            "properties": {
+              "pod": { "type": "string", "description": "Part of the day (n - night, d - day)" }
+            }
+          },
+          "dt_txt": { "type": "string", "description": "Time of data forecasted, ISO, UTC" }
+        }
+      }
+    },
+    "city": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "number", "description": "City ID" },
+        "name": { "type": "string", "description": "City name" },
+        "coord": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lon": { "type": "number" }
+          }
+        },
+        "country": { "type": "string", "description": "Country code" },
+        "population": { "type": "number", "description": "City population" },
+        "timezone": { "type": "number", "description": "Shift in seconds from UTC" },
+        "sunrise": { "type": "number", "description": "Sunrise time, unix, UTC" },
+        "sunset": { "type": "number", "description": "Sunset time, unix, UTC" }
+      }
+    }
+  },
+  "required": ["cod", "message", "cnt", "list", "city"]
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Geocoding API",
+  "description": "Convert city names and zip codes to geographic coordinates and vice versa",
+  "oneOf": [
+    {
+      "title": "Location Info",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name of the location" },
+        "local_names": {
+          "type": "object",
+          "description": "Location names in different languages",
+          "additionalProperties": { "type": "string" }
+        },
+        "lat": { "type": "number", "description": "Latitude" },
+        "lon": { "type": "number", "description": "Longitude" },
+        "country": { "type": "string", "description": "Country code" },
+        "state": { "type": "string", "description": "State (if available)" }
+      },
+      "required": ["name", "lat", "lon", "country"]
+    },
+    {
+      "title": "Zip Code Location",
+      "type": "object",
+      "properties": {
+        "zip": { "type": "string", "description": "Zip/postal code" },
+        "name": { "type": "string", "description": "Location name" },
+        "lat": { "type": "number", "description": "Latitude" },
+        "lon": { "type": "number", "description": "Longitude" },
+        "country": { "type": "string", "description": "Country code" }
+      },
+      "required": ["zip", "name", "lat", "lon", "country"]
+    }
+  ]
+}

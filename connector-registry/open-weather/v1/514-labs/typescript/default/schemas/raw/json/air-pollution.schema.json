@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Air Pollution API",
+  "description": "Air quality data including Air Quality Index and concentrations of pollutants",
+  "type": "object",
+  "properties": {
+    "coord": {
+      "type": "object",
+      "properties": {
+        "lon": { "type": "number", "description": "Longitude" },
+        "lat": { "type": "number", "description": "Latitude" }
+      },
+      "required": ["lon", "lat"]
+    },
+    "list": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "dt": { "type": "number", "description": "Date and time, Unix, UTC" },
+          "main": {
+            "type": "object",
+            "properties": {
+              "aqi": { 
+                "type": "number",
+                "description": "Air Quality Index: 1 = Good, 2 = Fair, 3 = Moderate, 4 = Poor, 5 = Very Poor",
+                "minimum": 1,
+                "maximum": 5
+              }
+            },
+            "required": ["aqi"]
+          },
+          "components": {
+            "type": "object",
+            "description": "Pollutant concentrations in μg/m³",
+            "properties": {
+              "co": { "type": "number", "description": "Carbon monoxide, μg/m³" },
+              "no": { "type": "number", "description": "Nitrogen monoxide, μg/m³" },
+              "no2": { "type": "number", "description": "Nitrogen dioxide, μg/m³" },
+              "o3": { "type": "number", "description": "Ozone, μg/m³" },
+              "so2": { "type": "number", "description": "Sulphur dioxide, μg/m³" },
+              "pm2_5": { "type": "number", "description": "Fine particles matter (PM2.5), μg/m³" },
+              "pm10": { "type": "number", "description": "Coarse particulate matter (PM10), μg/m³" },
+              "nh3": { "type": "number", "description": "Ammonia, μg/m³" }
+            },
+            "required": ["co", "no", "no2", "o3", "so2", "pm2_5", "pm10", "nh3"]
+          }
+        },
+        "required": ["dt", "main", "components"]
+      }
+    }
+  },
+  "required": ["coord", "list"]
+}
