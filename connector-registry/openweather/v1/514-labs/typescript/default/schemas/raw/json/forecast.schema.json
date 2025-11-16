@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "5-Day Weather Forecast",
+  "description": "5-day weather forecast with 3-hour intervals from OpenWeather API.",
+  "type": "object",
+  "properties": {
+    "cod": { "type": "string", "description": "Internal parameter" },
+    "message": { "type": "number", "description": "Internal parameter" },
+    "cnt": { "type": "integer", "description": "Number of timestamps" },
+    "list": {
+      "type": "array",
+      "description": "Forecast data points",
+      "items": {
+        "type": "object",
+        "properties": {
+          "dt": { "type": "integer", "description": "Time of data forecasted, unix UTC" },
+          "main": {
+            "type": "object",
+            "properties": {
+              "temp": { "type": "number", "description": "Temperature" },
+              "feels_like": { "type": "number", "description": "Feels like temperature" },
+              "temp_min": { "type": "number", "description": "Minimum temperature" },
+              "temp_max": { "type": "number", "description": "Maximum temperature" },
+              "pressure": { "type": "integer", "description": "Atmospheric pressure, hPa" },
+              "humidity": { "type": "integer", "description": "Humidity, %" }
+            }
+          },
+          "weather": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "integer" },
+                "main": { "type": "string" },
+                "description": { "type": "string" },
+                "icon": { "type": "string" }
+              }
+            }
+          },
+          "wind": {
+            "type": "object",
+            "properties": {
+              "speed": { "type": "number" },
+              "deg": { "type": "integer" }
+            }
+          },
+          "pop": { "type": "number", "description": "Probability of precipitation" },
+          "dt_txt": { "type": "string", "description": "Time of data forecasted, ISO format" }
+        }
+      }
+    },
+    "city": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer", "description": "City ID" },
+        "name": { "type": "string", "description": "City name" },
+        "country": { "type": "string", "description": "Country code" },
+        "timezone": { "type": "integer", "description": "Shift in seconds from UTC" }
+      }
+    }
+  }
+}

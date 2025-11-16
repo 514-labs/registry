@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Current Weather Data",
+  "description": "Current weather data from OpenWeather API. Includes temperature, humidity, wind, clouds, and other meteorological data.",
+  "type": "object",
+  "properties": {
+    "coord": {
+      "type": "object",
+      "description": "Geographic coordinates",
+      "properties": {
+        "lon": { "type": "number", "description": "Longitude" },
+        "lat": { "type": "number", "description": "Latitude" }
+      },
+      "required": ["lon", "lat"]
+    },
+    "weather": {
+      "type": "array",
+      "description": "Weather condition codes and descriptions",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "description": "Weather condition id" },
+          "main": { "type": "string", "description": "Group of weather parameters" },
+          "description": { "type": "string", "description": "Weather condition description" },
+          "icon": { "type": "string", "description": "Weather icon id" }
+        }
+      }
+    },
+    "main": {
+      "type": "object",
+      "description": "Main weather data",
+      "properties": {
+        "temp": { "type": "number", "description": "Temperature" },
+        "feels_like": { "type": "number", "description": "Feels like temperature" },
+        "temp_min": { "type": "number", "description": "Minimum temperature" },
+        "temp_max": { "type": "number", "description": "Maximum temperature" },
+        "pressure": { "type": "integer", "description": "Atmospheric pressure, hPa" },
+        "humidity": { "type": "integer", "description": "Humidity, %" }
+      }
+    },
+    "wind": {
+      "type": "object",
+      "description": "Wind data",
+      "properties": {
+        "speed": { "type": "number", "description": "Wind speed" },
+        "deg": { "type": "integer", "description": "Wind direction, degrees" }
+      }
+    },
+    "name": { "type": "string", "description": "City name" },
+    "dt": { "type": "integer", "description": "Data calculation time, unix UTC" }
+  }
+}

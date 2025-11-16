@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Air Pollution Data",
+  "description": "Air quality and pollution data from OpenWeather API.",
+  "type": "object",
+  "properties": {
+    "coord": {
+      "type": "object",
+      "properties": {
+        "lon": { "type": "number", "description": "Longitude" },
+        "lat": { "type": "number", "description": "Latitude" }
+      }
+    },
+    "list": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "main": {
+            "type": "object",
+            "properties": {
+              "aqi": {
+                "type": "integer",
+                "description": "Air Quality Index: 1=Good, 2=Fair, 3=Moderate, 4=Poor, 5=Very Poor"
+              }
+            }
+          },
+          "components": {
+            "type": "object",
+            "description": "Concentrations of air pollutants in μg/m³",
+            "properties": {
+              "co": { "type": "number", "description": "Carbon monoxide" },
+              "no": { "type": "number", "description": "Nitrogen monoxide" },
+              "no2": { "type": "number", "description": "Nitrogen dioxide" },
+              "o3": { "type": "number", "description": "Ozone" },
+              "so2": { "type": "number", "description": "Sulphur dioxide" },
+              "pm2_5": { "type": "number", "description": "Fine particles matter" },
+              "pm10": { "type": "number", "description": "Coarse particulate matter" },
+              "nh3": { "type": "number", "description": "Ammonia" }
+            }
+          },
+          "dt": { "type": "integer", "description": "Date and time, Unix, UTC" }
+        }
+      }
+    }
+  }
+}

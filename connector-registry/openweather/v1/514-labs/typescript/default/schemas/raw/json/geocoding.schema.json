@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Geocoding Data",
+  "description": "Geographic coordinates and location data from OpenWeather Geocoding API.",
+  "type": "object",
+  "properties": {
+    "name": { "type": "string", "description": "Name of the location" },
+    "local_names": {
+      "type": "object",
+      "description": "Location names in different languages",
+      "additionalProperties": { "type": "string" }
+    },
+    "lat": { "type": "number", "description": "Latitude" },
+    "lon": { "type": "number", "description": "Longitude" },
+    "country": { "type": "string", "description": "Country code (ISO 3166)" },
+    "state": { "type": "string", "description": "State or province (if available)" }
+  }
+}
