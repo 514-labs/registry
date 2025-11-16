@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Weather Forecast",
+  "description": "5 day forecast with data every 3 hours",
+  "type": "object",
+  "required": ["cod", "message", "cnt", "list", "city"],
+  "properties": {
+    "cod": { "type": "string", "description": "Internal parameter" },
+    "message": { "type": "number", "description": "Internal parameter" },
+    "cnt": { "type": "integer", "description": "Number of forecasts returned" },
+    "list": {
+      "type": "array",
+      "description": "List of forecast data points",
+      "items": {
+        "type": "object",
+        "properties": {
+          "dt": { "type": "integer", "description": "Time of data forecasted (Unix, UTC)" },
+          "main": {
+            "type": "object",
+            "properties": {
+              "temp": { "type": "number", "description": "Temperature" },
+              "feels_like": { "type": "number", "description": "Temperature accounting for human perception" },
+              "temp_min": { "type": "number", "description": "Minimum temperature" },
+              "temp_max": { "type": "number", "description": "Maximum temperature" },
+              "pressure": { "type": "integer", "description": "Atmospheric pressure (hPa)" },
+              "sea_level": { "type": "integer", "description": "Atmospheric pressure on sea level (hPa)" },
+              "grnd_level": { "type": "integer", "description": "Atmospheric pressure on ground level (hPa)" },
+              "humidity": { "type": "integer", "description": "Humidity (%)" },
+              "temp_kf": { "type": "number", "description": "Internal parameter" }
+            }
+          },
+          "weather": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "integer", "description": "Weather condition id" },
+                "main": { "type": "string", "description": "Group of weather parameters" },
+                "description": { "type": "string", "description": "Weather condition" },
+                "icon": { "type": "string", "description": "Weather icon id" }
+              }
+            }
+          },
+          "clouds": {
+            "type": "object",
+            "properties": {
+              "all": { "type": "integer", "description": "Cloudiness (%)" }
+            }
+          },
+          "wind": {
+            "type": "object",
+            "properties": {
+              "speed": { "type": "number", "description": "Wind speed" },
+              "deg": { "type": "integer", "description": "Wind direction (degrees)" },
+              "gust": { "type": "number", "description": "Wind gust" }
+            }
+          },
+          "visibility": { "type": "integer", "description": "Visibility in meters" },
+          "pop": { "type": "number", "description": "Probability of precipitation (0-1)" },
+          "rain": {
+            "type": "object",
+            "properties": {
+              "3h": { "type": "number", "description": "Rain volume for last 3 hours (mm)" }
+            }
+          },
+          "snow": {
+            "type": "object",
+            "properties": {
+              "3h": { "type": "number", "description": "Snow volume for last 3 hours (mm)" }
+            }
+          },
+          "sys": {
+            "type": "object",
+            "properties": {
+              "pod": { "type": "string", "description": "Part of the day (n-night, d-day)" }
+            }
+          },
+          "dt_txt": { "type": "string", "description": "Time of data forecasted (text format)" }
+        }
+      }
+    },
+    "city": {
+      "type": "object",
+      "description": "City information",
+      "properties": {
+        "id": { "type": "integer", "description": "City ID" },
+        "name": { "type": "string", "description": "City name" },
+        "coord": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number", "description": "Latitude" },
+            "lon": { "type": "number", "description": "Longitude" }
+          }
+        },
+        "country": { "type": "string", "description": "Country code (ISO 3166)" },
+        "population": { "type": "integer", "description": "City population" },
+        "timezone": { "type": "integer", "description": "Shift in seconds from UTC" },
+        "sunrise": { "type": "integer", "description": "Sunrise time (Unix, UTC)" },
+        "sunset": { "type": "integer", "description": "Sunset time (Unix, UTC)" }
+      }
+    }
+  }
+}
