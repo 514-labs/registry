@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Current Weather Data",
+  "description": "Current weather data from OpenWeatherMap API",
+  "type": "object",
+  "properties": {
+    "coord": {
+      "type": "object",
+      "description": "Coordinates of the location",
+      "properties": {
+        "lon": { "type": "number", "description": "Longitude" },
+        "lat": { "type": "number", "description": "Latitude" }
+      },
+      "required": ["lon", "lat"]
+    },
+    "weather": {
+      "type": "array",
+      "description": "Weather condition codes",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "description": "Weather condition id" },
+          "main": { "type": "string", "description": "Group of weather parameters (Rain, Snow, Clouds, etc.)" },
+          "description": { "type": "string", "description": "Weather condition description" },
+          "icon": { "type": "string", "description": "Weather icon id" }
+        }
+      }
+    },
+    "base": { "type": "string", "description": "Internal parameter" },
+    "main": {
+      "type": "object",
+      "description": "Main weather data",
+      "properties": {
+        "temp": { "type": "number", "description": "Temperature" },
+        "feels_like": { "type": "number", "description": "Temperature accounting for human perception" },
+        "temp_min": { "type": "number", "description": "Minimum temperature at the moment" },
+        "temp_max": { "type": "number", "description": "Maximum temperature at the moment" },
+        "pressure": { "type": "integer", "description": "Atmospheric pressure on the sea level, hPa" },
+        "humidity": { "type": "integer", "description": "Humidity, %" },
+        "sea_level": { "type": "integer", "description": "Atmospheric pressure on the sea level, hPa" },
+        "grnd_level": { "type": "integer", "description": "Atmospheric pressure on the ground level, hPa" }
+      },
+      "required": ["temp", "feels_like", "pressure", "humidity"]
+    },
+    "visibility": { "type": "integer", "description": "Visibility, meters. Maximum 10km" },
+    "wind": {
+      "type": "object",
+      "description": "Wind data",
+      "properties": {
+        "speed": { "type": "number", "description": "Wind speed. Unit Default: meter/sec" },
+        "deg": { "type": "integer", "description": "Wind direction, degrees (meteorological)" },
+        "gust": { "type": "number", "description": "Wind gust" }
+      }
+    },
+    "clouds": {
+      "type": "object",
+      "description": "Cloudiness data",
+      "properties": {
+        "all": { "type": "integer", "description": "Cloudiness, %" }
+      }
+    },
+    "rain": {
+      "type": "object",
+      "description": "Rain volume",
+      "properties": {
+        "1h": { "type": "number", "description": "Rain volume for the last 1 hour, mm" },
+        "3h": { "type": "number", "description": "Rain volume for the last 3 hours, mm" }
+      }
+    },
+    "snow": {
+      "type": "object",
+      "description": "Snow volume",
+      "properties": {
+        "1h": { "type": "number", "description": "Snow volume for the last 1 hour, mm" },
+        "3h": { "type": "number", "description": "Snow volume for the last 3 hours, mm" }
+      }
+    },
+    "dt": { "type": "integer", "description": "Time of data calculation, unix, UTC" },
+    "sys": {
+      "type": "object",
+      "description": "System data",
+      "properties": {
+        "type": { "type": "integer", "description": "Internal parameter" },
+        "id": { "type": "integer", "description": "Internal parameter" },
+        "country": { "type": "string", "description": "Country code (GB, JP etc.)" },
+        "sunrise": { "type": "integer", "description": "Sunrise time, unix, UTC" },
+        "sunset": { "type": "integer", "description": "Sunset time, unix, UTC" }
+      },
+      "required": ["country", "sunrise", "sunset"]
+    },
+    "timezone": { "type": "integer", "description": "Shift in seconds from UTC" },
+    "id": { "type": "integer", "description": "City ID" },
+    "name": { "type": "string", "description": "City name" },
+    "cod": { "type": "integer", "description": "Internal parameter" }
+  },
+  "required": ["coord", "weather", "main", "dt", "sys", "id", "name", "cod"]
+}

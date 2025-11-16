@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Geocoding Location",
+  "description": "Geographic coordinates and location data from OpenWeatherMap Geocoding API",
+  "type": "object",
+  "properties": {
+    "name": { 
+      "type": "string", 
+      "description": "Name of the location (city, state, country)" 
+    },
+    "local_names": {
+      "type": "object",
+      "description": "Location names in different languages",
+      "additionalProperties": { "type": "string" }
+    },
+    "lat": { 
+      "type": "number", 
+      "description": "Latitude",
+      "minimum": -90,
+      "maximum": 90
+    },
+    "lon": { 
+      "type": "number", 
+      "description": "Longitude",
+      "minimum": -180,
+      "maximum": 180
+    },
+    "country": { 
+      "type": "string", 
+      "description": "Country code (ISO 3166)",
+      "pattern": "^[A-Z]{2}$"
+    },
+    "state": { 
+      "type": "string", 
+      "description": "State name (for locations in the US)" 
+    },
+    "zip": {
+      "type": "string",
+      "description": "ZIP/postal code (only returned for ZIP code geocoding)"
+    }
+  },
+  "required": ["name", "lat", "lon", "country"]
+}

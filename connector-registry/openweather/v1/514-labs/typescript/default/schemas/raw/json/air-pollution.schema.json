@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Air Pollution Data",
+  "description": "Air pollution data from OpenWeatherMap Air Pollution API",
+  "type": "object",
+  "properties": {
+    "coord": {
+      "type": "object",
+      "description": "Geographic coordinates",
+      "properties": {
+        "lon": { "type": "number", "description": "Longitude" },
+        "lat": { "type": "number", "description": "Latitude" }
+      },
+      "required": ["lon", "lat"]
+    },
+    "list": {
+      "type": "array",
+      "description": "List of air pollution data",
+      "items": {
+        "type": "object",
+        "properties": {
+          "dt": { "type": "integer", "description": "Date and time, Unix, UTC" },
+          "main": {
+            "type": "object",
+            "description": "Air Quality Index",
+            "properties": {
+              "aqi": { 
+                "type": "integer", 
+                "description": "Air Quality Index. 1 = Good, 2 = Fair, 3 = Moderate, 4 = Poor, 5 = Very Poor",
+                "minimum": 1,
+                "maximum": 5
+              }
+            },
+            "required": ["aqi"]
+          },
+          "components": {
+            "type": "object",
+            "description": "Air pollution components concentrations (μg/m³)",
+            "properties": {
+              "co": { "type": "number", "description": "Carbon monoxide concentration (μg/m³)" },
+              "no": { "type": "number", "description": "Nitrogen monoxide concentration (μg/m³)" },
+              "no2": { "type": "number", "description": "Nitrogen dioxide concentration (μg/m³)" },
+              "o3": { "type": "number", "description": "Ozone concentration (μg/m³)" },
+              "so2": { "type": "number", "description": "Sulphur dioxide concentration (μg/m³)" },
+              "pm2_5": { "type": "number", "description": "Fine particles matter concentration (μg/m³)" },
+              "pm10": { "type": "number", "description": "Coarse particulate matter concentration (μg/m³)" },
+              "nh3": { "type": "number", "description": "Ammonia concentration (μg/m³)" }
+            },
+            "required": ["co", "no", "no2", "o3", "so2", "pm2_5", "pm10", "nh3"]
+          }
+        },
+        "required": ["dt", "main", "components"]
+      }
+    }
+  },
+  "required": ["coord", "list"]
+}
