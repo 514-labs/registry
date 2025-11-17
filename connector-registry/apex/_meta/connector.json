@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "identifier": "apex",
+  "name": "apex",
+  "category": "api",
+  "tags": [],
+  "description": "",
+  "homepage": ""
+}
