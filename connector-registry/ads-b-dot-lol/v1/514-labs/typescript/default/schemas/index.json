@@ -1,0 +1,13 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/schema-index.schema.json",
+  "version": "0.1.0",
+  "datasets": [
+    {
+      "name": "aircraft",
+      "stage": "raw",
+      "kind": "endpoints",
+      "path": "raw/json/aircraft.schema.json",
+      "doc": "raw/json/aircraft.md"
+    }
+  ]
+}

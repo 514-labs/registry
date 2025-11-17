@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "identifier": "ads-b-dot-lol",
+  "name": "ADS-B data (from ADSB.lol)",
+  "category": "api",
+  "tags": ["events", "telemetry", "aviation"],
+  "description": "Aircraft data",
+  "homepage": "https://api.adsb.lol/docs"
+}
