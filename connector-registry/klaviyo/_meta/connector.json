@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "identifier": "klaviyo",
+  "name": "Klaviyo",
+  "category": "api",
+  "tags": ["email", "marketing", "crm", "automation"],
+  "description": "Klaviyo connector for marketing automation and CRM. Access profiles, lists, and campaign data.",
+  "homepage": "https://www.klaviyo.com"
+}

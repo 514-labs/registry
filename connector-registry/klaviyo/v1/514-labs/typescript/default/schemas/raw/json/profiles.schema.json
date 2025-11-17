@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Klaviyo Profile",
+  "description": "A profile represents an individual person in Klaviyo. Profiles store contact information (email, phone), custom properties, and can be associated with lists and segments.",
+  "type": "object",
+  "required": ["type", "id", "attributes"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "profile",
+      "description": "Resource type identifier"
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the profile"
+    },
+    "attributes": {
+      "type": "object",
+      "description": "Profile attributes",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Email address of the profile"
+        },
+        "phone_number": {
+          "type": "string",
+          "description": "Phone number in E.164 format"
+        },
+        "external_id": {
+          "type": "string",
+          "description": "External identifier from your system"
+        },
+        "first_name": {
+          "type": "string",
+          "description": "First name"
+        },
+        "last_name": {
+          "type": "string",
+          "description": "Last name"
+        },
+        "organization": {
+          "type": "string",
+          "description": "Organization name"
+        },
+        "title": {
+          "type": "string",
+          "description": "Job title"
+        },
+        "image": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to profile image"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the profile was created"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the profile was last updated"
+        },
+        "properties": {
+          "type": "object",
+          "description": "Custom properties",
+          "additionalProperties": true
+        }
+      }
+    },
+    "links": {
+      "type": "object",
+      "description": "Related links",
+      "properties": {
+        "self": {
+          "type": "string",
+          "format": "uri",
+          "description": "Link to this resource"
+        }
+      }
+    }
+  }
+}

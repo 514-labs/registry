@@ -1,0 +1,22 @@
+{
+  "name": "Klaviyo",
+  "author": "514-labs",
+  "version": "v1",
+  "languages": [
+    "typescript"
+  ],
+  "category": "api",
+  "capabilities": {
+    "extract": true,
+    "transform": false,
+    "load": false
+  },
+  "source": {
+    "type": "api",
+    "spec": "https://developers.klaviyo.com/en/reference/api_overview",
+    "homepage": "https://www.klaviyo.com"
+  },
+  "tags": ["email", "marketing", "crm", "automation"],
+  "maintainers": [],
+  "issues": { "typescript": { "default": "" } }
+}
