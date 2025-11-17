@@ -2,6 +2,6 @@
   "name": "apex",
   "version": "v1",
   "status": "beta",
-  "releasedAt": "",
-  "notes": "apex v1 version"
+  "releasedAt": "2025-11-17",
+  "notes": "Initial release of Apex Trading v1 connector with support for batches, buyers, brands, products, and more"
 }

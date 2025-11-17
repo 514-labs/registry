@@ -13,10 +13,10 @@
   },
   "source": {
     "type": "api",
-    "spec": "",
-    "homepage": ""
+    "spec": "REST API",
+    "homepage": "https://app.apextrading.com"
   },
-  "tags": [],
-  "maintainers": [],
+  "tags": ["cannabis", "hemp", "trading", "inventory", "erp"],
+  "maintainers": ["514-labs"],
   "issues": { "typescript": { "default": "" } }
 }
