@@ -13,16 +13,8 @@ const nextConfig: NextConfig = {
   output: "standalone",
   // Ensure file tracing can include files outside the app (monorepo root)
   outputFileTracingRoot: resolve(__dirname, "../../"),
-  // Include registries only for routes that actually need them at build time
-  // Note: API routes now serve pre-generated static JSON files, so they don't need the full registry bundled
-  outputFileTracingIncludes: {
-    "/connectors/**/*": ["../../connector-registry/**/*"],
-    "/pipelines/**/*": ["../../pipeline-registry/**/*"],
-  },
-  // Explicitly exclude registries from API routes since they only read from public/ directory
-  outputFileTracingExcludes: {
-    "/api/**/*": ["../../connector-registry/**/*", "../../pipeline-registry/**/*"],
-  },
+  // Pages now read from pre-generated JSON files in public/ directory at build time
+  // No need to include connector-registry or pipeline-registry in serverless functions
   env: {
     GITHUB_PAT: process.env.GITHUB_PAT,
   },

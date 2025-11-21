@@ -1,8 +1,82 @@
 {
-  "total": 10,
-  "connectors": 7,
+  "total": 13,
+  "connectors": 10,
   "pipelines": 3,
   "items": [
+    {
+      "type": "connector",
+      "id": "apex",
+      "name": "Apex Trading",
+      "version": "v1",
+      "author": "514-labs",
+      "authorId": "514-labs",
+      "language": "typescript",
+      "implementation": "default",
+      "category": "api",
+      "tags": [
+        "cannabis",
+        "hemp",
+        "trading",
+        "inventory",
+        "erp"
+      ],
+      "description": "Connector for the Apex Trading platform - a comprehensive ERP solution for the cannabis and hemp industry",
+      "homepage": "https://app.apextrading.com",
+      "languages": [
+        "typescript"
+      ],
+      "capabilities": {
+        "extract": true,
+        "transform": false,
+        "load": false
+      },
+      "maintainers": [
+        "514-labs"
+      ],
+      "issues": {
+        "typescript": {
+          "default": "https://github.com/514-labs/registry/issues"
+        }
+      },
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/apex/v1/514-labs/typescript",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/apex/v1/514-labs",
+      "apiPaths": {
+        "scaffold": "/api/connectors/scaffolds/typescript"
+      }
+    },
+    {
+      "type": "connector",
+      "id": "audit-conn",
+      "name": "audit-conn",
+      "version": "v1",
+      "author": "test-author",
+      "authorId": "test-author",
+      "language": "typescript",
+      "implementation": "default",
+      "category": "api",
+      "tags": [],
+      "description": "",
+      "homepage": "",
+      "languages": [
+        "typescript"
+      ],
+      "capabilities": {
+        "extract": true,
+        "transform": false,
+        "load": false
+      },
+      "maintainers": [],
+      "issues": {
+        "typescript": {
+          "default": ""
+        }
+      },
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/audit-conn/v1/test-author/typescript",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/audit-conn/v1/test-author",
+      "apiPaths": {
+        "scaffold": "/api/connectors/scaffolds/typescript"
+      }
+    },
     {
       "type": "connector",
       "id": "dutchie",
@@ -45,24 +119,9 @@
       "authorId": "514-labs",
       "language": "typescript",
       "implementation": "default",
-      "category": "api",
       "tags": [],
-      "description": "Connector for Google Ads advertising platform data extraction and reporting",
-      "homepage": "",
-      "languages": [
-        "typescript"
-      ],
-      "capabilities": {
-        "extract": true,
-        "transform": false,
-        "load": false
-      },
+      "description": "",
       "maintainers": [],
-      "issues": {
-        "typescript": {
-          "default": "https://github.com/514-labs/registry/issues/117"
-        }
-      },
       "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/google-ads/v1/514-labs/typescript",
       "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/google-ads/v1/514-labs",
       "apiPaths": {
@@ -177,26 +236,29 @@
       "authorId": "514-labs",
       "language": "typescript",
       "implementation": "default",
-      "category": "api",
       "tags": [],
-      "description": "Connector for Meta (Facebook) Ads platform data extraction and advertising insights",
-      "homepage": "",
-      "languages": [
-        "typescript"
-      ],
-      "capabilities": {
-        "extract": true,
-        "transform": false,
-        "load": false
-      },
+      "description": "",
       "maintainers": [],
-      "issues": {
-        "typescript": {
-          "default": "https://github.com/514-labs/registry/issues/118"
-        }
-      },
       "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/meta-ads-new/v1/514-labs/typescript",
       "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/meta-ads-new/v1/514-labs",
+      "apiPaths": {
+        "scaffold": "/api/connectors/scaffolds/typescript"
+      }
+    },
+    {
+      "type": "connector",
+      "id": "openweather",
+      "name": "openweather",
+      "version": "v1",
+      "author": "514-labs",
+      "authorId": "514-labs",
+      "language": "typescript",
+      "implementation": "default",
+      "tags": [],
+      "description": "",
+      "maintainers": [],
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/openweather/v1/514-labs/typescript",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/openweather/v1/514-labs",
       "apiPaths": {
         "scaffold": "/api/connectors/scaffolds/typescript"
       }
@@ -210,24 +272,9 @@
       "authorId": "514-labs",
       "language": "typescript",
       "implementation": "default",
-      "category": "api",
       "tags": [],
-      "description": "Connector for Shopify e-commerce platform data extraction and analytics",
-      "homepage": "",
-      "languages": [
-        "typescript"
-      ],
-      "capabilities": {
-        "extract": true,
-        "transform": false,
-        "load": false
-      },
+      "description": "",
       "maintainers": [],
-      "issues": {
-        "typescript": {
-          "default": "https://github.com/514-labs/registry/issues/119"
-        }
-      },
       "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/shopify/v1/514-labs/typescript",
       "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/shopify/v1/514-labs",
       "apiPaths": {
