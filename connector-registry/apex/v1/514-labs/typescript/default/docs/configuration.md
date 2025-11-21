@@ -5,7 +5,7 @@ The Apex Trading connector supports comprehensive configuration options for auth
 ## Basic Configuration
 
 ```typescript
-import { createConnector } from '@workspace/connector-apex'
+import { createConnector } from '@514labs/connector-apex'
 
 const conn = createConnector()
 conn.init({
@@ -176,7 +176,7 @@ console.log('Metrics:', sink.events)
 ## Complete Example
 
 ```typescript
-import { createConnector } from '@workspace/connector-apex'
+import { createConnector } from '@514labs/connector-apex'
 
 const conn = createConnector()
 conn.init({
@@ -224,7 +224,7 @@ APEX_BASE_URL=https://app.apextrading.com/api
 ```
 
 ```typescript
-import { createConnector } from '@workspace/connector-apex'
+import { createConnector } from '@514labs/connector-apex'
 
 const conn = createConnector()
 conn.init({

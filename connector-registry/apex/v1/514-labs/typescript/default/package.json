@@ -1,5 +1,5 @@
 {
-  "name": "@workspace/connector-apex",
+  "name": "@514labs/connector-apex",
   "version": "0.0.0",
   "private": true,
   "main": "dist/index.js",

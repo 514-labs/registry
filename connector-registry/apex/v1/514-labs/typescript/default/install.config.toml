@@ -3,12 +3,8 @@ description = "TypeScript connector for apex"
 post_install_print = """
 🚀 Next steps to get your apex connector running:
 
-📖 IMPORTANT: Read the implementation guide first!
-    $ cat CONNECTOR_GUIDE.md
-    Or open: connector-registry/_scaffold/CONNECTOR_IMPLEMENTATION_GUIDE.md
-
 📂 Go to your connector directory:
-    $ cd 
+    $ cd {destination_dir}
 
 📦 Install dependencies:
     $ npm install
@@ -19,14 +15,17 @@ post_install_print = """
 🧪 Run tests:
     $ npm test
 
-📋 Follow the checklist in CONNECTOR_GUIDE.md:
-    Phase 3: Configure authentication in src/client/connector.ts
-    Phase 4: Implement pagination in src/lib/paginate.ts
-    Phase 5: Implement resources in src/resources/
-    Phase 6-10: Add schemas, docs, tests
+📖 Next, check out the documentation:
+    • Review docs/getting-started.md for configuration details
+    • See examples/ for usage examples
+    • Check docs/schema.md for available resources and data structures
 
-💡 Reference connectors for examples:
-    • connector-registry/socrata/ (simple API key + offset pagination)
-    • connector-registry/meta-ads/ (OAuth2 + cursor pagination)
-    • connector-registry/google-analytics/ (service account auth)
+🔗 Integration options:
+    • Add to your project: import { createConnector } from '{packageName}'
+    • Use with pipelines: Configure as a source in your pipeline setup
+    • Standalone usage: Check examples/basic-usage.ts
+
+🔑 Authentication:
+    • Set APEX_ACCESS_TOKEN environment variable with your Apex Trading API bearer token
+    • See docs/getting-started.md for authentication setup
 """

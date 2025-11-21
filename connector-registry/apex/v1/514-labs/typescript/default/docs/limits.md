@@ -166,7 +166,7 @@ Common error status codes:
 ## Example: Efficient Batch Synchronization
 
 ```typescript
-import { createConnector } from '@workspace/connector-apex'
+import { createConnector } from '@514labs/connector-apex'
 
 const conn = createConnector()
 conn.init({

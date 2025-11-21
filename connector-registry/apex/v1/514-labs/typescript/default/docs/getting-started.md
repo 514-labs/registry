@@ -4,12 +4,24 @@ This guide will help you get up and running with the Apex Trading connector.
 
 ## Installation
 
-```bash
-# If using in the monorepo
-pnpm install
+### 1. Navigate to your project
 
-# If standalone
-npm install @workspace/connector-apex
+Go to the root directory of your project.
+
+### 2. Run the installer
+
+Run the installer with a destination folder where the connector code will reside.
+
+```bash
+bash -i <(curl https://registry.514.ai/install.sh) --dest app/connectors/apex apex v1 514-labs typescript default
+```
+
+### 3. Install dependencies
+
+From your project's root directory:
+
+```bash
+pnpm install
 ```
 
 ## Authentication
@@ -24,7 +36,7 @@ The Apex Trading API uses Bearer token authentication. You'll need to obtain an 
 ## Basic Usage
 
 ```typescript
-import { createConnector } from '@workspace/connector-apex'
+import { createConnector } from '@514labs/connector-apex'
 
 // Initialize the connector
 const conn = createConnector()
@@ -220,7 +232,7 @@ APEX_ACCESS_TOKEN=your_bearer_token_here
 ```
 
 ```typescript
-import { createConnector } from '@workspace/connector-apex'
+import { createConnector } from '@514labs/connector-apex'
 
 const conn = createConnector()
 conn.init({

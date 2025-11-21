@@ -13,13 +13,19 @@ TypeScript connector for the [Apex Trading](https://app.apextrading.com) API by 
 ## Installation
 
 ```bash
+bash -i <(curl https://registry.514.ai/install.sh) --dest app/connectors/apex apex v1 514-labs typescript default
+```
+
+Then install dependencies from your project root:
+
+```bash
 pnpm install
 ```
 
 ## Quick Start
 
 ```typescript
-import { createConnector } from '@workspace/connector-apex'
+import { createConnector } from '@514labs/connector-apex'
 
 // Initialize the connector
 const conn = createConnector()
