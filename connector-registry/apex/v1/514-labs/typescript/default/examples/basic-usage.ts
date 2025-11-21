@@ -132,6 +132,31 @@ async function main() {
   // Update a product (uncomment to test)
   // const updatedProduct = await conn.products.update(123, { /* updated data */ })
   // console.log('Updated product:', updatedProduct)
+
+  // ===== SHIPPING ORDERS =====
+  console.log('\n===== SHIPPING ORDERS =====')
+
+  // List shipping orders with filters (updated_at_from is REQUIRED)
+  console.log('\nFetching shipping orders...')
+  for await (const page of conn.shippingOrders.list({
+    updated_at_from: '2024-01-01T00:00:00Z',
+    updated_at_to: '2025-12-31T23:59:59Z',
+    cancelled: false,
+    with_items: true,
+    with_payments: true,
+    pageSize: 10,
+    maxItems: 20
+  })) {
+    console.log(`Page with ${page.length} shipping orders`)
+    page.forEach(order => console.log(`  - Order ${order.invoice_number} (ID: ${order.id}, Status: ${order.payment_status})`))
+  }
+
+  // Get a single shipping order with additional details (uncomment and replace ID)
+  // const shippingOrder = await conn.shippingOrders.get(123, {
+  //   with_history: true,
+  //   with_deal_flow: true
+  // })
+  // console.log('Single shipping order:', shippingOrder)
 }
 
 main().catch(console.error)

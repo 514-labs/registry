@@ -26,6 +26,7 @@ import { createResource as createBuyersResource } from '../resources/buyers'
 import { createResource as createBuyerContactLogsResource } from '../resources/buyer-contact-logs'
 import { createResource as createBuyerStagesResource } from '../resources/buyer-stages'
 import { createResource as createProductsResource } from '../resources/products'
+import { createResource as createShippingOrdersResource } from '../resources/shipping-orders'
 
 /**
  * Apex Trading API Connector Configuration
@@ -128,6 +129,7 @@ export class Connector extends ApiConnectorBase {
   get buyerContactLogs() { return createBuyerContactLogsResource(this.sendLite as any) }
   get buyerStages() { return createBuyerStagesResource(this.sendLite as any) }
   get products() { return createProductsResource(this.sendLite as any) }
+  get shippingOrders() { return createShippingOrdersResource(this.sendLite as any) }
 }
 
 export function createConnector() { return new Connector() }
