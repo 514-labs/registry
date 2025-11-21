@@ -6,6 +6,7 @@ import type { SendFn } from '../lib/paginate'
  */
 export interface BuyerStage {
   id: number
+  sort_order: number
   name: string
   color: string
   created_at: string

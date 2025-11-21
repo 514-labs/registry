@@ -6,7 +6,13 @@ import type { SendFn } from '../lib/paginate'
  */
 export interface BuyerContactLog {
   id: number
-  [key: string]: any // Additional fields from the API
+  buyer_contact_id: number
+  buyer_location_id: string
+  buyer_id: number
+  method: string
+  text: string
+  created_at: string
+  updated_at: string
 }
 
 export interface ListBuyerContactLogsParams {

@@ -67,7 +67,23 @@ export interface ShippingOrder {
   buyer_location_id: number | null
   created_at: string
   updated_at: string
-  [key: string]: any // Additional fields from the API
+  transporters: any[]
+  buyer: {
+    id: number
+    name: string
+  }
+  order_status: {
+    id: number
+    name: string
+    payment_percentage: number
+    archived: boolean
+    position: number
+    parent_status: {
+      id: number
+      name: string
+    }
+  }
+  sales_reps: any[]
 }
 
 export interface ListShippingOrdersParams {
