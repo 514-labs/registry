@@ -18,5 +18,5 @@
   },
   "tags": ["cannabis", "hemp", "trading", "inventory", "erp"],
   "maintainers": ["514-labs"],
-  "issues": { "typescript": { "default": "" } }
+  "issues": { "typescript": { "default": "https://github.com/514-labs/registry/issues" } }
 }
