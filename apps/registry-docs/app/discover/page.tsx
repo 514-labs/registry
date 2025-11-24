@@ -11,15 +11,20 @@ async function getDiscoverData(): Promise<{
   // These are generated during build by scripts/generate-registry-data.ts
   const publicDir = join(process.cwd(), "public", "api", "discover");
 
-  const [connectorsJson, pipelinesJson] = await Promise.all([
-    readFile(join(publicDir, "connectors.json"), "utf-8"),
-    readFile(join(publicDir, "pipelines.json"), "utf-8"),
-  ]);
+  try {
+    const [connectorsJson, pipelinesJson] = await Promise.all([
+      readFile(join(publicDir, "connectors.json"), "utf-8"),
+      readFile(join(publicDir, "pipelines.json"), "utf-8"),
+    ]);
 
-  return {
-    connectors: JSON.parse(connectorsJson),
-    pipelines: JSON.parse(pipelinesJson),
-  };
+    return {
+      connectors: JSON.parse(connectorsJson),
+      pipelines: JSON.parse(pipelinesJson),
+    };
+  } catch (error) {
+    console.error("Failed to read discover data:", error);
+    return { connectors: [], pipelines: [] };
+  }
 }
 
 export default async function DiscoverPage() {
