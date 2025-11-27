@@ -1,0 +1,22 @@
+{
+  "name": "shopify",
+  "author": "514-labs",
+  "version": "v1",
+  "languages": [
+    "typescript"
+  ],
+  "category": "api",
+  "capabilities": {
+    "extract": true,
+    "transform": false,
+    "load": false
+  },
+  "source": {
+    "type": "api",
+    "spec": "https://shopify.dev/docs/api/admin-rest",
+    "homepage": "https://www.shopify.com"
+  },
+  "tags": ["ecommerce", "retail", "sales", "inventory"],
+  "maintainers": [],
+  "issues": { "typescript": { "default": "" } }
+}

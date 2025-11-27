@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Shopify Customer",
+  "description": "A customer in a Shopify store",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "number",
+      "description": "Unique identifier for the customer"
+    },
+    "email": {
+      "type": "string",
+      "description": "The customer's email address"
+    },
+    "first_name": {
+      "type": "string",
+      "description": "The customer's first name"
+    },
+    "last_name": {
+      "type": "string",
+      "description": "The customer's last name"
+    },
+    "phone": {
+      "type": ["string", "null"],
+      "description": "The customer's phone number"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time when the customer was created"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time when the customer was last modified"
+    },
+    "accepts_marketing": {
+      "type": "boolean",
+      "description": "Whether the customer has consented to receive marketing material via email"
+    },
+    "verified_email": {
+      "type": "boolean",
+      "description": "Whether the customer has verified their email address"
+    },
+    "state": {
+      "type": "string",
+      "description": "The state of the customer's account (enabled, disabled, invited, declined)"
+    },
+    "tags": {
+      "type": "string",
+      "description": "Tags that the shop owner has attached to the customer"
+    },
+    "addresses": {
+      "type": "array",
+      "description": "A list of addresses for the customer",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "address1": { "type": "string" },
+          "city": { "type": "string" },
+          "province": { "type": ["string", "null"] },
+          "country": { "type": "string" },
+          "zip": { "type": "string" },
+          "phone": { "type": ["string", "null"] }
+        }
+      }
+    }
+  },
+  "required": ["id", "email"]
+}
