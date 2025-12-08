@@ -18,7 +18,10 @@ const nextConfig: NextConfig = {
   env: {
     GITHUB_PAT: process.env.GITHUB_PAT,
   },
-  /* config options here */
+  // Enable Rust-based MDX compiler for Turbopack compatibility
+  experimental: {
+    mdxRs: true,
+  },
 };
 
 const withMDX = createMDX({

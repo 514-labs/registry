@@ -1,6 +1,6 @@
 {
-  "total": 13,
-  "connectors": 10,
+  "total": 8,
+  "connectors": 5,
   "pipelines": 3,
   "items": [
     {
@@ -46,39 +46,6 @@
     },
     {
       "type": "connector",
-      "id": "audit-conn",
-      "name": "audit-conn",
-      "version": "v1",
-      "author": "test-author",
-      "authorId": "test-author",
-      "language": "typescript",
-      "implementation": "default",
-      "category": "api",
-      "tags": [],
-      "description": "",
-      "homepage": "",
-      "languages": [
-        "typescript"
-      ],
-      "capabilities": {
-        "extract": true,
-        "transform": false,
-        "load": false
-      },
-      "maintainers": [],
-      "issues": {
-        "typescript": {
-          "default": ""
-        }
-      },
-      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/audit-conn/v1/test-author/typescript",
-      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/audit-conn/v1/test-author",
-      "apiPaths": {
-        "scaffold": "/api/connectors/scaffolds/typescript"
-      }
-    },
-    {
-      "type": "connector",
       "id": "dutchie",
       "name": "Dutchie",
       "version": "v001",
@@ -106,24 +73,6 @@
       },
       "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/dutchie/v001/514-labs/typescript/open-api",
       "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/dutchie/v001/514-labs",
-      "apiPaths": {
-        "scaffold": "/api/connectors/scaffolds/typescript"
-      }
-    },
-    {
-      "type": "connector",
-      "id": "google-ads",
-      "name": "google-ads",
-      "version": "v1",
-      "author": "514-labs",
-      "authorId": "514-labs",
-      "language": "typescript",
-      "implementation": "default",
-      "tags": [],
-      "description": "",
-      "maintainers": [],
-      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/google-ads/v1/514-labs/typescript",
-      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/google-ads/v1/514-labs",
       "apiPaths": {
         "scaffold": "/api/connectors/scaffolds/typescript"
       }
@@ -223,60 +172,6 @@
       },
       "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/meta-ads/v1/514-labs/typescript",
       "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/meta-ads/v1/514-labs",
-      "apiPaths": {
-        "scaffold": "/api/connectors/scaffolds/typescript"
-      }
-    },
-    {
-      "type": "connector",
-      "id": "meta-ads-new",
-      "name": "meta-ads-new",
-      "version": "v1",
-      "author": "514-labs",
-      "authorId": "514-labs",
-      "language": "typescript",
-      "implementation": "default",
-      "tags": [],
-      "description": "",
-      "maintainers": [],
-      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/meta-ads-new/v1/514-labs/typescript",
-      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/meta-ads-new/v1/514-labs",
-      "apiPaths": {
-        "scaffold": "/api/connectors/scaffolds/typescript"
-      }
-    },
-    {
-      "type": "connector",
-      "id": "openweather",
-      "name": "openweather",
-      "version": "v1",
-      "author": "514-labs",
-      "authorId": "514-labs",
-      "language": "typescript",
-      "implementation": "default",
-      "tags": [],
-      "description": "",
-      "maintainers": [],
-      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/openweather/v1/514-labs/typescript",
-      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/openweather/v1/514-labs",
-      "apiPaths": {
-        "scaffold": "/api/connectors/scaffolds/typescript"
-      }
-    },
-    {
-      "type": "connector",
-      "id": "shopify",
-      "name": "shopify",
-      "version": "v1",
-      "author": "514-labs",
-      "authorId": "514-labs",
-      "language": "typescript",
-      "implementation": "default",
-      "tags": [],
-      "description": "",
-      "maintainers": [],
-      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/shopify/v1/514-labs/typescript",
-      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/shopify/v1/514-labs",
       "apiPaths": {
         "scaffold": "/api/connectors/scaffolds/typescript"
       }
