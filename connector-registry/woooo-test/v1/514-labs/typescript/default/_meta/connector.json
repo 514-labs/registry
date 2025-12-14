@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector.schema.json",
+  "identifier": "woooo-test",
+  "name": "wooo test",
+  "author": "514-labs",
+  "authorType": "organization",
+  "avatarUrlOverride": "",
+  "version": "v1",
+  "language": "typescript",
+  "implementation": "default",
+  "tags": ["yooo"],
+  "category": "api",
+  "description": "This is a test connector dont do anything",
+  "homepage": "https://openweathermap.org",
+  "license": "MIT",
+  "source": {"type":"api","spec":"https://openweathermap.org"},
+  "capabilities": {"extract": true, "transform": false, "load": false},
+  "maintainers": [],
+  "issues": "",
+  "registryUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/woooo-test/v1/514-labs/typescript/default"
+}
