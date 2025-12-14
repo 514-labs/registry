@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Shopify Product",
+  "description": "A product in a Shopify store",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "number",
+      "description": "Unique identifier for the product"
+    },
+    "title": {
+      "type": "string",
+      "description": "The name of the product"
+    },
+    "body_html": {
+      "type": ["string", "null"],
+      "description": "The description of the product, complete with HTML markup"
+    },
+    "vendor": {
+      "type": "string",
+      "description": "The name of the product's vendor"
+    },
+    "product_type": {
+      "type": "string",
+      "description": "The categorization that a product can be tagged with"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time when the product was created"
+    },
+    "handle": {
+      "type": "string",
+      "description": "A unique human-friendly string for the product"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time when the product was last modified"
+    },
+    "published_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "The date and time when the product was published"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "archived", "draft"],
+      "description": "The status of the product"
+    },
+    "tags": {
+      "type": "string",
+      "description": "A string of comma-separated tags used for filtering and search"
+    },
+    "variants": {
+      "type": "array",
+      "description": "An array of product variants",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "product_id": { "type": "number" },
+          "title": { "type": "string" },
+          "price": { "type": "string" },
+          "sku": { "type": "string" },
+          "inventory_quantity": { "type": "number" }
+        }
+      }
+    },
+    "images": {
+      "type": "array",
+      "description": "A list of product images",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "product_id": { "type": "number" },
+          "src": { "type": "string" },
+          "alt": { "type": ["string", "null"] }
+        }
+      }
+    }
+  },
+  "required": ["id", "title", "handle"]
+}
