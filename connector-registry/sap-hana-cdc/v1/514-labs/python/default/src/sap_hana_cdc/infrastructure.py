@@ -72,7 +72,7 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
                 STATUS VARCHAR(128) NOT NULL,
                 CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY (CLIENT_ID, SCHEMA_NAME, TABLE_NAME, LAST_PROCESSED_CHANGE_ID)
+                PRIMARY KEY (CLIENT_ID, SCHEMA_NAME, TABLE_NAME)
             )
         """
         self._ensure_table_exists(self.CDC_CLIENT_STATUS_TABLE, table_definition)
