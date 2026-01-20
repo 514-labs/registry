@@ -56,7 +56,7 @@ export const hubspotDeadLetterTable = new OlapTable<DeadLetterModel>("HubSpotDea
 export const HubSpotDealRawPipeline = new IngestPipeline<HubSpotDealRaw>("HubSpotDealRaw", {
   table: false,
   stream: true,
-  ingest: true,
+  ingestApi: true,
   deadLetterQueue: { destination: hubspotDeadLetterTable },
 });
 
@@ -64,7 +64,7 @@ export const HubSpotDealRawPipeline = new IngestPipeline<HubSpotDealRaw>("HubSpo
 export const HubSpotDealPipeline = new IngestPipeline<HubSpotDeal>("HubSpotDeal", {
   table: {engine: ClickHouseEngines.MergeTree, orderByFields: ["id"]}, // Store processed data in ClickHouse
   stream: true, // Buffer processed records
-  ingest: false, // No direct API; only derived from raw data
+  ingestApi: false, // No direct API; only derived from raw data
   deadLetterQueue: {
     destination: hubspotDeadLetterTable,
   },

@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "identifier": "apex",
+  "name": "Apex Trading",
+  "category": "api",
+  "tags": ["cannabis", "hemp", "trading", "inventory", "erp"],
+  "description": "Connector for the Apex Trading platform - a comprehensive ERP solution for the cannabis and hemp industry",
+  "homepage": "https://app.apextrading.com"
+}

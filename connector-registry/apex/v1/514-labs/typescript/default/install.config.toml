@@ -1,0 +1,31 @@
+language = "typescript"
+description = "TypeScript connector for apex"
+post_install_print = """
+🚀 Next steps to get your apex connector running:
+
+📂 Go to your connector directory:
+    $ cd {destination_dir}
+
+📦 Install dependencies:
+    $ npm install
+
+🔧 Build the connector:
+    $ npm run build
+
+🧪 Run tests:
+    $ npm test
+
+📖 Next, check out the documentation:
+    • Review docs/getting-started.md for configuration details
+    • See examples/ for usage examples
+    • Check docs/schema.md for available resources and data structures
+
+🔗 Integration options:
+    • Add to your project: import { createConnector } from '{packageName}'
+    • Use with pipelines: Configure as a source in your pipeline setup
+    • Standalone usage: Check examples/basic-usage.ts
+
+🔑 Authentication:
+    • Set APEX_ACCESS_TOKEN environment variable with your Apex Trading API bearer token
+    • See docs/getting-started.md for authentication setup
+"""

@@ -7,7 +7,7 @@ post_install_print = """
     $ cd {destination_dir}
 
 🔑 Set environment variables:
-    $ export HUBSPOT_ACCESS_TOKEN=your_token_here
+    $ export HUBSPOT_TOKEN=your_token_here
 
 📦 Install dependencies:
     $ npm install

@@ -1,0 +1,23 @@
+{
+  "name": "@514labs/connector-apex",
+  "version": "0.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "jest --runInBand"
+  },
+  "engines": {"node": ">=20"},
+  "dependencies": {
+    "@connector-factory/core": "^0.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.30",
+    "nock": "^13.5.0"
+  }
+}
