@@ -81,13 +81,14 @@ class ChangeEvent:
                     })
             return differences
         elif self.trigger_type == TriggerType.UPDATE:
-            for key, value in self.old_values[0].items():
-                if key in self.new_values[0] and value != self.new_values[0][key]:
-                    differences.append({
-                        "key": key,
-                        "old": value,
-                        "new": self.new_values[0][key],
-                    })
+            if self.old_values and self.new_values:
+                for key, value in self.old_values[0].items():
+                    if key in self.new_values[0] and value != self.new_values[0][key]:
+                        differences.append({
+                            "key": key,
+                            "old": value,
+                            "new": self.new_values[0][key],
+                        })
             return differences
 
 @dataclass
@@ -97,8 +98,8 @@ class BatchChange:
     changes: List[ChangeEvent]
 
     def add_change(self, change: ChangeEvent) -> None:
-        """Add changes for a table."""
-        self.changes.extend(change)
+        """Add a single change event to the batch."""
+        self.changes.append(change)
     
 
     def __len__(self) -> int:
@@ -118,7 +119,7 @@ class BatchChange:
 
     def get_max_event_id(self) -> int:
         """Get the maximum event ID in this batch."""
-        return max(change.event_id for change in self.changes)
+        return max(int(change.event_id) for change in self.changes)
 
     def get_newest_change_timestamp(self) -> datetime:
         """Get the timestamp of the newest change in this batch."""

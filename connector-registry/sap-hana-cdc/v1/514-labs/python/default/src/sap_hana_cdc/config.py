@@ -24,9 +24,10 @@ class SAPHanaCDCConfig:
 
     @staticmethod
     def from_env(prefix: str = "SAP_HANA_") -> "SAPHanaCDCConfig":
+        port_str = os.getenv(f"{prefix}PORT", "30015")
         return SAPHanaCDCConfig(
             host=os.getenv(f"{prefix}HOST", "localhost"),
-            port=os.getenv(f"{prefix}PORT", 30015),
+            port=int(port_str),
             user=os.getenv(f"{prefix}USERNAME", "SYSTEM"),
             password=os.getenv(f"{prefix}PASSWORD", ""),
             client_id=os.getenv(f"{prefix}CLIENT_ID", "default_client"),

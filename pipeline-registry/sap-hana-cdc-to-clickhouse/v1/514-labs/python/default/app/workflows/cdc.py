@@ -39,13 +39,12 @@ def initial_load_task(ctx: TaskContext[None]) -> None:
 def sync_changes_task(ctx: TaskContext[None]) -> None:
     connector = get_connector()
     batch = connector.get_changes()
-    
+
     if batch:
         print(f"Batch: {batch}")
         inserter = BatchChangeInserter()
         inserter.insert(batch.changes)
         connector.update_client_status(batch)
-        return True
 
 sync_changes_task_instance = Task[None, None](
     name="sync_changes",

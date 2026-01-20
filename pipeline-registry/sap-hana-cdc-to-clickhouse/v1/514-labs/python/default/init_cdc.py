@@ -25,8 +25,8 @@ parser.add_argument("--init-cdc", action="store_true", default=False, help="Init
 parser.add_argument("--drop-cdc", action="store_true", default=False, help="Drop CDC tables and triggers")
 
 def validate_table_args(args):
-    if not args.tables and not args.table_from_file:
-        parser.error("You must specify either --tables or --table_from_file for the 'init' command.")
+    if not args.tables and not args.tables_from_file:
+        parser.error("You must specify either --tables or --tables-from-file for the 'init' command.")
 parser.set_defaults(func=validate_table_args)
 
 args = parser.parse_args()
