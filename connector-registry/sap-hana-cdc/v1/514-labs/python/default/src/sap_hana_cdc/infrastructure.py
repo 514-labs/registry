@@ -85,14 +85,17 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
         self.connection.commit()
 
     def setup_table_triggers(self) -> None:
-        """Set up triggers for the specified tables and change types."""
+        """Set up triggers for the specified tables (not views)."""
 
         with self.connection.cursor() as cursor:
             current_tables = set(self.get_monitored_tables())
             desired_tables = set(self.config.tables)
 
-            tables_to_add = desired_tables - current_tables
-            tables_to_remove = current_tables - desired_tables
+            # Filter out views - only create triggers for tables
+            tables_only = set(self._filter_tables_only(list(desired_tables)))
+
+            tables_to_add = tables_only - current_tables
+            tables_to_remove = current_tables - tables_only
 
             # Add triggers for new tables
             for table in tables_to_add:
@@ -188,17 +191,41 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
         with self.connection.cursor() as cursor:
             try:
                 cursor.execute("""
-                    SELECT COUNT(*) 
-                    FROM TABLES 
+                    SELECT COUNT(*)
+                    FROM TABLES
                     WHERE SCHEMA_NAME = ? AND TABLE_NAME = ?
                 """, (schema_name, table_name))
-                
+
                 result = cursor.fetchone()
                 exists = result[0] > 0 if result else False
                 return exists
             except Exception as e:
                 logger.error(f"Error checking if table {schema_name}.{table_name} exists: {e}")
                 return False
+
+    def _is_view(self, object_name: str) -> bool:
+        """Check if an object is a view."""
+        with self.connection.cursor() as cursor:
+            try:
+                cursor.execute("""
+                    SELECT COUNT(*) FROM VIEWS
+                    WHERE SCHEMA_NAME = ? AND VIEW_NAME = ?
+                """, (self.config.source_schema, object_name))
+                result = cursor.fetchone()
+                return result[0] > 0 if result else False
+            except Exception as e:
+                logger.error(f"Error checking if object {object_name} is a view: {e}")
+                return False
+
+    def _filter_tables_only(self, object_names: List[str]) -> List[str]:
+        """Filter to include only tables, excluding views."""
+        tables = []
+        for name in object_names:
+            if self._is_view(name):
+                logger.info(f"Skipping trigger creation for view: {name}")
+            else:
+                tables.append(name)
+        return tables
     
     def _ensure_table_exists(self, table_name: str, table_definition: str) -> None:
         """Ensure a table exists with the given definition, creating it if necessary."""

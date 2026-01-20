@@ -51,14 +51,19 @@ load_dotenv()
 connector = SAPHanaCDCConnector.build_from_config(config=config)
 
 if args.recreate_moose_models:
-    tables_metadata = introspect_hana_database(connector.connection, table_names, config.source_schema)
-    
+    tables_metadata = introspect_hana_database(
+        connector.connection,
+        table_names,
+        config.source_schema,
+        include_views=True
+    )
+
     config = MooseModelConfig(
         force_all_fields_nullable=True
     )
 
     generate_moose_models(tables_metadata, MODEL_PATH, config)
-    print(f"Generated Moose models for {len(tables_metadata)} tables in '{MODEL_PATH}'.")
+    print(f"Generated Moose models for {len(tables_metadata)} tables/views in '{MODEL_PATH}'.")
 
 if args.init_cdc or args.recreate_cdc_tables:
     connector.init_cdc()

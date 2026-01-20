@@ -32,12 +32,13 @@ class FieldMetadata:
 
 @dataclass
 class TableMetadata:
-    """Represents metadata for a database table."""
-    
+    """Represents metadata for a database table or view."""
+
     table_name: str
     schema_name: str
     fields: List[FieldMetadata]
-    
+    object_type: str = 'TABLE'  # 'TABLE' or 'VIEW'
+
     def get_field_names(self) -> List[str]:
         """Get list of field names."""
         return [field.name for field in self.fields]
@@ -161,7 +162,12 @@ class HanaIntrospector:
             # Get primary key columns
             cursor.execute(pk_query, (actual_schema, table_name))
             pk_columns = {row[0] for row in cursor.fetchall()}
-            
+
+            # Detect object type (TABLE or VIEW)
+            object_type = self._get_object_type(actual_schema, table_name)
+            if object_type == 'VIEW':
+                logger.info(f"Detected view: {actual_schema}.{table_name}")
+
             # Build field metadata
             fields = []
             for col in columns:
@@ -175,11 +181,12 @@ class HanaIntrospector:
                     default_value=col[5] if col[5] is not None else None # DEFAULT_VALUE
                 )
                 fields.append(field)
-            
+
             return TableMetadata(
                 table_name=table_name,
                 schema_name=actual_schema,
-                fields=fields
+                fields=fields,
+                object_type=object_type
             )
             
         finally:
@@ -194,7 +201,88 @@ class HanaIntrospector:
             return result[0] if result else "PUBLIC"
         finally:
             cursor.close()
-    
+
+    def _get_object_type(self, schema_name: str, object_name: str) -> str:
+        """
+        Determine if an object is a TABLE or VIEW.
+
+        Args:
+            schema_name: Schema name
+            object_name: Object name
+
+        Returns:
+            'TABLE' or 'VIEW'
+
+        Raises:
+            ValueError: If object is not found
+        """
+        cursor = self.connection.cursor()
+        try:
+            # Check if it's a table
+            cursor.execute("""
+                SELECT COUNT(*) FROM TABLES
+                WHERE SCHEMA_NAME = ? AND TABLE_NAME = ?
+            """, (schema_name, object_name))
+            if cursor.fetchone()[0] > 0:
+                return 'TABLE'
+
+            # Check if it's a view
+            cursor.execute("""
+                SELECT COUNT(*) FROM VIEWS
+                WHERE SCHEMA_NAME = ? AND VIEW_NAME = ?
+            """, (schema_name, object_name))
+            if cursor.fetchone()[0] > 0:
+                return 'VIEW'
+
+            raise ValueError(f"Object {schema_name}.{object_name} not found")
+        finally:
+            cursor.close()
+
+    def _get_views(self, schema_name: str) -> List[str]:
+        """
+        Get all views in a schema.
+
+        Args:
+            schema_name: Schema name
+
+        Returns:
+            List of view names
+        """
+        query = """
+            SELECT VIEW_NAME
+            FROM VIEWS
+            WHERE SCHEMA_NAME = ?
+            ORDER BY VIEW_NAME
+        """
+        cursor = self.connection.cursor()
+        try:
+            cursor.execute(query, (schema_name,))
+            return [row[0] for row in cursor.fetchall()]
+        finally:
+            cursor.close()
+
+    def _get_view_definition(self, schema_name: str, view_name: str) -> str:
+        """
+        Get the CREATE VIEW statement for a view.
+
+        Args:
+            schema_name: Schema name
+            view_name: View name
+
+        Returns:
+            View definition SQL
+        """
+        cursor = self.connection.cursor()
+        try:
+            cursor.execute(
+                "CALL SYS.GET_OBJECT_DEFINITION(?, ?)",
+                (schema_name, view_name)
+            )
+            result = cursor.fetchone()
+            return result[0] if result else ""
+        finally:
+            cursor.close()
+
     def get_all_tables_in_schema(self, schema_name: Optional[str] = None) -> List[str]:
         """
         Get list of all table names in a schema.
@@ -223,21 +311,42 @@ class HanaIntrospector:
 
 
 def introspect_hana_database(
-    connection: hdb.Connection, 
-    table_names: List[str], 
-    schema_name: Optional[str] = None
+    connection: hdb.Connection,
+    table_names: Optional[List[str]] = None,
+    schema_name: Optional[str] = None,
+    include_views: bool = True
 ) -> List[TableMetadata]:
     """
-    Convenience function to generate table metadata.
-    
+    Convenience function to generate table and view metadata.
+
     Args:
         connection: SAP HANA database connection
-        table_names: List of table names to get metadata for
+        table_names: List of table/view names to get metadata for. If None, discovers all tables (and views if include_views=True)
         schema_name: Optional schema name
-        
+        include_views: Whether to include views when auto-discovering objects (only applies when table_names is None)
+
     Returns:
         List of TableMetadata objects
     """
     introspector = HanaIntrospector(connection)
-    return introspector.get_table_metadata(table_names, schema_name)
+
+    # If specific table names provided, introspect those
+    if table_names is not None:
+        return introspector.get_table_metadata(table_names, schema_name)
+
+    # Otherwise, discover all tables and optionally views
+    if schema_name is None:
+        schema_name = introspector._get_current_schema()
+
+    # Get all tables
+    object_names = introspector.get_all_tables_in_schema(schema_name)
+
+    # Add views if requested
+    if include_views:
+        view_names = introspector._get_views(schema_name)
+        if view_names:
+            logger.info(f"Found {len(view_names)} views in schema {schema_name}")
+            object_names.extend(view_names)
+
+    return introspector.get_table_metadata(object_names, schema_name)
 
