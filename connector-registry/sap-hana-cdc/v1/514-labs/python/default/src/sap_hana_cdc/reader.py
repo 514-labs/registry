@@ -78,7 +78,6 @@ class SAPHanaCDCReader(SAPHanaCDCBase):
                     LIMIT ?
                 """
 
-                print(query)
                 cursor.execute(query, (client_id, TableStatus.ACTIVE.value, limit))
                 changes = []
                 for row in cursor.fetchall():
