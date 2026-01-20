@@ -224,12 +224,13 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
             bool: True if at least one trigger was created, False otherwise.
         """
         try:
-            trigger_created = False
+            any_trigger_created = False
             # Create triggers for each change type
             for trigger_type in TriggerType:
-                trigger_created = self._create_trigger(cursor, table_name, trigger_type)
+                if self._create_trigger(cursor, table_name, trigger_type):
+                    any_trigger_created = True
 
-            return trigger_created
+            return any_trigger_created
 
         except Exception as e:
             logger.error(f"Failed to setup CDC for table {table_name}: {e}")
