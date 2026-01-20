@@ -24,7 +24,10 @@ def initial_load_task(ctx: TaskContext[None]) -> None:
     client_status = connector.get_client_status()
     for table_status in client_status:
         if table_status.status == TableStatus.NEW:
-            print(f"Initial loading table: {table_status.table_name}")
+            # Detect if object is a view for logging
+            is_view = connector.is_view(table_status.table_name)
+            object_type = "view" if is_view else "table"
+            print(f"Initial loading {object_type}: {table_status.table_name}")
             chunk_size = 100000
             offset = 0
             while True:
