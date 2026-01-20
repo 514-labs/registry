@@ -48,7 +48,7 @@ while True:
             # if hasattr(change, 'old_values') and change.old_values:
             #     print(f"Old values: {change.old_values}")
             print("-" * 40)
-        connector.update_client_status(changes.changes[-1])
+        connector.update_client_status(changes)
     else:
         print("No changes found")
         time.sleep(1)

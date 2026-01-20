@@ -213,8 +213,12 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
             cursor.execute(table_definition.replace("<TABLENAME>", full_table_name))
             logger.info(f"Created table {full_table_name}")
     
-    def _setup_table_cdc(self, cursor: dbapi.Cursor, table_name: str) -> None:
-        """Set up CDC for a specific table."""
+    def _setup_table_cdc(self, cursor: dbapi.Cursor, table_name: str) -> bool:
+        """Set up CDC for a specific table.
+
+        Returns:
+            bool: True if at least one trigger was created, False otherwise.
+        """
         try:
             trigger_created = False
             # Create triggers for each change type
