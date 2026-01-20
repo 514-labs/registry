@@ -7,10 +7,8 @@ from typing import Optional
 from datetime import datetime
 from moose_lib import BaseModel, Key, Field, OlapTable, OlapConfig
 
-from moose_lib_extras import (
-    # Base model
-    SapHanaBaseModel,
-    
+from app.utils.sap_pydantic_model import SapHanaBaseModel
+from app.utils.sap_hana_validators import (
     # Datetime types
     SapDate, SapTime, SapSecondDate, SapTimestamp,
     
@@ -246,7 +244,7 @@ class Adrc(SapHanaBaseModel):
     # SAP HANA type: NVARCHAR | Forced nullable
     ADDRESSCREATEDBYUSER: Optional[SapNvarchar] = ""
     # SAP HANA type: TIMESTAMP | Order by field
-    ADDRESSCREATEDONDATETIME: SapTimestamp
+    ADDRESSCREATEDONDATETIME: Optional[SapTimestamp] = None
     # SAP HANA type: NVARCHAR | Forced nullable
     ADDRESSCHANGEDBYUSER: Optional[SapNvarchar] = ""
     # SAP HANA type: TIMESTAMP | Forced nullable

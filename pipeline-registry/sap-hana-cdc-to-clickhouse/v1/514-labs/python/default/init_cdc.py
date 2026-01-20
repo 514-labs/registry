@@ -1,7 +1,8 @@
 import argparse
 import logging
 from dotenv import load_dotenv
-from moose_lib_extras import introspect_hana_database, generate_moose_models, MooseModelConfig
+from app.utils.sap_hana_introspection import introspect_hana_database
+from app.utils.moose_model_generator import generate_moose_models, MooseModelConfig
 from sap_hana_cdc import SAPHanaCDCConfig, SAPHanaCDCConnector
 
 MODEL_PATH = "app/ingest/cdc.py"

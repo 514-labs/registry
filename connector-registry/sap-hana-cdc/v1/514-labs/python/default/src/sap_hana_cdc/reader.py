@@ -73,8 +73,6 @@ class SAPHanaCDCReader(SAPHanaCDCBase):
                         AND tst.STATUS = ?
                         AND (
                             (tst.LAST_PROCESSED_CHANGE_ID > 0 AND ct.CHANGE_ID > tst.LAST_PROCESSED_CHANGE_ID) 
-                        OR 
-                            (tst.LAST_PROCESSED_CHANGE_ID = 0 AND ct.CHANGE_TIMESTAMP > )
                         )
                     ORDER BY CHANGE_TIMESTAMP ASC 
                     LIMIT ?
