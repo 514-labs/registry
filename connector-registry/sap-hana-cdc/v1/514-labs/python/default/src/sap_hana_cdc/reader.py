@@ -157,14 +157,15 @@ class SAPHanaCDCReader(SAPHanaCDCBase):
                     """
                 
                     cursor.execute(update_sql, (
-                        max_change_id, 
+                        max_change_id,
                         client_id,
                         schema_name,
                         table_name
                     ))
-                
+
+                self.connection.commit()
                 logger.info(f"Updated client status for {client_id}")
-                
+
         except Exception as e:
             logger.error(f"Error updating client status for {client_id}: {e}")
             raise

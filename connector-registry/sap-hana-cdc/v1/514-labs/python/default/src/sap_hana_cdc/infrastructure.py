@@ -82,6 +82,7 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
         with self.connection.cursor() as cursor:
             for table in self.config.tables:
                 self._update_table_status(cursor, table, TableStatus.NEW)
+        self.connection.commit()
 
     def setup_table_triggers(self) -> None:
         """Set up triggers for the specified tables and change types."""
@@ -105,11 +106,14 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
                 self._remove_table_status(cursor, table)
                 logger.info(f"CDC triggers cleaned up for removed table {table}")
 
+        self.connection.commit()
+
 
     def set_table_status_active(self, table_name: str) -> None:
         """Update the status of a table."""
         with self.connection.cursor() as cursor:
             self._update_table_status(cursor, table_name, TableStatus.ACTIVE)
+        self.connection.commit()
 
 
     def get_monitored_tables(self) -> List[str]:
@@ -351,3 +355,4 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
             for table in self.config.tables:
                 self._update_table_status(cursor, table, TableStatus.NEW)
                 logger.info(f"Set status to NEW for table {table}")
+        self.connection.commit()
