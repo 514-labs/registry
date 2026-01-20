@@ -57,7 +57,7 @@ class ChangeEvent:
             "new_values": self.new_values,
         }
 
-    def diff_values(self) -> Dict[str, Any]:
+    def diff_values(self) -> List[Dict[str, Any]]:
         """Get the diff values between the old and new values."""
         differences = []
         
