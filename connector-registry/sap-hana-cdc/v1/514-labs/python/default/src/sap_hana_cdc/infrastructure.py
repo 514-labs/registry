@@ -249,10 +249,20 @@ class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
         try:
             quoted_table_name = f'"{table_name}"'
             quoted_schema_name = f'{self.config.source_schema}'
+
+            # Build REFERENCING clause based on trigger type
+            referencing_clause = ""
+            if trigger_type == TriggerType.INSERT:
+                referencing_clause = "REFERENCING NEW ROW AS new_row"
+            elif trigger_type == TriggerType.DELETE:
+                referencing_clause = "REFERENCING OLD ROW AS old_row"
+            else:  # UPDATE
+                referencing_clause = "REFERENCING OLD ROW AS old_row, NEW ROW AS new_row"
+
             trigger_sql = f"""
                 CREATE TRIGGER {trigger_name}
                 AFTER {trigger_type.value} ON {quoted_schema_name}.{quoted_table_name}
-                REFERENCING OLD ROW AS old_row, NEW ROW AS new_row
+                {referencing_clause}
                 FOR EACH ROW
                 BEGIN
                     DECLARE old_json NCLOB;
