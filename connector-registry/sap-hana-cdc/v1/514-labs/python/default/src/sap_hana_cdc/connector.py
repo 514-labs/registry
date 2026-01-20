@@ -100,7 +100,18 @@ class SAPHanaCDCConnector:
     
     def get_client_status(self) -> List[ClientTableStatus]:
         return self.reader.get_client_status()
-    
+
+    def is_view(self, object_name: str) -> bool:
+        """Check if an object is a view.
+
+        Args:
+            object_name: Name of the object to check
+
+        Returns:
+            bool: True if the object is a view, False otherwise
+        """
+        return self.infrastructure._is_view(object_name)
+
     def cleanup_cdc_infrastructure(self) -> None:
         """Remove all CDC infrastructure.
         
