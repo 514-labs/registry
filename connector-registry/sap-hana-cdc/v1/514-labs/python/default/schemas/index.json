@@ -1,0 +1,34 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/schema-index.schema.json",
+  "version": "0.1.0",
+  "datasets": [
+    {
+      "name": "change_events",
+      "stage": "raw",
+      "kind": "json",
+      "path": "raw/json/change_events.schema.json",
+      "doc": "raw/json/change_events.md"
+    },
+    {
+      "name": "change_events",
+      "stage": "extracted",
+      "kind": "json",
+      "path": "extracted/json/change_events.schema.json",
+      "doc": "extracted/json/change_events.md"
+    },
+    {
+      "name": "change_table",
+      "stage": "raw",
+      "kind": "relational",
+      "path": "raw/relational/change_table.json",
+      "doc": "raw/relational/change_table.md"
+    },
+    {
+      "name": "change_table",
+      "stage": "extracted",
+      "kind": "relational",
+      "path": "extracted/relational/change_table.json",
+      "doc": "extracted/relational/change_table.md"
+    }
+  ]
+}

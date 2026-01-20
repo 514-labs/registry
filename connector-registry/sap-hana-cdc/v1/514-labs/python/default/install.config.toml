@@ -1,0 +1,30 @@
+language = "python"
+description = "Python connector for SAP HANA CDC"
+post_install_print = """
+🚀 Next steps to get your SAP HANA CDC connector running:
+
+📂 Go to your connector directory:
+    $ cd 
+
+🐍 Create virtual environment (recommended):
+    $ python3 -m venv .venv
+    $ source .venv/bin/activate
+
+📦 Install dependencies:
+    $ pip install -e .
+
+🧪 Run tests:
+    $ python -m pytest
+
+📖 Next, check out the documentation:
+    • Review docs/getting-started.md for configuration details
+    • See examples/ for usage examples
+    • Update src/sap_hana_cdc/connector.py with your database configuration
+
+🔗 Integration options:
+    • Add to your project: from sap_hana_cdc import Client
+    • Use with pipelines: Configure as a source in your pipeline setup
+    • Standalone usage: Check examples/console_streamer.py
+
+⚠️  Important: Ensure you have SAP HANA database access and proper permissions
+"""
