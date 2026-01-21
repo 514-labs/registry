@@ -38,6 +38,7 @@ class TableMetadata:
     schema_name: str
     fields: List[FieldMetadata]
     object_type: str = 'TABLE'  # 'TABLE' or 'VIEW'
+    view_definition: Optional[str] = None  # SQL definition for views
 
     def get_field_names(self) -> List[str]:
         """Get list of field names."""
@@ -165,8 +166,13 @@ class HanaIntrospector:
 
             # Detect object type (TABLE or VIEW)
             object_type = self._get_object_type(actual_schema, table_name)
+            view_definition = None
+
             if object_type == 'VIEW':
                 logger.info(f"Detected view: {actual_schema}.{table_name}")
+                # Retrieve view definition
+                view_definition = self._get_view_definition(actual_schema, table_name)
+                logger.info(f"Retrieved view definition for {actual_schema}.{table_name}")
 
             # Build field metadata
             fields = []
@@ -186,7 +192,8 @@ class HanaIntrospector:
                 table_name=table_name,
                 schema_name=actual_schema,
                 fields=fields,
-                object_type=object_type
+                object_type=object_type,
+                view_definition=view_definition
             )
             
         finally:

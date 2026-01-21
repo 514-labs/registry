@@ -24,19 +24,27 @@ def initial_load_task(ctx: TaskContext[None]) -> None:
     client_status = connector.get_client_status()
     for table_status in client_status:
         if table_status.status == TableStatus.NEW:
-            # Detect if object is a view for logging
+            # Detect if object is a view
             is_view = connector.is_view(table_status.table_name)
-            object_type = "view" if is_view else "table"
-            print(f"Initial loading {object_type}: {table_status.table_name}")
-            chunk_size = 100000
-            offset = 0
-            while True:
-                rows = connector.get_all_table_rows(table_status.table_name, page_size=chunk_size, offset=offset)
-                if not rows:
-                    break
-                inserter.insert_table_data(table_status.table_name, rows)
-                offset += len(rows)
-            connector.infrastructure.set_table_status_active(table_status.table_name)
+
+            if is_view:
+                # For views, skip initial data load
+                # The view should be created in ClickHouse by executing the generated views.sql file
+                print(f"Skipping initial load for view: {table_status.table_name}")
+                print(f"  Note: ClickHouse view should be created using the generated views.sql file")
+                connector.infrastructure.set_table_status_active(table_status.table_name)
+            else:
+                # For tables, perform normal initial data load
+                print(f"Initial loading table: {table_status.table_name}")
+                chunk_size = 100000
+                offset = 0
+                while True:
+                    rows = connector.get_all_table_rows(table_status.table_name, page_size=chunk_size, offset=offset)
+                    if not rows:
+                        break
+                    inserter.insert_table_data(table_status.table_name, rows)
+                    offset += len(rows)
+                connector.infrastructure.set_table_status_active(table_status.table_name)
 
 
 def sync_changes_task(ctx: TaskContext[None]) -> None:

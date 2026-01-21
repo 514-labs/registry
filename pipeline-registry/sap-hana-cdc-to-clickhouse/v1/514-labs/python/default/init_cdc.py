@@ -3,9 +3,11 @@ import logging
 from dotenv import load_dotenv
 from app.utils.sap_hana_introspection import introspect_hana_database
 from app.utils.moose_model_generator import generate_moose_models, MooseModelConfig
+from app.utils.view_generator import generate_clickhouse_views
 from sap_hana_cdc import SAPHanaCDCConfig, SAPHanaCDCConnector
 
 MODEL_PATH = "app/ingest/cdc.py"
+VIEW_SQL_PATH = "app/ingest/views.sql"
 
 logging.basicConfig(
     level=logging.INFO,
@@ -58,12 +60,22 @@ if args.recreate_moose_models:
         include_views=True
     )
 
-    config = MooseModelConfig(
+    model_config = MooseModelConfig(
         force_all_fields_nullable=True
     )
 
-    generate_moose_models(tables_metadata, MODEL_PATH, config)
+    generate_moose_models(tables_metadata, MODEL_PATH, model_config)
     print(f"Generated Moose models for {len(tables_metadata)} tables/views in '{MODEL_PATH}'.")
+
+    # Generate ClickHouse view SQL for views
+    view_names = generate_clickhouse_views(
+        tables_metadata,
+        VIEW_SQL_PATH,
+        config.source_schema
+    )
+    if view_names:
+        print(f"Generated ClickHouse view SQL for {len(view_names)} views in '{VIEW_SQL_PATH}'.")
+        print(f"Views: {', '.join(view_names)}")
 
 if args.init_cdc or args.recreate_cdc_tables:
     connector.init_cdc()
