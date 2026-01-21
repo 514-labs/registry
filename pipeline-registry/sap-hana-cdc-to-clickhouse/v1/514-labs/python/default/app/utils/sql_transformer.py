@@ -61,12 +61,15 @@ class SQLTransformer:
         # Replace "SCHEMA"."TABLE" with target_schema.TABLE
         # Also handle unquoted schema.table references
 
+        # Escape schema name to handle special regex characters (., $, *, etc.)
+        escaped_schema = re.escape(self.source_schema)
+
         # Pattern 1: "SCHEMA"."TABLE"
-        pattern1 = rf'"{self.source_schema}"\.?"([^"]+)"?'
+        pattern1 = rf'"{escaped_schema}"\.?"([^"]+)"?'
         sql = re.sub(pattern1, rf'{self.target_schema}.\1', sql, flags=re.IGNORECASE)
 
         # Pattern 2: SCHEMA.TABLE (unquoted)
-        pattern2 = rf'\b{self.source_schema}\.(\w+)\b'
+        pattern2 = rf'\b{escaped_schema}\.(\w+)\b'
         sql = re.sub(pattern2, rf'{self.target_schema}.\1', sql, flags=re.IGNORECASE)
 
         return sql
@@ -101,7 +104,8 @@ class SQLTransformer:
         # This is more complex and may need more sophisticated parsing
 
         # 7. TO_DATE -> toDate or parseDateTime
-        sql = re.sub(r'\bTO_DATE\s*\((.*?),\s*[\'"]([^\'\"]+)[\'"]\)', r"parseDateTimeBestEffort('\1')", sql, flags=re.IGNORECASE)
+        # Note: Don't quote the column reference - \1 is already the column name or expression
+        sql = re.sub(r'\bTO_DATE\s*\((.*?),\s*[\'"]([^\'\"]+)[\'"]\)', r"parseDateTimeBestEffort(\1)", sql, flags=re.IGNORECASE)
 
         # 8. NVL -> ifNull
         sql = re.sub(r'\bNVL\s*\(', 'ifNull(', sql, flags=re.IGNORECASE)
