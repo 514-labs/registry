@@ -170,3 +170,29 @@ class SQLTransformer:
             table_metadata.view_definition,
             table_metadata.table_name
         )
+
+    def extract_select_for_view(self, view_definition: str) -> Optional[str]:
+        """
+        Extract and transform SELECT statement for MooseStack View().
+
+        Returns a clean SELECT statement without CREATE VIEW prefix.
+
+        Args:
+            view_definition: The SAP HANA view SQL definition
+
+        Returns:
+            Transformed SELECT statement or None if extraction fails
+        """
+        # Extract SELECT portion
+        select_statement = self._extract_select_statement(view_definition)
+        if not select_statement:
+            return None
+
+        # Transform SAP HANA syntax to ClickHouse
+        transformed = self._replace_schema_references(select_statement)
+        transformed = self._transform_syntax(transformed)
+
+        # Clean up formatting for View() string literal
+        transformed = transformed.strip()
+
+        return transformed

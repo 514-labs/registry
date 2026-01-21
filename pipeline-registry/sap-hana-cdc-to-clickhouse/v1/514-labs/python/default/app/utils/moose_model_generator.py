@@ -11,6 +11,7 @@ import logging
 from pathlib import Path
 
 from .sap_hana_introspection import TableMetadata, FieldMetadata
+from .sql_transformer import SQLTransformer
 from .sap_hana_validators import (
     # Datetime types
     SapDate, SapTime, SapSecondDate, SapTimestamp,
@@ -230,7 +231,7 @@ class MooseModelGenerator:
             '',
             'from typing import Optional',
             'from datetime import datetime',
-            'from moose_lib import BaseModel, Key, Field, OlapTable, OlapConfig',
+            'from moose_lib import BaseModel, Key, Field, OlapTable, OlapConfig, View',
             '',
         ]
         
@@ -273,10 +274,15 @@ class MooseModelGenerator:
             lines.extend(model_code)
             lines.append('')  # Add blank line between models
         
-        # Generate OlapTable instances
+        # Generate OlapTable instances or View instances based on object_type
         for table in tables:
-            olap_table_code = self._generate_olap_table_code(table)
-            lines.extend(olap_table_code)
+            if table.object_type == 'VIEW':
+                view_code = self._generate_view_code(table)
+                lines.extend(view_code)
+            else:
+                olap_table_code = self._generate_olap_table_code(table)
+                lines.extend(olap_table_code)
+            lines.append('')  # Add blank line between instances
 
         return '\n'.join(lines)
     
@@ -333,7 +339,43 @@ class MooseModelGenerator:
             ]
         
         return lines
-    
+
+    def _generate_view_code(self, table: TableMetadata) -> List[str]:
+        """Generate View code for a SAP HANA view.
+
+        Uses MooseStack's View() to create a ClickHouse view with transformed SQL.
+        """
+        if not table.view_definition:
+            logger.warning(f"No view definition found for {table.table_name}")
+            return []
+
+        class_name = self._to_pascal_case(table.table_name)
+        variable_name = self._to_snake_case(table.table_name)
+
+        # Transform SAP HANA SQL to ClickHouse SELECT statement
+        transformer = SQLTransformer(table.schema_name, "default")
+        select_sql = transformer.extract_select_for_view(table.view_definition)
+
+        if not select_sql:
+            logger.warning(f"Could not extract SELECT statement for view {table.table_name}")
+            return []
+
+        # Generate View() code
+        # Note: For now, we specify empty base_tables list []
+        # In future, could parse SELECT to identify referenced tables
+        lines = [
+            f'# View: {table.table_name}',
+            f'{variable_name} = View[{class_name}](',
+            f'    "{table.table_name}",',
+            f'    """',
+            f'{select_sql}',
+            f'    """,',
+            f'    []  # TODO: Specify base tables for proper DDL ordering',
+            f')',
+        ]
+
+        return lines
+
     def _has_primary_key(self, table: TableMetadata) -> bool:
         """Check if table has any primary key fields."""
         return any(field.is_primary_key for field in table.fields)
