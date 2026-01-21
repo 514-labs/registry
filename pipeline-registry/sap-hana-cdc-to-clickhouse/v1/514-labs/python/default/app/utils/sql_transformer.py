@@ -26,47 +26,6 @@ class SQLTransformer:
         self.source_schema = source_schema
         self.target_schema = target_schema
 
-    def transform_view_definition(self, view_definition: str, view_name: str) -> Optional[str]:
-        """
-        Transform a SAP HANA view definition to ClickHouse view definition.
-
-        Args:
-            view_definition: The SAP HANA view SQL definition
-            view_name: The name of the view
-
-        Returns:
-            Transformed ClickHouse view definition or None if transformation fails
-        """
-        if not view_definition:
-            logger.warning(f"Empty view definition for {view_name}")
-            return None
-
-        try:
-            # Extract the SELECT statement from CREATE VIEW
-            select_statement = self._extract_select_statement(view_definition)
-            if not select_statement:
-                logger.warning(f"Could not extract SELECT statement from view definition for {view_name}")
-                return None
-
-            # Transform the SQL
-            transformed_sql = select_statement
-
-            # Replace schema references
-            transformed_sql = self._replace_schema_references(transformed_sql)
-
-            # Transform SAP HANA specific syntax to ClickHouse
-            transformed_sql = self._transform_syntax(transformed_sql)
-
-            # Build ClickHouse CREATE VIEW statement
-            clickhouse_view = f"CREATE VIEW IF NOT EXISTS {self.target_schema}.{view_name} AS\n{transformed_sql}"
-
-            logger.info(f"Successfully transformed view definition for {view_name}")
-            return clickhouse_view
-
-        except Exception as e:
-            logger.error(f"Failed to transform view definition for {view_name}: {e}")
-            return None
-
     def _extract_select_statement(self, view_definition: str) -> Optional[str]:
         """
         Extract the SELECT statement from a CREATE VIEW definition.
@@ -148,28 +107,6 @@ class SQLTransformer:
         sql = re.sub(r'\bNVL\s*\(', 'ifNull(', sql, flags=re.IGNORECASE)
 
         return sql
-
-    def get_view_sql_for_clickhouse(self, table_metadata) -> Optional[str]:
-        """
-        Generate ClickHouse view SQL from TableMetadata.
-
-        Args:
-            table_metadata: TableMetadata object with view_definition
-
-        Returns:
-            ClickHouse view SQL or None
-        """
-        if table_metadata.object_type != 'VIEW':
-            return None
-
-        if not table_metadata.view_definition:
-            logger.warning(f"No view definition found for {table_metadata.table_name}")
-            return None
-
-        return self.transform_view_definition(
-            table_metadata.view_definition,
-            table_metadata.table_name
-        )
 
     def extract_select_for_view(self, view_definition: str) -> Optional[str]:
         """
