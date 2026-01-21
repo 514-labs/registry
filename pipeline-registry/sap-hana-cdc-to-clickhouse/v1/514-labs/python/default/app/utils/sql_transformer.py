@@ -1,0 +1,139 @@
+"""
+SQL Transformation utilities for converting SAP HANA SQL to ClickHouse SQL.
+
+This module provides functionality to transform SAP HANA view definitions
+into ClickHouse-compatible view definitions.
+"""
+
+import re
+import logging
+from typing import Optional, Dict
+
+logger = logging.getLogger(__name__)
+
+
+class SQLTransformer:
+    """Transforms SAP HANA SQL to ClickHouse SQL."""
+
+    def __init__(self, source_schema: str, target_schema: str = "default"):
+        """
+        Initialize the SQL transformer.
+
+        Args:
+            source_schema: The SAP HANA source schema name
+            target_schema: The target ClickHouse schema/database name
+        """
+        self.source_schema = source_schema
+        self.target_schema = target_schema
+
+    def _extract_select_statement(self, view_definition: str) -> Optional[str]:
+        """
+        Extract the SELECT statement from a CREATE VIEW definition.
+
+        Args:
+            view_definition: Full CREATE VIEW statement
+
+        Returns:
+            The SELECT portion or None if not found
+        """
+        # Remove CREATE VIEW ... AS prefix
+        # Pattern: CREATE VIEW ... AS <select_statement>
+        match = re.search(r'CREATE\s+VIEW.*?AS\s+(SELECT.*)', view_definition, re.IGNORECASE | re.DOTALL)
+        if match:
+            return match.group(1).strip()
+
+        # If already just a SELECT statement
+        if view_definition.strip().upper().startswith('SELECT'):
+            return view_definition.strip()
+
+        return None
+
+    def _replace_schema_references(self, sql: str) -> str:
+        """
+        Replace schema references in the SQL.
+
+        Args:
+            sql: SQL statement
+
+        Returns:
+            SQL with replaced schema references
+        """
+        # Replace "SCHEMA"."TABLE" with target_schema.TABLE
+        # Also handle unquoted schema.table references
+
+        # Escape schema name to handle special regex characters (., $, *, etc.)
+        escaped_schema = re.escape(self.source_schema)
+
+        # Pattern 1: "SCHEMA"."TABLE"
+        pattern1 = rf'"{escaped_schema}"\.?"([^"]+)"?'
+        sql = re.sub(pattern1, rf'{self.target_schema}.\1', sql, flags=re.IGNORECASE)
+
+        # Pattern 2: SCHEMA.TABLE (unquoted)
+        pattern2 = rf'\b{escaped_schema}\.(\w+)\b'
+        sql = re.sub(pattern2, rf'{self.target_schema}.\1', sql, flags=re.IGNORECASE)
+
+        return sql
+
+    def _transform_syntax(self, sql: str) -> str:
+        """
+        Transform SAP HANA specific syntax to ClickHouse syntax.
+
+        Args:
+            sql: SQL statement
+
+        Returns:
+            Transformed SQL
+        """
+        # Common transformations:
+
+        # 1. CONCAT function - SAP HANA uses || or CONCAT, ClickHouse uses concat()
+        # Keep as is since both support CONCAT
+
+        # 2. String concatenation operator || - ClickHouse also supports this
+
+        # 3. IFNULL -> ifNull (ClickHouse prefers ifNull but accepts IFNULL)
+        sql = re.sub(r'\bIFNULL\s*\(', 'ifNull(', sql, flags=re.IGNORECASE)
+
+        # 4. CURRENT_TIMESTAMP -> now()
+        sql = re.sub(r'\bCURRENT_TIMESTAMP\b', 'now()', sql, flags=re.IGNORECASE)
+
+        # 5. Remove DUMMY table references (SAP HANA specific)
+        sql = re.sub(r'\s+FROM\s+DUMMY\b', '', sql, flags=re.IGNORECASE)
+
+        # 6. DAYS_BETWEEN -> dateDiff('day', ...)
+        # This is more complex and may need more sophisticated parsing
+
+        # 7. TO_DATE -> toDate or parseDateTime
+        # Note: Don't quote the column reference - \1 is already the column name or expression
+        sql = re.sub(r'\bTO_DATE\s*\((.*?),\s*[\'"]([^\'\"]+)[\'"]\)', r"parseDateTimeBestEffort(\1)", sql, flags=re.IGNORECASE)
+
+        # 8. NVL -> ifNull
+        sql = re.sub(r'\bNVL\s*\(', 'ifNull(', sql, flags=re.IGNORECASE)
+
+        return sql
+
+    def extract_select_for_view(self, view_definition: str) -> Optional[str]:
+        """
+        Extract and transform SELECT statement for MooseStack View().
+
+        Returns a clean SELECT statement without CREATE VIEW prefix.
+
+        Args:
+            view_definition: The SAP HANA view SQL definition
+
+        Returns:
+            Transformed SELECT statement or None if extraction fails
+        """
+        # Extract SELECT portion
+        select_statement = self._extract_select_statement(view_definition)
+        if not select_statement:
+            return None
+
+        # Transform SAP HANA syntax to ClickHouse
+        transformed = self._replace_schema_references(select_statement)
+        transformed = self._transform_syntax(transformed)
+
+        # Clean up formatting for View() string literal
+        transformed = transformed.strip()
+
+        return transformed

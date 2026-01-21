@@ -58,11 +58,11 @@ if args.recreate_moose_models:
         include_views=True
     )
 
-    config = MooseModelConfig(
+    model_config = MooseModelConfig(
         force_all_fields_nullable=True
     )
 
-    generate_moose_models(tables_metadata, MODEL_PATH, config)
+    generate_moose_models(tables_metadata, MODEL_PATH, model_config)
     print(f"Generated Moose models for {len(tables_metadata)} tables/views in '{MODEL_PATH}'.")
 
 if args.init_cdc or args.recreate_cdc_tables:
