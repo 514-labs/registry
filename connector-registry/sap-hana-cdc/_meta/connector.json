@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "identifier": "sap-hana-cdc",
+  "name": "SAP HANA CDC",
+  "category": "database",
+  "tags": ["database", "cdc", "sap", "hana", "real-time"],
+  "description": "High-performance, real-time Change Data Capture (CDC) connector for SAP HANA database",
+  "homepage": ""
+}

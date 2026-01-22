@@ -1,0 +1,7 @@
+{
+  "name": "sap-hana-cdc",
+  "version": "v1",
+  "status": "beta",
+  "releasedAt": "2025-01-15",
+  "notes": "Initial release of SAP HANA CDC v1 connector with support for real-time change data capture and view support"
+}
