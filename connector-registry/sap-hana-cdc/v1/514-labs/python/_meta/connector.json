@@ -1,0 +1,8 @@
+{
+  "identifier": "sap-hana-cdc",
+  "name": "sap-hana-cdc",
+  "author": "514-labs",
+  "version": "v1",
+  "language": "python",
+  "implementations": ["default"]
+}
