@@ -1,0 +1,7 @@
+{
+  "name": "sap-hana-cdc-to-clickhouse",
+  "version": "v1",
+  "status": "beta",
+  "releasedAt": "2025-01-15",
+  "notes": "Initial release with support for real-time CDC from SAP HANA to ClickHouse, including view support and automatic table synchronization"
+}
