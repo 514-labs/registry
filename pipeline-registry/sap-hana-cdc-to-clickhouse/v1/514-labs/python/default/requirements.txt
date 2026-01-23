@@ -1,12 +1,22 @@
+# Note: The SAP HANA CDC connector (connectorsap-hana-cdc) must be installed separately.
+# See README.md for installation instructions.
+
 annotated-types==0.7.0
+asyncio-mqtt==0.16.2
 certifi==2025.10.5
 cffi==2.0.0
 charset-normalizer==3.4.3
+click==8.3.1
 clickhouse-connect==0.7.16
 cryptography==46.0.2
 dotenv==0.9.9
 faker==37.8.0
 hdbcli==2.26.18
+kafka-python==2.3.0
+paho-mqtt==2.1.0
+structlog==25.5.0
+tenacity==9.1.2
+uvloop==0.22.1
 humanfriendly==10.0
 idna==3.10
 kafka-python-ng==2.2.2
@@ -22,7 +32,6 @@ pydantic-core==2.33.2
 pyjwt==2.10.1
 python-dotenv==1.1.1
 pytz==2025.2
-redis==6.4.0
 requests==2.32.4
 sqlglot==27.20.0
 sqlglotrs==0.6.2

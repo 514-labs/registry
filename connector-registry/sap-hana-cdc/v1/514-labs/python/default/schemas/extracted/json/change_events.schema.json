@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SAP HANA CDC Change Event (Extracted)",
+  "description": "Extracted and transformed change event from SAP HANA database",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "description": "Unique identifier for the change event"
+    },
+    "event_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the change occurred"
+    },
+    "change_type": {
+      "type": "string",
+      "enum": ["INSERT", "UPDATE", "DELETE"],
+      "description": "Type of database operation"
+    },
+    "transaction_id": {
+      "type": "string",
+      "description": "Database transaction identifier"
+    },
+    "schema_name": {
+      "type": "string",
+      "description": "Database schema containing the changed table"
+    },
+    "table_name": {
+      "type": "string",
+      "description": "Name of the table that was changed"
+    },
+    "full_table_name": {
+      "type": "string",
+      "description": "Fully qualified table name (schema.table)"
+    },
+    "old_values": {
+      "type": ["object", "null"],
+      "description": "Previous values (for UPDATE/DELETE operations)"
+    },
+    "new_values": {
+      "type": ["object", "null"],
+      "description": "New values (for INSERT/UPDATE operations)"
+    }
+  },
+  "required": [
+    "event_id",
+    "event_timestamp",
+    "change_type",
+    "transaction_id",
+    "schema_name",
+    "table_name",
+    "full_table_name"
+  ],
+  "additionalProperties": false
+}

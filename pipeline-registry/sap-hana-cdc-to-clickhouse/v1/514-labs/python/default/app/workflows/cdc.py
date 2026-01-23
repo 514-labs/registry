@@ -1,6 +1,7 @@
 import re
 import sys
 import os
+from pathlib import Path
 from moose_lib import Task, TaskConfig, Workflow, WorkflowConfig, OlapTable, InsertOptions, Key, TaskContext
 from dotenv import load_dotenv
 

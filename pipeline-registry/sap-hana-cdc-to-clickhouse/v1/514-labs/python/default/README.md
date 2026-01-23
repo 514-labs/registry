@@ -38,8 +38,108 @@ This is a Python-based Moose pipeline that provides real-time Change Data Captur
 
 ### Installation
 
-1. Install Moose CLI: `pip install moose-cli`
-2. Install dependencies: `pip install -r requirements.txt`
+You can install this pipeline using either a **package-based** approach (simpler, recommended for production) or a **bundled** approach (better for development and customization).
+
+#### Option A: Package-Based Installation (Recommended)
+
+1. Install Moose CLI:
+   ```bash
+   pip install moose-cli
+   ```
+
+2. Install the SAP HANA CDC connector:
+   ```bash
+   # From PyPI (when published)
+   pip install connectorsap-hana-cdc
+
+   # OR from the 514 registry:
+   bash -i <(curl https://registry.514.ai/install.sh) sap-hana-cdc v1 514-labs python default
+   cd sap-hana-cdc && pip install -e .
+   ```
+
+3. Install pipeline dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+**Pros:** Simple, clean separation of concerns, easy updates
+**Cons:** Requires publishing connector or manual installation
+
+#### Option B: Bundled Installation (Development & Customization)
+
+This approach bundles the connector code directly in your pipeline, allowing for easier customization and development.
+
+**Quick Setup (Automated):**
+```bash
+./setup_bundled.sh
+```
+
+The script will automatically:
+- Install the connector into `app/sap-hana-cdc`
+- Create/update `pyproject.toml`
+- Update `app/workflows/cdc.py` with path setup
+- Install all dependencies
+
+**Manual Setup:**
+
+1. Install Moose CLI:
+   ```bash
+   pip install moose-cli
+   ```
+
+2. Bundle the connector into your pipeline:
+   ```bash
+   # Install the connector directly into the app directory
+   bash -i <(curl https://registry.514.ai/install.sh) --dest app/sap-hana-cdc sap-hana-cdc v1 514-labs python default
+   ```
+
+3. Update your project to use the bundled connector:
+
+   Create or update `pyproject.toml`:
+   ```toml
+   [project]
+   name = "sap-hana-cdc-pipeline"
+   version = "0.1.0"
+   requires-python = ">=3.13"
+   dependencies = [
+       "clickhouse-connect==0.7.16",
+       "moose-cli>=0.6.230",
+       "moose-lib>=0.6.230",
+       "connectorsap-hana-cdc @ file:///path/to/your/pipeline/app/sap-hana-cdc",
+       # ... other dependencies from requirements.txt
+   ]
+
+   [build-system]
+   requires = ["setuptools>=68", "wheel"]
+   build-backend = "setuptools.build_meta"
+
+   [tool.setuptools.packages.find]
+   where = ["."]
+   include = ["app*"]
+   ```
+
+4. Update `app/workflows/cdc.py` to add path setup (at the top of the file):
+   ```python
+   import sys
+   from pathlib import Path
+
+   # Add sap-hana-cdc module to Python path
+   sap_hana_cdc_path = Path(__file__).parent.parent / "sap-hana-cdc" / "src"
+   if str(sap_hana_cdc_path) not in sys.path:
+       sys.path.insert(0, str(sap_hana_cdc_path))
+   ```
+
+5. Install dependencies:
+   ```bash
+   # Using uv (recommended)
+   uv sync
+
+   # OR using pip
+   pip install -e .
+   ```
+
+**Pros:** Easy to customize connector, all code in one place, no external dependencies
+**Cons:** More complex setup, must manually sync updates
 
 ### Configuration
 
@@ -77,6 +177,67 @@ This is a Python-based Moose pipeline that provides real-time Change Data Captur
 - **Generate Moose models**: `python init_cdc.py --recreate-moose-models --tables TABLE1,TABLE2`
 - **Recreate CDC tables**: `python init_cdc.py --recreate-cdc-tables --tables TABLE1,TABLE2`
 - **Initialize CDC**: `python init_cdc.py --init-cdc --tables TABLE1,TABLE2`
+
+## Troubleshooting
+
+### ImportError: cannot import name 'ChangeEvent' from 'sap_hana_cdc'
+
+This means the connector isn't installed or not in your Python path.
+
+**Solution for Package-Based Installation:**
+```bash
+pip install connectorsap-hana-cdc
+# Or reinstall from registry
+```
+
+**Solution for Bundled Installation:**
+1. Verify the connector is in `app/sap-hana-cdc/`
+2. Ensure you've added the path setup in `app/workflows/cdc.py` (see Option B above)
+3. Run `uv sync` or `pip install -e .` to install with the bundled connector
+
+### ModuleNotFoundError: No module named 'hdbcli'
+
+The SAP HANA client library isn't installed.
+
+**Solution:**
+```bash
+pip install hdbcli>=2.20.0
+```
+
+### TypeError: ReplacingMergeTreeEngine.__init__() got an unexpected keyword argument 'version_column'
+
+You're using an older version of the model syntax.
+
+**Solution:**
+Update your model definitions to use `ver` instead of `version_column`:
+```python
+# OLD (incorrect)
+engine=ReplacingMergeTreeEngine(version_column="updated_at")
+
+# NEW (correct)
+engine=ReplacingMergeTreeEngine(ver="updated_at")
+```
+
+### Connection refused when running workflows
+
+The SAP HANA database isn't accessible.
+
+**Solution:**
+1. Verify your SAP HANA environment variables are correct
+2. Check network connectivity: `telnet $SAP_HANA_HOST $SAP_HANA_PORT`
+3. Verify the database is running
+4. Check firewall rules
+
+### Running workflows directly with uv
+
+If you want to run the CDC workflow directly:
+```bash
+# Package-based installation
+uv run python app/workflows/cdc.py
+
+# Bundled installation (requires proper pyproject.toml)
+uv run app/workflows/cdc.py
+```
 
 ## Learn More
 
