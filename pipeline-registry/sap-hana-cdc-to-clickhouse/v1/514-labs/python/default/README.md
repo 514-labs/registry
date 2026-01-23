@@ -6,12 +6,13 @@ This is a Python-based Moose pipeline that provides real-time Change Data Captur
 
 ### CDC Workflow (`cdc`)
 - **Purpose**: Continuously syncs changes from SAP HANA to ClickHouse
-- **Schedule**: Continuous (runs indefinitely)
-- **Features**: 
-  - Syncs new tables automatically
-  - Processes CDC changes in real-time
+- **Schedule**: Continuous (runs every 60 seconds)
+- **Features**:
+  - Initial load: Syncs new tables automatically with chunked pagination
+  - Incremental sync: Processes CDC changes in real-time
   - Updates client status for tracking
-  - Handles model generation for new tables
+  - Smart model lookup supporting various table naming conventions (EKKO, T001W, etc.)
+  - Batch insertion using Moose OlapTable interface
 
 ### Pruning Workflow (`prune_database`)
 - **Purpose**: Maintains database performance by removing old CDC entries
@@ -238,6 +239,42 @@ uv run python app/workflows/cdc.py
 # Bundled installation (requires proper pyproject.toml)
 uv run app/workflows/cdc.py
 ```
+
+## Pipeline Architecture
+
+### Directory Structure
+
+```
+app/
+├── ingest/
+│   ├── cdc.py              # Auto-generated Moose models (OlapTables)
+│   └── models.py           # Base models
+├── workflows/
+│   ├── cdc.py              # CDC workflow definition
+│   ├── prune.py            # Database pruning workflow
+│   └── lib/
+│       ├── __init__.py
+│       └── changes_inserter.py  # Batch insertion helper
+└── utils/
+    ├── sap_hana_introspection.py  # Database metadata extraction
+    └── moose_model_generator.py   # Model code generation
+```
+
+### Key Components
+
+**BatchChangeInserter** (`app/workflows/lib/changes_inserter.py`)
+- Handles batch insertion of CDC data into ClickHouse
+- Supports initial table loads and incremental changes
+- Smart model lookup with table name normalization:
+  - `EKKO` → `ekko` (OlapTable) + `Ekko` (Pydantic model)
+  - `T001W` → `t001_w` (OlapTable) + `T001w` (Pydantic model)
+- Works with auto-generated Moose models from `app/ingest/cdc.py`
+
+**Model Generation** (`init_cdc.py --recreate-moose-models`)
+- Introspects SAP HANA tables and generates Pydantic models
+- Creates OlapTable instances for each table
+- Handles complex SAP data types (DECIMAL, NVARCHAR, etc.)
+- Supports both tables and views
 
 ## Learn More
 

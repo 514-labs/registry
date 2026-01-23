@@ -65,7 +65,13 @@ if args.recreate_moose_models:
     generate_moose_models(tables_metadata, MODEL_PATH, config)
     print(f"Generated Moose models for {len(tables_metadata)} tables/views in '{MODEL_PATH}'.")
 
-if args.init_cdc or args.recreate_cdc_tables:
+if args.recreate_cdc_tables:
+    print("Dropping existing CDC infrastructure...")
+    connector.cleanup_cdc_infrastructure()
+    print("Recreating CDC infrastructure...")
+    connector.init_cdc()
+    print(f"Recreated CDC tables and triggers.")
+elif args.init_cdc:
     connector.init_cdc()
     print(f"Initialized CDC tables and triggers.")
 
