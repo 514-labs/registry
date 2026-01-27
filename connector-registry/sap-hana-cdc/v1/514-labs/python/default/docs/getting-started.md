@@ -12,12 +12,7 @@ This guide will help you set up and start using the SAP HANA CDC connector.
 
 1. Install the connector:
    ```bash
-   pip install -e .
-   ```
-
-2. Install additional dependencies if needed:
-   ```bash
-   pip install -r requirements.txt
+   bash -i <(curl https://registry.514.ai/install.sh) --dest app/sap-hana-cdc sap-hana-cdc v1 514-labs python default
    ```
 
 ## Basic Configuration

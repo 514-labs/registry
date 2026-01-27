@@ -15,7 +15,7 @@ A high-performance, real-time Change Data Capture (CDC) connector for SAP HANA d
 
 1. Install the connector:
    ```bash
-   pip install -e .
+   bash -i <(curl https://registry.514.ai/install.sh) --dest app/sap-hana-cdc sap-hana-cdc v1 514-labs python default
    ```
 
 2. Configure your SAP HANA connection:
