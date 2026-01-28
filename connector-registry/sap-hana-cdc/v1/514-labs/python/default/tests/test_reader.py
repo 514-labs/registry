@@ -20,16 +20,16 @@ class TestSAPHanaCDCReader:
     """Test suite for SAPHanaCDCReader."""
 
     def test_initialization(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test reader initialization."""
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
 
         assert reader.connection == mock_connection
         assert reader.config == sample_config
 
     def test_get_changes_with_results(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test getting changes when results exist."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
@@ -48,7 +48,7 @@ class TestSAPHanaCDCReader:
             ),
         ]
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         batch = reader.get_changes(limit=100)
 
         assert len(batch.changes) == 1
@@ -57,33 +57,33 @@ class TestSAPHanaCDCReader:
         assert batch.changes[0].table_name == "TABLE1"
 
     def test_get_changes_empty_results(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test getting changes when no results exist."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
         cursor.fetchall.return_value = []
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         batch = reader.get_changes(limit=100)
 
         assert len(batch.changes) == 0
         assert batch.is_empty()
 
     def test_get_changes_respects_limit(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test that get_changes respects the limit parameter."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
         cursor.fetchall.return_value = []
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         reader.get_changes(limit=50)
 
         call_args = cursor.execute.call_args
         assert call_args[0][1][2] == 50
 
     def test_get_client_status(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test getting client status."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
@@ -92,7 +92,7 @@ class TestSAPHanaCDCReader:
             ("TEST_SCHEMA", "TABLE2", "NEW"),
         ]
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         statuses = reader.get_client_status()
 
         assert len(statuses) == 2
@@ -103,21 +103,21 @@ class TestSAPHanaCDCReader:
 
     def test_update_client_status(
         self,
-        mock_connection: Mock,
+        simple_mock_connection: Mock,
         sample_config: SAPHanaCDCConfig,
         sample_batch: BatchChange,
     ) -> None:
         """Test updating client status."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         reader.update_client_status(sample_batch)
 
         assert cursor.execute.called
         assert mock_connection.commit.called
 
     def test_update_client_status_with_multiple_tables(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test updating client status for multiple tables."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
@@ -146,14 +146,14 @@ class TestSAPHanaCDCReader:
 
         batch = BatchChange(changes=[event1, event2])
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         reader.update_client_status(batch)
 
         assert cursor.execute.call_count >= 2
         assert mock_connection.commit.called
 
     def test_get_all_table_rows(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test getting all table rows."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
@@ -162,7 +162,7 @@ class TestSAPHanaCDCReader:
             [(1, "test1"), (2, "test2")],
         ]
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         rows = reader.get_all_table_rows("TABLE1", page_size=100, offset=0)
 
         assert len(rows) == 2
@@ -170,7 +170,7 @@ class TestSAPHanaCDCReader:
         assert rows[1] == {"id": 2, "name": "test2"}
 
     def test_get_all_table_rows_empty_table(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test getting rows from empty table."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
@@ -179,13 +179,13 @@ class TestSAPHanaCDCReader:
             [],
         ]
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         rows = reader.get_all_table_rows("TABLE1", page_size=100, offset=0)
 
         assert len(rows) == 0
 
     def test_get_all_table_rows_with_pagination(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test getting table rows with pagination."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
@@ -194,41 +194,41 @@ class TestSAPHanaCDCReader:
             [(11, "test11"), (12, "test12")],
         ]
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         rows = reader.get_all_table_rows("TABLE1", page_size=2, offset=10)
 
         assert len(rows) == 2
         assert cursor.execute.call_args_list[1][0][1] == (2, 10)
 
     def test_parse_json_valid(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test parsing valid JSON."""
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         result = reader._parse_json('{"id": 1, "name": "test"}')
 
         assert result == {"id": 1, "name": "test"}
 
     def test_parse_json_invalid(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test parsing invalid JSON returns empty dict."""
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         result = reader._parse_json("invalid json")
 
         assert result == {}
 
     def test_parse_json_empty_string(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test parsing empty string returns empty dict."""
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         result = reader._parse_json("")
 
         assert result == {}
 
     def test_get_status(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test getting CDC status."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
@@ -241,7 +241,7 @@ class TestSAPHanaCDCReader:
             (last_update,),
         ]
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         status = reader.get_status("test_client")
 
         assert status["total_entries"] == 100
@@ -250,7 +250,7 @@ class TestSAPHanaCDCReader:
         assert isinstance(status["lag_seconds"], int)
 
     def test_get_status_no_changes(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test getting status when no changes exist."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
@@ -260,7 +260,7 @@ class TestSAPHanaCDCReader:
             (None,),
         ]
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         status = reader.get_status("test_client")
 
         assert status["total_entries"] == 0
@@ -269,13 +269,13 @@ class TestSAPHanaCDCReader:
         assert status["lag_seconds"] == 0
 
     def test_prune(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test pruning old entries."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
         cursor.rowcount = 50
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         result = reader.prune(older_than_days=7)
 
         assert result.entries_deleted == 50
@@ -290,20 +290,20 @@ class TestSAPHanaCDCReader:
         assert delete_call_found
 
     def test_prune_custom_retention(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test pruning with custom retention period."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
         cursor.rowcount = 25
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         result = reader.prune(older_than_days=30)
 
         assert result.entries_deleted == 25
         assert cursor.execute.called
 
     def test_get_current_monitored_tables(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test getting currently monitored tables."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
@@ -313,7 +313,7 @@ class TestSAPHanaCDCReader:
             ("TABLE2", "TABLE2_INSERT_CDC_TRIGGER"),
         ]
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         monitored = reader.get_current_monitored_tables()
 
         assert "TABLE1" in monitored
@@ -324,31 +324,31 @@ class TestSAPHanaCDCReader:
         assert len(monitored["TABLE2"]) == 1
 
     def test_get_current_monitored_tables_empty(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test getting monitored tables when none exist."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
         cursor.fetchall.return_value = []
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         monitored = reader.get_current_monitored_tables()
 
         assert len(monitored) == 0
 
     def test_get_change_table_name(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test getting change table name."""
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         table_name = reader._get_change_table_name()
 
         assert table_name == f"{sample_config.cdc_schema}.CDC_CHANGES"
 
     def test_get_client_status_table_name(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test getting client status table name."""
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         table_name = reader._get_client_status_table_name()
 
         assert table_name == f"{sample_config.cdc_schema}.CDC_CLIENT_STATUS"
@@ -358,13 +358,13 @@ class TestReaderFailures:
     """Test suite for reader failure scenarios."""
 
     def test_get_changes_with_db_error(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test get_changes handles database errors."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
         cursor.execute.side_effect = Exception("Database connection lost")
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
 
         with pytest.raises(Exception) as exc_info:
             reader.get_changes(limit=100)
@@ -372,7 +372,7 @@ class TestReaderFailures:
         assert "Database connection lost" in str(exc_info.value)
 
     def test_get_changes_with_malformed_json(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test get_changes handles malformed JSON gracefully."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
@@ -391,20 +391,20 @@ class TestReaderFailures:
             ),
         ]
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         batch = reader.get_changes(limit=100)
 
         assert len(batch.changes) == 1
         assert batch.changes[0].new_values == {}
 
     def test_get_client_status_with_db_error(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test get_client_status handles database errors."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
         cursor.execute.side_effect = Exception("Query timeout")
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
 
         with pytest.raises(Exception) as exc_info:
             reader.get_client_status()
@@ -413,7 +413,7 @@ class TestReaderFailures:
 
     def test_update_client_status_with_db_error(
         self,
-        mock_connection: Mock,
+        simple_mock_connection: Mock,
         sample_config: SAPHanaCDCConfig,
         sample_batch: BatchChange,
     ) -> None:
@@ -421,7 +421,7 @@ class TestReaderFailures:
         cursor = mock_connection.cursor.return_value.__enter__.return_value
         cursor.execute.side_effect = Exception("Update failed")
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
 
         with pytest.raises(Exception) as exc_info:
             reader.update_client_status(sample_batch)
@@ -429,25 +429,25 @@ class TestReaderFailures:
         assert "Update failed" in str(exc_info.value)
 
     def test_get_all_table_rows_with_nonexistent_table(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test get_all_table_rows with nonexistent table."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
         cursor.fetchall.return_value = []
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
         rows = reader.get_all_table_rows("NONEXISTENT_TABLE", page_size=100, offset=0)
 
         assert len(rows) == 0
 
     def test_get_all_table_rows_with_db_error(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test get_all_table_rows handles database errors."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
         cursor.fetchall.side_effect = Exception("Table access denied")
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
 
         with pytest.raises(Exception) as exc_info:
             reader.get_all_table_rows("TABLE1", page_size=100, offset=0)
@@ -455,13 +455,13 @@ class TestReaderFailures:
         assert "Table access denied" in str(exc_info.value)
 
     def test_get_status_with_db_error(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test get_status handles database errors."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
         cursor.execute.side_effect = Exception("Status query failed")
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
 
         with pytest.raises(Exception) as exc_info:
             reader.get_status("test_client")
@@ -469,13 +469,13 @@ class TestReaderFailures:
         assert "Status query failed" in str(exc_info.value)
 
     def test_prune_with_db_error(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test prune handles database errors."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
         cursor.execute.side_effect = Exception("Delete operation failed")
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
 
         with pytest.raises(Exception) as exc_info:
             reader.prune(older_than_days=7)
@@ -483,13 +483,13 @@ class TestReaderFailures:
         assert "Delete operation failed" in str(exc_info.value)
 
     def test_get_current_monitored_tables_with_db_error(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test get_current_monitored_tables handles database errors."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
         cursor.execute.side_effect = Exception("Trigger query failed")
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
 
         with pytest.raises(Exception) as exc_info:
             reader.get_current_monitored_tables()
@@ -497,7 +497,7 @@ class TestReaderFailures:
         assert "Trigger query failed" in str(exc_info.value)
 
     def test_get_changes_with_invalid_trigger_type(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test get_changes handles invalid trigger type."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
@@ -516,13 +516,13 @@ class TestReaderFailures:
             ),
         ]
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
 
         with pytest.raises(KeyError):
             reader.get_changes(limit=100)
 
     def test_get_client_status_with_invalid_status(
-        self, mock_connection: Mock, sample_config: SAPHanaCDCConfig
+        self, simple_mock_connection: Mock, sample_config: SAPHanaCDCConfig
     ) -> None:
         """Test get_client_status handles invalid status values."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
@@ -530,7 +530,7 @@ class TestReaderFailures:
             ("TEST_SCHEMA", "TABLE1", "INVALID_STATUS"),
         ]
 
-        reader = SAPHanaCDCReader(mock_connection, sample_config)
+        reader = SAPHanaCDCReader(simple_mock_connection, sample_config)
 
         with pytest.raises(KeyError):
             reader.get_client_status()
