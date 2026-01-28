@@ -431,7 +431,7 @@ class TestChangeEventFailures:
         )
 
         diff = event.diff_values()
-        assert diff is None or diff == []
+        assert diff == []
 
 
 class TestBatchChangeFailures:
