@@ -183,14 +183,20 @@ class ConnectionPool:
 
     def _is_connection_valid(self, connection: dbapi.Connection) -> bool:
         """Check if connection is still valid."""
+        cursor = None
         try:
             cursor = connection.cursor()
             cursor.execute("SELECT 1 FROM DUMMY")
             cursor.fetchone()
-            cursor.close()
             return True
         except Exception:
             return False
+        finally:
+            if cursor is not None:
+                try:
+                    cursor.close()
+                except Exception:
+                    pass  # Best effort close
 
     @contextmanager
     def get_connection_context(self):
