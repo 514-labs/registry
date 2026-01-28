@@ -14,7 +14,7 @@ from app.utils.sap_hana_validators import (
     
     # Numeric types
     SapTinyInt, SapSmallInt, SapInteger, SapBigInt,
-    SapSmallDecimal, SapDecimal, SapReal, SapDouble,
+    SapSmallDecimal, SapDecimal, SapTimestampDecimal, SapReal, SapDouble,
     
     # Boolean type
     SapBoolean,
@@ -2220,7 +2220,7 @@ class Cabn(SapHanaBaseModel):
     # SAP HANA type: NVARCHAR | Forced nullable
     DATUB: Optional[SapNvarchar] = 00000000
     # SAP HANA type: DECIMAL | Order by field
-    LASTCHANGEDDATETIME: SapDecimal
+    LASTCHANGEDDATETIME: SapTimestampDecimal
     # SAP HANA type: NVARCHAR | Forced nullable
     UNIT: Optional[SapNvarchar] = ""
     # SAP HANA type: NVARCHAR | Forced nullable
@@ -2768,7 +2768,7 @@ class Crhd(SapHanaBaseModel):
     # SAP HANA type: NVARCHAR | Forced nullable
     ISTBED_KZ: Optional[SapNvarchar] = ""
     # SAP HANA type: DECIMAL | Order by field
-    LASTCHANGE_DATETIME: SapDecimal
+    LASTCHANGE_DATETIME: SapTimestampDecimal
     # SAP HANA type: NVARCHAR | Forced nullable
     EBELN_EXT: Optional[SapNvarchar] = ""
     # SAP HANA type: NVARCHAR | Forced nullable
