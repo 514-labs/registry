@@ -52,9 +52,12 @@ jobs:
           if [ -n "${INPUTS[*]-}" ]; then
             ROOTS=$(printf '%s\n' "${INPUTS[@]}" | sed 's#//*#/#g' | sort -u)
           else
-            # Default: enumerate only implementation roots: <name>/<version>/<author>/typescript/<implementation>
-            ROOTS=$(find connector-registry -mindepth 5 -maxdepth 5 -type d -path '*/typescript/*' \
-              -not -name '_meta' -not -name '.*' 2>/dev/null | sort -u)
+            # Default: enumerate implementation roots for both TypeScript and Python
+            TS_ROOTS=$(find connector-registry -mindepth 5 -maxdepth 5 -type d -path '*/typescript/*' \
+              -not -name '_meta' -not -name '.*' 2>/dev/null | sort -u || true)
+            PY_ROOTS=$(find connector-registry -mindepth 5 -maxdepth 5 -type d -path '*/python/*' \
+              -not -name '_meta' -not -name '.*' 2>/dev/null | sort -u || true)
+            ROOTS=$(printf '%s\n%s\n' "$TS_ROOTS" "$PY_ROOTS" | grep -v '^$' | sort -u)
           fi
           echo "Discovered implementation roots (count=$(printf '%s\n' "$ROOTS" | grep -c . || true)):" && printf '%s\n' "$ROOTS"
           printf '%s\n' "$ROOTS" | awk -F'/' '{printf("{\"impl\":\"%s\",\"lang\":\"%s\"}\n",$0,$5)}' | jq -s '{include: .}' > m.json
@@ -70,13 +73,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
+        if: ${{ matrix.lang == 'typescript' }}
       - uses: actions/setup-node@v4
+        if: ${{ matrix.lang == 'typescript' }}
         with: { node-version: 20, cache: 'pnpm' }
       - name: Install deps (root)
+        if: ${{ matrix.lang == 'typescript' }}
         run: pnpm install --frozen-lockfile
       - name: Test TypeScript implementation
         if: ${{ matrix.lang == 'typescript' }}
         working-directory: ${{ matrix.impl }}
         run: pnpm test
+      - uses: actions/setup-python@v5
+        if: ${{ matrix.lang == 'python' }}
+        with: { python-version: '3.13' }
+      - name: Install Python dependencies
+        if: ${{ matrix.lang == 'python' }}
+        working-directory: ${{ matrix.impl }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[dev]
+      - name: Test Python implementation
+        if: ${{ matrix.lang == 'python' }}
+        working-directory: ${{ matrix.impl }}
+        run: pytest
 
 
