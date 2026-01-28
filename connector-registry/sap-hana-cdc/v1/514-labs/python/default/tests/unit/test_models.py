@@ -168,8 +168,8 @@ class TestTableStatus:
 
     def test_table_status_values(self):
         """Test TableStatus enum values."""
-        assert TableStatus.NEW.value == "NEW"
-        assert TableStatus.ACTIVE.value == "ACTIVE"
+        assert TableStatus.NEW.value == "new"
+        assert TableStatus.ACTIVE.value == "active"
 
     def test_table_status_from_string(self):
         """Test creating TableStatus from string."""
