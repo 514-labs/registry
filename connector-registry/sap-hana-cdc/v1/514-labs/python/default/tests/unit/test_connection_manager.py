@@ -183,7 +183,7 @@ class TestConnectionPool:
                 mock_conn,
             ]
 
-            pool = ConnectionPool(mock_config, max_retries=3)
+            pool = ConnectionPool(mock_config)
             conn = pool.get_connection()
 
             assert conn is not None

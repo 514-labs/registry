@@ -111,11 +111,9 @@ class ConnectionPool:
     def __init__(
         self,
         config: SAPHanaCDCConfig,
-        max_retries: int = 3,
         circuit_breaker: Optional[CircuitBreaker] = None,
     ):
         self.config = config
-        self.max_retries = max_retries
         self.circuit_breaker = circuit_breaker or CircuitBreaker()
         self._connection: Optional[dbapi.Connection] = None
 
@@ -175,7 +173,7 @@ class ConnectionPool:
             logger.error("Cannot get connection: circuit breaker is open")
             raise
         except RetryError as e:
-            logger.error(f"Failed to connect after {self.max_retries} retries")
+            logger.error(f"Failed to connect after 3 retries")
             raise
 
     def _is_connection_valid(self, connection: dbapi.Connection) -> bool:
