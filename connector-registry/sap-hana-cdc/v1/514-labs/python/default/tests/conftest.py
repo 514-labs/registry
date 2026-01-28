@@ -4,8 +4,9 @@ import pytest
 import socket
 from typing import List
 from datetime import datetime
+from unittest.mock import Mock, MagicMock
 
-from sap_hana_cdc import SAPHanaCDCConfig, ChangeEvent, BatchChange, TriggerType
+from sap_hana_cdc import SAPHanaCDCConfig, ChangeEvent, BatchChange, TriggerType, TableStatus, ClientTableStatus
 from tests.fixtures.mock_connections import create_mock_connection, MockConnection
 from tests.fixtures.sample_data import (
     sample_change_event,
@@ -106,9 +107,40 @@ def mock_config() -> SAPHanaCDCConfig:
 
 
 @pytest.fixture
+def sample_config() -> SAPHanaCDCConfig:
+    """Create a sample configuration for testing (alias for mock_config)."""
+    return SAPHanaCDCConfig(
+        host="test-host",
+        port=30015,
+        user="testuser",
+        password="testpass",
+        client_id="test_client",
+        tables=["TABLE1", "TABLE2"],
+        source_schema="TEST_SCHEMA",
+        cdc_schema="CDC_SCHEMA",
+    )
+
+
+@pytest.fixture
 def mock_connection() -> MockConnection:
     """Create a mock database connection for testing."""
     return create_mock_connection()
+
+
+@pytest.fixture
+def simple_mock_connection() -> Mock:
+    """Create a simple mock database connection using unittest.mock."""
+    connection = Mock()
+    cursor = MagicMock()
+    cursor.__enter__ = Mock(return_value=cursor)
+    cursor.__exit__ = Mock(return_value=False)
+    cursor.fetchall = Mock(return_value=[])
+    cursor.fetchone = Mock(return_value=None)
+    cursor.execute = Mock()
+    cursor.rowcount = 0
+    connection.cursor = Mock(return_value=cursor)
+    connection.commit = Mock()
+    return connection
 
 
 @pytest.fixture
@@ -143,3 +175,13 @@ def update_event() -> ChangeEvent:
 def delete_event() -> ChangeEvent:
     """Create a sample DELETE event."""
     return sample_delete_event()
+
+
+@pytest.fixture
+def sample_client_status() -> ClientTableStatus:
+    """Create a sample client table status for testing."""
+    return ClientTableStatus(
+        schema_name="TEST_SCHEMA",
+        table_name="TABLE1",
+        status=TableStatus.ACTIVE,
+    )

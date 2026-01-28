@@ -1,0 +1,45 @@
+{
+  "tables": [
+    {
+      "name": "ekko",
+      "description": "Purchasing Document Header (example SAP table)",
+      "primaryKey": ["mandt", "ebeln"],
+      "columns": [
+        { "name": "mandt", "type": "string", "description": "Client" },
+        { "name": "ebeln", "type": "string", "description": "Purchasing Document Number" },
+        { "name": "bukrs", "type": "string", "description": "Company Code" },
+        { "name": "bstyp", "type": "string", "description": "Purchasing Document Category" },
+        { "name": "bsart", "type": "string", "description": "Purchasing Document Type" },
+        { "name": "lifnr", "type": "string", "description": "Vendor Account Number" },
+        { "name": "waers", "type": "string", "description": "Currency Key" },
+        { "name": "updated_at", "type": "timestamp", "description": "CDC timestamp" }
+      ]
+    },
+    {
+      "name": "mara",
+      "description": "General Material Data (example SAP table)",
+      "primaryKey": ["mandt", "matnr"],
+      "columns": [
+        { "name": "mandt", "type": "string", "description": "Client" },
+        { "name": "matnr", "type": "string", "description": "Material Number" },
+        { "name": "mtart", "type": "string", "description": "Material Type" },
+        { "name": "matkl", "type": "string", "description": "Material Group" },
+        { "name": "meins", "type": "string", "description": "Base Unit of Measure" },
+        { "name": "updated_at", "type": "timestamp", "description": "CDC timestamp" }
+      ]
+    },
+    {
+      "name": "kna1",
+      "description": "Customer Master (General Data)",
+      "primaryKey": ["mandt", "kunnr"],
+      "columns": [
+        { "name": "mandt", "type": "string", "description": "Client" },
+        { "name": "kunnr", "type": "string", "description": "Customer Number" },
+        { "name": "name1", "type": "string", "description": "Name" },
+        { "name": "land1", "type": "string", "description": "Country Key" },
+        { "name": "ort01", "type": "string", "description": "City" },
+        { "name": "updated_at", "type": "timestamp", "description": "CDC timestamp" }
+      ]
+    }
+  ]
+}

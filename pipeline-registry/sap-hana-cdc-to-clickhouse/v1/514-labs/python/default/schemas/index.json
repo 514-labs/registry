@@ -1,0 +1,6 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/schema-index.schema.json",
+  "version": "0.1.0",
+  "datasets": [],
+  "_comment": "Schema definitions for SAP HANA CDC pipeline. Tables are dynamically synced based on configuration."
+}
