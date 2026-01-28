@@ -35,7 +35,7 @@ class TestBatchChangeInserter:
         # Should not raise an error
         inserter.insert_table_data("EKKO", [])
 
-    @patch("app.workflows.lib.changes_inserter.cdc_module")
+    @patch("app.ingest.cdc")
     def test_insert_table_data_success(self, mock_cdc_module):
         """Test successful table data insertion."""
         # Setup mock OlapTable
@@ -68,7 +68,7 @@ class TestBatchChangeInserter:
         # Should not raise an error
         inserter.insert([])
 
-    @patch("app.workflows.lib.changes_inserter.cdc_module")
+    @patch("app.ingest.cdc")
     def test_insert_groups_by_table(self, mock_cdc_module):
         """Test that insert groups changes by table."""
         mock_table1 = MagicMock()
@@ -224,7 +224,7 @@ class TestBatchChangeInserter:
 
     def test_get_olap_table_caches_result(self):
         """Test that _get_olap_table caches results."""
-        with patch("app.workflows.lib.changes_inserter.cdc_module") as mock_module:
+        with patch("app.ingest.cdc") as mock_module:
             mock_table = Mock()
             mock_module.ekko = mock_table
 
@@ -244,16 +244,15 @@ class TestBatchChangeInserter:
 
     def test_get_olap_table_returns_none_for_missing(self):
         """Test that _get_olap_table returns None for missing tables."""
-        with patch("app.workflows.lib.changes_inserter.cdc_module") as mock_module:
-            # Table doesn't exist in module
-            mock_module.missing_table = None
-            delattr(mock_module, "missing_table")
+        with patch("app.ingest.cdc") as mock_module:
+            # Configure mock to not have the missing_table attribute
+            del mock_module.missing_table
 
             inserter = BatchChangeInserter()
             table = inserter._get_olap_table("missing_table")
             assert table is None
 
-    @patch("app.workflows.lib.changes_inserter.cdc_module")
+    @patch("app.ingest.cdc")
     def test_insert_with_retry_success_on_first_attempt(self, mock_cdc_module):
         """Test _insert_with_retry succeeds on first attempt."""
         mock_table = MagicMock()
@@ -264,7 +263,7 @@ class TestBatchChangeInserter:
 
         mock_table.insert.assert_called_once()
 
-    @patch("app.workflows.lib.changes_inserter.cdc_module")
+    @patch("app.ingest.cdc")
     def test_insert_with_retry_retries_on_failure(self, mock_cdc_module):
         """Test _insert_with_retry retries on failure."""
         mock_table = MagicMock()
