@@ -1,3 +1,106 @@
 {
-  "tables": []
+  "tables": [
+    {
+      "name": "CDC_CHANGES",
+      "label": "CDC Change Events",
+      "primaryKey": ["CHANGE_ID"],
+      "columns": [
+        {
+          "name": "CHANGE_ID",
+          "type": "BIGINT",
+          "nullable": false,
+          "isPrimaryKey": true,
+          "description": "Auto-generated primary key"
+        },
+        {
+          "name": "TABLE_SCHEMA",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "description": "Database schema name"
+        },
+        {
+          "name": "TABLE_NAME",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "description": "Table name that was changed"
+        },
+        {
+          "name": "CHANGE_TYPE",
+          "type": "VARCHAR(10)",
+          "nullable": false,
+          "description": "Type of change (INSERT/UPDATE/DELETE)"
+        },
+        {
+          "name": "CHANGE_TIMESTAMP",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "description": "When the change occurred"
+        },
+        {
+          "name": "TRANSACTION_ID",
+          "type": "VARCHAR(50)",
+          "nullable": false,
+          "description": "Database transaction identifier"
+        },
+        {
+          "name": "OLD_VALUES",
+          "type": "NCLOB",
+          "nullable": true,
+          "description": "Previous values as JSON"
+        },
+        {
+          "name": "NEW_VALUES",
+          "type": "NCLOB",
+          "nullable": true,
+          "description": "New values as JSON"
+        }
+      ]
+    },
+    {
+      "name": "CDC_TABLE_CHANGES_STATUS",
+      "label": "Table Status Tracking",
+      "primaryKey": ["SCHEMA_NAME", "TABLE_NAME", "CLIENT_ID"],
+      "columns": [
+        {
+          "name": "SCHEMA_NAME",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "isPrimaryKey": true,
+          "description": "Database schema name"
+        },
+        {
+          "name": "TABLE_NAME",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "isPrimaryKey": true,
+          "description": "Table name being tracked"
+        },
+        {
+          "name": "CLIENT_ID",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "isPrimaryKey": true,
+          "description": "Client identifier for multi-client support"
+        },
+        {
+          "name": "STATUS",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "description": "Current status of the table (NEW, ACTIVE)"
+        },
+        {
+          "name": "CREATED_AT",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "description": "When the table status record was created"
+        },
+        {
+          "name": "UPDATED_AT",
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "description": "When the table status was last updated"
+        }
+      ]
+    }
+  ]
 }
