@@ -253,8 +253,7 @@ class TestBatchChangeInserter:
             table = inserter._get_olap_table("missing_table")
             assert table is None
 
-    @patch("app.ingest.cdc")
-    def test_insert_with_retry_success_on_first_attempt(self, mock_cdc_module):
+    def test_insert_with_retry_success_on_first_attempt(self):
         """Test _insert_with_retry succeeds on first attempt."""
         mock_table = MagicMock()
         inserter = BatchChangeInserter()
@@ -264,8 +263,7 @@ class TestBatchChangeInserter:
 
         mock_table.insert.assert_called_once()
 
-    @patch("app.ingest.cdc")
-    def test_insert_with_retry_retries_on_failure(self, mock_cdc_module):
+    def test_insert_with_retry_retries_on_failure(self):
         """Test _insert_with_retry retries on failure."""
         mock_table = MagicMock()
         # Fail twice, succeed on third attempt
