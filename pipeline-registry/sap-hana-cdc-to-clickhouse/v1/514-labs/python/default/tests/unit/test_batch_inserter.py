@@ -244,10 +244,11 @@ class TestBatchChangeInserter:
 
     def test_get_olap_table_returns_none_for_missing(self):
         """Test that _get_olap_table returns None for missing tables."""
-        with patch("app.ingest.cdc") as mock_module:
-            # Configure mock to not have the missing_table attribute
-            del mock_module.missing_table
+        # Create a mock with spec=[] so it has no attributes
+        # This ensures hasattr() returns False for any attribute
+        mock_module = Mock(spec=[])
 
+        with patch("app.ingest.cdc", mock_module):
             inserter = BatchChangeInserter()
             table = inserter._get_olap_table("missing_table")
             assert table is None
