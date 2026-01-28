@@ -292,7 +292,45 @@ def validate_sap_decimal(value: Any) -> Decimal:
     final_digits = len(final_str.replace('.', ''))
     if final_digits > 10:
         logger.error(f"SAP Decimal validator: Final result {decimal_val} still has {final_digits} digits!")
-    
+
+    return decimal_val
+
+
+def validate_sap_timestamp_decimal(value: Any) -> Decimal:
+    """
+    Validate and convert SAP HANA timestamp stored as DECIMAL.
+
+    SAP often stores timestamps as decimals in format: YYYYMMDDHHMMSS.microseconds
+    Example: 20260127082421.44 = 2026-01-27 08:24:21.44
+
+    This requires up to 17 digits of precision (14 for datetime + 3 for microseconds).
+    """
+    if value is None:
+        return None
+
+    if isinstance(value, Decimal):
+        decimal_val = value
+    else:
+        try:
+            decimal_val = Decimal(str(value))
+        except (ValueError, TypeError):
+            raise ValueError(f"Cannot convert {type(value)} to timestamp DECIMAL")
+
+    # Allow up to 18 digits for SAP timestamp format (YYYYMMDDHHMMSS.mmm)
+    # This accommodates the full timestamp with microseconds
+    decimal_str = str(decimal_val)
+
+    # Remove decimal point and count digits
+    if '.' in decimal_str:
+        integer_part, decimal_part = decimal_str.split('.')
+        total_digits = len(integer_part) + len(decimal_part)
+    else:
+        total_digits = len(decimal_str)
+
+    # Warn if precision exceeds expected timestamp format
+    if total_digits > 18:
+        logger.warning(f"SAP Timestamp Decimal validator: Input {decimal_val} has {total_digits} digits, exceeds expected 18 for timestamp format")
+
     return decimal_val
 
 
@@ -659,6 +697,7 @@ SapInteger = Annotated[int, BeforeValidator(validate_sap_integer)]
 SapBigInt = Annotated[int, BeforeValidator(validate_sap_bigint)]
 SapSmallDecimal = Annotated[Decimal, BeforeValidator(validate_sap_smalldecimal)]
 SapDecimal = Annotated[Decimal, BeforeValidator(validate_sap_decimal)]
+SapTimestampDecimal = Annotated[Decimal, BeforeValidator(validate_sap_timestamp_decimal)]
 SapReal = Annotated[float, BeforeValidator(validate_sap_real)]
 SapDouble = Annotated[float, BeforeValidator(validate_sap_double)]
 
@@ -711,6 +750,7 @@ def get_sap_hana_validator(sap_type: str):
         'BIGINT': validate_sap_bigint,
         'SMALLDECIMAL': validate_sap_smalldecimal,
         'DECIMAL': validate_sap_decimal,
+        'TIMESTAMP_DECIMAL': validate_sap_timestamp_decimal,
         'REAL': validate_sap_real,
         'DOUBLE': validate_sap_double,
         
@@ -759,6 +799,7 @@ def get_sap_hana_annotated_type(sap_type: str):
         'BIGINT': SapBigInt,
         'SMALLDECIMAL': SapSmallDecimal,
         'DECIMAL': SapDecimal,
+        'TIMESTAMP_DECIMAL': SapTimestampDecimal,
         'REAL': SapReal,
         'DOUBLE': SapDouble,
         

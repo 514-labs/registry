@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/schema-index.schema.json",
+  "version": "0.1.0",
+  "datasets": [
+    {
+      "name": "source.sap-hana",
+      "kind": "pointer",
+      "connector": {
+        "name": "sap-hana-cdc",
+        "version": "v1",
+        "author": "514-labs"
+      }
+    },
+    {
+      "name": "clickhouse.sap_hana_tables",
+      "stage": "extracted",
+      "kind": "tables",
+      "path": "relational/tables.json"
+    }
+  ]
+}
