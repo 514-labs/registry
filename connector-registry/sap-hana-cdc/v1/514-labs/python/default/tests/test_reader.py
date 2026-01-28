@@ -105,13 +105,13 @@ class TestSAPHanaCDCReader:
         self,
         mock_connection: Mock,
         sample_config: SAPHanaCDCConfig,
-        sample_batch_change: BatchChange,
+        sample_batch: BatchChange,
     ) -> None:
         """Test updating client status."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
 
         reader = SAPHanaCDCReader(mock_connection, sample_config)
-        reader.update_client_status(sample_batch_change)
+        reader.update_client_status(sample_batch)
 
         assert cursor.execute.called
         assert mock_connection.commit.called
@@ -415,7 +415,7 @@ class TestReaderFailures:
         self,
         mock_connection: Mock,
         sample_config: SAPHanaCDCConfig,
-        sample_batch_change: BatchChange,
+        sample_batch: BatchChange,
     ) -> None:
         """Test update_client_status handles database errors."""
         cursor = mock_connection.cursor.return_value.__enter__.return_value
@@ -424,7 +424,7 @@ class TestReaderFailures:
         reader = SAPHanaCDCReader(mock_connection, sample_config)
 
         with pytest.raises(Exception) as exc_info:
-            reader.update_client_status(sample_batch_change)
+            reader.update_client_status(sample_batch)
 
         assert "Update failed" in str(exc_info.value)
 

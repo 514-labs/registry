@@ -63,20 +63,20 @@ class TestSAPHanaCDCConnector:
         self,
         mock_connection: Mock,
         sample_config: SAPHanaCDCConfig,
-        sample_batch_change: BatchChange,
+        sample_batch: BatchChange,
         mocker,
     ) -> None:
         """Test getting changes."""
         infrastructure = SAPHanaCDCInfrastructure(mock_connection, sample_config)
         reader = SAPHanaCDCReader(mock_connection, sample_config)
 
-        mocker.patch.object(reader, "get_changes", return_value=sample_batch_change)
+        mocker.patch.object(reader, "get_changes", return_value=sample_batch)
 
         connector = SAPHanaCDCConnector(infrastructure, reader, sample_config)
         changes = connector.get_changes(limit=100)
 
         reader.get_changes.assert_called_once_with(100)
-        assert changes == sample_batch_change
+        assert changes == sample_batch
 
     def test_reset_cdc_status(
         self,
@@ -99,7 +99,7 @@ class TestSAPHanaCDCConnector:
         self,
         mock_connection: Mock,
         sample_config: SAPHanaCDCConfig,
-        sample_batch_change: BatchChange,
+        sample_batch: BatchChange,
         mocker,
     ) -> None:
         """Test updating client status."""
@@ -109,9 +109,9 @@ class TestSAPHanaCDCConnector:
         mocker.patch.object(reader, "update_client_status")
 
         connector = SAPHanaCDCConnector(infrastructure, reader, sample_config)
-        connector.update_client_status(sample_batch_change)
+        connector.update_client_status(sample_batch)
 
-        reader.update_client_status.assert_called_once_with(sample_batch_change)
+        reader.update_client_status.assert_called_once_with(sample_batch)
 
     def test_get_current_monitored_tables(
         self,
@@ -397,7 +397,7 @@ class TestConnectorFailures:
         self,
         mock_connection: Mock,
         sample_config: SAPHanaCDCConfig,
-        sample_batch_change: BatchChange,
+        sample_batch: BatchChange,
         mocker,
     ) -> None:
         """Test update_client_status handles errors."""
@@ -411,7 +411,7 @@ class TestConnectorFailures:
         connector = SAPHanaCDCConnector(infrastructure, reader, sample_config)
 
         with pytest.raises(Exception) as exc_info:
-            connector.update_client_status(sample_batch_change)
+            connector.update_client_status(sample_batch)
 
         assert "Update failed" in str(exc_info.value)
 
