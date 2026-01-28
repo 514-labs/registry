@@ -160,9 +160,17 @@ class ConnectionPool:
                     return self._connection
                 else:
                     logger.warning("Existing connection invalid, creating new one")
+                    try:
+                        self._connection.close()
+                    except Exception:
+                        pass  # Best effort close
                     self._connection = None
             except Exception as e:
                 logger.warning(f"Connection validation failed: {e}")
+                try:
+                    self._connection.close()
+                except Exception:
+                    pass  # Best effort close
                 self._connection = None
 
         # Create new connection with circuit breaker protection
