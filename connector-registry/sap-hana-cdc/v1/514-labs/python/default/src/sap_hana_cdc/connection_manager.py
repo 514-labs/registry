@@ -11,7 +11,6 @@ from tenacity import (
     stop_after_attempt,
     wait_exponential,
     retry_if_exception_type,
-    RetryError,
 )
 
 from .config import SAPHanaCDCConfig
@@ -151,7 +150,8 @@ class ConnectionPool:
 
         Raises:
             CircuitBreakerOpenError: If circuit breaker is open
-            RetryError: If all retry attempts fail
+            dbapi.Error: If connection fails after retry attempts
+            OSError: If network-level connection fails after retry attempts
         """
         if self._connection is not None:
             try:
@@ -171,9 +171,6 @@ class ConnectionPool:
             return self._connection
         except CircuitBreakerOpenError:
             logger.error("Cannot get connection: circuit breaker is open")
-            raise
-        except RetryError as e:
-            logger.error(f"Failed to connect after 3 retries")
             raise
 
     def _is_connection_valid(self, connection: dbapi.Connection) -> bool:
