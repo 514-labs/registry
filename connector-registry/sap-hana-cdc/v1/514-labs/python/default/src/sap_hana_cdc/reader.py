@@ -10,6 +10,12 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Set, Any, Iterator
 
 from hdbcli import dbapi
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_exponential,
+    retry_if_exception_type,
+)
 
 from .config import SAPHanaCDCConfig
 from .models import BatchChange, ChangeEvent, ClientTableStatus, TableStatus, TriggerType, PruneResult
@@ -38,12 +44,18 @@ class SAPHanaCDCReader(SAPHanaCDCBase):
         """Get the full name of the CDC client status table."""
         return self.full_client_status_table_name
     
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=2, max=30),
+        retry=retry_if_exception_type((dbapi.Error,)),
+        reraise=True,
+    )
     def get_changes(self, limit: int = 1000) -> BatchChange:
         """Get changes from the CDC table using the last processed change ID from status table.
-        
+
         Args:
             limit: Maximum number of changes to retrieve
-            
+
         Returns:
             BatchChange: Object containing the retrieved changes
         """
@@ -131,9 +143,15 @@ class SAPHanaCDCReader(SAPHanaCDCBase):
             logger.error(f"Error getting client status for {client_id}: {e}")
             raise
 
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=2, max=30),
+        retry=retry_if_exception_type((dbapi.Error,)),
+        reraise=True,
+    )
     def update_client_status(self, batch: BatchChange) -> None:
         """Update the client's processing status based on a ChangeEvent.
-        
+
         Args:
             batch: BatchChange object containing the changes to process
         """
@@ -170,14 +188,20 @@ class SAPHanaCDCReader(SAPHanaCDCBase):
             logger.error(f"Error updating client status for {client_id}: {e}")
             raise
 
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=2, max=30),
+        retry=retry_if_exception_type((dbapi.Error,)),
+        reraise=True,
+    )
     def get_all_table_rows(self, table_name: str, page_size: int = 1000, offset: int = 0) -> List[Dict[str, Any]]:
         """Get a page of rows from a given table.
-        
+
         Args:
             table_name: Name of the table to read from
             page_size: Number of rows to fetch per page (default: 1000)
             offset: Number of rows to skip (default: 0)
-            
+
         Returns:
             List[Dict[str, Any]]: List of dictionaries representing rows with column names as keys
         """

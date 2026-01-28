@@ -1,1 +1,1 @@
-"""Test suite for SAP HANA CDC connector."""
+"""SAP HANA CDC connector tests."""

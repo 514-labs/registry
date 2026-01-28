@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # SAP HANA Express Edition for testing
+  # Note: This is a placeholder - actual SAP HANA Express requires special licensing
+  # For real integration tests, replace with actual SAP HANA Express image
+  sap-hana:
+    image: saplabs/hanaexpress:2.00.072.00.20231123.1
+    hostname: hxehost
+    container_name: sap-hana-test
+    ports:
+      - "39015:39015"  # SQL/MDX port
+      - "39017:39017"  # XS Classic port
+      - "39041-39045:39041-39045"  # Additional ports
+    environment:
+      - MASTER_PASSWORD=HXEHana1
+      - HXE_PASSWORD=HXEHana1
+    # SAP HANA Express requires at least 8GB RAM
+    mem_limit: 8g
+    ulimits:
+      nofile:
+        soft: 1048576
+        hard: 1048576
+    # Health check to wait for HANA to be ready
+    healthcheck:
+      test: ["CMD-SHELL", "hdbsql -i 90 -d SYSTEMDB -u SYSTEM -p HXEHana1 'SELECT 1 FROM DUMMY'"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 300s  # HANA takes a while to start
+
+  # ClickHouse for testing pipeline
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.1
+    container_name: clickhouse-test
+    ports:
+      - "8123:8123"  # HTTP interface
+      - "9000:9000"  # Native protocol
+    environment:
+      - CLICKHOUSE_DB=test_db
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+
+volumes:
+  clickhouse-data:

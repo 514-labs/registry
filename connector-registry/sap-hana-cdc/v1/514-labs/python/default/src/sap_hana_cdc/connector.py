@@ -16,14 +16,15 @@ logger = logging.getLogger(__name__)
 
 class SAPHanaCDCConnector:
     """High-level interface for SAP HANA CDC operations.
-    
+
     This class orchestrates the infrastructure setup and data reading operations,
     providing a unified API for CDC functionality.
     """
-    def __init__(self, infrastructure: SAPHanaCDCInfrastructure, reader: SAPHanaCDCReader, config: SAPHanaCDCConfig):
+    def __init__(self, infrastructure: SAPHanaCDCInfrastructure, reader: SAPHanaCDCReader, config: SAPHanaCDCConfig, connection_pool=None):
         self.infrastructure = infrastructure
         self.reader = reader
         self.config = config
+        self._connection_pool = connection_pool
         
     @staticmethod
     def build_from_env() -> 'SAPHanaCDCConnector':
@@ -32,20 +33,33 @@ class SAPHanaCDCConnector:
 
     @staticmethod
     def build_from_config(config: SAPHanaCDCConfig) -> 'SAPHanaCDCConnector':
-        
-        connection = dbapi.connect(
-            address=config.host,
-            port=config.port,
-            user=config.user,
-            password=config.password
-        )
+        from .connection_manager import ConnectionPool
+
+        # Use ConnectionPool with retry logic and circuit breaker
+        pool = ConnectionPool(config)
+        connection = pool.get_connection()
+
         infrastructure = SAPHanaCDCInfrastructure(connection, config)
         reader = SAPHanaCDCReader(connection, config)
-        return SAPHanaCDCConnector(infrastructure, reader, config)
+        # Store pool to enable connection resilience
+        return SAPHanaCDCConnector(infrastructure, reader, config, connection_pool=pool)
   
     @property
     def connection(self) -> dbapi.Connection:
         return self.reader.connection
+
+    def refresh_connection(self) -> None:
+        """Refresh the database connection using the connection pool.
+
+        This method should be called when the current connection becomes stale
+        (e.g., after a network timeout or database restart). It uses the
+        ConnectionPool's retry logic and circuit breaker to obtain a fresh connection.
+        """
+        if self._connection_pool is not None:
+            connection = self._connection_pool.get_connection()
+            self.infrastructure.connection = connection
+            self.reader.connection = connection
+            logger.info("Database connection refreshed")
 
     def init_cdc(self) -> None:
         """Initialize CDC infrastructure and setup data reader.
