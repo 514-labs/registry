@@ -86,7 +86,7 @@ class TestSAPHanaCDCConfig:
         assert config.user == "SYSTEM"
         assert config.password == ""
         assert config.client_id == "default_client"
-        assert config.tables == [""]  # Empty string from split
+        assert config.tables == []  # Empty strings are filtered out
         assert config.source_schema == "SAPHANADB"
         assert config.cdc_schema == "SAPHANADB"
 

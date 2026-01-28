@@ -19,12 +19,12 @@ class TestChangeEvent:
             table_name="TEST_TABLE",
             full_table_name="SAPHANADB.TEST_TABLE",
             old_values=None,
-            new_values={"id": 1, "name": "Test"},
+            new_values=[{"id": 1, "name": "Test"}],
         )
         assert event.event_id == "123"
         assert event.trigger_type == TriggerType.INSERT
         assert event.table_name == "TEST_TABLE"
-        assert event.new_values == {"id": 1, "name": "Test"}
+        assert event.new_values == [{"id": 1, "name": "Test"}]
         assert event.old_values is None
 
     def test_change_event_insert_type(self):
@@ -37,7 +37,7 @@ class TestChangeEvent:
             schema_name="SAPHANADB",
             table_name="TEST",
             full_table_name="SAPHANADB.TEST",
-            new_values={"id": 1, "value": 100},
+            new_values=[{"id": 1, "value": 100}],
         )
         assert event.trigger_type == TriggerType.INSERT
         assert event.new_values is not None
@@ -53,12 +53,12 @@ class TestChangeEvent:
             schema_name="SAPHANADB",
             table_name="TEST",
             full_table_name="SAPHANADB.TEST",
-            old_values={"id": 1, "value": 100},
-            new_values={"id": 1, "value": 200},
+            old_values=[{"id": 1, "value": 100}],
+            new_values=[{"id": 1, "value": 200}],
         )
         assert event.trigger_type == TriggerType.UPDATE
-        assert event.old_values == {"id": 1, "value": 100}
-        assert event.new_values == {"id": 1, "value": 200}
+        assert event.old_values == [{"id": 1, "value": 100}]
+        assert event.new_values == [{"id": 1, "value": 200}]
 
     def test_change_event_delete_type(self):
         """Test DELETE event has old_values."""
@@ -70,7 +70,7 @@ class TestChangeEvent:
             schema_name="SAPHANADB",
             table_name="TEST",
             full_table_name="SAPHANADB.TEST",
-            old_values={"id": 1, "value": 200},
+            old_values=[{"id": 1, "value": 200}],
         )
         assert event.trigger_type == TriggerType.DELETE
         assert event.old_values is not None
@@ -86,13 +86,18 @@ class TestChangeEvent:
             schema_name="SAPHANADB",
             table_name="TEST",
             full_table_name="SAPHANADB.TEST",
-            old_values={"id": 1, "name": "Old", "value": 100},
-            new_values={"id": 1, "name": "New", "value": 200},
+            old_values=[{"id": 1, "name": "Old", "value": 100}],
+            new_values=[{"id": 1, "name": "New", "value": 200}],
         )
         diff = event.diff_values()
-        assert diff["name"] == "New"
-        assert diff["value"] == 200
-        assert "id" not in diff  # Unchanged
+        # diff_values returns a list of dicts with structure: {"key": ..., "old": ..., "new": ...}
+        assert len(diff) == 2  # Only changed fields
+        diff_dict = {item["key"]: item for item in diff}
+        assert diff_dict["name"]["new"] == "New"
+        assert diff_dict["name"]["old"] == "Old"
+        assert diff_dict["value"]["new"] == 200
+        assert diff_dict["value"]["old"] == 100
+        assert "id" not in diff_dict  # Unchanged
 
 
 @pytest.mark.unit
@@ -122,7 +127,7 @@ class TestBatchChange:
 
     def test_batch_count(self, sample_batch):
         """Test batch count property."""
-        assert sample_batch.count() == 10
+        assert len(sample_batch) == 10
 
     def test_batch_add_change(self):
         """Test adding changes to a batch."""
@@ -138,7 +143,7 @@ class TestBatchChange:
             new_values={"id": 1},
         )
         batch.changes.append(event)
-        assert batch.count() == 1
+        assert len(batch) == 1
 
     def test_batch_bool_conversion(self):
         """Test batch truthiness."""
@@ -155,7 +160,7 @@ class TestBatchChange:
                     schema_name="SAPHANADB",
                     table_name="TEST",
                     full_table_name="SAPHANADB.TEST",
-                    new_values={"id": 1},
+                    new_values=[{"id": 1}],
                 )
             ]
         )
