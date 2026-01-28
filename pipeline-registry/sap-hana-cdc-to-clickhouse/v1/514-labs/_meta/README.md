@@ -30,7 +30,7 @@ export SAP_HANA_TABLES=TABLE1,TABLE2
 export SAP_HANA_CLIENT_ID=client
 
 # Initialize CDC
-python init_cdc.py --init-cdc --tables TABLE1,TABLE2
+python init_cdc.py --init-all --tables TABLE1,TABLE2
 
 # Start pipeline
 moose dev

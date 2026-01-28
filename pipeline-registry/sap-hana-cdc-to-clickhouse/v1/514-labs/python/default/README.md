@@ -162,7 +162,7 @@ The script will automatically:
 
 2. Initialize CDC infrastructure:
    ```bash
-   python init_cdc.py --init-cdc --tables TABLE1,TABLE2,TABLE3
+   python init_cdc.py --init-all --tables TABLE1,TABLE2,TABLE3
    ```
 
 ### Running the Pipeline
@@ -175,9 +175,9 @@ The script will automatically:
 
 ### Manual Operations
 
-- **Generate Moose models**: `python init_cdc.py --recreate-moose-models --tables TABLE1,TABLE2`
+- **Generate Moose models**: `python init_cdc.py --generate-models --tables TABLE1,TABLE2`
 - **Recreate CDC tables**: `python init_cdc.py --recreate-cdc-tables --tables TABLE1,TABLE2`
-- **Initialize CDC**: `python init_cdc.py --init-cdc --tables TABLE1,TABLE2`
+- **Initialize CDC**: `python init_cdc.py --init-all --tables TABLE1,TABLE2`
 
 ## Troubleshooting
 
@@ -270,7 +270,7 @@ app/
   - `T001W` → `t001_w` (OlapTable) + `T001w` (Pydantic model)
 - Works with auto-generated Moose models from `app/ingest/cdc.py`
 
-**Model Generation** (`init_cdc.py --recreate-moose-models`)
+**Model Generation** (`init_cdc.py --generate-models`)
 - Introspects SAP HANA tables and generates Pydantic models
 - Creates OlapTable instances for each table
 - Handles complex SAP data types (DECIMAL, NVARCHAR, etc.)

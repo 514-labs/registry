@@ -75,13 +75,13 @@ export SAP_HANA_CDC_RETENTION_DAYS=7
 Before running the pipeline, initialize the CDC infrastructure in SAP HANA:
 
 ```bash
-python init_cdc.py --init-cdc --tables CUSTOMERS,ORDERS,PRODUCTS
+python init_cdc.py --init-all --tables CUSTOMERS,ORDERS,PRODUCTS
 ```
 
 This command will:
+- Generate Moose data models from SAP HANA schemas
 - Create CDC capture tables for each specified table
 - Set up triggers for change tracking
-- Generate Moose data models
 - Configure initial synchronization
 
 ## Usage
@@ -117,7 +117,7 @@ curl http://localhost:4000/workflows
 #### Generate Models for New Tables
 
 ```bash
-python init_cdc.py --recreate-moose-models --tables NEW_TABLE1,NEW_TABLE2
+python init_cdc.py --generate-models --tables NEW_TABLE1,NEW_TABLE2
 ```
 
 #### Recreate CDC Tables
@@ -133,7 +133,7 @@ python init_cdc.py --recreate-cdc-tables --tables TABLE1,TABLE2
 To completely reinitialize CDC for tables:
 
 ```bash
-python init_cdc.py --init-cdc --tables TABLE1,TABLE2
+python init_cdc.py --init-all --tables TABLE1,TABLE2
 ```
 
 ## Workflows
@@ -198,7 +198,7 @@ INVENTORY
 - Verify tables exist in `SAP_HANA_SOURCE_SCHEMA`
 - Check CDC triggers are enabled on source tables
 - Ensure ClickHouse is accessible
-- Run initialization: `python init_cdc.py --init-cdc --tables TABLE_NAME`
+- Run initialization: `python init_cdc.py --init-all --tables TABLE_NAME`
 
 ### Data Not Appearing in ClickHouse
 
