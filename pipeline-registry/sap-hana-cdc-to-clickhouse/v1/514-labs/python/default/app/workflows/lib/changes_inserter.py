@@ -51,8 +51,9 @@ class BatchChangeInserter:
         try:
             olap_table = self._get_olap_table(normalized_table_name)
             if olap_table is None:
-                logger.error(f"OlapTable not found for {normalized_table_name}")
-                return
+                error_msg = f"OlapTable not found for {normalized_table_name}"
+                logger.error(error_msg)
+                raise ValueError(error_msg)
 
             # Convert rows to Pydantic models
             models = []
@@ -122,8 +123,9 @@ class BatchChangeInserter:
         """
         olap_table = self._get_olap_table(table_name)
         if olap_table is None:
-            logger.error(f"OlapTable not found for {table_name}")
-            return
+            error_msg = f"OlapTable not found for {table_name}"
+            logger.error(error_msg)
+            raise ValueError(error_msg)
 
         # Convert changes to models
         models = []
