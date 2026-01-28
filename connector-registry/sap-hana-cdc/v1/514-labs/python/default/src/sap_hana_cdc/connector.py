@@ -32,13 +32,12 @@ class SAPHanaCDCConnector:
 
     @staticmethod
     def build_from_config(config: SAPHanaCDCConfig) -> 'SAPHanaCDCConnector':
-        
-        connection = dbapi.connect(
-            address=config.host,
-            port=config.port,
-            user=config.user,
-            password=config.password
-        )
+        from .connection_manager import ConnectionPool
+
+        # Use ConnectionPool with retry logic and circuit breaker
+        pool = ConnectionPool(config)
+        connection = pool.get_connection()
+
         infrastructure = SAPHanaCDCInfrastructure(connection, config)
         reader = SAPHanaCDCReader(connection, config)
         return SAPHanaCDCConnector(infrastructure, reader, config)

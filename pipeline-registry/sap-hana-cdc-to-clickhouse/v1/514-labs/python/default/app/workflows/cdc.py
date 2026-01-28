@@ -52,7 +52,11 @@ def sync_changes_task(ctx: TaskContext[None]) -> None:
 
 sync_changes_task_instance = Task[None, None](
     name="sync_changes",
-    config=TaskConfig(run=sync_changes_task)
+    config=TaskConfig(
+        run=sync_changes_task,
+        retries=2,      # Add task-level retries
+        timeout=120     # 2 minute timeout
+    )
 )
 
 initial_load_task_instance = Task[None, None](
@@ -67,8 +71,8 @@ cdc_workflow = Workflow(
     name="cdc",
     config=WorkflowConfig(
         starting_task=initial_load_task_instance,
-        retries=0,
-        timeout=None,
+        retries=3,      # Changed from 0
+        timeout=300,    # Changed from None (5 minutes)
         schedule="@every 60s"  # Run every 60 seconds
     )
 )
