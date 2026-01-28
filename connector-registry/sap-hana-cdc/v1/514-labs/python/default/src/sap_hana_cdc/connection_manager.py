@@ -82,13 +82,13 @@ class CircuitBreaker:
         self.failure_count += 1
         self.last_failure_time = time.time()
 
-        if self.failure_count >= self.failure_threshold:
+        if self.state == CircuitState.HALF_OPEN:
+            logger.warning("Circuit breaker re-opening after failed recovery attempt")
+            self.state = CircuitState.OPEN
+        elif self.failure_count >= self.failure_threshold:
             logger.warning(
                 f"Circuit breaker opening after {self.failure_count} failures"
             )
-            self.state = CircuitState.OPEN
-        elif self.state == CircuitState.HALF_OPEN:
-            logger.warning("Circuit breaker re-opening after failed recovery attempt")
             self.state = CircuitState.OPEN
 
 
