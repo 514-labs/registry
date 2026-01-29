@@ -4,6 +4,6 @@
   "tags": ["sap-hana", "cdc", "clickhouse", "real-time"],
   "description": "Real-time Change Data Capture pipeline from SAP HANA to ClickHouse.",
   "homepage": "",
-  "registryUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/sap-hana-cdc-to-clickhouse"
+  "registryUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/sap_hana_cdc_to_clickhouse"
 }
 

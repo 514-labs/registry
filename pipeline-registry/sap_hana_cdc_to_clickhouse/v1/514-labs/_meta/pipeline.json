@@ -1,6 +1,6 @@
 {
   "$schema": "https://schemas.connector-factory.dev/pipeline.schema.json",
-  "identifier": "sap-hana-cdc-to-clickhouse",
+  "identifier": "sap_hana_cdc_to_clickhouse",
   "name": "SAP HANA CDC to ClickHouse",
   "author": "514-labs",
   "authorType": "organization",

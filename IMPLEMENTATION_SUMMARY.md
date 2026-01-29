@@ -367,7 +367,7 @@ cd connector-registry/sap-hana-cdc/v1/514-labs/python/default
 pytest -m unit -v
 
 # Pipeline unit tests
-cd pipeline-registry/sap-hana-cdc-to-clickhouse/v1/514-labs/python/default
+cd pipeline-registry/sap_hana_cdc_to_clickhouse/v1/514-labs/python/default
 pytest -m unit -v
 ```
 

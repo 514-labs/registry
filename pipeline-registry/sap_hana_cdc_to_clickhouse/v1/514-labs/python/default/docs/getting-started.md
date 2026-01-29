@@ -13,7 +13,7 @@ This Python implementation provides real-time Change Data Capture (CDC) from SAP
 Run the installer:
 
 ```bash
-bash -i <(curl https://registry.514.ai/install.sh) --type pipeline sap-hana-cdc-to-clickhouse v1 514-labs python default
+bash -i <(curl https://registry.514.ai/install.sh) --type pipeline sap_hana_cdc_to_clickhouse v1 514-labs python default
 ```
 
 ## Install dependencies

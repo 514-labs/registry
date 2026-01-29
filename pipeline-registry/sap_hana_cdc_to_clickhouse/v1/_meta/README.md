@@ -41,7 +41,7 @@ pip install moose-cli
 ### 2. Install Pipeline Dependencies
 
 ```bash
-cd pipeline-registry/sap-hana-cdc-to-clickhouse/v1/514-labs/python/default
+cd pipeline-registry/sap_hana_cdc_to_clickhouse/v1/514-labs/python/default
 pip install -r requirements.txt
 ```
 
