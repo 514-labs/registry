@@ -52,7 +52,7 @@ dependencies = [
 ]
 ```
 
-For complete bundled installation instructions, see the [SAP HANA CDC to ClickHouse pipeline documentation](https://registry.514.ai/pipelines/sap-hana-cdc-to-clickhouse).
+For complete bundled installation instructions, see the [SAP HANA CDC to ClickHouse pipeline documentation](https://registry.514.ai/pipelines/sap_hana_cdc_to_clickhouse).
 
 ## Quick Start
 

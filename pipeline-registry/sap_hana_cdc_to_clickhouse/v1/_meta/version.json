@@ -1,5 +1,5 @@
 {
-  "name": "sap-hana-cdc-to-clickhouse",
+  "name": "sap_hana_cdc_to_clickhouse",
   "version": "v1",
   "status": "beta",
   "releasedAt": "2025-01-15",

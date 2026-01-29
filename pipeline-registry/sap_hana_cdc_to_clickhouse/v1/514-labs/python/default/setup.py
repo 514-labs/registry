@@ -7,7 +7,7 @@ with open(requirements_path, "r") as f:
     requirements = f.read().splitlines()
 
 setup(
-    name='sap-hana-cdc-pipeline',
+    name='sap_hana_cdc_pipeline',
     version='0.0',
     install_requires=requirements,
 )
