@@ -123,3 +123,22 @@ A generator can interpret the `structure` array and create files/directories wit
 6. Create lineage definitions in `lineage/` and `moose/` folders within the implementation.
 
 > Note: Always use pnpm in this monorepo. For TypeScript, ensure Node 20. Do not commit real `.env` files.
+
+## Using connectors in pipelines
+
+When a pipeline references a connector from the connector registry, use symbolic links to reference the connector implementation rather than duplicating the code. This ensures:
+
+- The pipeline always uses the latest connector code
+- No code duplication across the repository
+- Easier maintenance and updates
+
+**Example:**
+
+For a pipeline that uses the `sap-hana-cdc` connector:
+
+```bash
+cd pipeline-registry/sap-hana-cdc-to-clickhouse/v1/514-labs/python/default/app
+ln -s ../../../../../../../connector-registry/sap-hana-cdc/v1/514-labs/python/default sap-hana-cdc
+```
+
+The installation script (`install.sh`) automatically dereferences symlinks when copying pipelines to user environments, so end users will receive the actual connector code, not the symlink.

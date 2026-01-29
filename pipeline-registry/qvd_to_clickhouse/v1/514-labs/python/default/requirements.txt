@@ -1,0 +1,17 @@
+# Core
+moose-cli>=0.6.103
+moose-lib>=0.6.103
+pydantic>=2.11.0
+
+# QVD reading
+pyqvd>=2.2.0
+pandas>=2.0.0
+
+# Universal filesystem
+fsspec>=2024.1.0
+s3fs>=2024.1.0          # S3 support
+requests>=2.31.0        # HTTP support
+
+# Utilities
+tenacity>=9.0.0
+python-dotenv>=1.0.0

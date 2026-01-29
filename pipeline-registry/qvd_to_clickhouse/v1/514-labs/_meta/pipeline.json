@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/pipeline.schema.json",
+  "identifier": "qvd_to_clickhouse",
+  "name": "QVD to ClickHouse",
+  "author": "514-labs",
+  "authorType": "organization",
+  "version": "v1",
+  "description": "Universal data pipeline for QVD (QlikView Data) files to ClickHouse with incremental tracking",
+  "tags": ["qvd", "qlikview", "clickhouse", "etl", "data-migration", "fsspec"],
+  "schedule": { "cron": "0 0 * * *", "timezone": "UTC" },
+  "source": {
+    "type": "files",
+    "format": "qvd",
+    "location": "configurable"
+  },
+  "systems": [],
+  "transformations": [],
+  "destination": {
+    "system": "clickhouse",
+    "database": "local",
+    "table": "qvd_*"
+  },
+  "lineage": {
+    "nodes": [
+      { "id": "source", "kind": "source", "label": "QVD Files" },
+      { "id": "qvd_reader", "kind": "transform", "label": "QVD Reader" },
+      { "id": "dest", "kind": "destination", "label": "ClickHouse" }
+    ],
+    "edges": [
+      { "from": "source", "to": "qvd_reader", "label": "read files" },
+      { "from": "qvd_reader", "to": "dest", "label": "batch insert" }
+    ]
+  },
+  "maintainers": []
+}
