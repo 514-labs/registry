@@ -115,6 +115,33 @@ open http://localhost:8081
 cat .qvd_state.json
 ```
 
+#### QVD Status API Endpoint
+
+The pipeline provides an HTTP API endpoint for real-time status monitoring:
+
+```bash
+# Get overall status and file list
+curl http://localhost:4000/consumption/qvd_status
+
+# Filter by file name
+curl "http://localhost:4000/consumption/qvd_status?file_name=Item"
+
+# Filter by status (completed, failed, processing)
+curl "http://localhost:4000/consumption/qvd_status?status=failed"
+
+# Include processing history
+curl "http://localhost:4000/consumption/qvd_status?include_history=true"
+
+# Limit results
+curl "http://localhost:4000/consumption/qvd_status?limit=10"
+```
+
+**Response includes:**
+- **Summary**: Total files, syncs today, rows processed, current failures
+- **Files**: List of processed files with status, row count, processing duration
+- **Failures**: Recent failed files with error messages
+- **History**: Optional processing history for each file
+
 ### Manual Execution
 
 For testing or manual runs:

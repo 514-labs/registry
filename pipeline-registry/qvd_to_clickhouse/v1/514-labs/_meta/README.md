@@ -30,6 +30,9 @@ python init_qvd.py --generate-models --source $QVD_SOURCE
 
 # Start pipeline
 moose dev
+
+# Check status via API
+curl http://localhost:4000/consumption/qvd_status
 ```
 
 ## Supported File Systems

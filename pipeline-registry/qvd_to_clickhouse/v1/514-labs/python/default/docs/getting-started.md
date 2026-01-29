@@ -151,6 +151,38 @@ SELECT count(*) FROM local.QvdItem;
 SELECT * FROM local.QvdItem LIMIT 5;
 ```
 
+## Step 7: Monitor Pipeline Status
+
+Use the API endpoint to monitor the pipeline:
+
+```bash
+# Get overall status and file list
+curl http://localhost:4000/consumption/qvd_status
+
+# Check for failures
+curl "http://localhost:4000/consumption/qvd_status?status=failed"
+
+# View specific file status
+curl "http://localhost:4000/consumption/qvd_status?file_name=Item&include_history=true"
+```
+
+Expected output:
+```json
+{
+  "summary": {
+    "total_files": 2,
+    "total_syncs_all_time": 2,
+    "syncs_today": 2,
+    "total_rows_processed": 15912,
+    "current_failures": 0,
+    "currently_processing": 0,
+    "last_sync_at": "2025-01-29 17:30:45"
+  },
+  "files": [...],
+  "failures": []
+}
+```
+
 ## Troubleshooting
 
 ### Issue: Dependencies not found
@@ -194,7 +226,7 @@ export AWS_PROFILE=your-profile
 1. **Schedule**: The workflow runs daily by default. Check Temporal UI.
 2. **Filter**: Use `QVD_INCLUDE_FILES` or `QVD_EXCLUDE_FILES` in `.env`
 3. **Tune**: Adjust `QVD_BATCH_SIZE` for performance
-4. **Monitor**: Check `.qvd_state.json` for sync status
+4. **Monitor**: Use the API endpoint (`/consumption/qvd_status`) or check `.qvd_state.json`
 
 ## Common Commands
 
@@ -211,7 +243,10 @@ python init_qvd.py --reset-state
 # Run sync
 moose dev
 
-# Check state
+# Check status via API
+curl http://localhost:4000/consumption/qvd_status
+
+# Check state file
 cat .qvd_state.json | python -m json.tool
 ```
 

@@ -107,6 +107,29 @@ SELECT count(*) FROM local.QvdItem;
 SELECT * FROM local.QvdItem LIMIT 10;
 ```
 
+### 6. Monitor Status
+
+Use the HTTP API endpoint to check pipeline status:
+
+```bash
+# Get overall status
+curl http://localhost:4000/consumption/qvd_status
+
+# Filter by file name
+curl "http://localhost:4000/consumption/qvd_status?file_name=Item"
+
+# Show only failures
+curl "http://localhost:4000/consumption/qvd_status?status=failed"
+
+# Include processing history
+curl "http://localhost:4000/consumption/qvd_status?include_history=true"
+```
+
+The API returns:
+- **Summary**: Total files, syncs, rows processed, failures
+- **Files**: Status, row count, processing time for each file
+- **Failures**: Recent errors with details
+
 ## Configuration
 
 ### Environment Variables
