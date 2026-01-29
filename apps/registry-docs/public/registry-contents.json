@@ -1,7 +1,7 @@
 {
-  "total": 8,
-  "connectors": 5,
-  "pipelines": 3,
+  "total": 10,
+  "connectors": 6,
+  "pipelines": 4,
   "items": [
     {
       "type": "connector",
@@ -177,6 +177,47 @@
       }
     },
     {
+      "type": "connector",
+      "id": "sap-hana-cdc",
+      "name": "SAP HANA CDC",
+      "version": "v1",
+      "author": "514-labs",
+      "authorId": "514-labs",
+      "language": "python",
+      "implementation": "default",
+      "category": "database",
+      "tags": [
+        "database",
+        "cdc",
+        "sap",
+        "hana",
+        "real-time"
+      ],
+      "description": "High-performance, real-time Change Data Capture (CDC) connector for SAP HANA database",
+      "homepage": "",
+      "languages": [
+        "python"
+      ],
+      "capabilities": {
+        "extract": true,
+        "transform": false,
+        "load": false
+      },
+      "maintainers": [
+        "514-labs"
+      ],
+      "issues": {
+        "python": {
+          "default": "https://github.com/514-labs/registry/issues"
+        }
+      },
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/sap-hana-cdc/v1/514-labs/python",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/sap-hana-cdc/v1/514-labs",
+      "apiPaths": {
+        "scaffold": "/api/connectors/scaffolds/python"
+      }
+    },
+    {
       "type": "pipeline",
       "id": "dutchie-to-clickhouse",
       "name": "dutchie-to-clickhouse",
@@ -318,6 +359,83 @@
       },
       "apiPaths": {
         "scaffold": "/api/pipelines/scaffolds/typescript"
+      }
+    },
+    {
+      "type": "pipeline",
+      "id": "sap-hana-cdc-to-clickhouse",
+      "name": "SAP HANA CDC to ClickHouse",
+      "version": "v1",
+      "author": "514-labs",
+      "authorId": "514-labs",
+      "language": "python",
+      "implementation": "default",
+      "tags": [
+        "sap-hana",
+        "cdc",
+        "clickhouse",
+        "real-time",
+        "etl"
+      ],
+      "description": "Real-time Change Data Capture pipeline from SAP HANA to ClickHouse",
+      "homepage": "",
+      "maintainers": [],
+      "authorType": "organization",
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/sap-hana-cdc-to-clickhouse/python",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/sap-hana-cdc-to-clickhouse",
+      "schedule": {
+        "cron": "0 * * * *",
+        "timezone": "UTC"
+      },
+      "source": {
+        "type": "connector",
+        "connector": {
+          "name": "sap-hana-cdc",
+          "version": "v1",
+          "author": "514-labs"
+        },
+        "stream": "changes"
+      },
+      "destination": {
+        "system": "clickhouse",
+        "database": "analytics",
+        "table": "sap_hana_changes"
+      },
+      "systems": [],
+      "transformations": [],
+      "lineage": {
+        "nodes": [
+          {
+            "id": "source",
+            "kind": "source",
+            "label": "SAP HANA"
+          },
+          {
+            "id": "cdc_processor",
+            "kind": "transform",
+            "label": "CDC Processor"
+          },
+          {
+            "id": "dest",
+            "kind": "destination",
+            "label": "ClickHouse analytics.sap_hana_changes"
+          }
+        ],
+        "edges": [
+          {
+            "from": "source",
+            "to": "cdc_processor",
+            "label": "extract changes"
+          },
+          {
+            "from": "cdc_processor",
+            "to": "dest",
+            "label": "load changes"
+          }
+        ]
+      },
+      "apiPaths": {
+        "scaffold": "/api/pipelines/scaffolds/python"
       }
     }
   ]
