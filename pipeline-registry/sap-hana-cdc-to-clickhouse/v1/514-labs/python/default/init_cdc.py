@@ -1,6 +1,14 @@
 import argparse
 import logging
+import sys
+from pathlib import Path
 from dotenv import load_dotenv
+
+# Add bundled sap-hana-cdc connector to Python path
+_connector_path = Path(__file__).parent / "app" / "sap-hana-cdc" / "src"
+if str(_connector_path) not in sys.path:
+    sys.path.insert(0, str(_connector_path))
+
 from app.utils.sap_hana_introspection import introspect_hana_database
 from app.utils.moose_model_generator import generate_moose_models, MooseModelConfig
 from sap_hana_cdc import SAPHanaCDCConfig, SAPHanaCDCConnector

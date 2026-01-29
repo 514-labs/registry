@@ -8,6 +8,11 @@ from dotenv import load_dotenv
 # Add the current directory to Python path to resolve app imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
+# Add bundled sap-hana-cdc connector to Python path
+_connector_path = Path(__file__).parent.parent / "sap-hana-cdc" / "src"
+if str(_connector_path) not in sys.path:
+    sys.path.insert(0, str(_connector_path))
+
 from app.ingest import cdc as cdc_module
 from sap_hana_cdc import SAPHanaCDCConnector, SAPHanaCDCConfig, TableStatus
 from app.workflows.lib.changes_inserter import BatchChangeInserter
