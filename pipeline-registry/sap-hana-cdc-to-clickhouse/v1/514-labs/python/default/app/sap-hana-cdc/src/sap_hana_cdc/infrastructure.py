@@ -1,0 +1,396 @@
+"""SAP HANA CDC Infrastructure Management.
+
+This module handles the creation and management of CDC infrastructure including
+tables and triggers. Requires elevated database privileges.
+"""
+
+import logging
+from typing import Dict, List, Optional
+import re
+
+
+from hdbcli import dbapi
+
+from .base import SAPHanaCDCBase
+from .config import SAPHanaCDCConfig
+from .models import TriggerType, TableStatus
+
+
+logger = logging.getLogger(__name__)
+
+
+
+class SAPHanaCDCInfrastructure(SAPHanaCDCBase):
+    """Manages CDC infrastructure setup and maintenance.
+    
+    This class handles operations that require elevated database privileges:
+    - Creating CDC tables
+    - Creating and dropping triggers
+    - Managing CDC infrastructure lifecycle
+    """
+    TRIGGER_NAME_SUFFIX = "_CDC_TRIGGER"
+
+    def __init__(self, connection: dbapi.Connection, config: SAPHanaCDCConfig):
+        super().__init__(connection, config)
+    
+    def setup_cdc_infrastructure(self) -> None:
+        """Set up complete CDC infrastructure for the given configuration."""
+        self.create_change_table()
+        self.create_client_status_table()
+        self.initialize_client_status_table()
+        # Setup triggers for monitored tables
+        self.setup_table_triggers()
+        
+        logger.info("CDC infrastructure setup completed")
+    
+    def create_change_table(self) -> None:
+        """Create the main change table for storing CDC events."""
+        
+        table_definition = f"""
+            CREATE TABLE <TABLENAME> (
+                CHANGE_ID BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                TABLE_SCHEMA VARCHAR(128) NOT NULL,
+                TABLE_NAME VARCHAR(128) NOT NULL,
+                TRIGGER_TYPE VARCHAR(10) NOT NULL,
+                CHANGE_TIMESTAMP TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                TRANSACTION_ID VARCHAR(50) NOT NULL,
+                OLD_VALUES NCLOB,
+                NEW_VALUES NCLOB
+            )
+        """
+        
+        self._ensure_table_exists(self.CDC_CHANGES_TABLE, table_definition)
+    
+    def create_client_status_table(self) -> None:
+        """Create the client status table for tracking table processing status."""
+        table_definition = f"""
+            CREATE TABLE <TABLENAME> (
+                CLIENT_ID VARCHAR(128) NOT NULL,
+                SCHEMA_NAME VARCHAR(128) NOT NULL,
+                TABLE_NAME VARCHAR(128) NOT NULL,
+                LAST_PROCESSED_CHANGE_ID BIGINT DEFAULT 0,
+                STATUS VARCHAR(128) NOT NULL,
+                CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (CLIENT_ID, SCHEMA_NAME, TABLE_NAME)
+            )
+        """
+        self._ensure_table_exists(self.CDC_CLIENT_STATUS_TABLE, table_definition)
+
+    def initialize_client_status_table(self) -> None:
+        """Initialize the client status table."""
+        with self.connection.cursor() as cursor:
+            for table in self.config.tables:
+                self._update_table_status(cursor, table, TableStatus.NEW)
+        self.connection.commit()
+
+    def setup_table_triggers(self) -> None:
+        """Set up triggers for the specified tables (not views)."""
+
+        with self.connection.cursor() as cursor:
+            current_tables = set(self.get_monitored_tables())
+            desired_tables = set(self.config.tables)
+
+            # Filter out views - only create triggers for tables
+            tables_only = set(self._filter_tables_only(list(desired_tables)))
+
+            tables_to_add = tables_only - current_tables
+            tables_to_remove = current_tables - tables_only
+
+            # Add triggers for new tables
+            for table in tables_to_add:
+                if self._setup_table_cdc(cursor, table):
+                    self._update_table_status(cursor, table, TableStatus.NEW)
+                logger.info(f"CDC triggers setup completed for new table {table}")
+
+            # Remove triggers for tables no longer in config
+            for table in tables_to_remove:
+                self._cleanup_table_cdc(cursor, table)
+                self._remove_table_status(cursor, table)
+                logger.info(f"CDC triggers cleaned up for removed table {table}")
+
+        self.connection.commit()
+
+
+    def set_table_status_active(self, table_name: str) -> None:
+        """Update the status of a table."""
+        with self.connection.cursor() as cursor:
+            self._update_table_status(cursor, table_name, TableStatus.ACTIVE)
+        self.connection.commit()
+
+
+    def get_monitored_tables(self) -> List[str]:
+        """Get list of currently monitored tables by examining existing triggers.
+        
+        This method queries the SAP HANA database to find all tables that have
+        CDC triggers installed, indicating they are being monitored for changes.
+        
+        Returns:
+            List[str]: List of table names that are currently monitored
+        """
+        with self.connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT DISTINCT SUBJECT_TABLE_NAME
+                FROM TRIGGERS 
+                WHERE SCHEMA_NAME = ? AND TRIGGER_NAME LIKE ?
+            """, (self.config.source_schema, f"%{self.TRIGGER_NAME_SUFFIX}"))
+            
+            result = [row[0] for row in cursor.fetchall()]
+        
+        logger.info(f"Found {len(result)} monitored tables: {result}")
+        return result
+
+    def _update_table_status(self, cursor: dbapi.Cursor, table_name: str, status: TableStatus) -> None:
+        """Update the status of a table."""
+        status_table = self.full_client_status_table_name
+        if status == TableStatus.NEW:
+            # Delete is there in case it already exists. 
+            self._remove_table_status(cursor, table_name)
+            cursor.execute(f"""
+                INSERT INTO {status_table} 
+                    (SCHEMA_NAME, TABLE_NAME, CLIENT_ID, STATUS, CREATED_AT, UPDATED_AT) 
+                VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+            """, (self.config.source_schema, table_name, self.config.client_id, status.value))
+        else:
+            cursor.execute(
+                f"UPDATE {status_table} SET STATUS = ?, UPDATED_AT = CURRENT_TIMESTAMP WHERE SCHEMA_NAME = ? AND TABLE_NAME = ? AND CLIENT_ID = ?",
+                (status.value, self.config.source_schema, table_name, self.config.client_id)
+            )
+
+    def _remove_table_status(self, cursor: dbapi.Cursor, table_name: str) -> None:
+        """Remove the status of a table."""
+        table_status_table = self.full_client_status_table_name
+        cursor.execute(f"DELETE FROM {table_status_table} WHERE SCHEMA_NAME = ? AND TABLE_NAME = ? AND CLIENT_ID = ?", (self.config.source_schema, table_name, self.config.client_id))
+
+
+    def cleanup_cdc_infrastructure(self) -> None:
+        """Remove all CDC infrastructure (tables and triggers)."""
+        
+        # Get all monitored tables first
+        monitored_tables = self.get_monitored_tables()
+        
+        with self.connection.cursor() as cursor:
+            # Remove triggers for all tables
+            for table_name in monitored_tables:
+                self._cleanup_table_cdc(cursor, table_name)
+            
+            # Drop status table
+            tables_to_drop = [self.full_client_status_table_name, self.full_changes_table_name]
+            for table_name in tables_to_drop:
+                try:
+                    cursor.execute(f"DROP TABLE {table_name}")
+                    logger.info(f"Dropped status table {table_name}")
+                except Exception as e:
+                    logger.warning(f"Could not drop status table: {e}")
+        
+        logger.info("CDC infrastructure cleanup completed")
+
+
+    def _table_exists(self, schema_name: str, table_name: str) -> bool:
+        """Check if a table exists in the specified schema."""
+        with self.connection.cursor() as cursor:
+            try:
+                cursor.execute("""
+                    SELECT COUNT(*)
+                    FROM TABLES
+                    WHERE SCHEMA_NAME = ? AND TABLE_NAME = ?
+                """, (schema_name, table_name))
+
+                result = cursor.fetchone()
+                exists = result[0] > 0 if result else False
+                return exists
+            except Exception as e:
+                logger.error(f"Error checking if table {schema_name}.{table_name} exists: {e}")
+                return False
+
+    def _is_view(self, object_name: str) -> bool:
+        """Check if an object is a view."""
+        with self.connection.cursor() as cursor:
+            try:
+                cursor.execute("""
+                    SELECT COUNT(*) FROM VIEWS
+                    WHERE SCHEMA_NAME = ? AND VIEW_NAME = ?
+                """, (self.config.source_schema, object_name))
+                result = cursor.fetchone()
+                return result[0] > 0 if result else False
+            except Exception as e:
+                logger.error(f"Error checking if object {object_name} is a view: {e}")
+                return False
+
+    def _filter_tables_only(self, object_names: List[str]) -> List[str]:
+        """Filter to include only tables, excluding views."""
+        tables = []
+        for name in object_names:
+            if self._is_view(name):
+                logger.info(f"Skipping trigger creation for view: {name}")
+            else:
+                tables.append(name)
+        return tables
+    
+    def _ensure_table_exists(self, table_name: str, table_definition: str) -> None:
+        """Ensure a table exists with the given definition, creating it if necessary."""
+        # Always in the CDC schema, we're not creating tables in the source schema
+        full_table_name = f"{self.config.cdc_schema}.{table_name}"
+        
+        # Check if table already exists
+        table_exists = self._table_exists(self.config.cdc_schema, table_name)
+        
+        if table_exists:
+            logger.info(f"Table {full_table_name} already exists")
+            return
+        
+        # Create the table
+        with self.connection.cursor() as cursor:
+            cursor.execute(table_definition.replace("<TABLENAME>", full_table_name))
+            logger.info(f"Created table {full_table_name}")
+    
+    def _setup_table_cdc(self, cursor: dbapi.Cursor, table_name: str) -> bool:
+        """Set up CDC for a specific table.
+
+        Returns:
+            bool: True if at least one trigger was created, False otherwise.
+        """
+        try:
+            any_trigger_created = False
+            # Create triggers for each change type
+            for trigger_type in TriggerType:
+                if self._create_trigger(cursor, table_name, trigger_type):
+                    any_trigger_created = True
+
+            return any_trigger_created
+
+        except Exception as e:
+            logger.error(f"Failed to setup CDC for table {table_name}: {e}")
+            raise
+  
+    
+    def _create_trigger(self, cursor: dbapi.Cursor, table_name: str, trigger_type: TriggerType) -> bool:
+        """Create a trigger for a table."""
+        trigger_name = self._get_trigger_name(table_name, trigger_type)
+        
+        # Check if trigger already exists
+        if self._check_trigger_exists(cursor, table_name, trigger_type):
+            return False
+        
+        change_table = self.full_changes_table_name
+
+        try:
+            quoted_table_name = f'"{table_name}"'
+            quoted_schema_name = f'{self.config.source_schema}'
+
+            # Build REFERENCING clause based on trigger type
+            referencing_clause = ""
+            if trigger_type == TriggerType.INSERT:
+                referencing_clause = "REFERENCING NEW ROW AS new_row"
+            elif trigger_type == TriggerType.DELETE:
+                referencing_clause = "REFERENCING OLD ROW AS old_row"
+            else:  # UPDATE
+                referencing_clause = "REFERENCING OLD ROW AS old_row, NEW ROW AS new_row"
+
+            trigger_sql = f"""
+                CREATE TRIGGER {trigger_name}
+                AFTER {trigger_type.value} ON {quoted_schema_name}.{quoted_table_name}
+                {referencing_clause}
+                FOR EACH ROW
+                BEGIN
+                    DECLARE old_json NCLOB;
+                    DECLARE new_json NCLOB;
+                    {self._create_select_stmt(table_name, "old_row", "old_json") if trigger_type != TriggerType.INSERT else ""}
+                    {self._create_select_stmt(table_name, "new_row", "new_json") if trigger_type != TriggerType.DELETE else ""}
+
+                    INSERT INTO {change_table} (
+                        TABLE_SCHEMA, TABLE_NAME, TRIGGER_TYPE, TRANSACTION_ID, OLD_VALUES, NEW_VALUES
+                    ) VALUES (
+                        '{self.config.source_schema}',
+                        '{table_name}',
+                        '{trigger_type.value}',
+                        CURRENT_UPDATE_TRANSACTION(),
+                        :old_json,
+                        :new_json
+                    );
+                END
+            """
+            cursor.execute(trigger_sql)
+            logger.debug(f"Created trigger {trigger_name} for table {table_name}")
+            return True
+
+        except Exception as e:
+            logger.error(f"Failed to create trigger {trigger_name}: {e}")
+            raise
+    
+    def _create_select_stmt(self, table_name: str, source_var: str, dest_var: str) -> str:
+        """Create a SELECT statement for a table."""
+        # Get column information directly from the database
+        query = """
+            SELECT COLUMN_NAME
+            FROM TABLE_COLUMNS 
+            WHERE SCHEMA_NAME = ? AND TABLE_NAME = ?
+            ORDER BY POSITION
+        """
+        
+        with self.connection.cursor() as cursor:
+            cursor.execute(query, (self.config.source_schema, table_name))
+            columns = [row[0] for row in cursor.fetchall()]
+        
+        if not columns:
+            raise ValueError(f"No columns found for table {table_name}")
+
+        select_columns = ", ".join([f":{source_var}.\"{col}\"" for col in columns])
+        query = f"""
+                SELECT {select_columns} INTO {dest_var} FROM DUMMY FOR JSON;
+        """
+        return query
+    
+    def _get_trigger_name(self, table_name: str, trigger_type: TriggerType) -> str:
+        """Get the name of a trigger for a table."""
+        # Sanitize table_name to be a valid trigger name (alphanumeric and underscores only)
+        safe_table_name = re.sub(r'[^A-Za-z0-9_]', '_', table_name)
+        # Ensure safe_table_name does not start with an underscore
+        safe_table_name = safe_table_name.lstrip('_')
+        if not safe_table_name:
+            safe_table_name = "TABLE"
+        return f"{safe_table_name}_{trigger_type.value.upper()}{self.TRIGGER_NAME_SUFFIX}"
+    
+    def _check_trigger_exists(self, cursor: dbapi.Cursor, table_name: str, trigger_type: TriggerType) -> bool:
+        """Check if a trigger already exists."""
+        try:
+            trigger_name = self._get_trigger_name(table_name, trigger_type)
+            cursor.execute("""
+                SELECT COUNT(*) 
+                FROM TRIGGERS 
+                WHERE TRIGGER_NAME = ?
+            """, (trigger_name,))
+            
+            result = cursor.fetchone()
+            exists = result[0] > 0 if result else False
+            return exists
+            
+        except Exception as e:
+            logger.warning(f"Error checking trigger existence: {e}")
+            return False
+
+    def _drop_trigger(self, cursor: dbapi.Cursor, table_name: str, trigger_type: TriggerType) -> None:
+        """Drop a trigger."""
+        trigger_name = self._get_trigger_name(table_name, trigger_type)
+        try:
+            cursor.execute(f"DROP TRIGGER {self.config.source_schema}.{trigger_name}")
+            logger.info(f"Dropped trigger {trigger_name}")
+        except Exception as e:
+            logger.warning(f"Could not drop trigger {trigger_name}: {e}")
+
+    def _cleanup_table_cdc(self, cursor: dbapi.Cursor, table_name: str) -> None:
+        """Clean up CDC infrastructure for a table (triggers)."""
+        for trigger_type in TriggerType:
+            self._drop_trigger(cursor, table_name, trigger_type)
+
+    def reset_cdc_status(self) -> None:
+        """Reset CDC status for all tables."""
+        table_status_table = self.full_client_status_table_name
+        with self.connection.cursor() as cursor:
+            cursor.execute(f"DELETE FROM {table_status_table} WHERE CLIENT_ID = ?", (self.config.client_id,))
+            logger.info("CDC status reset completed")
+            # For each table in the config, set the status to NEW
+            for table in self.config.tables:
+                self._update_table_status(cursor, table, TableStatus.NEW)
+                logger.info(f"Set status to NEW for table {table}")
+        self.connection.commit()
