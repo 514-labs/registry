@@ -1,0 +1,8 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/pipeline-root.schema.json",
+  "name": "QVD to ClickHouse",
+  "tags": ["qvd", "qlikview", "clickhouse", "etl", "data-migration"],
+  "description": "Universal data pipeline that reads QVD (QlikView Data) files from any source and imports them into ClickHouse.",
+  "homepage": "",
+  "registryUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/qvd_to_clickhouse"
+}

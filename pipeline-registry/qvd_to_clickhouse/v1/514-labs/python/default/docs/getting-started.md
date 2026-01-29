@@ -1,0 +1,230 @@
+# QVD-to-ClickHouse Pipeline - Getting Started
+
+Get the pipeline running in 5 minutes.
+
+## Prerequisites
+
+- Python 3.12+
+- Access to QVD files (local or S3)
+- Moose CLI installed
+- pip or uv package manager
+
+## Step 1: Install Dependencies
+
+Using pip:
+
+```bash
+cd pipeline-registry/qvd_to_clickhouse/v1/514-labs/python/default
+pip install -r requirements.txt
+```
+
+## Step 2: Configure Source
+
+Create `.env` file:
+
+```bash
+# For local files
+echo "QVD_SOURCE=/path/to/your/qvd/files" > .env
+
+# For S3
+cat > .env << EOF
+QVD_SOURCE=s3://your-bucket/qvd-files
+AWS_ACCESS_KEY_ID=your_key
+AWS_SECRET_ACCESS_KEY=your_secret
+EOF
+```
+
+## Step 3: List Available Files
+
+```bash
+python init_qvd.py --list-files --source $QVD_SOURCE
+```
+
+Expected output:
+```
+Found 5 QVD files:
+
+  - Item
+  - PurchaseOrder
+  - Reception
+  - Supplier
+  - Warehouse
+```
+
+## Step 4: Generate Models
+
+```bash
+# Generate all models
+python init_qvd.py --generate-models --source $QVD_SOURCE
+
+# Or generate specific models only
+python init_qvd.py --generate-models --source $QVD_SOURCE --files Item,PurchaseOrder
+```
+
+Expected output:
+```
+Introspecting QVD files...
+Found 2 files to process
+
+  Item
+    → Class: Item
+    → Table: QvdItem
+    → Fields: 45
+    → Rows: 10,234
+
+  PurchaseOrder
+    → Class: PurchaseOrder
+    → Table: QvdPurchaseOrder
+    → Fields: 67
+    → Rows: 5,678
+
+Generating models to: app/ingest/qvd.py
+Generated 2 models in app/ingest/qvd.py
+
+✓ Model generation complete!
+```
+
+## Step 5: Run the Pipeline
+
+### Option A: Via Moose (Recommended)
+
+```bash
+moose dev
+```
+
+Then open:
+- Temporal UI: http://localhost:8081
+- Check workflow execution
+
+### Option B: Manual Test
+
+```bash
+python -c "from app.workflows.qvd_sync import sync_qvd_files_task; sync_qvd_files_task(None)"
+```
+
+Expected output:
+```
+Starting QVD sync task...
+Source: /path/to/qvd
+Pattern: *.qvd
+Listing QVD files...
+Found 2 total files
+After filtering: 2 files
+Files to process: 2
+
+[1/2] Processing: Item
+  Table: QvdItem
+  Reading file...
+  Rows: 10234
+  Inserting into ClickHouse...
+  ✓ Successfully synced 10234 rows
+
+[2/2] Processing: PurchaseOrder
+  Table: QvdPurchaseOrder
+  Reading file...
+  Rows: 5678
+  Inserting into ClickHouse...
+  ✓ Successfully synced 5678 rows
+
+============================================================
+Sync Summary:
+  processed: 2
+============================================================
+```
+
+## Step 6: Verify Data
+
+Connect to ClickHouse:
+
+```bash
+clickhouse-client --host localhost --port 9000
+```
+
+Query the data:
+
+```sql
+-- List tables
+SHOW TABLES FROM local;
+
+-- Check data
+SELECT count(*) FROM local.QvdItem;
+SELECT * FROM local.QvdItem LIMIT 5;
+```
+
+## Troubleshooting
+
+### Issue: Dependencies not found
+
+```bash
+pip install -r requirements.txt
+```
+
+### Issue: Models not generated
+
+```bash
+# Check if file exists
+ls -lh app/ingest/qvd.py
+
+# Regenerate
+python init_qvd.py --generate-models --source $QVD_SOURCE --overwrite
+```
+
+### Issue: Files not processing
+
+```bash
+# Reset state
+python init_qvd.py --reset-state --force
+
+# Run again
+python -c "from app.workflows.qvd_sync import sync_qvd_files_task; sync_qvd_files_task(None)"
+```
+
+### Issue: S3 access denied
+
+```bash
+# Test AWS credentials
+aws s3 ls s3://your-bucket/
+
+# Or use profile
+export AWS_PROFILE=your-profile
+```
+
+## Next Steps
+
+1. **Schedule**: The workflow runs daily by default. Check Temporal UI.
+2. **Filter**: Use `QVD_INCLUDE_FILES` or `QVD_EXCLUDE_FILES` in `.env`
+3. **Tune**: Adjust `QVD_BATCH_SIZE` for performance
+4. **Monitor**: Check `.qvd_state.json` for sync status
+
+## Common Commands
+
+```bash
+# List files
+python init_qvd.py --list-files --source $QVD_SOURCE --verbose
+
+# Generate models
+python init_qvd.py --generate-models --source $QVD_SOURCE
+
+# Reset state
+python init_qvd.py --reset-state
+
+# Run sync
+moose dev
+
+# Check state
+cat .qvd_state.json | python -m json.tool
+```
+
+## Support
+
+If you encounter issues:
+
+1. Check error messages in console output
+2. Review `.qvd_state.json` for file-specific errors
+3. Check Temporal UI for workflow failures
+4. Verify QVD files are accessible
+
+For more help:
+- [Moose Documentation](https://docs.fiveonefour.com/moose)
+- [Community Slack](https://join.slack.com/t/moose-community/shared_invite/zt-2fjh5n3wz-cnOmM9Xe9DYAgQrNu8xKxg)
+- [GitHub Issues](https://github.com/514-labs/registry/issues)

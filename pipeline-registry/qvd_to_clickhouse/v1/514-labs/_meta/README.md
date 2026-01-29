@@ -1,0 +1,56 @@
+# QVD to ClickHouse
+
+> Maintained by 514-labs
+
+Universal data pipeline for QVD (QlikView Data) files to ClickHouse with incremental tracking.
+
+## Overview
+
+This Moose-based pipeline provides:
+- **Universal file system support** via fsspec (local, S3, HTTP, FTP, Azure, GCS)
+- **Automatic model generation** from QVD schemas
+- **Incremental processing** with smart change detection
+- **Batch insertion** for efficient data loading
+- **Scheduled execution** via Moose workflows
+
+## Quick Start
+
+```bash
+# Install dependencies
+pip install moose-cli
+pip install -r requirements.txt
+
+# Configure environment
+export QVD_SOURCE=/path/to/qvd/files
+# or
+export QVD_SOURCE=s3://bucket/path
+
+# Generate models
+python init_qvd.py --generate-models --source $QVD_SOURCE
+
+# Start pipeline
+moose dev
+```
+
+## Supported File Systems
+
+- **Local**: `file:///path/to/files` or `/path/to/files`
+- **S3**: `s3://bucket/path`
+- **HTTP**: `https://example.com/files`
+- **FTP**: `ftp://server/path`
+- **Azure**: `abfs://container/path`
+- **GCS**: `gs://bucket/path`
+
+## Documentation
+
+See the [full documentation](../../_meta/README.md) for detailed installation, configuration, and usage instructions.
+
+## Available Implementations
+
+- **Python** (default) - Production-ready implementation with universal file system support
+
+## Support
+
+- [Moose Documentation](https://docs.fiveonefour.com/moose)
+- [Community Slack](https://join.slack.com/t/moose-community/shared_invite/zt-2fjh5n3wz-cnOmM9Xe9DYAgQrNu8xKxg)
+- [Report Issues](https://github.com/514-labs/registry/issues)
