@@ -7,8 +7,15 @@ It runs once a day to maintain optimal database performance.
 
 import logging
 import os
+import sys
+from pathlib import Path
 from moose_lib import Task, TaskConfig, Workflow, WorkflowConfig, TaskContext
 from dotenv import load_dotenv
+
+# Add bundled sap-hana-cdc connector to Python path
+_connector_path = Path(__file__).parent.parent / "sap-hana-cdc" / "src"
+if str(_connector_path) not in sys.path:
+    sys.path.insert(0, str(_connector_path))
 
 from sap_hana_cdc import SAPHanaCDCConnector, SAPHanaCDCConfig, PruneResult
 

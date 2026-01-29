@@ -2,17 +2,24 @@
 # The implementation has been moved to FastAPI routes in main.py
 
 from moose_lib import MooseClient, Api, MooseCache, Query, and_
-from sap_hana_cdc import SAPHanaCDCConnector
 from pydantic import BaseModel, Field
 from typing import Optional
 import logging
 import argparse
 import sys
 import json
+from pathlib import Path
 
 from datetime import datetime, timezone
 from dotenv import load_dotenv
 load_dotenv()
+
+# Add bundled sap-hana-cdc connector to Python path
+_connector_path = Path(__file__).parent.parent / "sap-hana-cdc" / "src"
+if str(_connector_path) not in sys.path:
+    sys.path.insert(0, str(_connector_path))
+
+from sap_hana_cdc import SAPHanaCDCConnector
 
 logger = logging.getLogger(__name__)
 

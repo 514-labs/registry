@@ -1,7 +1,14 @@
 """Unit tests for BatchChangeInserter."""
 import pytest
+import sys
+from pathlib import Path
 from unittest.mock import Mock, MagicMock, patch
 from datetime import datetime
+
+# Add bundled sap-hana-cdc connector to Python path
+_connector_path = Path(__file__).parent.parent.parent / "app" / "sap-hana-cdc" / "src"
+if str(_connector_path) not in sys.path:
+    sys.path.insert(0, str(_connector_path))
 
 from app.workflows.lib.changes_inserter import BatchChangeInserter
 from sap_hana_cdc import ChangeEvent, TriggerType

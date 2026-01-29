@@ -68,79 +68,22 @@ You can install this pipeline using either a **package-based** approach (simpler
 
 #### Option B: Bundled Installation (Development & Customization)
 
-This approach bundles the connector code directly in your pipeline, allowing for easier customization and development.
-
-**Quick Setup (Automated):**
-```bash
-./setup_bundled.sh
-```
-
-The script will automatically:
-- Install the connector into `app/sap-hana-cdc`
-- Create/update `pyproject.toml`
-- Update `app/workflows/cdc.py` with path setup
-- Install all dependencies
-
-**Manual Setup:**
+This approach bundles the connector code directly in your pipeline, allowing for easier customization and development. The connector code is already included in the `app/sap-hana-cdc/` directory.
 
 1. Install Moose CLI:
    ```bash
    pip install moose-cli
    ```
 
-2. Bundle the connector into your pipeline:
+2. Install dependencies:
    ```bash
-   # Install the connector directly into the app directory
-   bash -i <(curl https://registry.514.ai/install.sh) --dest app/sap-hana-cdc sap-hana-cdc v1 514-labs python default
+   pip install -r requirements.txt
    ```
 
-3. Update your project to use the bundled connector:
+The pipeline comes pre-configured with the bundled connector - all necessary path setup is already in place in the workflow files.
 
-   Create or update `pyproject.toml`:
-   ```toml
-   [project]
-   name = "sap-hana-cdc-pipeline"
-   version = "0.1.0"
-   requires-python = ">=3.13"
-   dependencies = [
-       "clickhouse-connect==0.7.16",
-       "moose-cli>=0.6.230",
-       "moose-lib>=0.6.230",
-       "connectorsap-hana-cdc @ file:///path/to/your/pipeline/app/sap-hana-cdc",
-       # ... other dependencies from requirements.txt
-   ]
-
-   [build-system]
-   requires = ["setuptools>=68", "wheel"]
-   build-backend = "setuptools.build_meta"
-
-   [tool.setuptools.packages.find]
-   where = ["."]
-   include = ["app*"]
-   ```
-
-4. Update `app/workflows/cdc.py` to add path setup (at the top of the file):
-   ```python
-   import sys
-   from pathlib import Path
-
-   # Add sap-hana-cdc module to Python path
-   sap_hana_cdc_path = Path(__file__).parent.parent / "sap-hana-cdc" / "src"
-   if str(sap_hana_cdc_path) not in sys.path:
-       sys.path.insert(0, str(sap_hana_cdc_path))
-   ```
-
-5. Install dependencies:
-   ```bash
-   # Using uv (recommended)
-   uv sync
-
-   # OR using pip
-   pip install -e .
-   ```
-
-**Pros:** Easy to customize connector, all code in one place, no external dependencies
-**Cons:** More complex setup, must manually sync updates
+**Pros:** Easy to customize connector, all code in one place, no external dependencies, ready to use
+**Cons:** Must manually sync updates from the connector registry if needed
 
 ### Configuration
 
@@ -192,9 +135,9 @@ pip install connectorsap-hana-cdc
 ```
 
 **Solution for Bundled Installation:**
-1. Verify the connector is in `app/sap-hana-cdc/`
-2. Ensure you've added the path setup in `app/workflows/cdc.py` (see Option B above)
-3. Run `uv sync` or `pip install -e .` to install with the bundled connector
+1. Verify the connector is in `app/sap-hana-cdc/src/sap_hana_cdc/`
+2. The path setup is already included in the workflow files
+3. Reinstall dependencies: `pip install -r requirements.txt`
 
 ### ModuleNotFoundError: No module named 'hdbcli'
 
