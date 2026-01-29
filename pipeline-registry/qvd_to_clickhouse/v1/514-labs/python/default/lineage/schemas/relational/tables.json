@@ -1,0 +1,41 @@
+{
+  "tables": [
+    {
+      "name": "QvdFiles",
+      "description": "Source QVD files from configured storage location",
+      "columns": [
+        {
+          "name": "file_path",
+          "type": "string",
+          "description": "Path to QVD file"
+        },
+        {
+          "name": "file_name",
+          "type": "string",
+          "description": "Name of QVD file without extension"
+        },
+        {
+          "name": "last_modified",
+          "type": "datetime",
+          "description": "Last modification timestamp"
+        },
+        {
+          "name": "size",
+          "type": "integer",
+          "description": "File size in bytes"
+        }
+      ]
+    },
+    {
+      "name": "Qvd*",
+      "description": "Dynamically generated tables for each QVD file in ClickHouse",
+      "columns": [
+        {
+          "name": "*",
+          "type": "various",
+          "description": "Columns are generated based on QVD file schema"
+        }
+      ]
+    }
+  ]
+}

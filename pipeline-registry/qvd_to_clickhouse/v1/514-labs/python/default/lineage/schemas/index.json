@@ -1,0 +1,4 @@
+{
+  "schemas": ["relational/tables.json"],
+  "description": "Lineage schemas for QVD to ClickHouse pipeline"
+}

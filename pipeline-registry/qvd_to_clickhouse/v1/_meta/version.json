@@ -1,0 +1,7 @@
+{
+  "name": "qvd_to_clickhouse",
+  "version": "v1",
+  "status": "beta",
+  "releasedAt": "2025-01-29",
+  "notes": "Initial release with universal file system support (local, S3, HTTP) and incremental tracking"
+}

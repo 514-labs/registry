@@ -1,0 +1,32 @@
+language = "python"
+description = "QVD to ClickHouse data pipeline"
+post_install_print = """
+QVD to ClickHouse Pipeline
+---------------------------------------------------------
+
+📂 Go to your project directory:
+    $ cd {project_dir}
+
+🥄 Create a virtual environment (optional, recommended):
+    $ python3 -m venv .venv
+    $ source .venv/bin/activate
+
+📦 Install Dependencies:
+    $ pip install -r ./requirements.txt
+
+⚙️  Configure QVD Source:
+    Edit moose.config.toml to set your QVD file location:
+    - For local files: file:///path/to/qvd/files
+    - For S3: s3://bucket-name/path
+    - For HTTP: http://example.com/path
+
+🛠️  Start Moose Server:
+    $ moose dev
+
+📖 View Documentation:
+    $ cat docs/getting-started.md
+
+For more information, visit:
+https://github.com/514-labs/registry/tree/main/pipeline-registry/qvd_to_clickhouse
+"""
+default_sloan_telemetry="standard"
