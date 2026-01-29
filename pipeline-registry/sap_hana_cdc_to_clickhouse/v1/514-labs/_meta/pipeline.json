@@ -10,7 +10,7 @@
   "schedule": { "cron": "0 * * * *", "timezone": "UTC" },
   "source": {
     "type": "connector",
-    "connector": { "name": "sap-hana-cdc", "version": "v1", "author": "514-labs" },
+    "connector": { "name": "sap_hana_cdc", "version": "v1", "author": "514-labs" },
     "stream": "changes"
   },
   "systems": [],
