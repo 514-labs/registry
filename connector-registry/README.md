@@ -60,3 +60,13 @@ bash -i <(curl https://registry.514.ai/install.sh) \
 ```
 
 Then use the connector in the destination project.
+
+## Connectors used in pipelines
+
+Connectors in this registry may be referenced by pipelines in the `pipeline-registry/`. When a pipeline uses a connector, it should create a symbolic link to the connector implementation rather than duplicating the code. This approach:
+
+- Keeps the codebase DRY (Don't Repeat Yourself)
+- Ensures pipelines use the latest connector code
+- Simplifies maintenance and updates
+
+The installation script automatically dereferences symlinks, so users installing pipelines receive the actual connector code.

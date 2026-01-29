@@ -225,9 +225,9 @@ copy_connector_into_subdir() {
   echo ""
 
   if command -v rsync >/dev/null 2>&1; then
-    rsync -a --exclude ".git" "$src_dir"/ "$dest_dir"/
+    rsync -aL --exclude ".git" "$src_dir"/ "$dest_dir"/
   else
-    cp -R "$src_dir"/. "$dest_dir"/
+    cp -RL "$src_dir"/. "$dest_dir"/
   fi
 
   echo "✅ Installed into $dest_dir"
