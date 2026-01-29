@@ -1,4 +1,4 @@
-# sap-hana-cdc (Python)
+# sap_hana_cdc (Python)
 
 Python-based Change Data Capture (CDC) connector for SAP HANA database with real-time streaming capabilities.
 
@@ -26,8 +26,8 @@ Install the connector as a standalone Python package:
 
 ```bash
 # Using the 514 registry installer
-bash -i <(curl https://registry.514.ai/install.sh) sap-hana-cdc v1 514-labs python default
-cd sap-hana-cdc
+bash -i <(curl https://registry.514.ai/install.sh) sap_hana_cdc v1 514-labs python default
+cd sap_hana_cdc
 pip install -e .
 
 # Or using PyPI (when published)
@@ -40,14 +40,14 @@ To bundle this connector into your Moose pipeline for easier customization:
 
 ```bash
 # From your pipeline directory
-bash -i <(curl https://registry.514.ai/install.sh) --dest app/sap-hana-cdc sap-hana-cdc v1 514-labs python default
+bash -i <(curl https://registry.514.ai/install.sh) --dest app/sap_hana_cdc sap_hana_cdc v1 514-labs python default
 ```
 
 Then add to your pipeline's `pyproject.toml`:
 ```toml
 [project]
 dependencies = [
-    "connectorsap-hana-cdc @ file:///path/to/your/pipeline/app/sap-hana-cdc",
+    "connectorsap_hana_cdc @ file:///path/to/your/pipeline/app/sap_hana_cdc",
     # ... other dependencies
 ]
 ```

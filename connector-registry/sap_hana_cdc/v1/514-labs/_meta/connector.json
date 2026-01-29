@@ -1,5 +1,5 @@
 {
-  "name": "sap-hana-cdc",
+  "name": "sap_hana_cdc",
   "author": "514-labs",
   "version": "v1",
   "languages": ["python"],

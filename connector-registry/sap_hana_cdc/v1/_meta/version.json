@@ -1,5 +1,5 @@
 {
-  "name": "sap-hana-cdc",
+  "name": "sap_hana_cdc",
   "version": "v1",
   "status": "beta",
   "releasedAt": "2025-01-15",

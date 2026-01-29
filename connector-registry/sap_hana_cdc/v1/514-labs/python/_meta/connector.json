@@ -1,6 +1,6 @@
 {
-  "identifier": "sap-hana-cdc",
-  "name": "sap-hana-cdc",
+  "identifier": "sap_hana_cdc",
+  "name": "sap_hana_cdc",
   "author": "514-labs",
   "version": "v1",
   "language": "python",

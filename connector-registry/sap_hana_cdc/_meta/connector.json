@@ -1,6 +1,6 @@
 {
   "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
-  "identifier": "sap-hana-cdc",
+  "identifier": "sap_hana_cdc",
   "name": "SAP HANA CDC",
   "category": "database",
   "tags": ["database", "cdc", "sap", "hana", "real-time"],

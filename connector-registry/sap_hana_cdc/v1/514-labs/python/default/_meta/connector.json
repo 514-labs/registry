@@ -1,6 +1,6 @@
 {
   "$schema": "https://schemas.connector-factory.dev/connector.schema.json",
-  "identifier": "sap-hana-cdc",
+  "identifier": "sap_hana_cdc",
   "name": "SAP HANA CDC",
   "author": "514-labs",
   "authorType": "organization",
@@ -17,5 +17,5 @@
   "capabilities": {"extract": true, "transform": false, "load": false},
   "maintainers": [],
   "issues": "",
-  "registryUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/sap-hana-cdc/v1/514-labs/python/default"
+  "registryUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/sap_hana_cdc/v1/514-labs/python/default"
 }
