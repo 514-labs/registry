@@ -20,18 +20,30 @@ pip install -r requirements.txt
 
 ## Step 2: Configure Source
 
-Create `.env` file:
+Create a `.env` file in the pipeline directory with your configuration:
 
+**For local files:**
 ```bash
-# For local files
-echo "QVD_SOURCE=/path/to/your/qvd/files" > .env
+QVD_SOURCE=/path/to/your/qvd/files
+```
 
-# For S3
-cat > .env << EOF
+**For S3:**
+```bash
 QVD_SOURCE=s3://your-bucket/qvd-files
 AWS_ACCESS_KEY_ID=your_key
 AWS_SECRET_ACCESS_KEY=your_secret
-EOF
+```
+
+**Additional options:**
+```bash
+# Optional - filtering
+QVD_FILE_PATTERN=*.qvd
+QVD_INCLUDE_FILES=Item,PO,Reception
+QVD_EXCLUDE_FILES=Archive,Temp
+
+# Optional - processing
+QVD_BATCH_SIZE=10000
+QVD_SCHEDULE=@daily
 ```
 
 ## Step 3: List Available Files
