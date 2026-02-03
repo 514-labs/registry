@@ -65,12 +65,19 @@ Found 5 QVD files:
 
 ## Step 4: Generate Models
 
+**Generate all models:**
 ```bash
-# Generate all models
 python init_qvd.py --generate-models --source $QVD_SOURCE
+```
 
-# Or generate specific models only
+**Or generate specific models only:**
+```bash
 python init_qvd.py --generate-models --source $QVD_SOURCE --files Item,PurchaseOrder
+```
+
+**Or exclude certain files:**
+```bash
+python init_qvd.py --generate-models --source $QVD_SOURCE --exclude Archive,Temp
 ```
 
 Expected output:
