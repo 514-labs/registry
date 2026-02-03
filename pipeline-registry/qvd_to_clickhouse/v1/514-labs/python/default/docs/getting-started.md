@@ -212,31 +212,37 @@ pip install -r requirements.txt
 
 ### Issue: Models not generated
 
+**Check if file exists:**
 ```bash
-# Check if file exists
 ls -lh app/ingest/qvd.py
+```
 
-# Regenerate
+**Regenerate models:**
+```bash
 python init_qvd.py --generate-models --source $QVD_SOURCE --overwrite
 ```
 
 ### Issue: Files not processing
 
+**Reset state:**
 ```bash
-# Reset state
 python init_qvd.py --reset-state --force
+```
 
-# Run again
+**Run again:**
+```bash
 python -c "from app.workflows.qvd_sync import sync_qvd_files_task; sync_qvd_files_task(None)"
 ```
 
 ### Issue: S3 access denied
 
+**Test AWS credentials:**
 ```bash
-# Test AWS credentials
 aws s3 ls s3://your-bucket/
+```
 
-# Or use profile
+**Or use profile:**
+```bash
 export AWS_PROFILE=your-profile
 ```
 
