@@ -22,7 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - File filtering with include/exclude patterns
 - Comprehensive error handling and logging
 - Support for AWS S3 with multiple credential methods
-- State persistence in `.qvd_state.json`
+- State persistence in ClickHouse tracking table
+- HTTP API endpoint for real-time status monitoring
 
 ### Features
 - Read QVD files from any fsspec-supported filesystem

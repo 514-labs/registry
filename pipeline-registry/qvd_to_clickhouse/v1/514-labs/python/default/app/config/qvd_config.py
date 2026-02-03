@@ -13,8 +13,6 @@ class QvdConfig:
     exclude_files: Optional[List[str]] = None  # Blacklist (without .qvd extension)
     batch_size: int = 10000              # Rows per insert
     schedule: str = "@daily"             # Workflow schedule
-    state_file: str = ".qvd_state.json"  # File tracking state (JSON mode)
-    use_clickhouse_tracking: bool = True # Use ClickHouse for tracking (recommended)
 
     # S3 credentials (optional, can also use AWS profile or IAM role)
     aws_access_key_id: Optional[str] = None
@@ -55,8 +53,6 @@ class QvdConfig:
             exclude_files=exclude_files,
             batch_size=int(os.getenv(f"{prefix}BATCH_SIZE", "10000")),
             schedule=os.getenv(f"{prefix}SCHEDULE", "@daily"),
-            state_file=os.getenv(f"{prefix}STATE_FILE", ".qvd_state.json"),
-            use_clickhouse_tracking=os.getenv(f"{prefix}USE_CLICKHOUSE_TRACKING", "true").lower() == "true",
             aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
             aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
             aws_region=os.getenv("AWS_DEFAULT_REGION"),

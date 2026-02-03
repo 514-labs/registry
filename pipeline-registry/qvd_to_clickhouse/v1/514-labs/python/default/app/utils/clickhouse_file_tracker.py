@@ -304,9 +304,26 @@ class ClickHouseFileTracker:
         Returns:
             Dict with counts by status
         """
-        # This would query ClickHouse in production
-        # For now, return empty dict
-        return {'completed': 0, 'failed': 0, 'processing': 0}
+        try:
+            from moose_lib import ClickHouseClient
+
+            client = ClickHouseClient()
+            query = """
+                SELECT status, count() as count
+                FROM local.QvdFileTracking FINAL
+                GROUP BY status
+            """
+
+            result = client.query(query)
+            summary = {}
+            for row in result.result_rows:
+                status, count = row
+                summary[status] = count
+
+            return summary
+        except Exception as e:
+            print(f"Warning: Failed to get status summary: {e}")
+            return {'completed': 0, 'failed': 0, 'processing': 0}
 
     def list_errors(self) -> List[FileStatus]:
         """
@@ -315,18 +332,72 @@ class ClickHouseFileTracker:
         Returns:
             List of FileStatus objects with status='failed'
         """
-        # This would query ClickHouse in production
-        return []
+        try:
+            from moose_lib import ClickHouseClient
 
-    def reset_state(self):
+            client = ClickHouseClient()
+            query = """
+                SELECT
+                    file_path,
+                    file_name,
+                    file_size,
+                    file_mtime,
+                    file_etag,
+                    processed_at,
+                    processing_duration_seconds,
+                    row_count,
+                    status,
+                    error_message
+                FROM local.QvdFileTracking FINAL
+                WHERE status = 'failed'
+                ORDER BY processed_at DESC
+            """
+
+            result = client.query(query)
+            errors = []
+            for row in result.result_rows:
+                errors.append(FileStatus(
+                    file_path=row[0],
+                    file_name=row[1],
+                    size=row[2],
+                    mtime=row[3],
+                    etag=row[4],
+                    last_processed=row[5],
+                    processing_duration=row[6],
+                    row_count=row[7],
+                    status=row[8],
+                    error_message=row[9]
+                ))
+
+            return errors
+        except Exception as e:
+            print(f"Warning: Failed to list errors: {e}")
+            return []
+
+    def reset_state(self, force_delete: bool = False):
         """
         Clear all tracking state.
+
+        Args:
+            force_delete: If True, truncate the tracking table. Otherwise, just print instructions.
 
         Note: For ClickHouse-based tracking, this would typically just
         be documented. You don't usually delete tracking history.
         Instead, reprocessing is triggered by other means.
         """
-        print("Note: ClickHouse tracking preserves history.")
-        print("To reprocess files, either:")
-        print("  1. Delete specific records from QvdFileTracking table")
-        print("  2. Use --force flag to ignore tracking")
+        if force_delete:
+            try:
+                from moose_lib import ClickHouseClient
+
+                client = ClickHouseClient()
+                query = "TRUNCATE TABLE local.QvdFileTracking"
+                client.query(query)
+                print("✓ Tracking state cleared (all records deleted)")
+            except Exception as e:
+                print(f"Error truncating tracking table: {e}")
+        else:
+            print("Note: ClickHouse tracking preserves history.")
+            print("To reprocess files, either:")
+            print("  1. Delete specific records from QvdFileTracking table")
+            print("  2. Use --force flag to ignore tracking")
+            print("  3. Run with --force to truncate the tracking table")

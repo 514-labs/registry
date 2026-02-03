@@ -27,9 +27,6 @@ wheels/
 .env
 .venv
 
-# State files
-.qvd_state.json
-
 # IDE
 .vscode/
 .idea/

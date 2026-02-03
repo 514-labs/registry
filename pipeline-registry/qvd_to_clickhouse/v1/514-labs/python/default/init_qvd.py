@@ -21,7 +21,7 @@ from app.config.qvd_config import QvdConfig
 from app.workflows.lib.qvd_reader import QvdReader
 from app.utils.qvd_introspection import QvdIntrospector
 from app.utils.qvd_model_generator import QvdModelGenerator
-from app.utils.file_tracker import FileTracker
+from app.utils.clickhouse_file_tracker import ClickHouseFileTracker
 
 
 def list_files(args):
@@ -128,7 +128,7 @@ def generate_models(args):
 
 def reset_state(args):
     """Reset tracking state."""
-    tracker = FileTracker(args.state_file)
+    tracker = ClickHouseFileTracker()
 
     # Show current state
     summary = tracker.get_status_summary()
@@ -142,14 +142,23 @@ def reset_state(args):
     for status, count in summary.items():
         print(f"  {status}: {count}")
 
+    # Show failures if any
+    errors = tracker.list_errors()
+    if errors:
+        print(f"\nFiles with failures:")
+        for error in errors[:10]:  # Show first 10
+            print(f"  - {Path(error.file_path).name}: {error.error_message}")
+        if len(errors) > 10:
+            print(f"  ... and {len(errors) - 10} more")
+
     # Confirm reset
     if not args.force:
-        response = input("\nReset all tracking state? [y/N] ")
+        response = input("\nReset all tracking state (delete all records)? [y/N] ")
         if response.lower() != 'y':
             print("Cancelled")
             return
 
-    tracker.reset_state()
+    tracker.reset_state(force_delete=True)
     print("✓ Tracking state reset")
 
 
@@ -242,11 +251,6 @@ Examples:
     )
 
     # State management
-    parser.add_argument(
-        "--state-file",
-        default=".qvd_state.json",
-        help="State file for tracking (default: .qvd_state.json)"
-    )
     parser.add_argument(
         "--force",
         action="store_true",
