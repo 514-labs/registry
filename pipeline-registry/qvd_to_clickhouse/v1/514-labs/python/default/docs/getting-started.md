@@ -264,23 +264,33 @@ export AWS_PROFILE=your-profile
 
 ## Common Commands
 
+**List files:**
 ```bash
-# List files
 python init_qvd.py --list-files --source $QVD_SOURCE --verbose
+```
 
-# Generate models
+**Generate models:**
+```bash
 python init_qvd.py --generate-models --source $QVD_SOURCE
+```
 
-# Reset state
+**Reset state:**
+```bash
 python init_qvd.py --reset-state
+```
 
-# Run sync
+**Run sync:**
+```bash
 moose dev
+```
 
-# Check status via API
+**Check status via API:**
+```bash
 curl http://localhost:4000/consumption/qvd_status
+```
 
-# Check state file
+**Check state file:**
+```bash
 cat .qvd_state.json | python -m json.tool
 ```
 
