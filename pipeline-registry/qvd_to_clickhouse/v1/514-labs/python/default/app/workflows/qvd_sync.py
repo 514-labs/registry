@@ -1,9 +1,10 @@
 from pathlib import Path
+import time
 from moose_lib import Task, TaskConfig, Workflow, WorkflowConfig, TaskContext
 from ..config.qvd_config import QvdConfig
 from .lib.qvd_reader import QvdReader
 from .lib.batch_inserter import QvdBatchInserter
-from ..utils.file_tracker import FileTracker
+from ..utils.clickhouse_file_tracker import ClickHouseFileTracker
 
 
 def derive_table_name(file_path: str) -> str:
@@ -53,7 +54,7 @@ def sync_qvd_files_task(ctx: TaskContext[None]) -> None:
 
     # Initialize components
     reader = QvdReader(storage_options=storage_options)
-    tracker = FileTracker(config.state_file)
+    tracker = ClickHouseFileTracker(batch_size=config.batch_size)
     inserter = QvdBatchInserter(batch_size=config.batch_size)
 
     # List all QVD files
@@ -91,10 +92,16 @@ def sync_qvd_files_task(ctx: TaskContext[None]) -> None:
         file_name = Path(file_path).stem
         print(f"\n[{idx}/{len(files_to_process)}] Processing: {file_name}")
 
+        start_time = time.time()
+        file_info = reader.get_file_info(file_path)
+
         try:
             # Derive table name
             table_name = derive_table_name(file_path)
             print(f"  Table: {table_name}")
+
+            # Mark as processing
+            tracker.mark_processing(file_path, file_info, table_name)
 
             # Read QVD file
             print(f"  Reading file...")
@@ -105,14 +112,15 @@ def sync_qvd_files_task(ctx: TaskContext[None]) -> None:
             print(f"  Inserting into ClickHouse...")
             inserter.insert_dataframe(table_name, df)
 
-            # Mark as processed
-            file_info = reader.get_file_info(file_path)
-            tracker.mark_processed(file_path, file_info, len(df))
-            print(f"  ✓ Successfully synced {len(df)} rows")
+            # Mark as completed
+            processing_duration = time.time() - start_time
+            tracker.mark_completed(file_path, file_info, table_name, len(df), processing_duration)
+            print(f"  ✓ Successfully synced {len(df)} rows in {processing_duration:.2f}s")
 
         except Exception as e:
             print(f"  ✗ Error processing {file_name}: {e}")
-            tracker.mark_error(file_path, str(e))
+            processing_duration = time.time() - start_time
+            tracker.mark_failed(file_path, file_info, table_name, str(e), processing_duration)
 
     # Print summary
     print("\n" + "="*60)

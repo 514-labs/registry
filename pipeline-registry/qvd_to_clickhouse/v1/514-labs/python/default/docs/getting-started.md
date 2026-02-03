@@ -260,7 +260,7 @@ export AWS_PROFILE=your-profile
 1. **Schedule**: The workflow runs daily by default. Check Temporal UI.
 2. **Filter**: Use `QVD_INCLUDE_FILES` or `QVD_EXCLUDE_FILES` in `.env`
 3. **Tune**: Adjust `QVD_BATCH_SIZE` for performance
-4. **Monitor**: Use the API endpoint (`/consumption/qvd_status`) or check `.qvd_state.json`
+4. **Monitor**: Use the API endpoint (`/consumption/qvd_status`) or query ClickHouse tracking table
 
 ## Common Commands
 
@@ -289,9 +289,9 @@ moose dev
 curl http://localhost:4000/consumption/qvd_status
 ```
 
-**Check state file:**
+**Query tracking table:**
 ```bash
-cat .qvd_state.json | python -m json.tool
+clickhouse-client --query "SELECT * FROM local.QvdFileTracking FINAL ORDER BY processed_at DESC LIMIT 10"
 ```
 
 ## Support
@@ -299,7 +299,7 @@ cat .qvd_state.json | python -m json.tool
 If you encounter issues:
 
 1. Check error messages in console output
-2. Review `.qvd_state.json` for file-specific errors
+2. Use the API endpoint to review file-specific errors: `curl "http://localhost:4000/consumption/qvd_status?status=failed"`
 3. Check Temporal UI for workflow failures
 4. Verify QVD files are accessible
 

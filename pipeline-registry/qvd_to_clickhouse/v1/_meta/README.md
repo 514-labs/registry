@@ -120,8 +120,8 @@ moose logs
 # Check workflow status via Temporal UI
 open http://localhost:8081
 
-# View tracking state
-cat .qvd_state.json
+# View tracking state via API
+curl http://localhost:4000/consumption/qvd_status
 ```
 
 #### QVD Status API Endpoint
@@ -242,7 +242,7 @@ ClickHouse (via OlapTable)
 - **QvdReader**: Universal file reader using `fsspec` for any storage backend
 - **QvdIntrospector**: Extract schema metadata from QVD files
 - **QvdModelGenerator**: Generate Pydantic models from QVD schemas
-- **FileTracker**: Track processed files for incremental updates
+- **ClickHouseFileTracker**: Track processed files in ClickHouse for incremental updates
 - **QvdBatchInserter**: Efficient batch insertion into ClickHouse
 - **qvd_sync_workflow**: Moose workflow for scheduled execution
 
@@ -258,7 +258,6 @@ ClickHouse (via OlapTable)
 | `QVD_EXCLUDE_FILES` | No | - | Comma-separated file blacklist |
 | `QVD_BATCH_SIZE` | No | `10000` | Rows per insert batch |
 | `QVD_SCHEDULE` | No | `@daily` | Workflow schedule (cron or shorthand) |
-| `QVD_STATE_FILE` | No | `.qvd_state.json` | Path to tracking state file |
 
 ### AWS Configuration
 
@@ -285,16 +284,17 @@ QVD_FILE_PATTERN=prod_*.qvd
 
 ## Change Detection
 
-The pipeline tracks processed files and only processes new or modified files:
+The pipeline tracks processed files in ClickHouse and only processes new or modified files:
 
 - **Local files**: Compare modification time (`mtime`) + file size
 - **S3 files**: Compare ETag (content hash)
 - **HTTP files**: Compare `Last-Modified` header or `Content-Length`
 
-State is stored in `.qvd_state.json` by default and includes:
+Tracking state is stored in the `QvdFileTracking` ClickHouse table and includes:
 - Last processed timestamp
 - File metadata (mtime, size, ETag)
 - Processing status and error messages
+- Processing duration and row counts
 
 ## Troubleshooting
 
@@ -322,8 +322,11 @@ ls -lh app/ingest/qvd.py
 Check tracking state and reset if needed:
 
 ```bash
-# View current state
-cat .qvd_state.json
+# View current state via API
+curl http://localhost:4000/consumption/qvd_status
+
+# Query tracking table directly
+clickhouse-client --query "SELECT * FROM local.QvdFileTracking FINAL ORDER BY processed_at DESC"
 
 # Reset state to reprocess all files
 python init_qvd.py --reset-state --force
