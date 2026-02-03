@@ -34,15 +34,24 @@ AWS_ACCESS_KEY_ID=your_key
 AWS_SECRET_ACCESS_KEY=your_secret
 ```
 
-**Additional options:**
-```bash
-# Optional - filtering
-QVD_FILE_PATTERN=*.qvd
-QVD_INCLUDE_FILES=Item,PO,Reception
-QVD_EXCLUDE_FILES=Archive,Temp
+**Additional options (add to `.env` as needed):**
 
-# Optional - processing
+Filtering options:
+```bash
+QVD_FILE_PATTERN=*.qvd
+```
+```bash
+QVD_INCLUDE_FILES=Item,PO,Reception
+```
+```bash
+QVD_EXCLUDE_FILES=Archive,Temp
+```
+
+Processing options:
+```bash
 QVD_BATCH_SIZE=10000
+```
+```bash
 QVD_SCHEDULE=@daily
 ```
 
