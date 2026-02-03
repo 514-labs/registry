@@ -28,7 +28,23 @@ A universal data pipeline that reads QVD (QlikView Data) files from any source a
 
 ## Quick Start
 
-### 1. Install Dependencies
+### 1. Installation
+
+Install using the 514 registry:
+
+```bash
+bash -i <(curl https://registry.514.ai/install.sh) --type pipeline qvd_to_clickhouse v1 514-labs python default
+cd qvd_to_clickhouse
+```
+
+Or with a custom destination:
+
+```bash
+bash -i <(curl https://registry.514.ai/install.sh) --type pipeline --dest my-qvd-pipeline qvd_to_clickhouse v1 514-labs python default
+cd my-qvd-pipeline
+```
+
+Then install dependencies:
 
 ```bash
 pip install -r requirements.txt

@@ -26,16 +26,25 @@ Before installing this pipeline, ensure you have:
 
 ## Installation
 
-### 1. Install Moose CLI
+### 1. Install Pipeline from Registry
+
+Install using the 514 registry:
 
 ```bash
-pip install moose-cli
+bash -i <(curl https://registry.514.ai/install.sh) --type pipeline qvd_to_clickhouse v1 514-labs python default
+cd qvd_to_clickhouse
 ```
 
-### 2. Install Pipeline Dependencies
+Or with a custom destination:
 
 ```bash
-cd pipeline-registry/qvd_to_clickhouse/v1/514-labs/python/default
+bash -i <(curl https://registry.514.ai/install.sh) --type pipeline --dest my-qvd-pipeline qvd_to_clickhouse v1 514-labs python default
+cd my-qvd-pipeline
+```
+
+### 2. Install Dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
