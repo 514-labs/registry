@@ -1,0 +1,37 @@
+language = "python"
+description = "Python pipeline for QVD to ClickHouse"
+post_install_print = """
+🚀 Next steps for your QVD to ClickHouse pipeline:
+
+📂 Go to your pipeline directory:
+    $ cd {destination_dir}
+
+📦 Install dependencies:
+    $ pip install -r requirements.txt
+
+🔍 List available QVD files:
+    $ python init_qvd.py --list-files --source /path/to/qvd/files
+
+🔧 Generate models from your QVD files:
+    $ python init_qvd.py --generate-models --source /path/to/qvd/files
+
+⚙️  Set environment variables:
+    $ export QVD_SOURCE=/path/to/qvd/files
+    # For S3: export QVD_SOURCE=s3://bucket/path
+    # For HTTP: export QVD_SOURCE=https://example.com/files
+
+    $ export CLICKHOUSE_URL=your_clickhouse_url
+    $ export CLICKHOUSE_DATABASE=your_database
+
+🚀 Start development:
+    $ moose dev
+
+📊 Monitor pipeline status:
+    $ curl http://localhost:4000/consumption/qvd_status
+
+📖 Next steps:
+    • Review README.md for detailed configuration options
+    • Check docs/getting-started.md for setup details
+    • Configure QVD_INCLUDE_FILES or QVD_EXCLUDE_FILES to filter files
+    • Set QVD_SCHEDULE to customize sync frequency (default: @daily)
+"""

@@ -23,8 +23,16 @@ A universal data pipeline that reads QVD (QlikView Data) files from any source a
 ## Prerequisites
 
 - Python 3.12 or higher
-- Moose CLI installed
 - Access to QVD files (local or cloud storage)
+
+## Installation
+
+Install this pipeline from the 514 registry:
+
+```bash
+bash -i <(curl https://registry.514.ai/install.sh) --type pipeline qvd_to_clickhouse v1 514-labs python default
+cd qvd_to_clickhouse
+```
 
 ## Quick Start
 

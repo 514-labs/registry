@@ -13,13 +13,19 @@ This Moose-based pipeline provides:
 - **Batch insertion** for efficient data loading
 - **Scheduled execution** via Moose workflows
 
+## Installation
+
+Install using the 514 registry:
+
+```bash
+bash -i <(curl https://registry.514.ai/install.sh) --type pipeline qvd_to_clickhouse v1 514-labs python default
+cd qvd_to_clickhouse
+pip install -r requirements.txt
+```
+
 ## Quick Start
 
 ```bash
-# Install dependencies
-pip install moose-cli
-pip install -r requirements.txt
-
 # Configure environment
 export QVD_SOURCE=/path/to/qvd/files
 # or
