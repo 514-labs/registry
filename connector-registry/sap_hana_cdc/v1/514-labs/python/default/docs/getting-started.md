@@ -12,7 +12,7 @@ This guide will help you set up and start using the SAP HANA CDC connector.
 
 1. Install the connector:
    ```bash
-   bash -i <(curl https://registry.514.ai/install.sh) --dest app/sap-hana-cdc sap-hana-cdc v1 514-labs python default
+   bash -i <(curl https://registry.514.ai/install.sh) --dest app/sap_hana_cdc sap_hana_cdc v1 514-labs python default
    ```
 
 ## Basic Configuration
@@ -76,9 +76,3 @@ for change in changes.changes:
     if change.old_values:
         print(f"Old values: {change.old_values}")
 ```
-
-## Next Steps
-
-- Review the [Configuration](configuration.md) guide for advanced options
-- Check the [Schema Reference](schema.md) for data structure details
-- See [Limits and Considerations](limits.md) for important constraints
