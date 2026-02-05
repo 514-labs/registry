@@ -123,6 +123,6 @@ export const SnippetTabsContent = ({
     className={cn("mt-0 mb-0 bg-background p-4 text-sm", className)}
     {...props}
   >
-    <pre className="truncate">{children}</pre>
+    <pre className="overflow-x-auto whitespace-pre-wrap">{children}</pre>
   </TabsContent>
 );

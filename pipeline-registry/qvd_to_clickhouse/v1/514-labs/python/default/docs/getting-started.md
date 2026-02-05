@@ -6,15 +6,15 @@ Get the pipeline running in 5 minutes.
 
 - Python 3.12+
 - Access to QVD files (local or S3)
-- Moose CLI installed
 - pip or uv package manager
 
-## Step 1: Install Dependencies
+## Step 1: Install Pipeline
 
-Using pip:
+Install from the 514 registry:
 
 ```bash
-cd pipeline-registry/qvd_to_clickhouse/v1/514-labs/python/default
+bash -i <(curl https://registry.514.ai/install.sh) --type pipeline qvd_to_clickhouse v1 514-labs python default
+cd qvd_to_clickhouse
 pip install -r requirements.txt
 ```
 

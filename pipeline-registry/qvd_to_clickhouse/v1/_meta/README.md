@@ -27,7 +27,6 @@ Before installing this pipeline, ensure you have:
 ## Installation
 
 ### 1. Install Pipeline from Registry
-
 Install using the 514 registry:
 
 ```bash
@@ -352,10 +351,10 @@ echo $AWS_PROFILE
 
 ### Import Errors
 
-Ensure you're running from the correct directory:
+Ensure you're running from the pipeline directory:
 
 ```bash
-cd pipeline-registry/qvd_to_clickhouse/v1/514-labs/python/default
+cd qvd_to_clickhouse
 python -c "from app.config.qvd_config import QvdConfig; print('OK')"
 ```
 

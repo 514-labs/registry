@@ -1,7 +1,7 @@
 {
-  "total": 10,
+  "total": 11,
   "connectors": 6,
-  "pipelines": 4,
+  "pipelines": 5,
   "items": [
     {
       "type": "connector",
@@ -178,7 +178,7 @@
     },
     {
       "type": "connector",
-      "id": "sap-hana-cdc",
+      "id": "sap_hana_cdc",
       "name": "SAP HANA CDC",
       "version": "v1",
       "author": "514-labs",
@@ -211,8 +211,8 @@
           "default": "https://github.com/514-labs/registry/issues"
         }
       },
-      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/sap-hana-cdc/v1/514-labs/python",
-      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/sap-hana-cdc/v1/514-labs",
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/sap_hana_cdc/v1/514-labs/python",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/connector-registry/sap_hana_cdc/v1/514-labs",
       "apiPaths": {
         "scaffold": "/api/connectors/scaffolds/python"
       }
@@ -363,7 +363,81 @@
     },
     {
       "type": "pipeline",
-      "id": "sap-hana-cdc-to-clickhouse",
+      "id": "qvd_to_clickhouse",
+      "name": "QVD to ClickHouse",
+      "version": "v1",
+      "author": "514-labs",
+      "authorId": "514-labs",
+      "language": "python",
+      "implementation": "default",
+      "tags": [
+        "qvd",
+        "qlikview",
+        "clickhouse",
+        "etl",
+        "data-migration",
+        "fsspec"
+      ],
+      "description": "Universal data pipeline for QVD (QlikView Data) files to ClickHouse with incremental tracking",
+      "homepage": "",
+      "maintainers": [],
+      "authorType": "organization",
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/qvd_to_clickhouse/python",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/qvd_to_clickhouse",
+      "schedule": {
+        "cron": "0 0 * * *",
+        "timezone": "UTC"
+      },
+      "source": {
+        "type": "files",
+        "format": "qvd",
+        "location": "configurable"
+      },
+      "destination": {
+        "system": "clickhouse",
+        "database": "local",
+        "table": "qvd_*"
+      },
+      "systems": [],
+      "transformations": [],
+      "lineage": {
+        "nodes": [
+          {
+            "id": "source",
+            "kind": "source",
+            "label": "QVD Files"
+          },
+          {
+            "id": "qvd_reader",
+            "kind": "transform",
+            "label": "QVD Reader"
+          },
+          {
+            "id": "dest",
+            "kind": "destination",
+            "label": "ClickHouse"
+          }
+        ],
+        "edges": [
+          {
+            "from": "source",
+            "to": "qvd_reader",
+            "label": "read files"
+          },
+          {
+            "from": "qvd_reader",
+            "to": "dest",
+            "label": "batch insert"
+          }
+        ]
+      },
+      "apiPaths": {
+        "scaffold": "/api/pipelines/scaffolds/python"
+      }
+    },
+    {
+      "type": "pipeline",
+      "id": "sap_hana_cdc_to_clickhouse",
       "name": "SAP HANA CDC to ClickHouse",
       "version": "v1",
       "author": "514-labs",
@@ -381,8 +455,8 @@
       "homepage": "",
       "maintainers": [],
       "authorType": "organization",
-      "githubUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/sap-hana-cdc-to-clickhouse/python",
-      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/sap-hana-cdc-to-clickhouse",
+      "githubUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/sap_hana_cdc_to_clickhouse/python",
+      "providerGithubUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/sap_hana_cdc_to_clickhouse",
       "schedule": {
         "cron": "0 * * * *",
         "timezone": "UTC"
@@ -390,7 +464,7 @@
       "source": {
         "type": "connector",
         "connector": {
-          "name": "sap-hana-cdc",
+          "name": "sap_hana_cdc",
           "version": "v1",
           "author": "514-labs"
         },
