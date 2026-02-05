@@ -20,18 +20,39 @@ pip install -r requirements.txt
 
 ## Step 2: Configure Source
 
-Create `.env` file:
+Create a `.env` file in the pipeline directory with your configuration:
 
+**For local files:**
 ```bash
-# For local files
-echo "QVD_SOURCE=/path/to/your/qvd/files" > .env
+QVD_SOURCE=/path/to/your/qvd/files
+```
 
-# For S3
-cat > .env << EOF
+**For S3:**
+```bash
 QVD_SOURCE=s3://your-bucket/qvd-files
 AWS_ACCESS_KEY_ID=your_key
 AWS_SECRET_ACCESS_KEY=your_secret
-EOF
+```
+
+**Additional options (add to `.env` as needed):**
+
+Filtering options:
+```bash
+QVD_FILE_PATTERN=*.qvd
+```
+```bash
+QVD_INCLUDE_FILES=Item,PO,Reception
+```
+```bash
+QVD_EXCLUDE_FILES=Archive,Temp
+```
+
+Processing options:
+```bash
+QVD_BATCH_SIZE=10000
+```
+```bash
+QVD_SCHEDULE=@daily
 ```
 
 ## Step 3: List Available Files
@@ -53,12 +74,19 @@ Found 5 QVD files:
 
 ## Step 4: Generate Models
 
+**Generate all models:**
 ```bash
-# Generate all models
 python init_qvd.py --generate-models --source $QVD_SOURCE
+```
 
-# Or generate specific models only
+**Or generate specific models only:**
+```bash
 python init_qvd.py --generate-models --source $QVD_SOURCE --files Item,PurchaseOrder
+```
+
+**Or exclude certain files:**
+```bash
+python init_qvd.py --generate-models --source $QVD_SOURCE --exclude Archive,Temp
 ```
 
 Expected output:
@@ -193,31 +221,37 @@ pip install -r requirements.txt
 
 ### Issue: Models not generated
 
+**Check if file exists:**
 ```bash
-# Check if file exists
 ls -lh app/ingest/qvd.py
+```
 
-# Regenerate
+**Regenerate models:**
+```bash
 python init_qvd.py --generate-models --source $QVD_SOURCE --overwrite
 ```
 
 ### Issue: Files not processing
 
+**Reset state:**
 ```bash
-# Reset state
 python init_qvd.py --reset-state --force
+```
 
-# Run again
+**Run again:**
+```bash
 python -c "from app.workflows.qvd_sync import sync_qvd_files_task; sync_qvd_files_task(None)"
 ```
 
 ### Issue: S3 access denied
 
+**Test AWS credentials:**
 ```bash
-# Test AWS credentials
 aws s3 ls s3://your-bucket/
+```
 
-# Or use profile
+**Or use profile:**
+```bash
 export AWS_PROFILE=your-profile
 ```
 
@@ -226,28 +260,38 @@ export AWS_PROFILE=your-profile
 1. **Schedule**: The workflow runs daily by default. Check Temporal UI.
 2. **Filter**: Use `QVD_INCLUDE_FILES` or `QVD_EXCLUDE_FILES` in `.env`
 3. **Tune**: Adjust `QVD_BATCH_SIZE` for performance
-4. **Monitor**: Use the API endpoint (`/consumption/qvd_status`) or check `.qvd_state.json`
+4. **Monitor**: Use the API endpoint (`/consumption/qvd_status`) or query ClickHouse tracking table
 
 ## Common Commands
 
+**List files:**
 ```bash
-# List files
 python init_qvd.py --list-files --source $QVD_SOURCE --verbose
+```
 
-# Generate models
+**Generate models:**
+```bash
 python init_qvd.py --generate-models --source $QVD_SOURCE
+```
 
-# Reset state
+**Reset state:**
+```bash
 python init_qvd.py --reset-state
+```
 
-# Run sync
+**Run sync:**
+```bash
 moose dev
+```
 
-# Check status via API
+**Check status via API:**
+```bash
 curl http://localhost:4000/consumption/qvd_status
+```
 
-# Check state file
-cat .qvd_state.json | python -m json.tool
+**Query tracking table:**
+```bash
+clickhouse-client --query "SELECT * FROM local.QvdFileTracking FINAL ORDER BY processed_at DESC LIMIT 10"
 ```
 
 ## Support
@@ -255,7 +299,7 @@ cat .qvd_state.json | python -m json.tool
 If you encounter issues:
 
 1. Check error messages in console output
-2. Review `.qvd_state.json` for file-specific errors
+2. Use the API endpoint to review file-specific errors: `curl "http://localhost:4000/consumption/qvd_status?status=failed"`
 3. Check Temporal UI for workflow failures
 4. Verify QVD files are accessible
 

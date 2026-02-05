@@ -36,7 +36,23 @@ cd qvd_to_clickhouse
 
 ## Quick Start
 
-### 1. Install Dependencies
+### 1. Installation
+
+Install using the 514 registry:
+
+```bash
+bash -i <(curl https://registry.514.ai/install.sh) --type pipeline qvd_to_clickhouse v1 514-labs python default
+cd qvd_to_clickhouse
+```
+
+Or with a custom destination:
+
+```bash
+bash -i <(curl https://registry.514.ai/install.sh) --type pipeline --dest my-qvd-pipeline qvd_to_clickhouse v1 514-labs python default
+cd my-qvd-pipeline
+```
+
+Then install dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -150,7 +166,6 @@ The API returns:
 | `QVD_EXCLUDE_FILES` | No | - | Comma-separated blacklist |
 | `QVD_BATCH_SIZE` | No | `10000` | Rows per insert batch |
 | `QVD_SCHEDULE` | No | `@daily` | Workflow schedule |
-| `QVD_STATE_FILE` | No | `.qvd_state.json` | Tracking state file |
 
 ### AWS Configuration
 
@@ -205,19 +220,19 @@ ClickHouse (via OlapTable)
 - **QvdReader**: Universal file reader using `fsspec`
 - **QvdIntrospector**: Extract schema from QVD files
 - **QvdModelGenerator**: Generate Pydantic models
-- **FileTracker**: Track processed files for incremental updates
+- **ClickHouseFileTracker**: Track processed files in ClickHouse for incremental updates
 - **QvdBatchInserter**: Batch insert into ClickHouse
 - **qvd_sync_workflow**: Moose workflow for scheduled execution
 
 ## Change Detection
 
-The pipeline tracks processed files and only processes new or modified files:
+The pipeline tracks processed files in ClickHouse and only processes new or modified files:
 
 - **Local files**: Compare `mtime` + `size`
 - **S3 files**: Compare `ETag` (content hash)
 - **HTTP files**: Compare `Last-Modified` header or `Content-Length`
 
-State is stored in `.qvd_state.json` by default.
+Tracking state is stored in the `QvdFileTracking` ClickHouse table.
 
 ## Troubleshooting
 
@@ -234,8 +249,11 @@ python init_qvd.py --generate-models --source /path/to/qvd
 Check tracking state:
 
 ```bash
-# View state file
-cat .qvd_state.json
+# View status via API
+curl http://localhost:4000/consumption/qvd_status
+
+# Query tracking table directly
+clickhouse-client --query "SELECT * FROM local.QvdFileTracking FINAL ORDER BY processed_at DESC"
 
 # Reset state to reprocess all files
 python init_qvd.py --reset-state --force
