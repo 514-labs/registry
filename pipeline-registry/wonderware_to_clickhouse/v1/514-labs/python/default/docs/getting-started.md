@@ -25,7 +25,7 @@ This guide will walk you through installing, configuring, and running the Wonder
 
 - **Moose CLI** - Data infrastructure framework
   ```bash
-  npm install -g @514labs/moose-cli
+  bash -i <(curl -fsSL https://fiveonefour.com/install.sh) moose
   moose --version
   ```
   Install from: https://www.moosejs.com/getting-started
