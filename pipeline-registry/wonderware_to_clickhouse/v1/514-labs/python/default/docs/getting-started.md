@@ -30,11 +30,6 @@ This guide will walk you through installing, configuring, and running the Wonder
   ```
   Install from: https://www.moosejs.com/getting-started
 
-- **pip** - Python package manager (usually included with Python)
-  ```bash
-  pip --version
-  ```
-
 ### Required Access
 
 **Wonderware/AVEVA Historian SQL Server:**
