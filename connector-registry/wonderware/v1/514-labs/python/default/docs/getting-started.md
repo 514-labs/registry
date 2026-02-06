@@ -13,8 +13,6 @@ Before you begin, ensure you have:
 
 ## Step 1: Installation
 
-### Option A: Install from Registry (Recommended)
-
 ```bash
 # Install connector
 bash -i <(curl https://registry.514.ai/install.sh) wonderware v1 514-labs python default
@@ -24,14 +22,6 @@ cd wonderware
 
 # Install dependencies
 pip install -r requirements.txt
-```
-
-### Option B: Install Dependencies Only
-
-If you're bundling into an existing project:
-
-```bash
-pip install sqlalchemy>=2.0.0 python-tds>=1.15.0 tenacity>=8.0.0
 ```
 
 ## Step 2: Configure Environment
