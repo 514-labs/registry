@@ -1,0 +1,8 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/pipeline-root.schema.json",
+  "name": "Wonderware to ClickHouse",
+  "tags": ["wonderware", "aveva", "historian", "clickhouse", "time-series", "scada", "iot"],
+  "description": "Production-grade data pipeline that extracts time-series data from Wonderware/AVEVA Historian and loads it into ClickHouse with incremental sync and backfill capabilities.",
+  "homepage": "",
+  "registryUrl": "https://github.com/514-labs/registry/tree/main/pipeline-registry/wonderware_to_clickhouse"
+}

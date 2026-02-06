@@ -1,0 +1,13 @@
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="200" height="200" fill="#0066CC"/>
+  
+  <!-- AVEVA text -->
+  <text x="100" y="90" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="white" text-anchor="middle">AVEVA</text>
+  
+  <!-- Wonderware text -->
+  <text x="100" y="120" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="middle">Wonderware</text>
+  
+  <!-- Subtitle -->
+  <text x="100" y="145" font-family="Arial, sans-serif" font-size="10" fill="#CCDDFF" text-anchor="middle">Historian</text>
+</svg>

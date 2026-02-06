@@ -1,0 +1,24 @@
+{
+  "name": "wonderware",
+  "author": "514-labs",
+  "version": "v1",
+  "languages": ["python"],
+  "category": "historian",
+  "capabilities": {
+    "extract": true,
+    "transform": false,
+    "load": false
+  },
+  "source": {
+    "type": "historian",
+    "spec": "AVEVA Wonderware Historian",
+    "homepage": ""
+  },
+  "tags": ["historian", "scada", "aveva", "wonderware", "sql-server", "industrial"],
+  "maintainers": ["514-labs"],
+  "issues": {
+    "python": {
+      "default": "https://github.com/514-labs/registry/issues"
+    }
+  }
+}

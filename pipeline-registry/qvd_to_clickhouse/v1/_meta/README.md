@@ -19,7 +19,7 @@ A universal data pipeline that reads QVD (QlikView Data) files from any source a
 
 Before installing this pipeline, ensure you have:
 
-- **Python 3.12+** installed
+- **Python 3.13+** installed
 - **Moose CLI** ([Installation Guide](https://docs.fiveonefour.com/moose/getting-started/quickstart))
 - **Access to QVD files** (local or cloud storage)
 - **ClickHouse Database** access

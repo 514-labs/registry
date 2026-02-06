@@ -22,7 +22,7 @@ A universal data pipeline that reads QVD (QlikView Data) files from any source a
 
 ## Prerequisites
 
-- Python 3.12 or higher
+- Python 3.13 or higher
 - Access to QVD files (local or cloud storage)
 
 ## Installation

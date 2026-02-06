@@ -1,0 +1,7 @@
+{
+  "name": "wonderware_to_clickhouse",
+  "version": "v1",
+  "status": "beta",
+  "releasedAt": "2026-02-06",
+  "notes": "Initial release with backfill workflow (4-task DAG), incremental sync (1-minute schedule), tag discovery, Redis caching, and batch insert with retry"
+}

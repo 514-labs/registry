@@ -1,0 +1,3 @@
+sqlalchemy>=2.0.0
+python-tds>=1.15.0
+tenacity>=8.0.0

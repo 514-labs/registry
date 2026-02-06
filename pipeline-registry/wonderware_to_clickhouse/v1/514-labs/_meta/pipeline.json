@@ -1,0 +1,37 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/pipeline.schema.json",
+  "identifier": "wonderware_to_clickhouse",
+  "name": "Wonderware to ClickHouse",
+  "author": "514-labs",
+  "authorType": "organization",
+  "version": "v1",
+  "description": "Production-grade pipeline for extracting time-series data from Wonderware/AVEVA Historian into ClickHouse with incremental sync and historical backfill",
+  "tags": ["wonderware", "aveva", "historian", "clickhouse", "time-series", "scada", "iot", "sqlserver"],
+  "schedule": { "cron": "*/1 * * * *", "timezone": "UTC" },
+  "source": {
+    "type": "database",
+    "format": "sql-server",
+    "location": "configurable"
+  },
+  "systems": [],
+  "transformations": [],
+  "destination": {
+    "system": "clickhouse",
+    "database": "local",
+    "table": "WonderwareHistory_*"
+  },
+  "lineage": {
+    "nodes": [
+      { "id": "source", "kind": "source", "label": "Wonderware SQL Server" },
+      { "id": "extractor", "kind": "transform", "label": "WonderwareClient" },
+      { "id": "dest_raw", "kind": "destination", "label": "WonderwareHistory (ClickHouse)" },
+      { "id": "dest_agg", "kind": "destination", "label": "WonderwareHistoryAggregated (ClickHouse)" }
+    ],
+    "edges": [
+      { "from": "source", "to": "extractor", "label": "query history view" },
+      { "from": "extractor", "to": "dest_raw", "label": "batch insert" },
+      { "from": "dest_raw", "to": "dest_agg", "label": "aggregate" }
+    ]
+  },
+  "maintainers": []
+}
