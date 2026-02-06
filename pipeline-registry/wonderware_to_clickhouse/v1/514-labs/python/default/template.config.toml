@@ -1,0 +1,48 @@
+language = "python"
+description = "Wonderware to ClickHouse data pipeline"
+post_install_print = """
+Wonderware to ClickHouse Pipeline
+---------------------------------------------------------
+
+📂 Go to your project directory:
+    $ cd {project_dir}
+
+🥄 Create a virtual environment (optional, recommended):
+    $ python3 -m venv .venv
+    $ source .venv/bin/activate
+
+📦 Install Dependencies:
+    $ pip install -r ./requirements.txt
+
+⚙️  Configure Wonderware Connection:
+    Set the following environment variables:
+
+    WONDERWARE_HOST=<your-sql-server-host>
+    WONDERWARE_PORT=1433
+    WONDERWARE_DATABASE=Runtime
+    WONDERWARE_USERNAME=<your-username>
+    WONDERWARE_PASSWORD=<your-password>
+
+    Optional configuration:
+    WONDERWARE_TAG_CHUNK_SIZE=10
+    WONDERWARE_BACKFILL_CHUNK_DAYS=1
+    WONDERWARE_BACKFILL_OLDEST_TIME="2025-01-01 00:00:00"
+    WONDERWARE_TAG_CACHE_TTL=3600
+
+🛠️  Start Moose Server:
+    $ moose dev
+
+🔄 Run Backfill (one-time historical data load):
+    The backfill workflow will automatically discover tags and load
+    historical data in chunks. Monitor progress in Temporal UI.
+
+📊 Monitor Pipeline Status:
+    $ curl http://localhost:4000/consumption/wonderware_status
+
+📖 View Documentation:
+    $ cat docs/getting-started.md
+
+For more information, visit:
+https://github.com/514-labs/registry/tree/main/pipeline-registry/wonderware_to_clickhouse
+"""
+default_sloan_telemetry="standard"

@@ -4,7 +4,7 @@ Get the pipeline running in 5 minutes.
 
 ## Prerequisites
 
-- Python 3.12+
+- Python 3.13+
 - Access to QVD files (local or S3)
 - pip or uv package manager
 

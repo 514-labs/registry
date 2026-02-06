@@ -18,9 +18,9 @@ This guide will walk you through installing, configuring, and running the Wonder
 
 ### Required Software
 
-- **Python 3.12 or higher**
+- **Python 3.13 or higher**
   ```bash
-  python3 --version  # Should show 3.12.x or higher
+  python3 --version  # Should show 3.13.x or higher
   ```
 
 - **Moose CLI** - Data infrastructure framework

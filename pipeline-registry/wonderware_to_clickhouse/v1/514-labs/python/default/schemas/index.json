@@ -1,0 +1,19 @@
+{
+  "schemas": [
+    {
+      "name": "WonderwareHistory",
+      "description": "Raw sensor data from Wonderware historian (1-second resolution, Delta mode)",
+      "type": "olap"
+    },
+    {
+      "name": "WonderwareHistoryAggregated",
+      "description": "1-minute aggregated sensor data from Wonderware historian",
+      "type": "olap"
+    },
+    {
+      "name": "MachineData",
+      "description": "Machine metadata and sensor mapping for Wonderware tags",
+      "type": "olap"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "source_database": "Wonderware SQL Server",
+  "source_tables": [
+    {
+      "table_name": "History",
+      "description": "Wonderware History view - time-series data for all tags",
+      "columns": [
+        {"name": "DateTime", "type": "datetime", "description": "Timestamp of data point"},
+        {"name": "TagName", "type": "varchar", "description": "Tag identifier"},
+        {"name": "Value", "type": "float", "description": "Numeric sensor value"},
+        {"name": "VValue", "type": "varchar", "description": "String sensor value"},
+        {"name": "Quality", "type": "int", "description": "Data quality indicator"},
+        {"name": "wwRetrievalMode", "type": "varchar", "description": "Retrieval mode (Delta, etc.)"}
+      ]
+    },
+    {
+      "table_name": "TagRef",
+      "description": "Wonderware TagRef table - tag metadata and configuration",
+      "columns": [
+        {"name": "TagName", "type": "varchar", "description": "Tag identifier"},
+        {"name": "TagType", "type": "int", "description": "Tag type (1=Data)"}
+      ]
+    }
+  ],
+  "destination_database": "ClickHouse",
+  "destination_tables": [
+    {
+      "table_name": "WonderwareHistory",
+      "description": "Raw sensor data with all Wonderware fields",
+      "engine": "MergeTree",
+      "partition_by": "toYYYYMM(DateTime)",
+      "order_by": ["TagName", "DateTime"],
+      "ttl": "DateTime + INTERVAL 90 DAY"
+    },
+    {
+      "table_name": "WonderwareHistoryAggregated",
+      "description": "1-minute aggregated sensor data",
+      "engine": "MergeTree",
+      "partition_by": "toYYYYMM(minute_timestamp)",
+      "order_by": ["TagName", "minute_timestamp"],
+      "ttl": "minute_timestamp + INTERVAL 730 DAY"
+    },
+    {
+      "table_name": "MachineData",
+      "description": "Machine and sensor metadata",
+      "engine": "MergeTree",
+      "order_by": ["timestamp"]
+    }
+  ],
+  "transformations": [
+    {
+      "type": "extract",
+      "source": "History",
+      "destination": "WonderwareHistory",
+      "description": "Direct extraction of time-series data with Delta mode filter"
+    },
+    {
+      "type": "aggregate",
+      "source": "WonderwareHistory",
+      "destination": "WonderwareHistoryAggregated",
+      "description": "1-minute aggregation with first, avg, min, max, count"
+    }
+  ]
+}

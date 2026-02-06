@@ -1,0 +1,10 @@
+{
+  "source": "relational",
+  "description": "Wonderware SQL Server to ClickHouse lineage",
+  "schemas": [
+    {
+      "type": "relational",
+      "path": "relational/tables.json"
+    }
+  ]
+}

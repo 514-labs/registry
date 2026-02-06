@@ -60,7 +60,7 @@ The connector handles:
 ### Prerequisites
 
 Before starting, ensure you have:
-- Python 3.12+ installed
+- Python 3.13+ installed
 - Access to a Wonderware/AVEVA Historian SQL Server instance
 - ClickHouse running (local via Docker or remote)
 - Redis running (optional but recommended for tag caching)
