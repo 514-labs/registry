@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schemas.connector-factory.dev/connector-root.schema.json",
+  "identifier": "wonderware",
+  "name": "Wonderware Historian",
+  "category": "historian",
+  "tags": ["historian", "scada", "aveva", "wonderware", "sql-server", "industrial"],
+  "description": "High-performance connector for AVEVA Wonderware Historian with support for tag discovery and historical data extraction",
+  "homepage": ""
+}

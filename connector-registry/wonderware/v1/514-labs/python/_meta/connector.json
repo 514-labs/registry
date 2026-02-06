@@ -1,0 +1,8 @@
+{
+  "identifier": "wonderware",
+  "name": "wonderware",
+  "author": "514-labs",
+  "version": "v1",
+  "language": "python",
+  "implementations": ["default"]
+}
