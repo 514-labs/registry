@@ -25,7 +25,7 @@ moose-cli==0.6.103
 moose-lib==0.6.103
 #py-moose-lib-extras
 nexus-rpc==1.1.0
-protobuf==6.32.1
+protobuf==6.33.5
 pycparser==2.23
 pydantic==2.11.10
 pydantic-core==2.33.2
