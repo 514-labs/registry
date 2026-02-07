@@ -1,0 +1,7 @@
+{
+  "name": "shopify",
+  "version": "v1",
+  "status": "beta",
+  "releasedAt": "",
+  "notes": "Shopify Admin API v1 connector with support for products, orders, customers, and more"
+}

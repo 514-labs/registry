@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Shopify Order",
+  "description": "An order in a Shopify store",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "number",
+      "description": "Unique identifier for the order"
+    },
+    "name": {
+      "type": "string",
+      "description": "The order name (e.g., #1001)"
+    },
+    "email": {
+      "type": "string",
+      "description": "The customer's email address"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time when the order was created"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time when the order was last modified"
+    },
+    "financial_status": {
+      "type": "string",
+      "enum": ["authorized", "pending", "paid", "partially_paid", "refunded", "voided", "partially_refunded", "unpaid"],
+      "description": "The status of payments associated with the order"
+    },
+    "fulfillment_status": {
+      "type": ["string", "null"],
+      "enum": ["shipped", "partial", "unshipped", "unfulfilled", null],
+      "description": "The order's status in terms of fulfilled line items"
+    },
+    "currency": {
+      "type": "string",
+      "description": "The three-letter code (ISO 4217 format) for the shop currency"
+    },
+    "total_price": {
+      "type": "string",
+      "description": "The total price of the order"
+    },
+    "subtotal_price": {
+      "type": "string",
+      "description": "The price of the order before shipping and taxes"
+    },
+    "total_tax": {
+      "type": "string",
+      "description": "The sum of all the taxes applied to the order"
+    },
+    "line_items": {
+      "type": "array",
+      "description": "A list of line item objects",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "title": { "type": "string" },
+          "quantity": { "type": "number" },
+          "price": { "type": "string" },
+          "sku": { "type": "string" },
+          "product_id": { "type": ["number", "null"] },
+          "variant_id": { "type": ["number", "null"] }
+        }
+      }
+    }
+  },
+  "required": ["id", "name", "email"]
+}

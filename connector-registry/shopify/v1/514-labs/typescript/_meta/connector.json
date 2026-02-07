@@ -1,0 +1,8 @@
+{
+  "identifier": "shopify",
+  "name": "shopify",
+  "author": "514-labs",
+  "version": "v1",
+  "language": "typescript",
+  "implementations": ["default"]
+}
