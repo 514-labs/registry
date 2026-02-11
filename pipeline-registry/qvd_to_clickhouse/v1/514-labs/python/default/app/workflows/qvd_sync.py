@@ -1,5 +1,11 @@
-from pathlib import Path
+"""
+QVD Sync Workflow
+
+Syncs QVD files to ClickHouse with tracking and detailed metrics.
+"""
+
 import time
+from pathlib import Path
 from moose_lib import Task, TaskConfig, Workflow, WorkflowConfig, TaskContext
 from ..config.qvd_config import QvdConfig
 from .lib.qvd_reader import QvdReader
@@ -28,16 +34,17 @@ def derive_table_name(file_path: str) -> str:
 
 def sync_qvd_files_task(ctx: TaskContext[None]) -> None:
     """
-    Sync QVD files to ClickHouse.
+    Sync QVD files to ClickHouse with tracking.
 
     This task:
     1. Lists QVD files from configured source
-    2. Identifies new or modified files
+    2. Identifies new or modified files (using ClickHouse tracking)
     3. Reads QVD data
     4. Inserts into ClickHouse via OlapTable
-    5. Tracks processing state
+    5. Tracks processing state in ClickHouse (with timing and history)
     """
     print("Starting QVD sync task...")
+    sync_start_time = time.time()
 
     # Load configuration
     config = QvdConfig.from_env()
@@ -52,7 +59,7 @@ def sync_qvd_files_task(ctx: TaskContext[None]) -> None:
         if config.aws_region:
             storage_options["client_kwargs"] = {"region_name": config.aws_region}
 
-    # Initialize components
+    # Initialize components with ClickHouse tracker
     reader = QvdReader(storage_options=storage_options)
     tracker = ClickHouseFileTracker(batch_size=config.batch_size)
     inserter = QvdBatchInserter(batch_size=config.batch_size)
@@ -85,58 +92,96 @@ def sync_qvd_files_task(ctx: TaskContext[None]) -> None:
 
     if not files_to_process:
         print("No new or modified files to process")
+        total_duration = time.time() - sync_start_time
+        print(f"\nTotal sync duration: {total_duration:.2f}s")
         return
 
-    # Process each file
+    # Process each file with detailed tracking
+    successful = 0
+    failed = 0
+
     for idx, file_path in enumerate(files_to_process, 1):
         file_name = Path(file_path).stem
         print(f"\n[{idx}/{len(files_to_process)}] Processing: {file_name}")
 
-        start_time = time.time()
-        file_info = reader.get_file_info(file_path)
+        # Derive table name
+        table_name = derive_table_name(file_path)
+        print(f"  Table: {table_name}")
+
+        # Get file info for tracking
+        try:
+            file_info = reader.get_file_info(file_path)
+        except Exception as e:
+            print(f"  ✗ Error getting file info: {e}")
+            continue
+
+        # Mark as processing
+        tracker.mark_processing(file_path, file_info, table_name)
+
+        # Start processing timer
+        process_start_time = time.time()
 
         try:
-            # Derive table name
-            table_name = derive_table_name(file_path)
-            print(f"  Table: {table_name}")
-
-            # Mark as processing
-            tracker.mark_processing(file_path, file_info, table_name)
-
             # Read QVD file
             print(f"  Reading file...")
+            read_start = time.time()
             df = reader.read_file(file_path)
-            print(f"  Rows: {len(df)}")
+            read_duration = time.time() - read_start
+            print(f"  Read {len(df):,} rows in {read_duration:.2f}s")
 
             # Insert into ClickHouse
             print(f"  Inserting into ClickHouse...")
+            insert_start = time.time()
             inserter.insert_dataframe(table_name, df)
+            insert_duration = time.time() - insert_start
+            print(f"  Inserted in {insert_duration:.2f}s")
+
+            # Calculate total processing duration
+            process_duration = time.time() - process_start_time
 
             # Mark as completed
-            processing_duration = time.time() - start_time
-            tracker.mark_completed(file_path, file_info, table_name, len(df), processing_duration)
-            print(f"  ✓ Successfully synced {len(df)} rows in {processing_duration:.2f}s")
+            tracker.mark_completed(
+                file_path=file_path,
+                file_info=file_info,
+                table_name=table_name,
+                row_count=len(df),
+                processing_duration=process_duration
+            )
+
+            print(f"  ✓ Successfully synced {len(df):,} rows in {process_duration:.2f}s")
+            print(f"    ({len(df)/process_duration:.0f} rows/sec)")
+            successful += 1
 
         except Exception as e:
-            print(f"  ✗ Error processing {file_name}: {e}")
-            processing_duration = time.time() - start_time
-            tracker.mark_failed(file_path, file_info, table_name, str(e), processing_duration)
+            process_duration = time.time() - process_start_time
+            error_msg = str(e)
+
+            print(f"  ✗ Error processing {file_name}: {error_msg}")
+
+            # Mark as failed
+            tracker.mark_failed(
+                file_path=file_path,
+                file_info=file_info,
+                table_name=table_name,
+                error=error_msg,
+                processing_duration=process_duration
+            )
+            failed += 1
 
     # Print summary
+    total_duration = time.time() - sync_start_time
     print("\n" + "="*60)
     print("Sync Summary:")
-    summary = tracker.get_status_summary()
-    for status, count in summary.items():
-        print(f"  {status}: {count}")
-
-    # List any errors
-    errors = tracker.list_errors()
-    if errors:
-        print("\nFiles with errors:")
-        for error in errors:
-            print(f"  - {Path(error.file_path).name}: {error.error_message}")
-
+    print(f"  Total files: {len(files_to_process)}")
+    print(f"  Successful: {successful}")
+    print(f"  Failed: {failed}")
+    print(f"  Total duration: {total_duration:.2f}s")
+    print(f"  Average per file: {total_duration/len(files_to_process):.2f}s" if files_to_process else "")
     print("="*60)
+
+    # Note about tracking
+    print("\n📊 Tracking data stored in ClickHouse table: local.QvdFileTracking")
+    print("   Query with: SELECT * FROM local.QvdFileTracking FINAL ORDER BY processed_at DESC")
 
 
 # Define the sync task
