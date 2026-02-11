@@ -8,7 +8,7 @@ cffi==2.0.0
 charset-normalizer==3.4.3
 click==8.3.1
 clickhouse-connect==0.7.16
-cryptography==46.0.2
+cryptography==46.0.5
 dotenv==0.9.9
 faker==37.8.0
 hdbcli==2.26.18
