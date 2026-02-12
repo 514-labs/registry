@@ -68,7 +68,7 @@ def generate_models(args):
         storage_options["secret"] = args.aws_secret
 
     reader = QvdReader(storage_options=storage_options)
-    introspector = QvdIntrospector(reader)
+    introspector = QvdIntrospector(reader, table_prefix=args.table_prefix)
     generator = QvdModelGenerator()
 
     try:
@@ -177,6 +177,9 @@ Examples:
   # Generate models for all QVD files
   python init_qvd.py --generate-models --source /path/to/qvd
 
+  # Generate models with no table prefix
+  python init_qvd.py --generate-models --source /path/to/qvd --table-prefix ""
+
   # Generate models for specific files only
   python init_qvd.py --generate-models --source s3://bucket/path --files Item,PO
 
@@ -233,6 +236,11 @@ Examples:
     parser.add_argument(
         "--exclude",
         help="Comma-separated list of file names to exclude"
+    )
+    parser.add_argument(
+        "--table-prefix",
+        default="Qvd",
+        help="Prefix for table names (default: Qvd, use empty string for no prefix)"
     )
     parser.add_argument(
         "--overwrite",

@@ -31,26 +31,16 @@ class QvdFileMetadata:
 class QvdIntrospector:
     """Extract schema metadata from QVD files."""
 
-    # QVD type to Python type mapping
-    TYPE_MAPPING = {
-        'DATE': 'str',
-        'TIME': 'str',
-        'TIMESTAMP': 'str',
-        'INTEGER': 'int',
-        'REAL': 'float',
-        'MONEY': 'float',
-        'ASCII': 'str',
-        'UNKNOWN': 'str',
-    }
-
-    def __init__(self, reader):
+    def __init__(self, reader, table_prefix: str = "Qvd"):
         """
         Initialize introspector.
 
         Args:
             reader: QvdReader instance for file operations
+            table_prefix: Prefix for table names (default: "Qvd", use "" for no prefix)
         """
         self.reader = reader
+        self.table_prefix = table_prefix
 
     def introspect_file(self, file_path: str) -> QvdFileMetadata:
         """
@@ -68,14 +58,27 @@ class QvdIntrospector:
         # Extract file name and derive table/class names
         file_name = Path(file_path).stem  # Remove .qvd extension
         class_name = self._to_pascal_case(file_name)
-        table_name = f"Qvd{class_name}"
+        table_name = f"{self.table_prefix}{class_name}" if self.table_prefix else class_name
 
-        # Process fields
+        # Get row count before sampling
+        row_count = qvd_table.shape[0]
+
+        # Convert only a sample to pandas for type inference (reduces memory usage)
+        sample_size = min(1000, row_count) if row_count > 0 else 0
+        if sample_size > 0:
+            # Sample first N rows for type inference
+            df_sample = qvd_table.to_pandas().head(sample_size)
+        else:
+            # Empty file - still need column info
+            df_sample = qvd_table.to_pandas()
+
+        # Process fields using sampled data
         fields = []
-        for field in qvd_table.fields:
-            field_name = field.field_name
+        for field_name in qvd_table.columns:
             python_name = self._sanitize_field_name(field_name)
-            python_type = self._map_qvd_type(field)
+            # Get pandas dtype from sample
+            pandas_dtype = df_sample[field_name].dtype
+            python_type = self._map_pandas_type(pandas_dtype)
             needs_alias = field_name != python_name
 
             fields.append(QvdFieldMetadata(
@@ -87,9 +90,6 @@ class QvdIntrospector:
 
         # Get file info
         file_info = self.reader.get_file_info(file_path)
-
-        # Get row count
-        row_count = qvd_table.number_of_records
 
         return QvdFileMetadata(
             file_path=file_path,
@@ -197,24 +197,29 @@ class QvdIntrospector:
         # Capitalize each part
         return ''.join(part.capitalize() for part in parts if part)
 
-    def _map_qvd_type(self, field) -> str:
+    def _map_pandas_type(self, pandas_dtype) -> str:
         """
-        Map QVD field type to Python type.
+        Map pandas dtype to Python type.
 
         Args:
-            field: QVD field object
+            pandas_dtype: Pandas dtype object
 
         Returns:
             Python type string (e.g., "str", "Optional[float]")
         """
-        # Get base type from QVD field
-        qvd_type = getattr(field, 'field_type', 'UNKNOWN').upper()
-        base_type = self.TYPE_MAPPING.get(qvd_type, 'str')
+        dtype_str = str(pandas_dtype)
 
-        # Check if field can be null (in QVD, most fields are nullable)
-        # We'll make numeric fields optional by default, and string fields required
-        # unless we detect they have nulls in the data
-        if base_type in ('int', 'float'):
-            return f"Optional[{base_type}]"
-
-        return base_type
+        # Map pandas dtypes to Python types
+        if dtype_str.startswith('int'):
+            return 'Optional[int]'
+        elif dtype_str.startswith('float'):
+            return 'Optional[float]'
+        elif dtype_str == 'object' or dtype_str.startswith('str'):
+            return 'str'
+        elif dtype_str == 'bool':
+            return 'Optional[bool]'
+        elif dtype_str.startswith('datetime'):
+            return 'str'
+        else:
+            # Default to string for unknown types
+            return 'str'

@@ -13,6 +13,7 @@ class QvdConfig:
     exclude_files: Optional[List[str]] = None  # Blacklist (without .qvd extension)
     batch_size: int = 10000              # Rows per insert
     schedule: str = "@daily"             # Workflow schedule
+    table_prefix: str = "Qvd"            # Table name prefix (e.g., "Qvd" for QvdItem, "" for Item)
 
     # S3 credentials (optional, can also use AWS profile or IAM role)
     aws_access_key_id: Optional[str] = None
@@ -53,6 +54,7 @@ class QvdConfig:
             exclude_files=exclude_files,
             batch_size=int(os.getenv(f"{prefix}BATCH_SIZE", "10000")),
             schedule=os.getenv(f"{prefix}SCHEDULE", "@daily"),
+            table_prefix=os.getenv(f"{prefix}TABLE_PREFIX", "Qvd"),
             aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
             aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
             aws_region=os.getenv("AWS_DEFAULT_REGION"),
