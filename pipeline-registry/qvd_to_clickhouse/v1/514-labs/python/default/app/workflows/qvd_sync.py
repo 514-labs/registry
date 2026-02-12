@@ -13,15 +13,16 @@ from .lib.batch_inserter import QvdBatchInserter
 from ..utils.clickhouse_file_tracker import ClickHouseFileTracker
 
 
-def derive_table_name(file_path: str) -> str:
+def derive_table_name(file_path: str, table_prefix: str = "Qvd") -> str:
     """
     Derive table name from file path.
 
     Args:
         file_path: Path or URL to QVD file
+        table_prefix: Prefix for table name (default: "Qvd")
 
     Returns:
-        Table name (e.g., "QvdItem" for "Item.qvd")
+        Table name (e.g., "QvdItem" for "Item.qvd" with prefix "Qvd")
     """
     file_name = Path(file_path).stem  # Remove .qvd extension
 
@@ -29,7 +30,7 @@ def derive_table_name(file_path: str) -> str:
     parts = file_name.replace('_', ' ').split()
     class_name = ''.join(part.capitalize() for part in parts if part)
 
-    return f"Qvd{class_name}"
+    return f"{table_prefix}{class_name}" if table_prefix else class_name
 
 
 def sync_qvd_files_task(ctx: TaskContext[None]) -> None:
@@ -104,8 +105,8 @@ def sync_qvd_files_task(ctx: TaskContext[None]) -> None:
         file_name = Path(file_path).stem
         print(f"\n[{idx}/{len(files_to_process)}] Processing: {file_name}")
 
-        # Derive table name
-        table_name = derive_table_name(file_path)
+        # Derive table name using configured prefix
+        table_name = derive_table_name(file_path, config.table_prefix)
         print(f"  Table: {table_name}")
 
         # Get file info for tracking
@@ -113,6 +114,7 @@ def sync_qvd_files_task(ctx: TaskContext[None]) -> None:
             file_info = reader.get_file_info(file_path)
         except Exception as e:
             print(f"  ✗ Error getting file info: {e}")
+            failed += 1
             continue
 
         # Mark as processing
@@ -149,7 +151,10 @@ def sync_qvd_files_task(ctx: TaskContext[None]) -> None:
             )
 
             print(f"  ✓ Successfully synced {len(df):,} rows in {process_duration:.2f}s")
-            print(f"    ({len(df)/process_duration:.0f} rows/sec)")
+            if process_duration > 0:
+                print(f"    ({len(df)/process_duration:.0f} rows/sec)")
+            else:
+                print(f"    (instant)")
             successful += 1
 
         except Exception as e:

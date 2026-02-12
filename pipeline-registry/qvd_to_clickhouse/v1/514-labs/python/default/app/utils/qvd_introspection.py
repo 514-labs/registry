@@ -60,15 +60,24 @@ class QvdIntrospector:
         class_name = self._to_pascal_case(file_name)
         table_name = f"{self.table_prefix}{class_name}" if self.table_prefix else class_name
 
-        # Convert to pandas to get data types
-        df = qvd_table.to_pandas()
+        # Get row count before sampling
+        row_count = qvd_table.shape[0]
 
-        # Process fields
+        # Convert only a sample to pandas for type inference (reduces memory usage)
+        sample_size = min(1000, row_count) if row_count > 0 else 0
+        if sample_size > 0:
+            # Sample first N rows for type inference
+            df_sample = qvd_table.to_pandas().head(sample_size)
+        else:
+            # Empty file - still need column info
+            df_sample = qvd_table.to_pandas()
+
+        # Process fields using sampled data
         fields = []
         for field_name in qvd_table.columns:
             python_name = self._sanitize_field_name(field_name)
-            # Get pandas dtype for this column
-            pandas_dtype = df[field_name].dtype
+            # Get pandas dtype from sample
+            pandas_dtype = df_sample[field_name].dtype
             python_type = self._map_pandas_type(pandas_dtype)
             needs_alias = field_name != python_name
 
@@ -81,9 +90,6 @@ class QvdIntrospector:
 
         # Get file info
         file_info = self.reader.get_file_info(file_path)
-
-        # Get row count
-        row_count = qvd_table.shape[0]
 
         return QvdFileMetadata(
             file_path=file_path,
