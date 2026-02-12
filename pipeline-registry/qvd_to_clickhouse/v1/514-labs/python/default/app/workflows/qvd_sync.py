@@ -190,7 +190,7 @@ sync_task = Task[None, None](
     config=TaskConfig(
         run=sync_qvd_files_task,
         retries=2,
-        timeout=300
+        timeout="5m"  # 5 minutes
     )
 )
 
@@ -200,7 +200,7 @@ qvd_sync_workflow = Workflow(
     config=WorkflowConfig(
         starting_task=sync_task,
         retries=3,
-        timeout=600,
+        timeout="10m",  # 10 minutes
         schedule="@daily"  # Run daily by default (can be overridden via env)
     )
 )
